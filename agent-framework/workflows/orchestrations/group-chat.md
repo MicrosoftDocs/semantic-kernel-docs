@@ -233,6 +233,7 @@ def round_robin_selector(state: GroupChatState) -> str:
 workflow = GroupChatBuilder(
     participants=[researcher, writer],
     termination_condition=lambda conversation: len(conversation) >= 4,
+    intermediate_output_from=[researcher, writer],
     selection_func=round_robin_selector,
 ).build()
 ```
@@ -264,15 +265,16 @@ workflow = GroupChatBuilder(
     # The agent orchestrator will intelligently decide when to end before this limit but just in case
     termination_condition=lambda messages: sum(1 for msg in messages if msg.role == "assistant") >= 4,
     orchestrator_agent=orchestrator_agent,
+    intermediate_output_from=[researcher, writer],
 ).build()
 ```
 
 ## Run the Group Chat Workflow
 
-Execute the workflow and process events. The terminal output is an `AgentResponse` containing the orchestrator's completion message:
+Execute the workflow and process streaming participant updates. The non-streaming terminal output is an `AgentResponse`; streaming terminal output is emitted as `AgentResponseUpdate` chunks.
 
 ```python
-from agent_framework import AgentResponse, AgentResponseUpdate, Message
+from agent_framework import AgentResponseUpdate, Message
 
 task = "What are the key benefits of async/await in Python?"
 
@@ -280,11 +282,10 @@ print(f"Task: {task}\n")
 print("=" * 80)
 
 last_author: str | None = None
-final_response: AgentResponse | None = None
-
 # Run the workflow with streaming enabled
-async for event in workflow.run(task, stream=True):
-    if event.type == "output" and isinstance(event.data, AgentResponseUpdate):
+stream = workflow.run(task, stream=True)
+async for event in stream:
+    if event.type in ("intermediate", "output") and isinstance(event.data, AgentResponseUpdate):
         # Print streaming agent updates
         author = event.data.author_name
         if author != last_author:
@@ -293,16 +294,11 @@ async for event in workflow.run(task, stream=True):
             print(f"[{author}]:", end=" ", flush=True)
             last_author = author
         print(event.data.text, end="", flush=True)
-    elif event.type == "output" and isinstance(event.data, AgentResponse):
-        # Workflow completed — data is an AgentResponse
-        final_response = event.data
-
-if final_response:
+result = await stream.get_final_response()
+if outputs := result.get_outputs():
     print("\n\n" + "=" * 80)
     print("Final Response:")
-    for msg in final_response.messages:
-        print(f"\n[{msg.author_name}]\n{msg.text}")
-        print("-" * 80)
+    print(outputs[-1])
 
 print("\nWorkflow completed.")
 ```

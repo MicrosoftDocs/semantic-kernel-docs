@@ -122,13 +122,13 @@ If you don't specify the `name` and `description` parameters in the `@tool` deco
 When you need full control over the schema exposed to the model, pass the `schema` parameter to `@tool`.
 You can provide either a Pydantic model or a raw JSON schema dictionary.
 
-:::code language="python" source="~/../agent-framework-code/python/samples/02-agents/tools/function_tool_with_explicit_schema.py" range="25-41,44-59":::
+:::code language="python" source="~/../agent-framework-code/python/samples/02-agents/tools/function_tool_with_explicit_schema.py" range="29-45,48-64":::
 
 ### Pass runtime-only context to a tool
 
 Use normal function parameters for values the model should supply. Use `FunctionInvocationContext` for runtime-only values such as `function_invocation_kwargs` or the current session. The injected context parameter is hidden from the schema exposed to the model.
 
-:::code language="python" source="~/../agent-framework-code/python/samples/02-agents/tools/function_tool_with_kwargs.py" range="3-9,28-56":::
+:::code language="python" source="~/../agent-framework-code/python/samples/02-agents/tools/function_tool_with_kwargs.py" range="3-9,28-59":::
 
 For more detail on `ctx.kwargs`, `ctx.session`, and function middleware, see [Runtime Context](../middleware/runtime-context.md).
 
@@ -137,7 +137,7 @@ For more detail on `ctx.kwargs`, `ctx.session`, and function middleware, see [Ru
 If a tool is implemented outside the framework (for example, client-side in a UI), you can declare it without an implementation using `FunctionTool(..., func=None)`.
 The model can still reason about and call the tool, and your application can provide the result later.
 
-:::code language="python" source="~/../agent-framework-code/python/samples/03-workflows/human-in-the-loop/agents_with_declaration_only_tools.py" range="33-46":::
+:::code language="python" source="~/../agent-framework-code/python/samples/03-workflows/human-in-the-loop/agents_with_declaration_only_tools.py" range="37-50":::
 
 When creating the agent, you can now provide the function tool to the agent, by passing it to the `tools` parameter.
 

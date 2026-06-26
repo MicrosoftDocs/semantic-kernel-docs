@@ -55,7 +55,7 @@ async def text_pipeline(text: str) -> str:
 
 ### Workflow function signature
 
-The workflow function's **first parameter** receives the input passed to `.run()`. Add a `ctx: WorkflowRunContext` parameter only when you need HITL, key/value state, or custom events — it is optional otherwise:
+The workflow function's **first parameter** receives the input passed to `.run()`. Add a `ctx: RunContext` parameter only when you need HITL, key/value state, or custom events — it is optional otherwise:
 
 ```python
 # No ctx needed — just a plain pipeline
@@ -66,12 +66,12 @@ async def simple_pipeline(data: str) -> str:
 
 # ctx needed for HITL, state, or custom events
 @workflow
-async def hitl_pipeline(data: str, ctx: WorkflowRunContext) -> str:
+async def hitl_pipeline(data: str, ctx: RunContext) -> str:
     feedback = await ctx.request_info({"draft": data}, response_type=str)
     return feedback
 ```
 
-`WorkflowRunContext` is detected by type annotation first, then by the parameter name `ctx`, so both `ctx: WorkflowRunContext` and a bare `ctx` parameter work.
+`RunContext` is detected by type annotation first, then by the parameter name `ctx`, so both `ctx: RunContext` and a bare `ctx` parameter work.
 
 ## Running a workflow
 
@@ -100,7 +100,7 @@ print(result.get_final_state())           # WorkflowRunState.IDLE
 | `checkpoint_storage` | `CheckpointStorage | None` | Overrides the default storage set on the decorator for this run. |
 | `include_status_events` | `bool` | Include status-change events in the non-streaming result. |
 
-Exactly one of `message`, `responses`, or `checkpoint_id` must be provided per call.
+Provide one input mode per call: `message`, `responses`, or `checkpoint_id`. The exception is checkpoint resume with external input, where `checkpoint_id` and `responses` can be passed together.
 
 ### `WorkflowRunResult`
 
@@ -162,7 +162,7 @@ async def pipeline(url: str) -> str:
 - **Caches results** — the result is stored by `(step_name, call_index)`. On HITL resume or checkpoint restore, a completed step returns its saved result instantly instead of re-executing.
 - **Emits events** — `executor_invoked` / `executor_completed` / `executor_failed` are emitted for observability. On a cache hit, `executor_bypassed` is emitted instead.
 - **Saves checkpoints** — if the workflow has `checkpoint_storage`, a checkpoint is saved after each step completes.
-- **Injects `WorkflowRunContext`** — if the step function declares a `ctx: WorkflowRunContext` parameter, the active context is automatically injected.
+- **Injects `RunContext`** — if the step function declares a `ctx: RunContext` parameter, the active context is automatically injected.
 
 Outside a running workflow, `@step` is transparent — the function behaves identically to its undecorated version, making it fully testable in isolation.
 
@@ -200,14 +200,14 @@ async def transform_data(raw: dict) -> str:
 
 See [`python/samples/03-workflows/functional/steps_and_checkpointing.py`](https://github.com/microsoft/agent-framework/tree/main/python/samples/03-workflows/functional/steps_and_checkpointing.py) for a complete example.
 
-## `WorkflowRunContext`
+## `RunContext`
 
-`WorkflowRunContext` (short alias: `RunContext`) is the execution context injected into workflow and step functions. You only need it when you use HITL, key/value state, or custom events.
+`RunContext` is the execution context injected into workflow and step functions. You only need it when you use HITL, key/value state, or custom events.
 
 Import it from `agent_framework`:
 
 ```python
-from agent_framework import WorkflowRunContext, workflow
+from agent_framework import RunContext, workflow
 ```
 
 ### `ctx.request_info()` — Human-in-the-loop
@@ -216,7 +216,7 @@ from agent_framework import WorkflowRunContext, workflow
 
 ```python
 @workflow
-async def review_pipeline(topic: str, ctx: WorkflowRunContext) -> str:
+async def review_pipeline(topic: str, ctx: RunContext) -> str:
     draft = await write_draft(topic)
     feedback = await ctx.request_info(
         {"draft": draft, "instructions": "Please review this draft"},
@@ -232,7 +232,7 @@ async def review_pipeline(topic: str, ctx: WorkflowRunContext) -> str:
 |-----------|------|-------------|
 | `request_data` | `Any` | Payload describing what input is needed (dict, Pydantic model, string, …). |
 | `response_type` | `type` | Expected Python type of the response. |
-| `request_id` | `str | None` | Stable identifier for this request. A random UUID is generated if omitted. |
+| `request_id` | `str | None` | Stable identifier for this request. If omitted, a deterministic `auto::<index>` id is generated from call order. |
 
 **Replay semantics:** On first execution, `request_info()` raises an internal signal (never visible to your code) that suspends the workflow. The caller receives a `WorkflowRunResult` with `get_final_state() == WorkflowRunState.IDLE_WITH_PENDING_REQUESTS`. Resume by calling `.run(responses={request_id: value})` — the workflow re-executes from the top, and `request_info()` returns the provided value immediately.
 
@@ -275,7 +275,7 @@ Returns `True` when the current run was started with `stream=True`. Useful insid
 
 ### `get_run_context()`
 
-Retrieves the active `WorkflowRunContext` from anywhere inside a running workflow — useful in helper functions that don't declare a `ctx` parameter:
+Retrieves the active `RunContext` from anywhere inside a running workflow — useful in helper functions that don't declare a `ctx` parameter:
 
 ```python
 from agent_framework import get_run_context

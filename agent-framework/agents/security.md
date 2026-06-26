@@ -3,7 +3,7 @@ title: Agent Security with FIDES
 description: Defend Agent Framework agents against prompt injection and data exfiltration with FIDES (Flow Integrity Deterministic Enforcement System), an information-flow control middleware for tracking content trust and confidentiality.
 zone_pivot_groups: programming-languages
 author: eavanvalkenburg
-ms.topic: conceptual
+ms.topic: article
 ms.author: edvan
 ms.date: 05/20/2026
 ms.service: agent-framework
@@ -84,9 +84,25 @@ The next sections take each of these apart.
 Adding FIDES to the triage agent is a single opt-in. `SecureAgentConfig` is a [context provider](./conversations/context-providers.md) — attach it to the agent and the middleware, security tools, and instructions are injected automatically. All later snippets build on this one:
 
 ```python
-from agent_framework import ChatAgent, Content, tool
+import os
+
+from agent_framework import Agent, Content, tool
 from agent_framework.foundry import FoundryChatClient
 from agent_framework.security import SecureAgentConfig
+from azure.identity import AzureCliCredential
+
+
+credential = AzureCliCredential()
+main_client = FoundryChatClient(
+    project_endpoint=os.environ["FOUNDRY_PROJECT_ENDPOINT"],
+    model=os.environ["FOUNDRY_MODEL"],
+    credential=credential,
+)
+quarantine_client = FoundryChatClient(
+    project_endpoint=os.environ["FOUNDRY_PROJECT_ENDPOINT"],
+    model="gpt-4o-mini",
+    credential=credential,
+)
 
 
 @tool  # returns Content items with per-item security labels
@@ -117,11 +133,12 @@ config = SecureAgentConfig(
     auto_hide_untrusted=False,  # default is True; we'll come back to this below
     approval_on_violation=True,
     allow_untrusted_tools={"read_issue"},
-    quarantine_chat_client=FoundryChatClient(model="gpt-4o-mini"),
+    quarantine_chat_client=quarantine_client,
 )
 
-agent = ChatAgent(
-    chat_client=FoundryChatClient(),
+agent = Agent(
+    client=main_client,
+    name="triage_assistant",
     instructions="You are a GitHub issue triage assistant.",
     tools=[read_issue, post_comment, read_file, write_file],
     context_providers=[config],

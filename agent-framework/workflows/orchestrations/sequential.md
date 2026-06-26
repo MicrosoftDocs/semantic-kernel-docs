@@ -364,7 +364,7 @@ For a complete example, see [sequential_chain_only_agent_responses.py](https://g
 
 ## Intermediate Outputs
 
-By default, `SequentialBuilder` designates the **last participant** as the terminal output source (`final_output_from`). Only that participant's output surfaces as an `"output"` event.
+By default, `SequentialBuilder` designates the **last participant** as the terminal output source (`output_from`). Only that participant's output surfaces as an `"output"` event.
 
 To surface earlier participants' outputs as well, pass `intermediate_output_from` with the participants you want to designate as intermediate sources. This implicitly demotes those participants from the default-final set — they emit `"intermediate"` events instead of `"output"` events:
 
@@ -505,7 +505,7 @@ while pending_responses is not None:
 - **Order Matters**: Agents execute strictly in the order specified in the `participants` list
 - **Flexible Participants**: You can mix agents and custom executors in any order
 - **Custom Terminator Contract**: A custom executor used as the last participant must call `ctx.yield_output(AgentResponse(...))` to produce the terminal output
-- **Intermediate Outputs**: Set `intermediate_outputs=True` to surface every participant's output as a workflow `output` event, not just the last participant's
+- **Intermediate Outputs**: Use `intermediate_output_from=[...]` or `intermediate_output_from="all_other"` to surface participant progress as intermediate workflow events, not just the last participant's terminal output
 - **Tool Approval**: Use `@tool(approval_mode="always_require")` for sensitive operations that need human review
 - **Request Info**: Use `.with_request_info(agents=[...])` to pause after specific agents for external feedback
 

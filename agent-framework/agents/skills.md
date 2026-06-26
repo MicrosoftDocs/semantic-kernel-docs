@@ -299,14 +299,15 @@ The provider searches up to two levels deep.
 
 ### Customizing resource and script discovery
 
-By default, resources are discovered from `references/` and `assets/` subdirectories, and scripts from `scripts/`, per the [agentskills.io specification](https://agentskills.io/specification). Recognized resource extensions are `.md`, `.json`, `.yaml`, `.yml`, `.csv`, `.xml`, and `.txt`. Use `resource_directories`, `script_directories`, and `resource_extensions` to customize these defaults:
+By default, resources are discovered from `references/` and `assets/` subdirectories, and scripts from `scripts/`, per the [agentskills.io specification](https://agentskills.io/specification). Recognized resource extensions are `.md`, `.json`, `.yaml`, `.yml`, `.csv`, `.xml`, and `.txt`. Use `resource_extensions`, `script_extensions`, `resource_filter`, and `script_filter` to customize discovery:
 
 ```python
 skills_provider = SkillsProvider.from_paths(
     skill_paths=Path(__file__).parent / "skills",
     resource_extensions=(".md", ".txt"),
-    resource_directories=["docs", "templates"],
-    script_directories=["scripts", "tools"],
+    script_extensions=(".py", ".sh"),
+    resource_filter=lambda skill_name, path: path.startswith("references/"),
+    script_filter=lambda skill_name, path: path.startswith("scripts/"),
 )
 ```
 

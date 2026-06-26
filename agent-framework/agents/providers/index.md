@@ -24,7 +24,7 @@ Microsoft Agent Framework supports several types of agents to accommodate differ
 | [Ollama](./ollama.md) | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
 | [Foundry Local](./foundry-local.md) | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | [GitHub Copilot](./github-copilot.md) | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ |
-| [Copilot Studio](./copilot-studio.md) | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| [Copilot Studio](./copilot-studio.md) | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | [Custom](./custom.md) | Varies | Varies | Varies | Varies | Varies | Varies |
 
 > [!IMPORTANT]
@@ -68,6 +68,7 @@ Agent Framework supports many different inference services through chat clients.
 - **[Ollama](./ollama.md)** — Run open-source models locally.
 - **[GitHub Copilot](./github-copilot.md)** — GitHub Copilot SDK integration.
 - **[Copilot Studio](./copilot-studio.md)** — Integration with Microsoft Copilot Studio agents.
+- **[A2A](./agent-to-agent.md)** — Connect to remote agents via the Agent-to-Agent (A2A) protocol.
 - **[Custom](./custom.md)** — Build your own provider by implementing the `BaseAgent` class.
 
 :::zone-end

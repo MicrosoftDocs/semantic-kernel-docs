@@ -391,7 +391,7 @@ def spam_detection_orchestration(context: df.DurableOrchestrationContext):
     spam_result_raw = yield spam_agent.run(
         messages=f"Analyze this email for spam: {email['content']}",
         session=spam_thread,
-        response_format=SpamDetectionResult
+        options={"response_format": SpamDetectionResult},
     )
     spam_result = cast(SpamDetectionResult, spam_result_raw.get("structured_response"))
 
@@ -406,7 +406,7 @@ def spam_detection_orchestration(context: df.DurableOrchestrationContext):
     email_response_raw = yield email_agent.run(
         messages=f"Draft a professional response to: {email['content']}",
         session=email_thread,
-        response_format=EmailResponse
+        options={"response_format": EmailResponse},
     )
     email_response = cast(EmailResponse, email_response_raw.get("structured_response"))
 

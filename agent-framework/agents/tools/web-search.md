@@ -72,7 +72,7 @@ async def main() -> None:
 
     # Create web search tool with location context
     web_search_tool = client.get_web_search_tool(
-        user_location={"city": "Seattle", "region": "US"},
+        user_location={"city": "Seattle", "country": "US"},
     )
 
     agent = Agent(

@@ -288,14 +288,14 @@ Use `stream=True` to receive updates in real time as the remote agent processes 
 from agent_framework.a2a import A2AAgent
 
 async with A2AAgent(name="remote", url="https://a2a-agent.example.com") as agent:
-    async with agent.run("Write a short story about a robot.", stream=True) as stream:
-        async for update in stream:
-            for content in update.contents:
-                if content.text:
-                    print(content.text, end="", flush=True)
+    stream = agent.run("Write a short story about a robot.", stream=True)
+    async for update in stream:
+        for content in update.contents:
+            if content.text:
+                print(content.text, end="", flush=True)
 
-        final = await stream.get_final_response()
-        print(f"\n({len(final.messages)} message(s))")
+    final = await stream.get_final_response()
+    print(f"\n({len(final.messages)} message(s))")
 ```
 
 ## Long-Running Tasks

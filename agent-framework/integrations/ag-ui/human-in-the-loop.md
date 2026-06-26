@@ -851,7 +851,7 @@ Here's a client using `AGUIChatClient` that handles approval requests:
 import asyncio
 import os
 
-from agent_framework import Agent, ToolCallContent, ToolResultContent
+from agent_framework import Agent
 from agent_framework_ag_ui import AGUIChatClient
 
 
@@ -863,11 +863,12 @@ def display_approval_request(update) -> None:
     
     # Display tool call details from update contents
     for i, content in enumerate(update.contents, 1):
-        if isinstance(content, ToolCallContent):
+        if content.type == "function_approval_request":
+            function_call = content.function_call
             print(f"\nAction {i}:")
-            print(f"  Tool: \033[95m{content.name}\033[0m")
+            print(f"  Tool: \033[95m{function_call.name}\033[0m")
             print(f"  Arguments:")
-            for key, value in (content.arguments or {}).items():
+            for key, value in (function_call.arguments or {}).items():
                 print(f"    {key}: {value}")
     
     print("\n\033[93m" + "=" * 60 + "\033[0m")
@@ -879,7 +880,7 @@ async def main():
     print(f"Connecting to AG-UI server at: {server_url}\n")
 
     # Create AG-UI chat client
-    chat_client = AGUIChatClient(server_url=server_url)
+    chat_client = AGUIChatClient(endpoint=server_url)
     
     # Create agent with the chat client
     agent = Agent(
@@ -904,44 +905,21 @@ async def main():
             pending_approval_update = None
 
             async for update in agent.run(message, session=thread, stream=True):
-                # Check if this is an approval request
-                # (Approval requests are detected by specific metadata or content markers)
-                if update.additional_properties and update.additional_properties.get("requires_approval"):
+                # Check if this update carries an approval request.
+                if any(content.type == "function_approval_request" for content in update.contents):
                     pending_approval_update = update
                     display_approval_request(update)
                     break  # Exit the loop to handle approval
 
-                elif event_type == "RUN_FINISHED":
-                    print(f"\n\033[92m[Run Finished]\033[0m")
-
-                elif event_type == "RUN_ERROR":
-                    error_msg = event.get("message", "Unknown error")
-                    print(f"\n\033[91m[Error: {error_msg}]\033[0m")
+                if update.text:
+                    print(f"\033[96m{update.text}\033[0m", end="", flush=True)
 
             # Handle approval request
-            if pending_approval:
-                approval_id = pending_approval.get("approvalId")
+            if pending_approval_update is not None:
                 user_choice = input("\nApprove this action? (yes/no): ").strip().lower()
                 approved = user_choice in ("yes", "y")
-
-                print(f"\n\033[93m[Sending approval response: {approved}]\033[0m\n")
-
-                async for event in client.send_approval_response(approval_id, approved):
-                    event_type = event.get("type", "")
-
-                    if event_type == "TEXT_MESSAGE_CONTENT":
-                        print(f"\033[96m{event.get('delta', '')}\033[0m", end="", flush=True)
-
-                    elif event_type == "TOOL_CALL_RESULT":
-                        content = event.get("content", "")
-                        print(f"\033[94m[Tool Result: {content}]\033[0m")
-
-                    elif event_type == "RUN_FINISHED":
-                        print(f"\n\033[92m[Run Finished]\033[0m")
-
-                    elif event_type == "RUN_ERROR":
-                        error_msg = event.get("message", "Unknown error")
-                        print(f"\n\033[91m[Error: {error_msg}]\033[0m")
+                print(f"\n\033[93m[Approval selected: {approved}]\033[0m")
+                print("Send this decision through your AG-UI client's resume/approval payload.")
 
             print()
 
@@ -999,41 +977,7 @@ I understand. The transfer has been cancelled and no money was moved.
 
 ## Custom Confirmation Messages
 
-You can customize the approval messages by providing a custom confirmation strategy:
-
-```python
-from typing import Any
-from agent_framework_ag_ui import AgentFrameworkAgent, ConfirmationStrategy
-
-
-class BankingConfirmationStrategy(ConfirmationStrategy):
-    """Custom confirmation messages for banking operations."""
-    
-    def on_approval_accepted(self, steps: list[dict[str, Any]]) -> str:
-        """Message when user approves the action."""
-        tool_name = steps[0].get("toolCallName", "action")
-        return f"Thank you for confirming. Proceeding with {tool_name}..."
-    
-    def on_approval_rejected(self, steps: list[dict[str, Any]]) -> str:
-        """Message when user rejects the action."""
-        return "Action cancelled. No changes have been made to your account."
-    
-    def on_state_confirmed(self) -> str:
-        """Message when state changes are confirmed."""
-        return "Changes confirmed and applied."
-    
-    def on_state_rejected(self) -> str:
-        """Message when state changes are rejected."""
-        return "Changes discarded."
-
-
-# Use custom strategy
-wrapped_agent = AgentFrameworkAgent(
-    agent=agent,
-    require_confirmation=True,
-    confirmation_strategy=BankingConfirmationStrategy(),
-)
-```
+Customize approval and confirmation messages in your AG-UI client UI when rendering approval events from the server. The Python `AgentFrameworkAgent` exposes approval events; it doesn't take a server-side confirmation strategy object.
 
 ## Best Practices
 

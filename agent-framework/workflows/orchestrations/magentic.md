@@ -291,7 +291,6 @@ import asyncio
 from typing import cast
 
 from agent_framework import (
-    AgentResponse,
     AgentResponseUpdate,
     Message,
     WorkflowEvent,
@@ -309,9 +308,9 @@ task = (
 
 # Keep track of the last executor to format output nicely in streaming mode
 last_message_id: str | None = None
-final_response: AgentResponse | None = None
-async for event in workflow.run(task, stream=True):
-    if event.type == "output" and isinstance(event.data, AgentResponseUpdate):
+stream = workflow.run(task, stream=True)
+async for event in stream:
+    if event.type in ("intermediate", "output") and isinstance(event.data, AgentResponseUpdate):
         message_id = event.data.message_id
         if message_id != last_message_id:
             if last_message_id is not None:
@@ -334,13 +333,9 @@ async for event in workflow.run(task, stream=True):
         # Please refer to `with_plan_review` for proper human interaction during planning phases.
         await asyncio.get_event_loop().run_in_executor(None, input, "Press Enter to continue...")
 
-    elif event.type == "output" and isinstance(event.data, AgentResponse):
-        final_response = event.data
-
-# The output of the Magentic workflow is an AgentResponse with the manager's final answer
-if final_response:
-    output = final_response.messages[-1].text if final_response.messages else ""
-    print(output)
+result = await stream.get_final_response()
+if outputs := result.get_outputs():
+    print(outputs[-1])
 ```
 
 ::: zone-end
@@ -495,7 +490,7 @@ workflow = MagenticBuilder(
 
 pending_request: WorkflowEvent | None = None
 pending_responses: dict[str, MagenticPlanReviewResponse] | None = None
-final_response: AgentResponse | None = None
+final_response: object | None = None
 
 while not final_response:
     if pending_responses is not None:
@@ -505,7 +500,7 @@ while not final_response:
 
     last_message_id: str | None = None
     async for event in stream:
-        if event.type == "output" and isinstance(event.data, AgentResponseUpdate):
+        if event.type in ("intermediate", "output") and isinstance(event.data, AgentResponseUpdate):
             message_id = event.data.message_id
             if message_id != last_message_id:
                 if last_message_id is not None:
@@ -517,8 +512,9 @@ while not final_response:
         elif event.type == "request_info" and event.request_type is MagenticPlanReviewRequest:
             pending_request = event
 
-        elif event.type == "output" and isinstance(event.data, AgentResponse):
-            final_response = event.data
+    result = await stream.get_final_response()
+    if outputs := result.get_outputs():
+        final_response = outputs[-1]
 
     pending_responses = None
 

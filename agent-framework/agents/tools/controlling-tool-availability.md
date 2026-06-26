@@ -3,7 +3,7 @@ title: Controlling tool availability
 description: How to progressively expose tools, gate tool calls, and enforce ordering within an agent run (Python).
 zone_pivot_groups: programming-languages
 author: eavanvalkenburg
-ms.topic: conceptual
+ms.topic: article
 ms.author: edvan
 ms.date: 06/03/2026
 ms.service: agent-framework
@@ -62,7 +62,7 @@ from agent_framework import Agent, FunctionInvocationContext, tool
 from agent_framework.openai import OpenAIChatClient
 from pydantic import Field
 
-warnings.filterwarnings("ignore", category=UserWarning)  # suppress ExperimentalWarning for brevity
+warnings.filterwarnings("ignore", category=FutureWarning)  # suppress ExperimentalWarning for brevity
 
 
 @tool(approval_mode="never_require")
@@ -201,7 +201,7 @@ To require the model to call a specific tool as its first action, pass `tool_cho
 ```python
 result = await agent.run(
     "Update record REC-42 to status 'in-progress'.",
-    tool_choice={"mode": "required", "required_function_name": "get_record"},
+    options={"tool_choice": {"mode": "required", "required_function_name": "get_record"}},
 )
 ```
 
@@ -221,7 +221,7 @@ tool_choice: ToolMode = {"mode": "required", "required_function_name": "get_reco
 | **In-flight batch** | If the model requests several tools in one batch, all execute before the updated tool list is sent back. |
 | **Duplicate names** | Re-adding the exact same object is a no-op. Adding a different object whose name matches an existing tool raises `ValueError`. The entire batch is validated before any addition, so a duplicate midway through a list leaves the live list unchanged. |
 | **Outside-loop error** | Calling `add_tools` or `remove_tools` when `ctx.tools is None` raises `RuntimeError`. This happens when the function is invoked directly (for example via `FunctionTool.invoke`) rather than through the agent loop. |
-| **Experimental status** | Both helpers emit `ExperimentalWarning` on first call per process. Suppress with `warnings.filterwarnings("ignore", category=UserWarning)` if desired. |
+| **Experimental status** | Both helpers emit `ExperimentalWarning` on first call per process. Suppress with `warnings.filterwarnings("ignore", category=FutureWarning)` if desired. |
 | **Per-run scope** | The live tool list is a fresh copy created from `normalize_tools` at the start of each `agent.run()` call. The caller's original `tools` container is never mutated. |
 | **CodeAct exclusion** | Not available for `agent-framework-monty` or `agent-framework-hyperlight` CodeAct providers. |
 

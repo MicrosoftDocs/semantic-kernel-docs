@@ -132,23 +132,26 @@ app.Run();
 
 :::zone pivot="programming-language-python"
 
-Install the Azure Functions hosting package:
+Install the Azure Functions hosting package, Foundry client, and Azure authentication package:
 
 ```bash
-pip install agent-framework-azurefunctions --pre
+pip install agent-framework-azurefunctions agent-framework-foundry azure-identity
 ```
 
 Create an agent:
 
-:::code language="python" source="~/../agent-framework-code/python/samples/04-hosting/azure_functions/01_single_agent/function_app.py" range="13-27" highlight="12-15":::
+:::code language="python" source="~/../agent-framework-code/python/samples/04-hosting/azure_functions/01_single_agent/function_app.py" range="24-35" highlight="4-9":::
 
 Register the agent with `AgentFunctionApp`:
 
-:::code language="python" source="~/../agent-framework-code/python/samples/04-hosting/azure_functions/01_single_agent/function_app.py" range="30-31" highlight="2":::
+:::code language="python" source="~/../agent-framework-code/python/samples/04-hosting/azure_functions/01_single_agent/function_app.py" range="38-39" highlight="2":::
 
 Run locally with [Azure Functions Core Tools](/azure/azure-functions/functions-run-local):
 
 ```bash
+az login
+pip install -r requirements.txt
+# Start Azurite and copy local.settings.json.template to local.settings.json first.
 func start
 ```
 

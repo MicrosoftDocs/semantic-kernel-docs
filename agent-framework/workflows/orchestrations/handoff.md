@@ -317,7 +317,7 @@ from agent_framework import WorkflowEvent
 from agent_framework.orchestrations import HandoffAgentUserRequest
 
 # Start workflow with initial user message
-events = [event async for event in workflow.run_stream("I need help with my order")]
+events = [event async for event in workflow.run("I need help with my order", stream=True)]
 
 # Process events and collect pending input requests
 pending_requests = []
@@ -338,7 +338,7 @@ while pending_requests:
     # Send responses to all pending requests
     responses = {req.request_id: HandoffAgentUserRequest.create_response(user_input) for req in pending_requests}
     # You can also send a `HandoffAgentUserRequest.terminate()` to end the workflow early
-    events = [event async for event in workflow.run(responses=responses)]
+    events = [event async for event in workflow.run(responses=responses, stream=True)]
 
     # Process new events
     pending_requests = []
@@ -491,7 +491,7 @@ workflow = (
 pending_requests: list[WorkflowEvent] = []
 
 # Start workflow
-async for event in workflow.run_stream("My order 12345 arrived damaged. I need a refund."):
+async for event in workflow.run("My order 12345 arrived damaged. I need a refund.", stream=True):
     if event.type == "request_info":
         pending_requests.append(event)
 
@@ -522,7 +522,7 @@ while pending_requests:
 
     # Send all responses and collect new requests
     pending_requests = []
-    async for event in workflow.run(responses=responses):
+    async for event in workflow.run(responses=responses, stream=True):
         if event.type == "request_info":
             pending_requests.append(event)
         elif event.type == "output":
@@ -550,7 +550,7 @@ workflow = (
 
 # Initial run - workflow pauses when approval is needed
 pending_requests = []
-async for event in workflow.run_stream("I need a refund for order 12345"):
+async for event in workflow.run("I need a refund for order 12345", stream=True):
     if event.type == "request_info":
         pending_requests.append(event)
 
@@ -562,7 +562,7 @@ latest = sorted(checkpoints, key=lambda c: c.timestamp, reverse=True)[0]
 
 # Step 1: Restore checkpoint to reload pending requests
 restored_requests = []
-async for event in workflow.run_stream(checkpoint_id=latest.checkpoint_id):
+async for event in workflow.run(checkpoint_id=latest.checkpoint_id, stream=True):
     if event.type == "request_info":
         restored_requests.append(event)
 
@@ -574,7 +574,7 @@ for req in restored_requests:
     elif isinstance(req.data, HandoffAgentUserRequest):
         responses[req.request_id] = HandoffAgentUserRequest.create_response("Yes, please process the refund.")
 
-async for event in workflow.run(responses=responses):
+async for event in workflow.run(responses=responses, stream=True):
     if event.type == "output":
         print("Refund workflow completed!")
 ```
@@ -644,7 +644,7 @@ After broadcasting the response, the participant then checks whether it needs to
 - **HandoffBuilder**: Creates workflows with automatic handoff tool registration
 - **with_start_agent()**: Defines which agent receives user input first
 - **add_handoff()**: Configures specific handoff relationships between agents
-- **Output**: By default, `final_output_from` is set to **all participants**, so every agent's response surfaces as an `"output"` (terminal) event (`AgentResponse` in non-streaming mode, `AgentResponseUpdate` in streaming mode). To designate specific agents as intermediate sources instead, pass `intermediate_output_from=[agent_a, agent_b]` to `HandoffBuilder` — this implicitly demotes those agents from the default-final set so their responses become `"intermediate"` events. There is no overlap error; the demotion is silent and intentional.
+- **Output**: By default, `output_from` is set to **all participants**, so every agent's response surfaces as an `"output"` (terminal) event (`AgentResponse` in non-streaming mode, `AgentResponseUpdate` in streaming mode). To designate specific agents as intermediate sources instead, pass `intermediate_output_from=[agent_a, agent_b]` to `HandoffBuilder` — this implicitly demotes those agents from the default output set so their responses become `"intermediate"` events. There is no overlap error; the demotion is silent and intentional.
 - **Context Preservation**: Full conversation history is maintained across all handoffs
 - **Request/Response Cycle**: Workflow requests user input, processes responses, and continues until termination condition is met
 - **Tool Approval**: Use `@tool(approval_mode="always_require")` for sensitive operations that need human approval

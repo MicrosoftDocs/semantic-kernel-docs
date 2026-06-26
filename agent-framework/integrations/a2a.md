@@ -282,14 +282,14 @@ A2A naturally supports streaming via Server-Sent Events — updates arrive in re
 
 ```python
 async with A2AAgent(name="remote", url="https://a2a-agent.example.com") as agent:
-    async with agent.run("Tell me about yourself", stream=True) as stream:
-        async for update in stream:
-            for content in update.contents:
-                if content.text:
-                    print(content.text, end="", flush=True)
+    stream = agent.run("Tell me about yourself", stream=True)
+    async for update in stream:
+        for content in update.contents:
+            if content.text:
+                print(content.text, end="", flush=True)
 
-        final = await stream.get_final_response()
-        print(f"\n({len(final.messages)} message(s))")
+    final = await stream.get_final_response()
+    print(f"\n({len(final.messages)} message(s))")
 ```
 
 ### Long-Running Tasks

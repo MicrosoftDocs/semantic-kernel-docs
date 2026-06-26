@@ -29,12 +29,12 @@ The Agent Framework repository includes sample agents and workflows in the `pyth
 
 | Sample | Description |
 |--------|-------------|
-| [weather_agent_azure](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/devui/weather_agent_azure) | A weather agent using Azure OpenAI |
-| [foundry_agent](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/devui/foundry_agent) | Agent using Microsoft Foundry |
-| [azure_responses_agent](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/devui/azure_responses_agent) | Agent using Azure Responses API |
-| [fanout_workflow](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/devui/fanout_workflow) | Workflow demonstrating fan-out pattern |
-| [spam_workflow](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/devui/spam_workflow) | Workflow for spam detection |
-| [workflow_agents](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/devui/workflow_agents) | Multiple agents in a workflow |
+| [agent_weather](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/devui/agent_weather) | A weather agent using Microsoft Foundry |
+| [agent_foundry](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/devui/agent_foundry) | Minimal agent using Microsoft Foundry |
+| [workflow_declarative](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/devui/workflow_declarative) | YAML-defined workflow |
+| [workflow_fanout](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/devui/workflow_fanout) | Workflow demonstrating fan-out/fan-in patterns |
+| [workflow_spam](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/devui/workflow_spam) | Workflow for spam detection |
+| [workflow_with_agents](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/devui/workflow_with_agents) | Multiple agents in a workflow |
 
 ## Running with DevUI
 
@@ -87,14 +87,16 @@ agent = Agent(
 
 ```python
 # my_workflow/__init__.py
-from agent_framework.workflows import WorkflowBuilder
+from agent_framework import WorkflowBuilder, WorkflowContext, executor
+from typing_extensions import Never
 
-# Define your workflow
-workflow = (
-    WorkflowBuilder(start_executor="my_executor")
-    # Add executors and edges
-    .build()
-)
+
+@executor(id="my_executor")
+async def my_executor(message: str, ctx: WorkflowContext[Never, str]) -> None:
+    await ctx.yield_output(message)
+
+
+workflow = WorkflowBuilder(start_executor=my_executor).build()
 ```
 
 ## Related Resources

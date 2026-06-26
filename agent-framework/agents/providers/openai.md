@@ -41,9 +41,10 @@ using Microsoft.Agents.AI;
 using OpenAI;
 
 OpenAIClient client = new OpenAIClient("<your_api_key>");
-var responsesClient = client.GetResponseClient("gpt-4o-mini");
+var responsesClient = client.GetResponsesClient();
 
 AIAgent agent = responsesClient.AsAIAgent(
+    model: "gpt-4o-mini",
     instructions: "You are a helpful coding assistant.",
     name: "CodeHelper");
 
@@ -319,7 +320,7 @@ async def thread_example():
     agent = OpenAIChatClient().as_agent(
         instructions="You are a helpful assistant.",
     )
-    session = await agent.create_session()
+    session = agent.create_session()
 
     result1 = await agent.run("My name is Alice", session=session)
     print(result1)

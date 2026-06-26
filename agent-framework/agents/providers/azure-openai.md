@@ -57,9 +57,10 @@ AzureOpenAIClient client = new AzureOpenAIClient(
 The Responses client is the recommended primary client and provides the richest tool support including code interpreter, file search, web search, and hosted MCP.
 
 ```csharp
-var responsesClient = client.GetResponseClient("gpt-4o-mini");
+var responsesClient = client.GetResponsesClient();
 
 AIAgent agent = responsesClient.AsAIAgent(
+    model: "gpt-4o-mini",
     instructions: "You are a helpful coding assistant.",
     name: "CodeHelper");
 
