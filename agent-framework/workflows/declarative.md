@@ -99,7 +99,7 @@ The YAML structure differs slightly between C# and Python implementations. See t
 
 ## Action Types
 
-Declarative workflows support a wide range of action kinds covering variable management, control flow, agent and tool invocation, HTTP and MCP integration, human-in-the-loop, and conversation control. The complete language-specific reference appears in each zone below; for an at-a-glance availability matrix across both languages, see [Quick Reference Table](#quick-reference-table) at the bottom of this article.
+Declarative workflows support a wide range of action kinds covering variable management, control flow, agent and tool invocation, HTTP and MCP integration, human-in-the-loop, and conversation control. The complete language-specific reference appears in each zone below.
 
 ::: zone pivot="programming-language-csharp"
 
