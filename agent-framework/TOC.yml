@@ -42,6 +42,8 @@ items:
     href: agents/evaluation.md
   - name: Agent Skills
     href: agents/skills.md
+  - name: Agent Harnesses
+    href: agents/harness.md
   - name: CodeAct
     href: agents/code_act.md
   - name: Agent Safety
