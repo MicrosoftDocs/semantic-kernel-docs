@@ -296,7 +296,7 @@ class LoggingFunctionMiddleware(FunctionMiddleware):
 
 Chat middleware intercepts chat requests sent to AI models. It uses the `ChatContext` which contains:
 
-- `chat_client`: The chat client being invoked
+- `client`: The chat client being invoked
 - `messages`: List of messages being sent to the AI service
 - `options`: The options for the chat request
 - `stream`: Boolean indicating if this is a streaming invocation

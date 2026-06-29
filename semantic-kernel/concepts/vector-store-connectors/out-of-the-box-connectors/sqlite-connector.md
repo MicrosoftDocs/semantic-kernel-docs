@@ -3,7 +3,7 @@ title: Using the Semantic Kernel SQLite Vector Store connector (Preview)
 description: Contains information on how to use a Semantic Kernel Vector store connector to access and manipulate data in SQLite.
 zone_pivot_groups: programming-languages
 author: dmytrostruk
-ms.topic: conceptual
+ms.topic: article
 ms.author: dmytrostruk
 ms.date: 10/24/2024
 ms.service: semantic-kernel

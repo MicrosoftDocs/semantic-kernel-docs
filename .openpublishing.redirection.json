@@ -907,7 +907,12 @@
     },
     {
       "source_path": "agent-framework/tutorials/agents/structured-output.md",
-      "redirect_url": "/agent-framework/agents/structured-output",
+      "redirect_url": "/agent-framework/agents/structured-outputs",
+      "redirect_document_id": false
+    },
+    {
+      "source_path": "agent-framework/agents/structured-output.md",
+      "redirect_url": "/agent-framework/agents/structured-outputs",
       "redirect_document_id": true
     },
     {
@@ -916,13 +921,18 @@
       "redirect_document_id": true
     },
     {
+      "source_path": "agent-framework/integrations/azure-functions.md",
+      "redirect_url": "/agent-framework/integrations/durable-extension",
+      "redirect_document_id": true
+    },
+    {
       "source_path": "agent-framework/tutorials/agents/create-and-run-durable-agent.md",
-      "redirect_url": "/agent-framework/integrations/azure-functions",
+      "redirect_url": "/agent-framework/integrations/durable-extension",
       "redirect_document_id": true
     },
     {
       "source_path": "agent-framework/tutorials/agents/orchestrate-durable-agents.md",
-      "redirect_url": "/agent-framework/integrations/azure-functions",
+      "redirect_url": "/agent-framework/integrations/durable-extension",
       "redirect_document_id": false
     },
     {
@@ -1072,12 +1082,12 @@
     },
     {
       "source_path": "agent-framework/user-guide/agents/agent-types/durable-agent/create-durable-agent.md",
-      "redirect_url": "/agent-framework/integrations/azure-functions",
+      "redirect_url": "/agent-framework/integrations/durable-extension",
       "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/user-guide/agents/agent-types/durable-agent/features.md",
-      "redirect_url": "/agent-framework/integrations/azure-functions",
+      "redirect_url": "/agent-framework/integrations/durable-extension",
       "redirect_document_id": false
     },
     {

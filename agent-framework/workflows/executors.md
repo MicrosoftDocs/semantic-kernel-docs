@@ -3,7 +3,7 @@ title: Microsoft Agent Framework Workflows - Executors
 description: In-depth look at Executors in Microsoft Agent Framework Workflows.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
-ms.topic: conceptual
+ms.topic: article
 ms.author: taochen
 ms.date: 03/24/2026
 ms.service: agent-framework
@@ -237,6 +237,32 @@ class LogExecutor(Executor):
     async def handle(self, message: str, ctx: WorkflowContext) -> None:
         print("Doing some work...")
 ```
+
+::: zone-end
+
+## Designating Terminal and Intermediate Output Executors
+
+::: zone pivot="programming-language-python"
+
+Which executors contribute to the workflow's terminal answer and which emit observational progress is a **build-time** decision configured on `WorkflowBuilder`, not a per-emission flag.
+
+- `output_from` — executors whose `ctx.yield_output(...)` calls produce `"output"` events and are returned by `WorkflowRunResult.get_outputs()`.
+- `intermediate_output_from` — executors whose `ctx.yield_output(...)` calls produce `"intermediate"` events and are returned by `WorkflowRunResult.get_intermediate_outputs()`.
+
+```python
+from agent_framework import WorkflowBuilder
+
+workflow = WorkflowBuilder(
+    start_executor=analysis_executor,
+    output_from=[summary_executor],
+    intermediate_output_from=[analysis_executor],
+).build()
+```
+
+> [!IMPORTANT]
+> `ctx.yield_output(...)` has **no** per-emission flag. The same call is labelled `"output"` or `"intermediate"` solely based on the builder's designation. There is no `ctx.yield_intermediate(...)` API — designation does not vary per yield.
+
+Both lists are optional. If either output-selection list is provided, an executor that appears in neither list can still send messages to downstream executors via `ctx.send_message(...)`, but its `yield_output` calls are hidden. If both lists are omitted, every `yield_output` still emits `"output"` for compatibility.
 
 ::: zone-end
 

@@ -3,7 +3,7 @@ title: Function Invocation
 description: Describes function invocation types SK supports.
 zone_pivot_groups: programming-languages
 author: SergeyMenshykh
-ms.topic: conceptual
+ms.topic: article
 ms.author: semenshi
 ms.service: semantic-kernel
 ---

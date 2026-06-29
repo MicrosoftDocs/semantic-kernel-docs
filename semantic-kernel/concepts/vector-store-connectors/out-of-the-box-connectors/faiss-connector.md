@@ -3,7 +3,7 @@ title: Using the Semantic Kernel Faiss VectorYou can then create a vector store 
 description: Contains information on how to use a Semantic Kernel Vector store connector to access and manipulate data in an in-memory Faiss vector store.
 zone_pivot_groups: programming-languages
 author: eavanvalkenburg
-ms.topic: conceptual
+ms.topic: article
 ms.author: edvan
 ms.date: 03/13/2025
 ms.service: semantic-kernel

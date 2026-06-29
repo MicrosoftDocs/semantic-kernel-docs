@@ -3,7 +3,7 @@ title: Semantic Kernel Text Search Plugins (Preview)
 description: Describes how to create and use Semantic Kernel text search plugins. Includes samples showing how to use filters and how to create a custom search plugin.
 zone_pivot_groups: programming-languages
 author: markwallace
-ms.topic: conceptual
+ms.topic: article
 ms.author: markwallace
 ms.date: 07/10/2024
 ms.service: semantic-kernel

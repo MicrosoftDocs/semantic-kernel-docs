@@ -2,7 +2,7 @@
 title: Using the Liquid prompt template language 
 description: Learn how to use the Liquid prompt template language with Semantic Kernel.
 author: markwallace
-ms.topic: conceptual
+ms.topic: article
 ms.author: markwallace
 ms.date: 10/23/2024
 ms.service: semantic-kernel

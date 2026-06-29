@@ -3,7 +3,7 @@ title: Protecting against Prompt Injection Attacks
 description: Details how to protect against Prompt Injection Attacks in Chat Prompts
 zone_pivot_groups: programming-languages
 author: markwallace
-ms.topic: conceptual
+ms.topic: article
 ms.author: markwallace
 ms.date: 11/27/2024
 ms.service: semantic-kernel

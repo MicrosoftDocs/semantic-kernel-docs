@@ -3,7 +3,7 @@ title: Understanding the Experimental Attribute in Semantic Kernel
 description: Learn about experimental attribute in Semantic Kernel, why they exist, and how to use them.
 zone_pivot_groups: programming-languages
 author: shethaadit
-ms.topic: conceptual
+ms.topic: article
 ms.author: shethaadit
 ms.date: 02/21/2025
 ms.service: semantic-kernel

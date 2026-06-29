@@ -3,7 +3,7 @@ title: Using the Semantic Kernel JDBC Vector Store connector in Java (Experiment
 description: Contains information on how to use a Semantic Kernel Vector store connector to access and manipulate data in JDBC for Java.
 zone_pivot_groups: programming-languages
 author: milderhc
-ms.topic: conceptual
+ms.topic: article
 ms.author: milderhc
 ms.date: 10/11/2024
 ms.service: semantic-kernel
