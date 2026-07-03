@@ -72,10 +72,8 @@ productDirectory:
       links:
         - url: /agent-framework/integrations/index
           text: Integrations overview
-        - url: /agent-framework/integrations/azure-functions
-          text: Azure Functions
-        - url: /agent-framework/integrations/azure-functions
-          text: Durable Task
+        - url: /agent-framework/integrations/durable-extension
+          text: Durable Extension
         - url: /agent-framework/integrations/a2a
           text: A2A Protocol
         - url: /agent-framework/devui/index

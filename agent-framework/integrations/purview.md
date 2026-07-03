@@ -80,7 +80,7 @@ Console.WriteLine(response);
 ```python
 import asyncio
 import os
-from agent_framework import Agent, Message, Role
+from agent_framework import Agent, Message
 from agent_framework.openai import OpenAIChatCompletionClient
 from agent_framework.microsoft import PurviewPolicyMiddleware, PurviewSettings
 from azure.identity import AzureCliCredential, InteractiveBrowserCredential
@@ -110,7 +110,7 @@ async def main():
     response = await agent.run(Message(role='user', contents=["Summarize zero trust in one sentence."]))
     print(response)
 
-  if __name__ == "__main__":
+if __name__ == "__main__":
     asyncio.run(main())
 ```
 

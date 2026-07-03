@@ -445,7 +445,6 @@ from agent_framework import Agent
 from agent_framework.openai import OpenAIChatCompletionClient
 from agent_framework_ag_ui import (
     AgentFrameworkAgent,
-    RecipeConfirmationStrategy,
     add_agent_framework_fastapi_endpoint,
 )
 from azure.identity import AzureCliCredential
@@ -508,7 +507,6 @@ recipe_agent = AgentFrameworkAgent(
     predict_state_config={
         "recipe": {"tool": "update_recipe", "tool_argument": "recipe"},
     },
-    confirmation_strategy=RecipeConfirmationStrategy(),
 )
 
 # Create FastAPI app
@@ -606,7 +604,6 @@ import json
 import os
 from typing import Any
 
-import jsonpatch
 from agent_framework import Agent, Message, Role
 from agent_framework_ag_ui import AGUIChatClient
 
@@ -617,7 +614,7 @@ async def main():
     print(f"Connecting to AG-UI server at: {server_url}\n")
 
     # Create AG-UI chat client
-    chat_client = AGUIChatClient(server_url=server_url)
+    chat_client = AGUIChatClient(endpoint=server_url)
 
     # Wrap with Agent for convenient API
     agent = Agent(
@@ -652,21 +649,10 @@ async def main():
                 if update.text:
                     print(update.text, end="", flush=True)
 
-                # Handle state updates
+                # Handle state updates surfaced through AG-UI events.
                 for content in update.contents:
-                    # STATE_SNAPSHOT events come as DataContent with application/json
-                    if hasattr(content, 'media_type') and content.media_type == 'application/json':
-                        # Parse state snapshot
-                        state_data = json.loads(content.data.decode() if isinstance(content.data, bytes) else content.data)
-                        state = state_data
-                        print("\n[State Snapshot Received]")
-
-                    # STATE_DELTA events are handled similarly
-                    # Apply JSON Patch deltas to maintain state
-                    if hasattr(content, 'delta') and content.delta:
-                        patch = jsonpatch.JsonPatch(content.delta)
-                        state = patch.apply(state)
-                        print("\n[State Delta Applied]")
+                    if content.type == "data" and getattr(content, "media_type", None) == "application/json":
+                        print("\n[JSON state payload received]")
 
             print(f"\n\nCurrent state: {json.dumps(state, indent=2)}")
             print()
@@ -676,7 +662,7 @@ async def main():
 
 
 if __name__ == "__main__":
-    # Install dependencies: pip install agent-framework-ag-ui jsonpatch --pre
+    # Install dependencies: pip install agent-framework-ag-ui --pre
     asyncio.run(main())
 ```
 
@@ -693,28 +679,20 @@ The `AGUIChatClient` provides:
 > [!TIP]
 > Use `AGUIChatClient` with `Agent` to get the full benefit of the agent framework's features like conversation history, tool execution, and middleware support.
 
-## Using Confirmation Strategies
+## Confirming predicted state
 
-The `confirmation_strategy` parameter allows you to customize approval messages for your domain:
+Set `require_confirmation=True` on `AgentFrameworkAgent` when predicted state changes should wait for client confirmation before being applied:
 
 ```python
-from agent_framework_ag_ui import RecipeConfirmationStrategy
-
 recipe_agent = AgentFrameworkAgent(
     agent=agent,
     state_schema={"recipe": {"type": "object", "description": "The current recipe"}},
     predict_state_config={"recipe": {"tool": "update_recipe", "tool_argument": "recipe"}},
-    confirmation_strategy=RecipeConfirmationStrategy(),
+    require_confirmation=True,
 )
 ```
 
-Available strategies:
-- `DefaultConfirmationStrategy()` - Generic messages for any agent
-- `RecipeConfirmationStrategy()` - Recipe-specific messages
-- `DocumentWriterConfirmationStrategy()` - Document editing messages
-- `TaskPlannerConfirmationStrategy()` - Task planning messages
-
-You can also create custom strategies by inheriting from `ConfirmationStrategy` and implementing the required methods.
+Customize confirmation copy in your AG-UI client UI when rendering the confirmation event.
 
 ## Example Interaction
 
@@ -814,7 +792,6 @@ recipe_agent = AgentFrameworkAgent(
     state_schema={"recipe": {"type": "object", "description": "The current recipe"}},
     predict_state_config={"recipe": {"tool": "update_recipe", "tool_argument": "recipe"}},
     require_confirmation=True,  # Require approval for state changes
-    confirmation_strategy=RecipeConfirmationStrategy(),
 )
 ```
 
@@ -957,18 +934,9 @@ agent = Agent(
 )
 ```
 
-### Use Confirmation Strategies
+### Customize confirmation UI
 
-Customize approval messages for your domain:
-
-```python
-from agent_framework_ag_ui import RecipeConfirmationStrategy
-
-recipe_agent = AgentFrameworkAgent(
-    agent=agent,
-    confirmation_strategy=RecipeConfirmationStrategy(),  # Domain-specific messages
-)
-```
+Customize approval and state-confirmation messages in your AG-UI client when rendering confirmation events from the server.
 
 ## Next Steps
 

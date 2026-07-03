@@ -3,7 +3,7 @@ title: Storage
 description: Learn built-in storage modes and how to persist session state or plug in external storage.
 zone_pivot_groups: programming-languages
 author: eavanvalkenburg
-ms.topic: conceptual
+ms.topic: article
 ms.author: edvan
 ms.date: 02/13/2026
 ms.service: agent-framework

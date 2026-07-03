@@ -59,7 +59,7 @@ The following example shows how to create an agent with the File Search tool and
 
 import asyncio
 
-from agent_framework import Agent, Content
+from agent_framework import Agent
 from agent_framework.openai import OpenAIChatClient
 
 """
@@ -72,7 +72,7 @@ for direct document-based question answering and information retrieval.
 # Helper functions
 
 
-async def create_vector_store(client: OpenAIChatClient) -> tuple[str, Content]:
+async def create_vector_store(client: OpenAIChatClient) -> tuple[str, str]:
     """Create a vector store with sample documents."""
     file = await client.client.files.create(
         file=("todays_weather.txt", b"The weather today is sunny with a high of 75F."), purpose="user_data"
@@ -85,7 +85,7 @@ async def create_vector_store(client: OpenAIChatClient) -> tuple[str, Content]:
     if result.last_error is not None:
         raise Exception(f"Vector store file processing failed with status: {result.last_error.message}")
 
-    return file.id, Content.from_hosted_vector_store(vector_store_id=vector_store.id)
+    return file.id, vector_store.id
 
 
 async def delete_vector_store(client: OpenAIChatClient, file_id: str, vector_store_id: str) -> None:

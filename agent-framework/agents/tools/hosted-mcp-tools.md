@@ -2,9 +2,9 @@
 title: MCP and Foundry Agents
 description: Using MCP with Foundry Agents
 zone_pivot_groups: programming-languages
-author: markwallace
+author: moonbox3
 ms.topic: reference
-ms.author: markwallace
+ms.author: evmattso
 ms.date: 04/01/2026
 ms.service: agent-framework
 ---
@@ -247,6 +247,9 @@ if __name__ == "__main__":
 
 The Python Agent Framework provides seamless integration with Foundry's hosted MCP capabilities, enabling secure and scalable access to external tools while maintaining the flexibility and control needed for production applications.
 
+> [!TIP]
+> MCP tools can also be bundled into **Foundry toolboxes** — named, versioned server-side collections of hosted tool configurations. Toolboxes let you manage tool configuration once and reuse it across agents. See the [Toolboxes section on the Microsoft Foundry provider page](../providers/microsoft-foundry.md#toolboxes) for details on fetching toolboxes and the MCP consumption path.
+
 ### Complete example
 
 ```python
@@ -256,8 +259,7 @@ import asyncio
 import os
 
 from agent_framework import Agent
-from agent_framework.foundry import FoundryChatClient
-from azure.identity import AzureCliCredential
+from agent_framework.openai import OpenAIChatClient
 from dotenv import load_dotenv
 
 """
@@ -273,8 +275,8 @@ Prerequisites:
    - For read-only operations, you can use more restrictive scopes
 2. Environment variables:
    - GITHUB_PAT: Your GitHub Personal Access Token (required)
-   - FOUNDRY_PROJECT_ENDPOINT: Your Foundry project endpoint (required)
-   - FOUNDRY_MODEL: Your Foundry model deployment name (required)
+   - OPENAI_API_KEY: Your OpenAI API key (required)
+   - OPENAI_MODEL: Your OpenAI model ID (required)
 """
 
 
@@ -298,7 +300,8 @@ async def github_mcp_example() -> None:
     # 4. Create agent with the GitHub MCP tool using instance method
     # The MCP tool manages the connection to the MCP server and makes its tools available
     # Set approval_mode="never_require" to allow the MCP tool to execute without approval
-    client = FoundryChatClient(credential=AzureCliCredential())
+    client = OpenAIChatClient()
+    # This hosted MCP tool is executed remotely by OpenAI, not locally by your application.
     github_mcp_tool = client.get_mcp_tool(
         name="GitHub",
         url="https://api.githubcopilot.com/mcp/",

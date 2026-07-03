@@ -513,7 +513,7 @@ async def main():
     print(f"Connecting to AG-UI server at: {server_url}\n")
 
     # Create AG-UI chat client
-    chat_client = AGUIChatClient(server_url=server_url)
+    chat_client = AGUIChatClient(endpoint=server_url)
 
     # Create agent with the chat client
     agent = Agent(

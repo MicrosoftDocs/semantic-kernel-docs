@@ -144,7 +144,7 @@ chat_client = OpenAIChatCompletionClient(
 agent = Agent(
     name="my_test_agent",
     client=chat_client,
-    system_message="You are a helpful assistant.",
+    instructions="You are a helpful assistant.",
 )
 ```
 

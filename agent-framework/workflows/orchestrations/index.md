@@ -2,7 +2,7 @@
 title: Workflow orchestrations in Agent Framework
 description: Multi-agent orchestration patterns including sequential, concurrent, handoff, group chat, and magentic orchestrations.
 author: eavanvalkenburg
-ms.topic: conceptual
+ms.topic: article
 ms.author: edvan
 ms.date: 02/12/2026
 ms.service: agent-framework

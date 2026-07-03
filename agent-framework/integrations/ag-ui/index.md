@@ -48,7 +48,9 @@ The Agent Framework AG-UI integration supports all 7 AG-UI protocol features:
 
 ## Build agent UIs with CopilotKit
 
-[CopilotKit](https://copilotkit.ai/) provides rich UI components for building agent user interfaces based on the standard AG-UI protocol. CopilotKit supports streaming chat interfaces, frontend & backend tool calling, human-in-the-loop interactions, generative UI, shared state, and much more. You can see a examples of the various agent UI scenarios that CopilotKit supports in the [AG-UI Dojo](https://dojo.ag-ui.com/microsoft-agent-framework-dotnet) sample application.
+[CopilotKit](https://copilotkit.ai/) provides rich UI components for building agent user interfaces based on the standard AG-UI protocol. CopilotKit supports streaming chat interfaces, frontend & backend tool calling, human-in-the-loop interactions, generative UI, shared state, and much more. You can see examples of the various agent UI scenarios that CopilotKit supports in the [AG-UI Dojo](https://dojo.ag-ui.com/microsoft-agent-framework-dotnet) sample application.
+
+To connect a CopilotKit React frontend to an Agent Framework AG-UI backend, register your endpoint as an `HttpAgent` in the CopilotKit runtime. This allows CopilotKit's frontend tools to flow through as AG-UI client tools, and all AG-UI features (streaming, approvals, state sync) work automatically.
 
 CopilotKit helps you focus on your agent’s capabilities while delivering a polished user experience without reinventing the wheel.
 To learn more about getting started with Microsoft Agent Framework and CopilotKit, see the [Microsoft Agent Framework integration for CopilotKit](https://docs.copilotkit.ai/microsoft-agent-framework) documentation.
@@ -136,8 +138,8 @@ To get started with AG-UI integration:
 
 1. **[Getting Started](getting-started.md)**: Build your first AG-UI server and client
 2. **[Backend Tool Rendering](backend-tool-rendering.md)**: Add function tools to your agents
-<!-- 3. **[Human-in-the-Loop](#)**: Implement approval workflows -->
-<!-- 4. **[State Management](#)**: Synchronize state between client and server -->
+3. **[Human-in-the-Loop](human-in-the-loop.md)**: Implement approval workflows
+4. **[State Management](state-management.md)**: Synchronize state between client and server
 
 ## Additional Resources
 
@@ -244,14 +246,17 @@ To get started with AG-UI integration:
 
 1. **[Getting Started](getting-started.md)**: Build your first AG-UI server and client
 2. **[Backend Tool Rendering](backend-tool-rendering.md)**: Add function tools to your agents
-<!-- 3. **[Human-in-the-Loop](#)**: Implement approval workflows -->
-<!-- 4. **[State Management](#)**: Synchronize state between client and server -->
+3. **[Workflows](workflows.md)**: Expose multi-agent workflows through AG-UI
+4. **[Human-in-the-Loop](human-in-the-loop.md)**: Implement approval workflows
+5. **[MCP Apps Compatibility](mcp-apps.md)**: Use MCP Apps with your AG-UI endpoint
+6. **[State Management](state-management.md)**: Synchronize state between client and server
 
 ## Additional Resources
 
 - [Agent Framework Documentation](../../overview/index.md)
 - [AG-UI Protocol Documentation](https://docs.ag-ui.com/introduction)
 - [AG-UI Dojo App](https://dojo.ag-ui.com/) - Example application demonstrating Agent Framework integration
+- [CopilotKit MAF Integration](https://docs.copilotkit.ai/microsoft-agent-framework) - Connect CopilotKit React frontends to AG-UI backends
 - [Agent Framework GitHub Repository](https://github.com/microsoft/agent-framework)
 
 ::: zone-end

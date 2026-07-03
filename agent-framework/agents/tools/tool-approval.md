@@ -155,6 +155,7 @@ async with Agent(
     tools=[get_weather, get_weather_detail],
 ) as agent:
     # Agent is ready to use
+    pass
 ```
 
 Since you now have a function that requires approval, the agent might respond with a request for approval instead of executing the function directly and returning the result.
@@ -165,6 +166,8 @@ result = await agent.run("What is the detailed weather like in Amsterdam?")
 
 if result.user_input_requests:
     for user_input_needed in result.user_input_requests:
+        if user_input_needed.function_call is None:
+            continue
         print(f"Function: {user_input_needed.function_call.name}")
         print(f"Arguments: {user_input_needed.function_call.arguments}")
 ```
@@ -172,7 +175,7 @@ if result.user_input_requests:
 If there are any function approval requests, the detail of the function call including name and arguments can be found in the `function_call` property on the user input request.
 This can be shown to the user, so that they can decide whether to approve or reject the function call.
 
-Once the user has provided their input, you can create a response using the `create_response` method on the user input request.
+Once the user has provided their input, you can create a response using the `to_function_approval_response` method on the user input request.
 Pass `True` to approve the function call, or `False` to reject it.
 
 The response can then be passed to the agent in a new `Message`, to get the result back from the agent.
@@ -186,7 +189,7 @@ user_approval = True  # or False to reject
 # Create the approval response
 approval_message = Message(
     role="user",
-    contents=[user_input_needed.create_response(user_approval)]
+    contents=[user_input_needed.to_function_approval_response(user_approval)]
 )
 
 # Continue the conversation with the approval
@@ -218,6 +221,8 @@ async def handle_approvals(query: str, agent) -> str:
         new_inputs = [query]
 
         for user_input_needed in result.user_input_requests:
+            if user_input_needed.function_call is None:
+                continue
             print(f"Approval needed for: {user_input_needed.function_call.name}")
             print(f"Arguments: {user_input_needed.function_call.arguments}")
 
@@ -229,7 +234,7 @@ async def handle_approvals(query: str, agent) -> str:
 
             # Add the user's approval response
             new_inputs.append(
-                Message(role="user", contents=[user_input_needed.create_response(user_approval)])
+                Message(role="user", contents=[user_input_needed.to_function_approval_response(user_approval)])
             )
 
         # Continue with all the context

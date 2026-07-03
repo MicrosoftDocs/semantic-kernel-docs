@@ -3,7 +3,7 @@ title: Inspection of telemetry data with Application Insights
 description: Send telemetry data to Application Insights
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
-ms.topic: conceptual
+ms.topic: article
 ms.author: taochen
 ms.date: 09/12/2024
 ms.service: semantic-kernel
