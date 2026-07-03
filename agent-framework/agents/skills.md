@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: SergeyMenshykh
 ms.topic: article
 ms.author: semenshi
-ms.date: 05/15/2026
+ms.date: 07/02/2026
 ms.service: agent-framework
 ---
 
@@ -78,13 +78,17 @@ This pattern keeps the agent's context window lean while giving it access to dee
 
 ## Providing skills to an agent
 
-`AgentSkillsProvider` (C#) and `SkillsProvider` (Python) are context providers that make skills available to agents. They support three skill sources:
+Working with skills involves three building blocks:
 
-- **File-based** - skills discovered from `SKILL.md` files in filesystem directories
-- **Code-defined** - skills defined inline in code using `AgentInlineSkill` (C#) or `InlineSkill` (Python)
-- **Class-based** - skills encapsulated in a class deriving from `AgentClassSkill<T>` (C#) or `ClassSkill` (Python)
+- **Provider** - `AgentSkillsProvider` (C#) or `SkillsProvider` (Python) is a context provider that exposes skills to an agent. It advertises the available skills in the system prompt and registers the tools the agent uses to load skills, read resources, and run scripts.
+- **Sources** - a source supplies skills to the provider. Skills can come from several source types:
+  - **File-based** - skills discovered from `SKILL.md` files in filesystem directories.
+  - **Code-defined** - skills defined inline in code using `AgentInlineSkill` (C#) or `InlineSkill` (Python).
+  - **Class-based** - skills encapsulated in a class deriving from `AgentClassSkill<T>` (C#) or `ClassSkill` (Python).
+  - **MCP-based** - skills discovered from MCP (Model Context Protocol) servers via `UseMcpSkills` (C#) or `MCPSkillsSource` (Python).
+- **Builder** - `AgentSkillsProviderBuilder` (C#) assembles multiple sources into a single provider, applying aggregation, deduplication, caching, and optional filtering. In Python, compose source classes such as `AggregatingSkillsSource`, `FilteringSkillsSource`, and `DeduplicatingSkillsSource` directly.
 
-For mixing multiple sources in one provider, use `AgentSkillsProviderBuilder` (C#) or compose source classes such as `AggregatingSkillsSource`, `FilteringSkillsSource`, and `DeduplicatingSkillsSource` (Python) - see [Builder: advanced multi-source scenarios](#builder-advanced-multi-source-scenarios) (C#) or [Source composition: advanced multi-source scenarios](#source-composition-advanced-multi-source-scenarios) (Python).
+The following sections show how to create skills of each source type, then how to combine sources and construct a provider from them.
 
 :::zone pivot="programming-language-csharp"
 
@@ -144,25 +148,37 @@ var skillsProvider = new AgentSkillsProvider(
 
 The provider searches up to two levels deep.
 
-### Customizing resource discovery
+### Customizing resource and script discovery
 
-By default, the provider recognizes resources with extensions `.md`, `.json`, `.yaml`, `.yml`, `.csv`, `.xml`, and `.txt` in `references` and `assets` subdirectories. Use `AgentFileSkillsSourceOptions` to change these defaults:
+By default, the provider recognizes resources with extensions `.md`, `.json`, `.yaml`, `.yml`, `.csv`, `.xml`, and `.txt` and scripts with extensions `.py`, `.js`, `.sh`, `.ps1`, `.cs`, and `.csx`. It searches up to two levels deep within each skill directory. Use `AgentFileSkillsSourceOptions` to change these defaults:
 
 ```csharp
 var fileOptions = new AgentFileSkillsSourceOptions
 {
     AllowedResourceExtensions = [".md", ".txt"],
-    ResourceDirectories = ["docs", "templates"],
+    AllowedScriptExtensions = [".py"],
+    SearchDepth = 3, // Search up to 3 levels deep (default is 2)
+    ResourceFilter = context => context.RelativeFilePath.StartsWith("references/"),
+    ScriptFilter = context => context.RelativeFilePath.StartsWith("scripts/")
+                           || context.RelativeFilePath.StartsWith("tools/"),
 };
 
+// Via constructor
 var skillsProvider = new AgentSkillsProvider(
     Path.Combine(AppContext.BaseDirectory, "skills"),
     fileOptions: fileOptions);
+
+// Via builder
+var skillsProvider = new AgentSkillsProviderBuilder()
+    .UseFileSkill(Path.Combine(AppContext.BaseDirectory, "skills"), options: fileOptions)
+    .Build();
 ```
+
+`ResourceFilter` and `ScriptFilter` receive an `AgentFileSkillFilterContext` with the skill name and the file's relative path, letting you restrict files by location, naming convention, or any custom logic.
 
 ### Script execution
 
-Pass `SubprocessScriptRunner.RunAsync` as the second argument to `AgentSkillsProvider` to enable execution of file-based scripts:
+Pass `SubprocessScriptRunner.RunAsync` as the script runner to enable execution of file-based scripts:
 
 ```csharp
 var skillsProvider = new AgentSkillsProvider(
@@ -177,18 +193,19 @@ var skillsProvider = new AgentSkillsProvider(
 using System.Diagnostics;
 using System.Text.Json;
 
-static async Task<string> RunAsync(
+static async Task<object?> RunAsync(
     AgentFileSkill skill,
     AgentFileSkillScript script,
     JsonElement? args,
-    IServiceProvider? serviceProvider)
+    IServiceProvider? serviceProvider,
+    CancellationToken cancellationToken)
 {
     var psi = new ProcessStartInfo("python3")
     {
         RedirectStandardOutput = true,
         UseShellExecute = false,
     };
-    psi.ArgumentList.Add(Path.Combine(skill.Path, script.Path));
+    psi.ArgumentList.Add(script.FullPath);
     if (args is { ValueKind: JsonValueKind.Array } json)
     {
         foreach (var element in json.EnumerateArray())
@@ -197,8 +214,8 @@ static async Task<string> RunAsync(
         }
     }
     using var process = Process.Start(psi)!;
-    string output = await process.StandardOutput.ReadToEndAsync();
-    await process.WaitForExitAsync();
+    string output = await process.StandardOutput.ReadToEndAsync(cancellationToken);
+    await process.WaitForExitAsync(cancellationToken);
     return output.Trim();
 }
 ```
@@ -212,30 +229,6 @@ The runner runs each discovered script as a local subprocess. File-based scripts
 > - Resource limits (CPU, memory, wall-clock timeout)
 > - Input validation and allow-listing of executable scripts
 > - Structured logging and audit trails
-
-### Customizing script discovery
-
-By default, the provider recognizes scripts with extensions `.py`, `.js`, `.sh`, `.ps1`, `.cs`, and `.csx` in the `scripts` subdirectory. Use `AgentFileSkillsSourceOptions` to change these defaults:
-
-Pass `AgentFileSkillsSourceOptions` to the `AgentSkillsProvider` constructor or to `UseFileSkill` / `UseFileSkills` on the builder:
-
-```csharp
-var fileOptions = new AgentFileSkillsSourceOptions
-{
-    AllowedScriptExtensions = [".py"],
-    ScriptDirectories = ["scripts", "tools"],
-};
-
-// Via constructor
-var skillsProvider = new AgentSkillsProvider(
-    Path.Combine(AppContext.BaseDirectory, "skills"),
-    fileOptions: fileOptions);
-
-// Via builder
-var skillsProvider = new AgentSkillsProviderBuilder()
-    .UseFileSkill(Path.Combine(AppContext.BaseDirectory, "skills"), options: fileOptions)
-    .Build();
-```
 
 :::zone-end
 
@@ -459,7 +452,7 @@ var skillsProvider = new AgentSkillsProvider(unitConverterSkill);
 ```
 
 > [!NOTE]
-> To combine code-defined skills with file-based or class-based skills in a single provider, use `AgentSkillsProviderBuilder` - see [Builder: advanced multi-source scenarios](#builder-advanced-multi-source-scenarios).
+> To combine code-defined skills with file-based or class-based skills in a single provider, use `AgentSkillsProviderBuilder` - see [Provider construction](#provider-construction).
 
 :::zone-end
 
@@ -703,27 +696,260 @@ Resources can be defined as either regular methods or `@property` descriptors. W
 
 :::zone pivot="programming-language-csharp"
 
-## Builder: advanced multi-source scenarios
+## MCP-based skills
 
-For simple, single-source scenarios, use the `AgentSkillsProvider` constructors directly. Use `AgentSkillsProviderBuilder` when you need any of the following:
+> [!NOTE]
+> MCP-based skills require the `Microsoft.Agents.AI.Mcp` NuGet package. The MCP skills API is experimental and may change in future releases.
 
-- **Mixed skill types** - combine file-based, code-defined (`AgentInlineSkill`), and class-based (`AgentClassSkill`) skills in a single provider.
+Skills can be discovered from MCP (Model Context Protocol) servers that expose skill resources under the `skill://` URI scheme. The MCP server advertises skills via a `skill://index.json` discovery document, and the framework fetches skill content on demand.
+
+MCP-based skills support two index entry types:
+
+- **`skill-md`** - The skill's `SKILL.md` and sibling resources are fetched on demand from the MCP server.
+- **`archive`** - The skill is distributed as a single packaged archive (ZIP, TAR, or gzip-compressed TAR) that is downloaded and unpacked locally.
+
+### Basic usage
+
+Use the `UseMcpSkills` extension method on `AgentSkillsProviderBuilder` to add an MCP skills source:
+
+```csharp
+using Microsoft.Agents.AI;
+using ModelContextProtocol.Client;
+
+// Connect to the MCP server
+await using McpClient client = await McpClient.CreateAsync(
+    new StdioClientTransport(new()
+    {
+        Name = "skills-server",
+        Command = "dotnet",
+        Arguments = [skillsServerPath, "--server"],
+    }));
+
+// Build a skills provider that discovers skills over MCP
+var skillsProvider = new AgentSkillsProviderBuilder()
+    .UseMcpSkills(client)
+    .Build();
+
+// Create an agent with the MCP skills
+AIAgent agent = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredential())
+    .GetResponsesClient()
+    .AsAIAgent(new ChatClientAgentOptions
+    {
+        Name = "SkillsAgent",
+        ChatOptions = new()
+        {
+            Instructions = "You are a helpful assistant. Use available skills to answer the user.",
+        },
+        AIContextProviders = [skillsProvider],
+    },
+    model: deploymentName);
+```
+
+### Archive-type skills
+
+For archive-type skills, use `AgentMcpSkillsSourceOptions` (from the `Microsoft.Agents.AI.Mcp` package) to configure extraction behavior:
+
+```csharp
+var skillsProvider = new AgentSkillsProviderBuilder()
+    .UseMcpSkills(client, new AgentMcpSkillsSourceOptions
+    {
+        ArchiveSkillsDirectory = Path.Combine(AppContext.BaseDirectory, "extracted-skills"),
+        ArchiveMaxFileCount = 50,
+        ArchiveMaxSizeBytes = 2 * 1024 * 1024, // 2 MB
+    })
+    .Build();
+```
+
+`AgentMcpSkillsSourceOptions` exposes the following properties to control archive extraction:
+
+- `ArchiveSkillsDirectory` - Base directory for extracted archives. Defaults to a unique subdirectory under the current working directory, generated per source instance to prevent collisions between multiple sources.
+- `ArchiveResourceExtensions` - Allowed extensions for resources in extracted archives. Defaults to `.md`, `.json`, `.yaml`, `.yml`, `.csv`, `.xml`, `.txt`.
+- `ArchiveResourceSearchDepth` - How deep to search for resources within each extracted skill directory. Defaults to `2`.
+- `ArchiveMaxFileCount` - Maximum files per archive. Archives exceeding this limit are skipped. Defaults to `20`.
+- `ArchiveMaxSizeBytes` - Maximum download size per archive. Defaults to `1 MB`.
+- `ArchiveMaxUncompressedSizeBytes` - Maximum total uncompressed size per archive. Defaults to `1 MB`.
+
+> [!IMPORTANT]
+> Scripts bundled in archive-type skills are **never executed**. This is a deliberate security measure - executable content from remote MCP servers requires explicit trust.
+
+:::zone-end
+
+:::zone pivot="programming-language-csharp"
+
+## Skill sources
+
+An `AgentSkillsProvider` retrieves skills from one or more **sources** - objects that implement `AgentSkillsSource`. Sources fall into two categories: **leaf sources** that discover or hold skills (such as `AgentFileSkillsSource` for file-based skills), and **decorators** that transform the output of another source (aggregation, deduplication, caching, and filtering). You can also create a [custom source](#custom-sources).
+
+Every source implements a single method - `GetSkillsAsync(AgentSkillsSourceContext context, CancellationToken cancellationToken = default)`. The `AgentSkillsSourceContext` carries information about the current request:
+
+- `Agent` - the `AIAgent` instance requesting skills.
+- `Session` - the `AgentSession` associated with the invocation, or `null` when there is no session.
+
+This context is available throughout the source pipeline, so a `FilteringAgentSkillsSource` predicate or a custom source can base its logic on it - for example, returning a different set of skills depending on the requesting agent.
+
+### Leaf sources
+
+#### `AgentFileSkillsSource`
+
+Discovers skills from `SKILL.md` files on disk. Accepts one or more directory paths, an optional script runner, and optional `AgentFileSkillsSourceOptions` (documented in [File-based skills](#file-based-skills)).
+
+```csharp
+var source = new AgentFileSkillsSource(
+    [Path.Combine(AppContext.BaseDirectory, "skills")],
+    scriptRunner: SubprocessScriptRunner.RunAsync,
+    options: new AgentFileSkillsSourceOptions { SearchDepth = 3 });
+```
+
+#### `AgentInMemorySkillsSource`
+
+Wraps `AgentSkill` instances (code-defined or class-based) in memory.
+
+```csharp
+var source = new AgentInMemorySkillsSource([volumeConverterSkill, temperatureConverter]);
+```
+
+### Combinators
+
+#### `AggregatingAgentSkillsSource`
+
+Combines multiple sources into one. Skills are returned in registration order with no deduplication or filtering applied.
+
+```csharp
+var aggregated = new AggregatingAgentSkillsSource([fileSource, inMemorySource]);
+```
+
+### Decorators
+
+Decorators wrap an inner source and transform its output. They can be chained to build a pipeline.
+
+#### `DeduplicatingAgentSkillsSource`
+
+Removes duplicate skill names (case-insensitive, first occurrence wins). Duplicates are logged at warning level.
+
+```csharp
+var deduplicated = new DeduplicatingAgentSkillsSource(innerSource);
+```
+
+#### `CachingAgentSkillsSource`
+
+Caches the skill list returned by the inner source. Concurrent callers are serialized per cache key so only one fetch runs at a time. Accepts optional `CachingAgentSkillsSourceOptions`:
+
+- `RefreshInterval` (`TimeSpan?`) - when set, cached results expire after this interval and the inner source is re-invoked. When `null` (the default), cached results never expire.
+- `CacheIsolationKeySelector` (`Func<AgentSkillsSourceContext, string?>?`) - returns a cache key to isolate cached results by context (for example, per tenant). When `null`, all callers share a single cache bucket.
+
+```csharp
+var cached = new CachingAgentSkillsSource(innerSource, new CachingAgentSkillsSourceOptions
+{
+    RefreshInterval = TimeSpan.FromMinutes(5)
+});
+```
+
+#### `FilteringAgentSkillsSource`
+
+Applies a predicate to include or exclude skills. The predicate receives the skill and an `AgentSkillsSourceContext`.
+
+```csharp
+var filtered = new FilteringAgentSkillsSource(
+    innerSource,
+    (skill, context) => skill.Frontmatter.Name != "experimental-skill");
+```
+
+### Custom sources
+
+When the built-in sources do not cover your scenario, implement your own. Subclass `AgentSkillsSource` for a leaf source (one that produces skills from a new origin such as a database or remote service), or subclass `DelegatingAgentSkillsSource` for a decorator that transforms another source's output.
+
+#### Leaf source
+
+Derive from `AgentSkillsSource` and implement `GetSkillsAsync`. The `AgentSkillsSourceContext` argument lets the source tailor its result to the current request - for example, returning a different set of skills depending on the requesting agent. Override `Dispose(bool)` if the source owns resources such as a client or connection.
+
+```csharp
+public sealed class TenantSkillsSource : AgentSkillsSource
+{
+    private readonly ISkillStore _store;
+
+    public TenantSkillsSource(ISkillStore store)
+    {
+        _store = store;
+    }
+
+    public override async Task<IList<AgentSkill>> GetSkillsAsync(
+        AgentSkillsSourceContext context,
+        CancellationToken cancellationToken = default)
+    {
+        // Use the requesting agent to decide which skills to load.
+        var tenantId = context.Agent.Name ?? "default";
+        return await _store.GetSkillsForTenantAsync(tenantId, cancellationToken);
+    }
+}
+```
+
+#### Custom decorator
+
+Derive from `DelegatingAgentSkillsSource`, call `InnerSource.GetSkillsAsync`, and transform or observe the result. This is the same pattern the built-in caching, deduplication, and filtering decorators use. For example, a decorator that records how many skills were returned per request without changing the result:
+
+```csharp
+public sealed class MetricsAgentSkillsSource : DelegatingAgentSkillsSource
+{
+    private readonly ILogger<MetricsAgentSkillsSource> _logger;
+
+    public MetricsAgentSkillsSource(
+        AgentSkillsSource innerSource,
+        ILogger<MetricsAgentSkillsSource> logger)
+        : base(innerSource)
+    {
+        _logger = logger;
+    }
+
+    public override async Task<IList<AgentSkill>> GetSkillsAsync(
+        AgentSkillsSourceContext context,
+        CancellationToken cancellationToken = default)
+    {
+        var skills = await base.GetSkillsAsync(context, cancellationToken);
+        _logger.LogInformation(
+            "Returned {SkillCount} skills to agent {AgentName}.",
+            skills.Count,
+            context.Agent.Name);
+        return skills;
+    }
+}
+```
+
+Both custom sources can be passed to `AgentSkillsProvider` directly or nested inside a larger pipeline, just like the built-in sources.
+
+:::zone-end
+
+:::zone pivot="programming-language-csharp"
+
+## Provider construction
+
+`AgentSkillsProvider` is the component that exposes skills to an agent. It wraps one or more sources and registers the `load_skill`, `read_skill_resource`, and `run_skill_script` tools. There are three ways to create one:
+
+1. **`AgentSkillsProviderBuilder`** - composes multiple skill types into one provider with automatic aggregation, deduplication, caching, and optional filtering. Best for scenarios that combine file-based, code-defined, class-based, and MCP-based skills.
+2. **Direct source composition** - construct the source pipeline yourself using the public `AgentSkillsSource` classes. No automatic caching or deduplication is applied - you control the full pipeline. Best when you need control over ordering, conditional logic, or custom decorator behavior.
+3. **Convenience constructors** - create a provider from a file path or skill instance(s) directly. Automatically applies deduplication and caching. Best for single-source scenarios.
+
+### Using AgentSkillsProviderBuilder
+
+Use `AgentSkillsProviderBuilder` when you need any of the following:
+
+- **Mixed skill types** - combine file-based, code-defined (`AgentInlineSkill`), class-based (`AgentClassSkill`), and MCP-based skills in a single provider.
 - **Skill filtering** - include or exclude skills using a predicate.
 
-### Mixed skill types
+#### Mixed skill types
 
-Combine all three skill types in one provider by chaining `UseFileSkill`, `UseSkill`, and `UseFileScriptRunner`:
+Combine multiple skill types in one provider by chaining `UseFileSkill`, `UseSkill`, `UseMcpSkills`, and `UseFileScriptRunner`:
 
 ```csharp
 var skillsProvider = new AgentSkillsProviderBuilder()
     .UseFileSkill(Path.Combine(AppContext.BaseDirectory, "skills"))  // file-based skills
     .UseSkill(volumeConverterSkill)                                  // AgentInlineSkill
     .UseSkill(temperatureConverter)                                  // AgentClassSkill
+    .UseMcpSkills(mcpClient)                                         // MCP-based skills
     .UseFileScriptRunner(SubprocessScriptRunner.RunAsync)            // runner for file scripts
     .Build();
 ```
 
-### Skill filtering
+#### Skill filtering
 
 Use `UseFilter` to include only the skills that meet your criteria - for example, to load skills from a shared directory but exclude experimental ones:
 
@@ -732,8 +958,58 @@ var approvedSkillNames = new HashSet<string> { "expense-report", "code-style" };
 
 var skillsProvider = new AgentSkillsProviderBuilder()
     .UseFileSkill(Path.Combine(AppContext.BaseDirectory, "skills"))
-    .UseFilter(skill => approvedSkillNames.Contains(skill.Frontmatter.Name))
+    .UseFilter((skill, context) => approvedSkillNames.Contains(skill.Frontmatter.Name))
     .Build();
+```
+
+### Composing sources directly
+
+When the builder does not offer the control you need, compose source classes yourself and pass the resulting pipeline to `AgentSkillsProvider`. See [Skill sources](#skill-sources) for the full list of available sources and their options.
+
+The following example builds a comparable multi-source pipeline, but gives you explicit control over each decorator:
+
+```csharp
+// 1. Create the leaf sources
+var fileSource = new AgentFileSkillsSource(
+    [Path.Combine(AppContext.BaseDirectory, "skills")],
+    SubprocessScriptRunner.RunAsync);
+
+var inMemorySource = new AgentInMemorySkillsSource(
+    [volumeConverterSkill, temperatureConverter]);
+
+// 2. Aggregate them into one source
+var aggregated = new AggregatingAgentSkillsSource([fileSource, inMemorySource]);
+
+// 3. Add deduplication and caching decorators
+var deduplicated = new DeduplicatingAgentSkillsSource(aggregated);
+var cached = new CachingAgentSkillsSource(deduplicated);
+
+// 4. Create the provider, transferring source ownership
+var skillsProvider = new AgentSkillsProvider(
+    cached,
+    options: new AgentSkillsProviderOptions(),
+    ownsSource: true);
+```
+
+> [!NOTE]
+> When `ownsSource` is `true`, disposing the provider also disposes the entire source pipeline. Set it to `false` if you manage the source lifecycle yourself.
+
+### Convenience constructors
+
+For single-source scenarios, use the `AgentSkillsProvider` constructors directly. These automatically apply deduplication and caching without requiring a builder or manual source composition.
+
+From a file path:
+
+```csharp
+var skillsProvider = new AgentSkillsProvider(
+    Path.Combine(AppContext.BaseDirectory, "skills"),
+    scriptRunner: SubprocessScriptRunner.RunAsync);
+```
+
+From skill instances:
+
+```csharp
+var skillsProvider = new AgentSkillsProvider(volumeConverterSkill, temperatureConverter);
 ```
 
 :::zone-end
@@ -808,29 +1084,191 @@ skills_provider = SkillsProvider(
 
 :::zone-end
 
-## Script approval
-
 :::zone pivot="programming-language-csharp"
 
-Use `AgentSkillsProviderOptions.ScriptApproval` to gate all script execution behind human approval. When enabled, the agent pauses and returns an approval request instead of executing immediately:
+## Caching behavior
 
-```csharp
-var skillsProvider = new AgentSkillsProvider(
-    skillPath: Path.Combine(AppContext.BaseDirectory, "skills"),
-    options: new AgentSkillsProviderOptions
-    {
-        ScriptApproval = true,
-    });
-```
-
-To enable script approval on a builder-configured provider, use `UseScriptApproval`:
+By default, the builder wraps the source pipeline with a `CachingAgentSkillsSource` that caches the list of skills returned by the underlying sources. Once the skills are resolved on the first request, subsequent requests reuse the cached list without re-querying the sources. To disable caching (for example, during development when skill definitions change frequently), use `DisableCaching()` on the builder:
 
 ```csharp
 var skillsProvider = new AgentSkillsProviderBuilder()
     .UseFileSkill(Path.Combine(AppContext.BaseDirectory, "skills"))
-    .UseScriptApproval(true)
+    .UseFileScriptRunner(SubprocessScriptRunner.RunAsync)
+    .DisableCaching()
     .Build();
 ```
+
+> [!NOTE]
+> Disabling caching is useful during development when skill content changes frequently. In production, leave caching enabled (the default) for better performance.
+
+:::zone-end
+
+:::zone pivot="programming-language-python"
+
+## Caching behavior
+
+By default, skill tools and instructions are cached after the first build. Set `disable_caching=True` to force a rebuild on every invocation:
+
+```python
+skills_provider = SkillsProvider.from_paths(
+    skill_paths=Path(__file__).parent / "skills",
+    disable_caching=True,
+)
+```
+
+`disable_caching` is also available on the `SkillsProvider` constructor for code-defined and class-based skills.
+
+> [!NOTE]
+> Disabling caching is useful during development when skill content changes frequently. In production, leave caching enabled (the default) for better performance.
+
+:::zone-end
+
+## Tool approval
+
+:::zone pivot="programming-language-csharp"
+
+All tools exposed by `AgentSkillsProvider` (`load_skill`, `read_skill_resource`, `run_skill_script`) require approval by default. When a tool call requires approval, the agent pauses and returns a `ToolApprovalRequestContent` instead of executing immediately. Use `UseToolApproval` middleware with auto-approval rules to selectively bypass prompts for trusted operations:
+
+```csharp
+using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
+
+var skillsProvider = new AgentSkillsProvider(
+    Path.Combine(AppContext.BaseDirectory, "skills"),
+    SubprocessScriptRunner.RunAsync);
+
+AIAgent agent = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredential())
+    .GetResponsesClient()
+    .AsAIAgent(new ChatClientAgentOptions
+    {
+        Name = "SkillsAgent",
+        ChatOptions = new() { Instructions = "You are a helpful assistant." },
+        AIContextProviders = [skillsProvider],
+    },
+    model: deploymentName)
+    .AsBuilder()
+    .UseToolApproval(new ToolApprovalAgentOptions
+    {
+        // Auto-approve read-only skill tools (load_skill, read_skill_resource).
+        // run_skill_script still requires explicit user approval.
+        AutoApprovalRules = [AgentSkillsProvider.ReadOnlyToolsAutoApprovalRule],
+    })
+    .Build();
+```
+
+To auto-approve all skill tools including script execution:
+
+```csharp
+.UseToolApproval(new ToolApprovalAgentOptions
+{
+    AutoApprovalRules = [AgentSkillsProvider.AllToolsAutoApprovalRule],
+})
+```
+
+### Disabling approval for specific tools
+
+Use `AgentSkillsProviderOptions` to disable approval for individual tools, removing them from the approval flow entirely:
+
+```csharp
+var skillsProvider = new AgentSkillsProvider(
+    Path.Combine(AppContext.BaseDirectory, "skills"),
+    SubprocessScriptRunner.RunAsync,
+    options: new AgentSkillsProviderOptions
+    {
+        DisableLoadSkillApproval = true,
+        DisableReadSkillResourceApproval = true,
+        // DisableRunSkillScriptApproval remains false - scripts still require approval
+    });
+```
+
+When some tools require approval and others do not in the same response, the model may call both types simultaneously. Set `EnableNonApprovalRequiredFunctionBypassing` so that approval-free tools execute immediately while the user is prompted only for the remaining ones:
+
+```csharp
+AIAgent agent = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredential())
+    .GetResponsesClient()
+    .AsAIAgent(new ChatClientAgentOptions
+    {
+        Name = "SkillsAgent",
+        ChatOptions = new() { Instructions = "You are a helpful assistant." },
+        AIContextProviders = [skillsProvider],
+        EnableNonApprovalRequiredFunctionBypassing = true,
+    },
+    model: deploymentName)
+    .AsBuilder()
+    .UseToolApproval()
+    .Build();
+```
+
+### Handling approval requests
+
+When tools require approval (and no auto-approval rule matches), the agent returns `ToolApprovalRequestContent` items that must be approved or rejected before continuing:
+
+```csharp
+AgentSession session = await agent.CreateSessionAsync();
+AgentResponse response = await agent.RunAsync("Convert 26.2 miles to kilometers", session);
+
+List<ToolApprovalRequestContent> approvalRequests = response.Messages
+    .SelectMany(m => m.Contents)
+    .OfType<ToolApprovalRequestContent>()
+    .ToList();
+
+while (approvalRequests.Count > 0)
+{
+    List<ChatMessage> userInputResponses = approvalRequests
+        .ConvertAll(request =>
+        {
+            var toolCall = (FunctionCallContent)request.ToolCall;
+            Console.WriteLine($"Approve {toolCall.Name}? (Y/N)");
+            bool approved = Console.ReadLine()?.Equals("Y", StringComparison.OrdinalIgnoreCase) ?? false;
+            return new ChatMessage(ChatRole.User, [request.CreateResponse(approved)]);
+        });
+
+    response = await agent.RunAsync(userInputResponses, session);
+    approvalRequests = response.Messages
+        .SelectMany(m => m.Contents)
+        .OfType<ToolApprovalRequestContent>()
+        .ToList();
+}
+```
+
+### Script error details
+
+By default, when a skill script execution fails, the exception propagates to the underlying `FunctionInvokingChatClient`. If its `IncludeDetailedErrors` property is set to `true`, the exception message is forwarded to the model, enabling it to self-correct by retrying with different arguments:
+
+```csharp
+AIAgent agent = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredential())
+    .GetResponsesClient()
+    .AsAIAgent(
+        options: new ChatClientAgentOptions
+        {
+            Name = "SkillsAgent",
+            ChatOptions = new()
+            {
+                Instructions = "You are a helpful assistant.",
+            },
+            AIContextProviders = [skillsProvider],
+        },
+        model: deploymentName,
+        clientFactory: client => client
+            .AsBuilder()
+            .UseFunctionInvocation(configure: (c) => c.IncludeDetailedErrors = true)
+            .Build());
+```
+
+If you cannot configure `FunctionInvokingChatClient` directly, set `AgentSkillsProviderOptions.IncludeDetailedErrors` instead. This catches the exception at the skills provider level and returns the error message directly to the model:
+
+```csharp
+var skillsProvider = new AgentSkillsProvider(
+    Path.Combine(AppContext.BaseDirectory, "skills"),
+    SubprocessScriptRunner.RunAsync,
+    options: new AgentSkillsProviderOptions
+    {
+        IncludeDetailedErrors = true,
+    });
+```
+
+> [!WARNING]
+> Either approach may disclose raw exception details to the model. Exception messages can contain sensitive information such as connection strings, file paths, or internal service names. Additionally, if skills or scripts originate from untrusted sources, a maliciously crafted script could throw an exception whose message embeds a prompt-injection payload.
 
 :::zone-end
 
@@ -903,14 +1341,14 @@ var skillsProvider = new AgentSkillsProvider(
         SkillsInstructionPrompt = """
             You have skills available. Here they are:
             {skills}
-            {resource_instructions}
-            {script_instructions}
+            When a task matches a skill, use load_skill to retrieve instructions,
+            then read_skill_resource for referenced resources, and run_skill_script for scripts.
             """
     });
 ```
 
 > [!NOTE]
-> The custom template must contain `{skills}` (skill list), `{resource_instructions}` (resource tool hint), and `{script_instructions}` (script tool hint) placeholders. Literal braces must be escaped as `{{` and `}}`.
+> The custom template must contain `{skills}` as the placeholder for the generated skills list. Literal braces must be escaped as `{{` and `}}`.
 
 :::zone-end
 
@@ -932,49 +1370,13 @@ skills_provider = SkillsProvider.from_paths(
 
 :::zone-end
 
-:::zone pivot="programming-language-csharp"
+## Injecting services and runtime arguments
 
-## Caching behavior
-
-By default, skill tools and instructions are cached after the first build. Set `DisableCaching = true` on `AgentSkillsProviderOptions` to force a rebuild on every invocation:
-
-```csharp
-var skillsProvider = new AgentSkillsProvider(
-    Path.Combine(AppContext.BaseDirectory, "skills"),
-    options: new AgentSkillsProviderOptions
-    {
-        DisableCaching = true,
-    });
-```
-
-> [!NOTE]
-> Disabling caching is useful during development when skill content changes frequently. In production, leave caching enabled (the default) for better performance.
-
-:::zone-end
-
-:::zone pivot="programming-language-python"
-
-## Caching behavior
-
-By default, skill tools and instructions are cached after the first build. Set `disable_caching=True` to force a rebuild on every invocation:
-
-```python
-skills_provider = SkillsProvider.from_paths(
-    skill_paths=Path(__file__).parent / "skills",
-    disable_caching=True,
-)
-```
-
-`disable_caching` is also available on the `SkillsProvider` constructor for code-defined and class-based skills.
-
-> [!NOTE]
-> Disabling caching is useful during development when skill content changes frequently. In production, leave caching enabled (the default) for better performance.
-
-:::zone-end
+Skill resource and script functions can receive external application context supplied at runtime.
 
 :::zone pivot="programming-language-csharp"
 
-Skill resource and script delegates can declare an `IServiceProvider` parameter that the Agent Framework injects automatically. This lets skills resolve application services - such as database clients, configuration, or business logic - without hard-coding them into the skill definition.
+Skill resource and script delegates can declare an `IServiceProvider` parameter that the Agent Framework injects automatically. This lets skills resolve registered application services on demand.
 
 ### Setup
 
