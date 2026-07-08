@@ -91,6 +91,8 @@ AIAgent agent = new OpenAIClient("<your_api_key>")
 
 When the service manages conversation history, the session stores a remote conversation identifier.
 
+For OpenAI Responses and Conversations, service-side IDs such as `resp_*` and `conv_*` are opaque and scoped to the backing API key or project by default. This is usually sufficient when that key or project is already scoped to one application, user, or tenant. If you host an agent for multiple end users with the same backing key or project, keep those IDs in trusted server-side storage, map them from your own session IDs, and verify ownership before resuming a conversation.
+
 :::zone pivot="programming-language-csharp"
 
 ```csharp
@@ -377,7 +379,7 @@ resumed = AgentSession.from_dict(serialized)
 :::zone-end
 
 > [!IMPORTANT]
-> Treat `AgentSession` as an opaque state object and restore it with the same agent/provider configuration that created it.
+> Treat `AgentSession` as an opaque state object and restore it with the same agent/provider configuration that created it. Store serialized sessions and any service-side session IDs as trusted application state. In hosted or multi-tenant apps, bind each stored session to the authenticated user or tenant before allowing it to resume.
 
 :::zone pivot="programming-language-python"
 > [!TIP]
