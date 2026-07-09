@@ -3,7 +3,7 @@ title: Microsoft Agent Framework Overview
 description: "Build AI agents and multi-agent workflows in .NET and Python with Microsoft Agent Framework."
 zone_pivot_groups: programming-languages
 ms.topic: overview
-ms.date: 02/09/2026
+ms.date: 07/08/2026
 ms.service: agent-framework
 author: moonbox3
 ms.author: evmattso
@@ -12,11 +12,12 @@ ms.reviewer: ssalgado
 
 # Microsoft Agent Framework
 
-Agent Framework offers two primary categories of capabilities:
+Agent Framework offers three primary categories of capabilities:
 
 | | Description |
 |---|---|
 | **[Agents](../agents/index.md)** | Individual agents that use LLMs to process inputs, call [tools](../agents/tools/index.md) and [MCP servers](../agents/tools/hosted-mcp-tools.md), and generate responses. Supports Microsoft Foundry, Anthropic, Azure OpenAI, OpenAI, Ollama, and [more](../agents/providers/index.md). |
+| **[Harness](../agents/harness.md)** | An opinionated agent with batteries-included capabilities for long, multi-step tasks — planning and todo tracking, context compaction, file access and memory, don't-ask-again tool approval, and observability. |
 | **[Workflows](../workflows/index.md)** | Graph-based workflows that connect agents and functions for multi-step tasks with type-safe routing, checkpointing, and human-in-the-loop support. |
 
 The framework also provides foundational building
@@ -140,5 +141,6 @@ and the same is expected for Agent Framework. Microsoft Agent Framework welcomes
 **Go deeper:**
 
 - [Agents overview](../agents/index.md) — architecture, providers, tools
+- [Agent Harnesses](../agents/harness.md) — an opinionated agent with built-in features
 - [Workflows overview](../workflows/index.md) — sequential, concurrent, branching
 - [Integrations](../integrations/index.md) — A2A, AG-UI, Durable Extension, M365

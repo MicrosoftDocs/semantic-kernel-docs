@@ -1888,12 +1888,12 @@ Agent Skills and [Agent Framework Workflows](../workflows/index.md) both extend 
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [CodeAct](./code_act.md)
+> [Agent Harness](./harness.md)
 
 ### Related content
 
 - [Agent Skills specification](https://agentskills.io/)
-- [CodeAct](./code_act.md)
+- [Agent Harness](./harness.md)
 - [Context Providers](./conversations/context-providers.md)
 - [Running Agents](./running-agents.md)
 - [Tools Overview](./tools/index.md)
