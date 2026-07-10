@@ -3,7 +3,7 @@ title: Vector Store changes - April 2025
 description: Describes the changes included in the April 2025 Vector Store release and how to migrate
 zone_pivot_groups: programming-languages
 author: westey-m
-ms.topic: conceptual
+ms.topic: article
 ms.author: westey
 ms.date: 03/06/2025
 ms.service: semantic-kernel

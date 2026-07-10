@@ -315,6 +315,9 @@ The Responses API is similar to Chat Completions but is stateful, allowing you t
 Like Chat Completions, it supports the `stream` parameter, which controls the output format: either a single JSON response or a stream of events.
 The Responses API defines its own streaming event types, including `response.created`, `response.output_item.added`, `response.output_item.done`, `response.completed`, and others.
 
+> [!IMPORTANT]
+> OpenAI response and conversation IDs are opaque service-side IDs. OpenAI scopes `resp_*` and `conv_*` IDs to the backing API key or project by default, so they are usually constrained when that boundary matches your app or tenant boundary. Risk appears when a hosted agent uses one backing key or project for multiple end users, echoes raw OpenAI IDs to clients, and accepts those IDs back without checking ownership. Store them server-side, map them from your own client session IDs, and verify the authenticated user or tenant before passing them as `previous_response_id` or `conversation`.
+
 #### Create a Conversation and Response
 
 You can send a Responses request directly, or you can first create a conversation using the Conversations API
@@ -616,10 +619,10 @@ export AZURE_OPENAI_API_VERSION="your-api-version"
 
 - [Integrations Overview](./index.md)
 - [A2A Integration](./a2a.md)
-- [OpenAI Chat Completions API Reference](https://platform.openai.com/docs/api-reference/chat)
-- [OpenAI Responses API Reference](https://platform.openai.com/docs/api-reference/responses)
+- [OpenAI Chat Completions API Reference](https://developers.openai.com/api/reference/chat-completions/overview)
+- [OpenAI Responses API Reference](https://developers.openai.com/api/reference/responses/overview)
 
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Purview](purview.md)
+> [Hyperlight CodeAct](hyperlight.md)

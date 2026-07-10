@@ -69,14 +69,16 @@ The key requirement is that the `__init__.py` file must export a variable named 
 **`my_workflow/__init__.py`**:
 
 ```python
-from agent_framework.workflows import WorkflowBuilder
+from agent_framework import WorkflowBuilder, WorkflowContext, executor
+from typing_extensions import Never
 
-workflow = (
-    WorkflowBuilder(start_executor="my_executor")
-    .add_executor(...)
-    .add_edge(...)
-    .build()
-)
+
+@executor(id="my_executor")
+async def my_executor(message: str, ctx: WorkflowContext[Never, str]) -> None:
+    await ctx.yield_output(message)
+
+
+workflow = WorkflowBuilder(start_executor=my_executor).build()
 ```
 
 ## Environment Variables

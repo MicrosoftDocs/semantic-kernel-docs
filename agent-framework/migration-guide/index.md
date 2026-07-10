@@ -14,6 +14,7 @@ This section contains migration guides for moving to Agent Framework from other 
 
 - [Migrating from Semantic Kernel](./from-semantic-kernel/index.md)
 - [Migrating from AutoGen](./from-autogen/index.md)
+- [A2A SDK v1 Migration](./agent-to-agent-sdk-v1.md)
 
 ## Next steps
 

@@ -3,7 +3,7 @@ title: Conversations & Memory overview in Agent Framework
 description: Learn the core AgentSession usage pattern and how to navigate sessions, context providers, and storage.
 zone_pivot_groups: programming-languages
 author: eavanvalkenburg
-ms.topic: conceptual
+ms.topic: article
 ms.author: edvan
 ms.date: 02/13/2026
 ms.service: agent-framework
@@ -12,6 +12,8 @@ ms.service: agent-framework
 # Conversations & Memory overview
 
 Use `AgentSession` to keep conversation context between invocations.
+
+When a session uses service-managed storage, it can contain an opaque service-side session ID. OpenAI Responses and Conversations IDs are scoped to the backing API key or project by default; if a hosted agent uses the same key or project for multiple end users, store those IDs server-side and verify the authenticated user or tenant before resuming. For details, see [Session](./session.md).
 
 ## Core usage pattern
 

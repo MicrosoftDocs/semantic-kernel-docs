@@ -248,7 +248,7 @@ Agents can use tools that require human approval before execution. When the agen
 
 To learn more about checkpoints, see [Checkpoints](./checkpoints.md).
 
-When a checkpoint is created, pending requests are also saved as part of the checkpoint state. When you restore from a checkpoint, any pending requests will be re-emitted as `RequestInfoEvent` objects, allowing you to capture and respond to them. You cannot provide responses directly during the resume operation - instead, you must listen for the re-emitted events and respond using the standard response mechanism.
+When a checkpoint is created, pending requests are also saved as part of the checkpoint state. When you restore from a checkpoint, any pending requests will be re-emitted as `RequestInfoEvent` objects, allowing you to capture and respond to them. You can also resume from a checkpoint and provide responses in the same call by passing both `checkpoint_id` and `responses` to `workflow.run(...)`.
 
 ## Next Steps
 

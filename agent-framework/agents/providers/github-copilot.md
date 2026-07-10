@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: dmytrostruk
 ms.topic: tutorial
 ms.author: dmytrostruk
-ms.date: 04/02/2026
+ms.date: 06/08/2026
 ms.service: agent-framework
 ---
 
@@ -23,7 +23,7 @@ Microsoft Agent Framework supports creating agents that use the [GitHub Copilot 
 Add the required NuGet packages to your project.
 
 ```dotnetcli
-dotnet add package Microsoft.Agents.AI.GitHub.Copilot --prerelease
+dotnet add package Microsoft.Agents.AI.GitHub.Copilot
 ```
 
 ## Create a GitHub Copilot Agent
@@ -31,7 +31,7 @@ dotnet add package Microsoft.Agents.AI.GitHub.Copilot --prerelease
 As a first step, create a `CopilotClient` and start it. Then use the `AsAIAgent` extension method to create an agent.
 
 ```csharp
-using GitHub.Copilot.SDK;
+using GitHub.Copilot;
 using Microsoft.Agents.AI;
 
 await using CopilotClient copilotClient = new();
@@ -47,7 +47,7 @@ Console.WriteLine(await agent.RunAsync("What is Microsoft Agent Framework?"));
 You can provide function tools and custom instructions when creating the agent:
 
 ```csharp
-using GitHub.Copilot.SDK;
+using GitHub.Copilot;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
 
@@ -113,16 +113,18 @@ Console.WriteLine(response); // Should mention "Alice"
 By default, the agent cannot execute shell commands, read/write files, or fetch URLs. To enable these capabilities, provide a permission handler via `SessionConfig`:
 
 ```csharp
-static Task<PermissionRequestResult> PromptPermission(
+static Task<PermissionDecision> PromptPermission(
     PermissionRequest request, PermissionInvocation invocation)
 {
     Console.WriteLine($"\n[Permission Request: {request.Kind}]");
     Console.Write("Approve? (y/n): ");
 
     string? input = Console.ReadLine()?.Trim().ToUpperInvariant();
-    string kind = input is "Y" or "YES" ? "approved" : "denied-interactively-by-user";
+    PermissionDecision decision = input is "Y" or "YES"
+        ? PermissionDecision.ApproveOnce()
+        : PermissionDecision.Reject();
 
-    return Task.FromResult(new PermissionRequestResult { Kind = kind });
+    return Task.FromResult(decision);
 }
 
 await using CopilotClient copilotClient = new();
@@ -177,6 +179,19 @@ Console.WriteLine(await agent.RunAsync("Search Microsoft Learn for 'Azure Functi
 > [!TIP]
 > See the [.NET samples](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples) for complete runnable examples.
 
+## Tools
+
+| Tool | Status | Notes |
+|---|---|---|
+| [Function Tools](../tools/function-tools.md) | ✅ | Standard `AIFunction` instances. |
+| [Tool Approval](../tools/tool-approval.md) | ✅ | Provided by the framework's function-invoking chat client; works with any function-tool call. |
+| [Code Interpreter](../tools/code-interpreter.md) | ❌ | Not a Copilot CLI capability. |
+| [File Search](../tools/file-search.md) | ❌ | Not a Copilot CLI capability. |
+| [Web Search](../tools/web-search.md) | ❌ | Not exposed as a hosted tool. |
+| Shell / file system / URL fetching | ✅ | Built into the Copilot CLI runtime and gated by the [Permissions](#permissions) handler you supply. |
+| [Hosted MCP Tools](../tools/hosted-mcp-tools.md) | ✅ | Remote (HTTP) MCP servers configured via `SessionConfig.McpServers`. See [MCP Servers](#mcp-servers). |
+| [Local MCP Tools](../tools/local-mcp-tools.md) | ✅ | Local (stdio) MCP servers configured via `SessionConfig.McpServers`. See [MCP Servers](#mcp-servers). |
+
 ## Using the Agent
 
 The agent is a standard `AIAgent` and supports all standard `AIAgent` operations.
@@ -204,6 +219,7 @@ The agent can be optionally configured using the following environment variables
 | `GITHUB_COPILOT_MODEL` | Model to use (e.g., `gpt-5`, `claude-sonnet-4`) |
 | `GITHUB_COPILOT_TIMEOUT` | Request timeout in seconds |
 | `GITHUB_COPILOT_LOG_LEVEL` | CLI log level |
+| `GITHUB_COPILOT_BASE_DIRECTORY` | Directory for CLI session state and config (defaults to `~/.copilot`) |
 
 ## Getting Started
 
@@ -223,7 +239,7 @@ The simplest way to create a GitHub Copilot agent:
 ```python
 async def basic_example():
     agent = GitHubCopilotAgent(
-        default_options={"instructions": "You are a helpful assistant."},
+        instructions="You are a helpful assistant.",
     )
 
     async with agent:
@@ -238,8 +254,8 @@ You can provide explicit configuration through `default_options`:
 ```python
 async def explicit_config_example():
     agent = GitHubCopilotAgent(
+        instructions="You are a helpful assistant.",
         default_options={
-            "instructions": "You are a helpful assistant.",
             "model": "gpt-5",
             "timeout": 120,
         },
@@ -260,7 +276,7 @@ Python `GitHubCopilotAgent` also supports `context_providers=[...]`. Providers r
 from agent_framework import InMemoryHistoryProvider
 
 agent = GitHubCopilotAgent(
-    default_options={"instructions": "You are a helpful coding assistant."},
+    instructions="You are a helpful coding assistant.",
     context_providers=[InMemoryHistoryProvider()],
 )
 ```
@@ -283,7 +299,7 @@ def get_weather(
 
 async def tools_example():
     agent = GitHubCopilotAgent(
-        default_options={"instructions": "You are a helpful weather agent."},
+        instructions="You are a helpful weather agent.",
         tools=[get_weather],
     )
 
@@ -299,7 +315,7 @@ Get responses as they are generated for better user experience:
 ```python
 async def streaming_example():
     agent = GitHubCopilotAgent(
-        default_options={"instructions": "You are a helpful assistant."},
+        instructions="You are a helpful assistant.",
     )
 
     async with agent:
@@ -317,7 +333,7 @@ Maintain conversation context across multiple interactions:
 ```python
 async def thread_example():
     agent = GitHubCopilotAgent(
-        default_options={"instructions": "You are a helpful assistant."},
+        instructions="You are a helpful assistant.",
     )
 
     async with agent:
@@ -337,23 +353,26 @@ async def thread_example():
 By default, the agent cannot execute shell commands, read/write files, or fetch URLs. To enable these capabilities, provide a permission handler:
 
 ```python
-from copilot.generated.session_events import PermissionRequest
+import asyncio
 
-def prompt_permission(
+from copilot.generated.rpc import PermissionDecisionDeniedInteractivelyByUser
+from copilot.session import PermissionHandler, PermissionRequestResult
+from copilot.session_events import PermissionRequest
+
+
+async def prompt_permission(
     request: PermissionRequest, context: dict[str, str]
 ) -> PermissionRequestResult:
-    kind = request.get("kind", "unknown")
-    print(f"\n[Permission Request: {kind}]")
-
-    response = input("Approve? (y/n): ").strip().lower()
+    print(f"\n[Permission Request: {request.kind}]")
+    response = (await asyncio.to_thread(input, "Approve? (y/n): ")).strip().lower()
     if response in ("y", "yes"):
-        return PermissionRequestResult(kind="approved")
-    return PermissionRequestResult(kind="denied-interactively-by-user")
+        return PermissionHandler.approve_all(request, context)
+    return PermissionDecisionDeniedInteractivelyByUser()
 
 async def permissions_example():
     agent = GitHubCopilotAgent(
+        instructions="You are a helpful assistant that can execute shell commands.",
         default_options={
-            "instructions": "You are a helpful assistant that can execute shell commands.",
             "on_permission_request": prompt_permission,
         },
     )
@@ -363,12 +382,26 @@ async def permissions_example():
         print(result)
 ```
 
+For trusted environments where all permissions should be auto-approved, use the built-in `PermissionHandler.approve_all`:
+
+```python
+from copilot.session import PermissionHandler
+
+agent = GitHubCopilotAgent(
+    default_options={
+        "on_permission_request": PermissionHandler.approve_all,
+    },
+)
+```
+
+Permission handlers support both sync and async callbacks. Use `asyncio.to_thread` for interactive prompts in async handlers to avoid blocking the event loop.
+
 ### MCP Servers
 
 Connect to local (stdio) or remote (HTTP) MCP servers for extended capabilities:
 
 ```python
-from copilot.types import MCPServerConfig
+from copilot.session import MCPServerConfig, PermissionHandler
 
 async def mcp_example():
     mcp_servers: dict[str, MCPServerConfig] = {
@@ -388,9 +421,9 @@ async def mcp_example():
     }
 
     agent = GitHubCopilotAgent(
+        instructions="You are a helpful assistant with access to the filesystem and Microsoft Learn.",
         default_options={
-            "instructions": "You are a helpful assistant with access to the filesystem and Microsoft Learn.",
-            "on_permission_request": prompt_permission,
+            "on_permission_request": PermissionHandler.approve_all,
             "mcp_servers": mcp_servers,
         },
     )
@@ -399,6 +432,37 @@ async def mcp_example():
         result = await agent.run("Search Microsoft Learn for 'Azure Functions' and summarize the top result")
         print(result)
 ```
+
+### Observability
+
+`GitHubCopilotAgent` has OpenTelemetry tracing built-in. Call `configure_otel_providers()` once at startup to enable spans, metrics and logs for every run:
+
+```python
+from agent_framework.observability import configure_otel_providers
+from agent_framework.github import GitHubCopilotAgent
+
+configure_otel_providers(enable_console_exporters=True)
+
+async with GitHubCopilotAgent() as agent:
+    response = await agent.run("Hello!")
+```
+
+If you need the underlying agent without the telemetry layer (for example to wrap it in a custom one), import `RawGitHubCopilotAgent` from `agent_framework.github`.
+
+For OTLP exporters and richer examples, see the [observability samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/observability).
+
+## Tools
+
+| Tool | Status | Notes |
+|---|---|---|
+| [Function Tools](../tools/function-tools.md) | ✅ | Standard Python callables or `@ai_function`. |
+| [Tool Approval](../tools/tool-approval.md) | ✅ | Provided by the framework's function-invoking chat client; works with any function-tool call. |
+| [Code Interpreter](../tools/code-interpreter.md) | ❌ | Not a Copilot CLI capability. |
+| [File Search](../tools/file-search.md) | ❌ | Not a Copilot CLI capability. |
+| [Web Search](../tools/web-search.md) | ❌ | Not exposed as a hosted tool. |
+| Shell / file system / URL fetching | ✅ | Built into the Copilot CLI runtime and gated by the [Permissions](#permissions-1) handler you provide. |
+| [Hosted MCP Tools](../tools/hosted-mcp-tools.md) | ✅ | Remote (HTTP) MCP servers configured via `default_options["mcp_servers"]`. See [MCP Servers](#mcp-servers-1). |
+| [Local MCP Tools](../tools/local-mcp-tools.md) | ✅ | Local (stdio) MCP servers configured via `default_options["mcp_servers"]`. See [MCP Servers](#mcp-servers-1). |
 
 ## Using the Agent
 

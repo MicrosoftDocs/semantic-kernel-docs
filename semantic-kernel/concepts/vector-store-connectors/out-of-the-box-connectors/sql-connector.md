@@ -3,7 +3,7 @@ title: Using the Semantic Kernel SQL Server Vector Store connector (Preview)
 description: Contains information on how to use a Semantic Kernel Vector store connector to access and manipulate data in SQL Server.
 zone_pivot_groups: programming-languages
 author: eavanvalkenburg
-ms.topic: conceptual
+ms.topic: article
 ms.author: edvan
 ms.date: 03/21/2024
 ms.service: semantic-kernel

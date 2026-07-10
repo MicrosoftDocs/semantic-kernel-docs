@@ -3,7 +3,7 @@ title: Give agents access to OpenAPI APIs
 description: Learn how to add plugins from OpenAPI specifications to your agents in Semantic Kernel.
 zone_pivot_groups: programming-languages
 author: sophialagerkranspandey
-ms.topic: conceptual
+ms.topic: article
 ms.author: sopand
 ms.date: 07/12/2023
 ms.service: semantic-kernel

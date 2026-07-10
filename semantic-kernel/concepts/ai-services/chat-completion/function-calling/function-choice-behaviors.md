@@ -1,9 +1,9 @@
-﻿---
+---
 title: Function Choice Behavior
 description: Describes function choice behavior types Semantic Kernel supports.
 zone_pivot_groups: programming-languages
 author: SergeyMenshykh
-ms.topic: conceptual
+ms.topic: article
 ms.author: semenshi
 ms.service: semantic-kernel
 ---

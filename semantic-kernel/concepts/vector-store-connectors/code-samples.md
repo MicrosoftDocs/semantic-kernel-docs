@@ -3,7 +3,7 @@ title: Semantic Kernel Vector Store code samples (Preview)
 description: Lists code samples for the Semantic Kernel Vector Store abstractions and implementations
 zone_pivot_groups: programming-languages
 author: westey-m
-ms.topic: conceptual
+ms.topic: article
 ms.author: westey
 ms.date: 07/08/2024
 ms.service: semantic-kernel

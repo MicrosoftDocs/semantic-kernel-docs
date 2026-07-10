@@ -3,7 +3,7 @@ title: Generating embeddings for Semantic Kernel Vector Store connectors
 description: Describes how you can generate embeddings to use with Semantic Kernel vector store connectors.
 zone_pivot_groups: programming-languages
 author: westey-m
-ms.topic: conceptual
+ms.topic: article
 ms.author: westey
 ms.date: 09/23/2024
 ms.service: semantic-kernel
