@@ -4,7 +4,7 @@ description: In-depth look at Handoff Orchestrations in Microsoft Agent Framewor
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 05/09/2026
+ms.date: 05/27/2026
 ms.service: agent-framework
 zone_pivot_groups: programming-languages
 ---
@@ -12,18 +12,18 @@ zone_pivot_groups: programming-languages
 <!--
   Language parity table – keep in sync when adding/removing sections.
 
-  | Section                              | C# | Python | Notes                           |
-  |--------------------------------------|:--:|:------:|--------------------------------|
-  | Set Up the Client                    | ✅ |   ✅   |                                |
-  | Define Specialized Agents            | ✅ |   ✅   |                                |
-  | Configure Handoff Rules              | ✅ |   ✅   |                                |
-  | Run Interactive Workflow             | ✅ |   ✅   | Different patterns per language |
-  | Autonomous Mode                      | ❌ |   ✅   | Python-specific                |
-  | Tool Approval (HITL)                 | ❌ |   ✅   |                                |
-  | Checkpointing                        | ❌ |   ✅   |                                |
-  | Sample Interaction                   | ✅ |   ✅   |                                |
-  | Context Synchronization              | ✅ |   ✅   | Shared section                 |
-  | Key Concepts                         | ✅ |   ✅   |                                |
+    | Section                              | C# | Python | Go | Notes                           |
+    |--------------------------------------|:--:|:------:|:--:|--------------------------------|
+    | Set Up the Client                    | ✅ |   ✅   | ❌ | No Go handoff builder          |
+    | Define Specialized Agents            | ✅ |   ✅   | ❌ |                                |
+    | Configure Handoff Rules              | ✅ |   ✅   | ❌ |                                |
+    | Run Interactive Workflow             | ✅ |   ✅   | ❌ | Different patterns per language |
+    | Autonomous Mode                      | ❌ |   ✅   | ❌ | Python-specific                |
+    | Tool Approval (HITL)                 | ❌ |   ✅   | ❌ |                                |
+    | Checkpointing                        | ❌ |   ✅   | ❌ |                                |
+    | Sample Interaction                   | ✅ |   ✅   | ❌ |                                |
+    | Context Synchronization              | ✅ |   ✅   | ❌ | Shared section                 |
+    | Key Concepts                         | ✅ |   ✅   | ❌ |                                |
 -->
 
 # Microsoft Agent Framework Workflows Orchestrations - Handoff
@@ -654,6 +654,12 @@ After broadcasting the response, the participant then checks whether it needs to
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+> [!NOTE]
+> Go support for this feature is coming soon. See the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go) for the latest status.
+
+::: zone-end
 ## The Handoff Agent Executor
 
 Unlike standard workflows where agents are wrapped in a general-purpose [Agent Executor](../advanced/agent-executor.md), handoff orchestration uses a specialized `HandoffAgentExecutor`. This executor extends the base agent executor with handoff-specific capabilities:

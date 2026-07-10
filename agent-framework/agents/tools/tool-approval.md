@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
 ms.author: westey
-ms.date: 04/01/2026
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
@@ -410,6 +410,27 @@ if __name__ == "__main__":
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Tool approval
+
+You can require human approval before a tool is executed by wrapping it with `tool.ApprovalRequiredFunc`:
+
+```go
+import "github.com/microsoft/agent-framework-go/tool"
+
+approvedWeatherTool := tool.ApprovalRequiredFunc(weatherTool)
+
+a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Instructions: "You are a helpful assistant.",
+    Config: agent.Config{
+        Tools: []tool.Tool{approvedWeatherTool},
+    },
+})
+```
+
+When the model requests a tool call, the framework intercepts it and waits for approval before executing. The approval flow is handled through middleware.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

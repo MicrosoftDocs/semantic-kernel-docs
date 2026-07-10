@@ -5,21 +5,24 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: article
 ms.author: taochen
-ms.date: 03/24/2026
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
 <!--
   Language parity table – keep in sync when adding/removing sections.
 
-  | Section                    | C# | Python | Notes            |
-  |----------------------------|:--:|:------:|------------------|
-  | Basic Executor Structure   | ✅ |   ✅   |                  |
-  | Resettable Executors (TIP) | ✅ |   ❌   | C#-specific; links to advanced page |
-  | Multiple Input Types       | ✅ |   ✅   |                  |
-  | Function-Based Executors   | ✅ |   ✅   |                  |
-  | Explicit Type Parameters   | ❌ |   ✅   | Python-specific  |
-  | The WorkflowContext Object | ✅ |   ✅   |                  |
+    | Section                                            | C# | Python | Go | Notes            |
+    |----------------------------------------------------|:--:|:------:|:--:|------------------|
+    | Basic Executor Structure                           | ✅ |   ✅   | ✅ |                  |
+    | Resettable Executors (TIP)                         | ✅ |   ❌   | ✅ | C#/Go reset hooks; Python uses fresh instances |
+    | Multiple Input Types                               | ✅ |   ✅   | ✅ |                  |
+    | Function-Based Executors                           | ✅ |   ✅   | ✅ |                  |
+    | Explicit Type Parameters                           | ❌ |   ✅   | ❌ | Python-specific  |
+    | The WorkflowContext Object                         | ✅ |   ✅   | ✅ |                  |
+    | Designating Terminal and Intermediate Outputs      | ❌ |   ✅   | ❌ | Python-specific  |
+    | Agent Executors                                    | ❌ |   ❌   | ✅ | Go-specific      |
+    | Executor Lifecycle                                 | ❌ |   ❌   | ✅ | Go-specific      |
 -->
 
 # Executors
@@ -240,9 +243,9 @@ class LogExecutor(Executor):
 
 ::: zone-end
 
-## Designating Terminal and Intermediate Output Executors
-
 ::: zone pivot="programming-language-python"
+
+## Designating Terminal and Intermediate Output Executors
 
 Which executors contribute to the workflow's terminal answer and which emit observational progress is a **build-time** decision configured on `WorkflowBuilder`, not a per-emission flag.
 
@@ -266,6 +269,103 @@ Both lists are optional. If either output-selection list is provided, an executo
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+## Basic Executor Structure
+
+Executors are the processing units in a workflow. They receive input, perform work, and produce output.
+
+## Multiple Input Types
+
+Register multiple handlers by configuring routes on an executor:
+
+```go
+sample := (&workflow.Executor{
+    ID: "SampleExecutor",
+    ConfigureProtocol: func(pb *workflow.ProtocolBuilder) (*workflow.ProtocolBuilder, error) {
+        pb.RouteBuilder.
+            AddHandlerRaw(reflect.TypeFor[string](), reflect.TypeFor[string](), func(_ *workflow.Context, msg any) (any, error) {
+                return strings.ToUpper(msg.(string)), nil
+            }).
+            AddHandlerRaw(reflect.TypeFor[int](), reflect.TypeFor[int](), func(_ *workflow.Context, msg any) (any, error) {
+                return msg.(int) * 2, nil
+            })
+        return pb, nil
+    },
+}).Bind()
+```
+
+## Function-Based Executors
+
+The simplest way to create an executor is with `workflow.NewExecutor(...).Bind()`:
+
+```go
+uppercase := workflow.NewExecutor("UppercaseExecutor", func(input string) string {
+    return strings.ToUpper(input)
+}).Bind()
+```
+
+Function executors automatically register the input type and can auto-send and auto-yield returned values.
+
+## The workflow.Context Object
+
+Handlers can accept `*workflow.Context` to interact with the workflow during execution:
+
+```go
+output := workflow.NewExecutor("OutputExecutor", func(ctx *workflow.Context, message string) error {
+    return ctx.YieldOutput("Hello, World!")
+}).Bind()
+```
+
+The context also exposes APIs such as `SendMessage`, `AddEvent`, `PostRequest`, `ReadState`, and `QueueStateUpdate`.
+
+## Agent Executors
+
+Agents can be used as workflow executors via `agentworkflow.New`:
+
+```go
+agentExecutor := agentworkflow.New(myAgent, agentworkflow.Config{
+    EmitUpdateEvents: true,
+})
+```
+
+## Executor Lifecycle
+
+Executors support lifecycle hooks through fields on `workflow.Executor`:
+
+| Hook | Purpose |
+|---|---|
+| `ConfigureProtocol` | Set up message routing and declared send/yield types |
+| `InitializeFunc` | Setup when an executor instance is created for a run |
+| `ResetFunc` | Reset executor-local state before reuse |
+| `OnCheckpointFunc` | Save state at checkpoint |
+| `OnCheckpointRestoredFunc` | Restore state from checkpoint |
+| `OnMessageDeliveryStartingFunc` | Run before a superstep delivers messages |
+| `OnMessageDeliveryFinishedFunc` | Run after a superstep finishes message delivery |
+
+```go
+stateful := workflow.NewExecutor("StatefulExecutor", handleMessage).Extend(&workflow.Executor{
+    InitializeFunc: func(ctx *workflow.Context) error {
+        return nil
+    },
+    ResetFunc: func() error {
+        return nil
+    },
+    OnCheckpointFunc: func(ctx *workflow.Context) error {
+        return ctx.QueueStateUpdate("StatefulExecutorState", "", currentState)
+    },
+    OnCheckpointRestoredFunc: func(ctx *workflow.Context) error {
+        restored, err := ctx.ReadState("StatefulExecutorState", "")
+        if err != nil {
+            return err
+        }
+        currentState = restored
+        return nil
+    },
+}).Bind()
+```
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

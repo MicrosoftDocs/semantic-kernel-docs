@@ -5,22 +5,22 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: article
 ms.author: taochen
-ms.date: 06/05/2026
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
 <!--
   Language parity table – keep in sync when adding/removing sections.
 
-  | Section                                    | C# | Python | Notes |
-  |--------------------------------------------|:--:|:------:|-------|
-  | State Visibility and Scope Behavior        | ✅ |   ✅   |       |
-  | Writing to State                           | ✅ |   ✅   |       |
-  | Accessing State                            | ✅ |   ✅   |       |
-  | State Isolation – Mutable vs Immutable     | ✅ |   ✅   | Prose only, no code needed |
-  | State Isolation – Helper Methods           | ❌ |   ✅   | C# coming soon |
-  | State Isolation – Resetting Shared Executors| ✅ |   ❌   | C#-specific; links to advanced page |
-  | Agent State Management                     | ❌ |   ✅   | C# coming soon |
+    | Section                                     | C# | Python | Go | Notes |
+    |---------------------------------------------|:--:|:------:|:--:|-------|
+    | State Visibility and Scope Behavior         | ✅ |   ✅   | ✅ |       |
+    | Writing to State                            | ✅ |   ✅   | ✅ |       |
+    | Accessing State                             | ✅ |   ✅   | ✅ |       |
+    | State Isolation – Mutable vs Immutable      | ✅ |   ✅   | ✅ | Prose only, no code needed |
+    | State Isolation – Helper Methods            | ❌ |   ✅   | ✅ | C# coming soon |
+    | State Isolation – Resetting Shared Executors | ✅ |   ❌   | ✅ | Links to advanced page |
+    | Agent State Management                      | ❌ |   ✅   | ✅ | C# coming soon |
 -->
 
 # Microsoft Agent Framework Workflows - State
@@ -124,6 +124,26 @@ class FileReadExecutor(Executor):
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+```go
+fileRead := workflow.NewExecutor("FileReadExecutor", func(ctx *workflow.Context, path string) (string, error) {
+    fileContent, err := os.ReadFile(path)
+    if err != nil {
+        return "", err
+    }
+
+    fileID := uuid.NewString()
+    if err := ctx.QueueStateUpdate(fileID, "FileContent", string(fileContent)); err != nil {
+        return "", err
+    }
+
+    return fileID, nil
+}).Bind()
+```
+
+::: zone-end
+
 ## Accessing State
 
 ::: zone pivot="programming-language-csharp"
@@ -168,6 +188,29 @@ class WordCountingExecutor(Executor):
             raise ValueError("File content state not found")
 
         await ctx.send_message(len(file_content.split()))
+```
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+```go
+fileProcess := workflow.NewExecutor("FileProcessExecutor", func(ctx *workflow.Context, fileID string) (FileSummary, error) {
+    value, err := ctx.ReadState(fileID, "FileContent")
+    if err != nil {
+        return FileSummary{}, err
+    }
+
+    fileContent, ok := value.(string)
+    if !ok {
+        return FileSummary{}, fmt.Errorf("file content %q was not found", fileID)
+    }
+
+    return FileSummary{
+        FileID:  fileID,
+        Summary: summarize(fileContent),
+    }, nil
+}).Bind()
 ```
 
 ::: zone-end
@@ -262,6 +305,56 @@ workflow_b = create_workflow()
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+Non-isolated example (shared state):
+
+```go
+executorA := workflow.NewExecutor("ExecutorA", func(_ *workflow.Context, input string) (string, error) {
+    return input, nil
+}).Bind()
+executorB := workflow.NewExecutor("ExecutorB", func(_ *workflow.Context, input string) (string, error) {
+    return input, nil
+}).Bind()
+
+builder := workflow.NewBuilder(executorA).AddEdge(executorA, executorB)
+
+workflowA, err := builder.Build()
+if err != nil {
+    return err
+}
+workflowB, err := builder.Build()
+if err != nil {
+    return err
+}
+```
+
+Isolated example (helper method):
+
+```go
+func createWorkflow() (*workflow.Workflow, error) {
+    executorA := workflow.NewExecutor("ExecutorA", func(_ *workflow.Context, input string) (string, error) {
+        return input, nil
+    }).Bind()
+    executorB := workflow.NewExecutor("ExecutorB", func(_ *workflow.Context, input string) (string, error) {
+        return input, nil
+    }).Bind()
+
+    return workflow.NewBuilder(executorA).AddEdge(executorA, executorB).Build()
+}
+
+workflowA, err := createWorkflow()
+if err != nil {
+    return err
+}
+workflowB, err := createWorkflow()
+if err != nil {
+    return err
+}
+```
+
+::: zone-end
+
 > [!TIP]
 > To ensure proper state isolation and thread safety, also make sure that executor instances created inside the helper method do not share external mutable state.
 
@@ -272,6 +365,16 @@ workflow_b = create_workflow()
 If you need to share executor instances across workflow runs — for example, when executor construction is expensive or when a workflow is exposed as an agent — stateful executors must implement `IResettableExecutor`. This interface provides a `ResetAsync()` method that the workflow runtime calls automatically between runs to clear stale state.
 
 For details on when and how to implement `IResettableExecutor`, see [Resettable Executors](./advanced/resettable-executors.md).
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+### Resetting Shared Executors
+
+Go executor bindings can reset shared executor state with `ResetFunc`. Bindings created with `BindNewExecutorFunc` create a fresh executor for each workflow session and do not need a reset hook.
+
+For details, see [Resettable Executors](./advanced/resettable-executors.md).
 
 ::: zone-end
 
@@ -357,6 +460,31 @@ def create_workflow() -> Workflow:
 workflow_a = create_workflow()
 workflow_b = create_workflow()
 ```
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+Go agent state is managed through `agent.Session`. Agents in workflows keep their session across turns unless a new agent, workflow, or session is created.
+
+```go
+session, err := writerAgent.CreateSession(ctx)
+if err != nil {
+    return err
+}
+
+_, err = writerAgent.RunText(ctx, "first request", agent.WithSession(session)).Collect()
+if err != nil {
+    return err
+}
+
+_, err = writerAgent.RunText(ctx, "follow-up request", agent.WithSession(session)).Collect()
+if err != nil {
+    return err
+}
+```
+
+Hosted agent executors created with `agentworkflow.New` can also start a new agent session by sending `agentworkflow.ResetSignal{}`.
 
 ::: zone-end
 

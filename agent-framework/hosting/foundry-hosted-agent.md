@@ -5,26 +5,26 @@ zone_pivot_groups: programming-languages
 author: taochen
 ms.topic: article
 ms.author: taochen
-ms.date: 04/27/2026
+ms.date: 05/27/2026
 ms.service: agent-framework
 ---
 
 <!--
   Language parity table – keep in sync when adding/removing sections.
 
-  | Section                         | C# | Python | Notes |
-  |---------------------------------|:--:|:------:|-------|
-  | Overview                        | ✅ |   ✅   |       |
-  | Prerequisites                   | ✅ |   ✅   |       |
-  | Responses protocol              | ✅ |   ✅   |       |
-  | Invocations protocol            | ✅ |   ✅   |       |
-  | Running locally                 | ✅ |   ✅   |       |
-  | Deploying to Foundry            | ✅ |   ✅   |       |
+    | Section                         | C# | Python | Go | Notes                         |
+    |---------------------------------|:--:|:------:|:--:|-------------------------------|
+    | Overview                        | ✅ |   ✅   | ❌ | No Go Foundry hosting package |
+    | Prerequisites                   | ✅ |   ✅   | ❌ |                               |
+    | Responses protocol              | ✅ |   ✅   | ❌ |                               |
+    | Invocations protocol            | ✅ |   ✅   | ❌ |                               |
+    | Running locally                 | ✅ |   ✅   | ❌ |                               |
+    | Deploying to Foundry            | ✅ |   ✅   | ❌ |                               |
 -->
 
 # Foundry Hosted Agents
 
-[Hosted agents](https://learn.microsoft.com/azure/foundry/agents/concepts/hosted-agents) in Microsoft Foundry Agent Service let you deploy Agent Framework agents as containerized applications to Microsoft-managed infrastructure. The platform handles scaling, session state persistence, security, and lifecycle management so you can focus on your agent's logic.
+[Hosted agents](/azure/foundry/agents/concepts/hosted-agents) in Microsoft Foundry Agent Service let you deploy Agent Framework agents as containerized applications to Microsoft-managed infrastructure. The platform handles scaling, session state persistence, security, and lifecycle management so you can focus on your agent's logic.
 
 With the Agent Framework hosting integration, you can take any `Agent` or workflow and expose it through the Foundry Responses or Invocations protocol with minimal code.
 
@@ -38,17 +38,17 @@ Choose Foundry hosted agents when you want:
 - **OpenAI-compatible endpoints** — clients can interact with your agent using any OpenAI-compatible SDK through the Responses protocol.
 
 > [!NOTE]
-> Foundry hosted agents are currently in preview. See the [Foundry hosted agents documentation](https://learn.microsoft.com/azure/foundry/agents/concepts/hosted-agents#limits-pricing-and-availability-preview) for the latest availability, limits, and pricing.
+> Foundry hosted agents are currently in preview. See the [Foundry hosted agents documentation](/azure/foundry/agents/concepts/hosted-agents#limits-pricing-and-availability-preview) for the latest availability, limits, and pricing.
 
 ## Prerequisites
 
 - An Azure subscription
-- [Azure Developer CLI (`azd`)](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd) with the AI agent extension: `azd ext install azure.ai.agents`
+- [Azure Developer CLI (`azd`)](/azure/developer/azure-developer-cli/install-azd) with the AI agent extension: `azd ext install azure.ai.agents`
 
 For local testing, you also need:
 
-- A [Microsoft Foundry](https://learn.microsoft.com/azure/foundry/) project with a model deployment (for example, `gpt-4o`)
-- [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) installed and authenticated (`az login`)
+- A [Microsoft Foundry](/azure/foundry/) project with a model deployment (for example, `gpt-4o`)
+- [Azure CLI](/cli/azure/install-azure-cli) installed and authenticated (`az login`)
 
 :::zone pivot="programming-language-csharp"
 
@@ -265,8 +265,15 @@ if __name__ == "__main__":
 
 :::zone-end
 
+:::zone pivot="programming-language-go"
+
+> [!NOTE]
+> Go support for Foundry hosted agents is coming soon. See the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go) for the latest status.
+
+:::zone-end
+
 > [!TIP]
-> Refer the [Python samples](https://github.com/microsoft-foundry/foundry-samples/tree/main/samples/python/hosted-agents/agent-framework) or the [C# samples](https://github.com/microsoft-foundry/foundry-samples/tree/main/samples/csharp/hosted-agents/agent-framework) for examples of a hosted agent project. Or use the `azd ai agent init` command to scaffold a new hosted agent project from scratch. Refer to this [quickstart guide](https://learn.microsoft.com/azure/foundry/agents/quickstarts/quickstart-hosted-agent?pivots=azd) for step-by-step instructions.
+> Refer the [Python samples](https://github.com/microsoft-foundry/foundry-samples/tree/main/samples/python/hosted-agents/agent-framework) or the [C# samples](https://github.com/microsoft-foundry/foundry-samples/tree/main/samples/csharp/hosted-agents/agent-framework) for examples of a hosted agent project. Or use the `azd ai agent init` command to scaffold a new hosted agent project from scratch. Refer to this [quickstart guide](/azure/foundry/agents/quickstarts/quickstart-hosted-agent?pivots=azd) for step-by-step instructions.
 
 ## Running locally
 
@@ -352,11 +359,11 @@ Once deployed, your agent is accessible through its dedicated Foundry endpoint a
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Hosted agents concepts](https://learn.microsoft.com/azure/foundry/agents/concepts/hosted-agents)
+> [Hosted agents concepts](/azure/foundry/agents/concepts/hosted-agents)
 
-- [Deploy a hosted agent with the Foundry SDK](https://learn.microsoft.com/azure/foundry/agents/how-to/deploy-hosted-agent)
-- [Manage hosted agents](https://learn.microsoft.com/azure/foundry/agents/how-to/manage-hosted-agent)
-- [Durable Extension hosting](../integrations/durable-extension.md)
+- [Deploy a hosted agent with the Foundry SDK](/azure/foundry/agents/how-to/deploy-hosted-agent)
+- [Manage hosted agents](/azure/foundry/agents/how-to/manage-hosted-agent)
+- [Azure Functions (Durable) hosting](../integrations/azure-functions.md)
 - [A2A Hosting](agent-to-agent.md)
 - [Python samples](https://github.com/microsoft-foundry/foundry-samples/tree/main/samples/python/hosted-agents/agent-framework)
 - [C# samples](https://github.com/microsoft-foundry/foundry-samples/tree/main/samples/csharp/hosted-agents/agent-framework)

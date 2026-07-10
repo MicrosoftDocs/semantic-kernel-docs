@@ -5,13 +5,13 @@ zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
 ms.author: westey
-ms.date: 04/02/2026
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
 # OpenAI Agents
 
-Microsoft Agent Framework supports two OpenAI client types — Responses and Chat Completion — in both C# and Python. **Responses is the recommended primary client**: it targets the newer OpenAI Responses API and supports the full set of hosted tools (code interpreter, file search, web search, hosted MCP, image generation). Use Chat Completion when you need broad model compatibility or have an existing Chat Completions integration to keep.
+Microsoft Agent Framework supports OpenAI agents in C#, Python, and Go. C# and Python support two OpenAI client types — Responses and Chat Completion — while Go currently uses the Chat Completions provider. **Responses is the recommended primary client when available**: it targets the newer OpenAI Responses API and supports the full set of hosted tools (code interpreter, file search, web search, hosted MCP, image generation). Use Chat Completion when you need broad model compatibility, Go support, or have an existing Chat Completions integration to keep.
 
 | Client Type | API | Best For |
 |---|---|---|
@@ -371,6 +371,89 @@ The same matrix applies when you point these clients at Azure OpenAI — see [Az
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## OpenAI Chat Completions
+
+The `openaiprovider` package creates agents using the OpenAI Chat Completions API.
+
+### Installation
+
+```bash
+go get github.com/microsoft/agent-framework-go
+```
+
+### Direct OpenAI
+
+```go
+import (
+    "github.com/microsoft/agent-framework-go/agent"
+    "github.com/microsoft/agent-framework-go/provider/openaiprovider"
+
+    "github.com/openai/openai-go/v3"
+)
+
+a := openaiprovider.NewChatCompletionsAgent(
+    openai.NewClient(), // uses OPENAI_API_KEY env var
+    openaiprovider.AgentConfig{
+        Model: "gpt-4o-mini",
+        Instructions: "You are a helpful assistant.",
+        Config: agent.Config{
+            Name:         "MyAgent",
+        },
+    },
+)
+
+resp, err := a.RunText(ctx, "Tell me a joke.").Collect()
+```
+
+### Azure OpenAI
+
+Use the same `openaiprovider` package with Azure credentials:
+
+```go
+import (
+    "github.com/Azure/azure-sdk-for-go/sdk/azidentity"
+    openai "github.com/openai/openai-go/v3"
+    "github.com/openai/openai-go/v3/azure"
+)
+
+token, _ := azidentity.NewDefaultAzureCredential(nil)
+
+a := openaiprovider.NewChatCompletionsAgent(
+    openai.NewClient(
+        azure.WithEndpoint(endpoint, apiVersion),
+        azure.WithTokenCredential(token),
+    ),
+    openaiprovider.AgentConfig{
+        Model: deployment,
+        Instructions: "You are a helpful assistant.",
+        Config: agent.Config{
+        },
+    },
+)
+```
+
+> [!WARNING]
+> `azidentity.NewDefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential, such as `azidentity.NewManagedIdentityCredential`, to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
+
+### Custom options
+
+Pass provider-specific options using `openaiprovider.ChatCompletionNewParams`:
+
+```go
+resp, err := a.RunText(ctx, "Hello!",
+    openaiprovider.ChatCompletionNewParams(openai.ChatCompletionNewParams{
+        Temperature: openai.Float(0.7),
+    }),
+).Collect()
+```
+
+**Supported tools:** Function tools, web search, local MCP tools.
+
+> [!TIP]
+> See the [OpenAI provider sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/providers/openai/main.go) and [Azure OpenAI sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/providers/azure/main.go) for complete examples.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

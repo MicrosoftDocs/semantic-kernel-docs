@@ -4,7 +4,7 @@ description: Compose agents by using one agent as a tool for another — enablin
 author: TaoChenOSU
 ms.topic: article
 ms.author: taochen
-ms.date: 04/06/2026
+ms.date: 05/27/2026
 ms.service: agent-framework
 ---
 
@@ -92,6 +92,6 @@ Now that you can compose agents within a single process, the next step is **Agen
 
 **Go deeper:**
 
-- [Tools Overview — Using an Agent as a Function Tool](../agents/tools/index.md#using-an-agent-as-a-function-tool) — code examples for C# and Python
+- [Tools Overview — Using an Agent as a Function Tool](../agents/tools/index.md#using-an-agent-as-a-function-tool) — code examples for C#, Python, and Go
 - [Function Tools](../agents/tools/function-tools.md) — the tool type that agent-as-tool builds on
 - [Observability](../agents/observability.md) — tracing inner agent behavior

@@ -5,7 +5,7 @@ This repository contains documentation for two separate Microsoft products, publ
 | Docset | Languages | Source Code | Published URL |
 |--------|-----------|-------------|---------------|
 | **Semantic Kernel** (`semantic-kernel/`) | C#, Python, Java | [microsoft/semantic-kernel](https://github.com/microsoft/semantic-kernel) | [/semantic-kernel](https://learn.microsoft.com/semantic-kernel) |
-| **Agent Framework** (`agent-framework/`) | C#, Python | [microsoft/agent-framework](https://github.com/microsoft/agent-framework) | [/agent-framework](https://learn.microsoft.com/agent-framework) |
+| **Agent Framework** (`agent-framework/`) | C#, Python, Go | [microsoft/agent-framework](https://github.com/microsoft/agent-framework), [microsoft/agent-framework-go](https://github.com/microsoft/agent-framework-go) | [/agent-framework](https://learn.microsoft.com/agent-framework) |
 
 Each docset is independent with its own `docfx.json`, `TOC.yml`, and `zone-pivot-groups.yml`.
 
@@ -47,7 +47,7 @@ Java content here
 ::: zone-end
 ```
 
-**Agent Framework** (C#, Python only - no Java):
+**Agent Framework** (C#, Python, Go only - no Java):
 ```markdown
 ::: zone pivot="programming-language-csharp"
 C# content here
@@ -55,6 +55,10 @@ C# content here
 
 ::: zone pivot="programming-language-python"
 Python content here
+::: zone-end
+
+::: zone pivot="programming-language-go"
+Go content here
 ::: zone-end
 ```
 

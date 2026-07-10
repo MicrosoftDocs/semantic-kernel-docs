@@ -1,6 +1,6 @@
 ---
 title: Microsoft Agent Framework Overview
-description: "Build AI agents and multi-agent workflows in .NET and Python with Microsoft Agent Framework."
+description: "Build AI agents and multi-agent workflows in .NET, Python, and Go with Microsoft Agent Framework."
 zone_pivot_groups: programming-languages
 ms.topic: overview
 ms.date: 07/08/2026
@@ -26,6 +26,13 @@ middleware for intercepting agent actions, and MCP clients for tool integration.
 Together, these components give you the flexibility and power to build
 interactive, robust, and safe AI applications.
 
+
+:::zone pivot="programming-language-go"
+
+> [!IMPORTANT]
+> The Agent Framework for Go is in public preview. Declarative agents, RAG, CodeAct, and functional workflows are not yet available. File issues on GitHub (https://github.com/microsoft/agent-framework-go/issues).
+
+:::zone-end
 
 ## Get started
 
@@ -81,6 +88,54 @@ pip install agent-framework
     result = await agent.run("What is the largest city in France?")
     print(f"Agent: {result}")
 ```
+:::zone-end
+
+:::zone pivot="programming-language-go"
+
+```bash
+go get github.com/microsoft/agent-framework-go
+```
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+
+    "github.com/microsoft/agent-framework-go/agent"
+    "github.com/microsoft/agent-framework-go/provider/foundryprovider"
+
+    "github.com/Azure/azure-sdk-for-go/sdk/azidentity"
+)
+
+func main() {
+    endpoint := os.Getenv("FOUNDRY_PROJECT_ENDPOINT")
+    model := os.Getenv("FOUNDRY_MODEL")
+
+    token, err := azidentity.NewDefaultAzureCredential(nil)
+    if err != nil {
+        panic(err)
+    }
+
+    a := foundryprovider.NewAgent(
+        endpoint,
+        token,
+        foundryprovider.ModelDeployment(model),
+        foundryprovider.AgentConfig{
+            Instructions: "You are a friendly assistant. Keep your answers brief.",
+            Config: agent.Config{
+                Name: "HelloAgent",
+            },
+        },
+    )
+
+    resp, err := a.RunText(context.Background(), "What is the largest city in France?").Collect()
+    fmt.Println(resp, err)
+}
+```
+
 :::zone-end
 
 That's it — an agent that calls an LLM and returns a response. From here you can [add tools](../agents/tools/index.md), [multi-turn conversations](../agents/conversations/session.md), [middleware](../agents/middleware/index.md), and [workflows](#when-to-use-agents-vs-workflows) to build production applications.

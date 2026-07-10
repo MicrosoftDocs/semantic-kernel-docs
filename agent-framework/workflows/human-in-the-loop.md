@@ -5,21 +5,21 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 03/09/2026
+ms.date: 05/27/2026
 ms.service: agent-framework
 ---
 
 <!--
   Language parity table – keep in sync when adding/removing sections.
 
-  | Section                              | C# | Python | Notes                                           |
-  |--------------------------------------|:--:|:------:|:------------------------------------------------|
-  | Overview                             | ✅ |   ✅   |                                                  |
-  | Enable Request and Response Handling | ✅ |   ✅   | C# uses RequestPort; Python uses ctx.request_info |
-  | Handling Requests and Responses      | ✅ |   ✅   |                                                  |
-  | HITL with Agent Orchestrations       | ✅ |   ✅   | No zone pivots; links to orchestration docs     |
-  | Checkpoints and Requests             | ✅ |   ✅   |                                                  |
-  | Next Steps                           | ✅ |   ✅   |                                                  |
+    | Section                              | C# | Python | Go | Notes                                           |
+    |--------------------------------------|:--:|:------:|:--:|:------------------------------------------------|
+    | Overview                             | ✅ |   ✅   | ✅ |                                                  |
+    | Enable Request and Response Handling | ✅ |   ✅   | ✅ | C# and Go use RequestPort; Python uses ctx.request_info |
+    | Handling Requests and Responses      | ✅ |   ✅   | ✅ |                                                  |
+    | HITL with Agent Orchestrations       | ✅ |   ✅   | ✅ | No zone pivots; links to orchestration docs     |
+    | Checkpoints and Requests             | ✅ |   ✅   | ✅ |                                                  |
+    | Next Steps                           | ✅ |   ✅   | ✅ |                                                  |
 -->
 
 # Microsoft Agent Framework Workflows - Human-in-the-loop (HITL)
@@ -156,6 +156,35 @@ The `@response_handler` decorator automatically registers the method to handle r
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+Workflows support human-in-the-loop patterns through `RequestPort`, which pauses execution and waits for external input.
+
+```go
+approvalPort := workflow.RequestPort{
+    ID:       "ApprovalPort",
+    Request:  reflect.TypeFor[string](),
+    Response: reflect.TypeFor[bool](),
+}
+
+approval := approvalPort.Bind()
+finalize := workflow.NewExecutor("FinalizeExecutor", func(approved bool) string {
+    if approved {
+        return "Request approved by the human reviewer"
+    }
+    return "Request rejected by the human reviewer"
+}).Bind()
+
+wf, err := workflow.NewBuilder(approval).
+    AddEdge(approval, finalize).
+    WithOutputFrom(finalize).
+    Build()
+```
+
+A `RequestPort` defines a typed request/response channel between the workflow and the outside world. When an executor reaches a request port, the workflow pauses and emits an external request event. The workflow resumes when an external response is provided.
+
+::: zone-end
+
 ## Handling Requests and Responses
 
 ::: zone pivot="programming-language-csharp"
@@ -231,11 +260,49 @@ while pending_responses is not None:
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+Listen for `workflow.RequestInfoEvent`, create a response from the request, and resume the run with that response:
+
+```go
+run, err := inproc.Default.Run(ctx, wf, "Approve deployment to production?")
+if err != nil {
+    return err
+}
+
+var request *workflow.ExternalRequest
+for evt := range run.NewEvents() {
+    if requestEvent, ok := evt.(workflow.RequestInfoEvent); ok {
+        request = requestEvent.Request
+        break
+    }
+}
+
+response, err := request.CreateResponse(true)
+if err != nil {
+    return err
+}
+
+if _, err := run.Resume(ctx, response); err != nil {
+    return err
+}
+
+for evt := range run.NewEvents() {
+    if output, ok := evt.(workflow.OutputEvent); ok {
+        fmt.Println(output.Output)
+    }
+}
+```
+
+> [!TIP]
+> See the [human-in-the-loop sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/03-workflows/human-in-the-loop/human_in_the_loop_basic/main.go) for a complete runnable file.
+
+::: zone-end
 ## Human-in-the-Loop with Agent Orchestrations
 
 The `RequestPort` pattern described above works with custom executors and `WorkflowBuilder`. When using **agent orchestrations** (such as sequential, concurrent, or group chat workflows), **tool approval** is achieved through the human-in-the-loop request/response mechanism.
 
-Agents can use tools that require human approval before execution. When the agent attempts to call an approval-required tool, the workflow pauses and emits a `RequestInfoEvent` just like the `RequestPort` pattern, but the event payload contains a `ToolApprovalRequestContent` (C#) or a `Content` with `type == "function_approval_request"` (Python) instead of a custom request type.
+Agents can use tools that require human approval before execution. When the agent attempts to call an approval-required tool, the workflow pauses and emits a `RequestInfoEvent` just like the `RequestPort` pattern, but the event payload contains a `ToolApprovalRequestContent` (C# and Go) or a `Content` with `type == "function_approval_request"` (Python) instead of a custom request type.
 
 > [!TIP]
 > For complete examples with code, see:
@@ -249,6 +316,8 @@ Agents can use tools that require human approval before execution. When the agen
 To learn more about checkpoints, see [Checkpoints](./checkpoints.md).
 
 When a checkpoint is created, pending requests are also saved as part of the checkpoint state. When you restore from a checkpoint, any pending requests will be re-emitted as `RequestInfoEvent` objects, allowing you to capture and respond to them. You can also resume from a checkpoint and provide responses in the same call by passing both `checkpoint_id` and `responses` to `workflow.run(...)`.
+
+After restoring, listen for the re-emitted request events and respond through the same response mechanism shown earlier for your language.
 
 ## Next Steps
 

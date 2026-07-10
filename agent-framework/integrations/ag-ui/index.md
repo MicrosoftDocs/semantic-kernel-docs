@@ -260,3 +260,23 @@ To get started with AG-UI integration:
 - [Agent Framework GitHub Repository](https://github.com/microsoft/agent-framework)
 
 ::: zone-end
+
+::: zone pivot="programming-language-go"
+
+Go supports AG-UI through `provider/aguiprovider` for both servers and clients.
+
+```go
+import "github.com/microsoft/agent-framework-go/provider/aguiprovider"
+
+mux := http.NewServeMux()
+mux.Handle("/", aguiprovider.NewJSONHTTPHandler(myAgent, aguiprovider.HandlerConfig{}))
+
+if err := http.ListenAndServe(":8888", mux); err != nil {
+    log.Fatal(err)
+}
+```
+
+> [!TIP]
+> See the [AG-UI Go examples](https://github.com/microsoft/agent-framework-go/tree/main/examples/02-agents/agui) for complete server and client samples.
+
+::: zone-end

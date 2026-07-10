@@ -954,3 +954,37 @@ You've now learned all the core AG-UI features! Next you can:
 <!-- - [Human-in-the-Loop](human-in-the-loop.md) -->
 
 ::: zone-end
+
+::: zone pivot="programming-language-go"
+
+Go AG-UI state management can be implemented with middleware that emits structured `message.DataContent` updates alongside normal text updates.
+
+```go
+stateSnapshotMiddleware := agent.MiddlewareFunc(func(next agent.RunFunc, ctx context.Context, messages []*message.Message, opts ...agent.Option) iter.Seq2[*agent.ResponseUpdate, error] {
+    return func(yield func(*agent.ResponseUpdate, error) bool) {
+        for update, err := range next(ctx, messages, opts...) {
+            if err != nil {
+                yield(nil, err)
+                return
+            }
+            if update != nil {
+                // Inspect update contents and yield DataContent snapshots as needed.
+            }
+            if !yield(update, nil) {
+                return
+            }
+        }
+    }
+})
+
+a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Config: agent.Config{
+        Middlewares: []agent.Middleware{stateSnapshotMiddleware},
+    },
+})
+```
+
+> [!TIP]
+> See the [AG-UI state management sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/agui/step05_state_management/server/main.go) for a complete runnable example.
+
+::: zone-end

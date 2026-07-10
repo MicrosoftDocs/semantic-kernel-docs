@@ -19,7 +19,7 @@ Once you've built your agent, you need to host it so users and other agents can 
 |--------|-------------|----------|
 | [A2A Protocol](../integrations/a2a.md) | Expose agents via the Agent-to-Agent protocol | Multi-agent systems |
 | [OpenAI-Compatible Endpoints](../integrations/openai-endpoints.md) | Expose agents via Chat Completions or Responses APIs | OpenAI-compatible clients |
-| [Durable Extension](../integrations/durable-extension.md) | Make agents and workflows durable on Azure Functions or self-hosted compute | Long-running, reliable workloads |
+| [Durable Extension](../integrations/durable-extension.md) | Make C# and Python agents and workflows durable on Azure Functions or self-hosted compute | Long-running, reliable workloads |
 | [AG-UI Protocol](../integrations/ag-ui/index.md) | Build web-based AI agent applications | Web frontends |
 
 :::zone pivot="programming-language-csharp"
@@ -168,6 +168,67 @@ curl -X POST http://localhost:7071/api/agents/Joker/run \
 
 :::zone-end
 
+:::zone pivot="programming-language-go"
+
+## Hosting with A2A Protocol
+
+The Go port provides A2A hosting through `a2aprovider`, which wraps an agent in an HTTP handler compatible with the Agent-to-Agent protocol.
+
+> [!NOTE]
+> Durable Extension hosting isn't currently available for Go. For the latest Go SDK status, see the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go).
+
+Create an agent:
+
+```go
+import (
+    "github.com/microsoft/agent-framework-go/agent"
+    "github.com/microsoft/agent-framework-go/provider/a2aprovider"
+    "github.com/microsoft/agent-framework-go/provider/foundryprovider"
+
+    "github.com/a2aproject/a2a-go/v2/a2a"
+    "github.com/a2aproject/a2a-go/v2/a2asrv"
+)
+
+a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Instructions: "You are a helpful assistant.",
+    Config: agent.Config{
+    },
+})
+```
+
+Expose the agent via A2A:
+
+```go
+url := "http://localhost:5000"
+card := &a2a.AgentCard{
+    Name:               "MyAgent",
+    Description:        "A helpful assistant.",
+    Version:            "1.0.0",
+    DefaultInputModes:  []string{"text"},
+    DefaultOutputModes: []string{"text"},
+    Capabilities:       a2a.AgentCapabilities{Streaming: false},
+    SupportedInterfaces: []*a2a.AgentInterface{
+        a2a.NewAgentInterface(url, a2a.TransportProtocolJSONRPC),
+    },
+}
+
+mux := http.NewServeMux()
+requestHandler := a2asrv.NewHandler(
+    a2aprovider.NewExecutor(a, a2aprovider.ExecutorConfig{}),
+    a2asrv.WithExtendedAgentCard(card),
+)
+mux.Handle("/", a2asrv.NewJSONRPCHandler(requestHandler))
+mux.Handle(a2asrv.WellKnownAgentCardPath, a2asrv.NewStaticAgentCardHandler(card))
+
+log.Println("A2A server listening on :5000")
+http.ListenAndServe(":5000", mux)
+```
+
+> [!TIP]
+> See the [full A2A client-server sample](https://github.com/microsoft/agent-framework-go/tree/main/examples/05-end-to-end/a2a_client_server) for a complete runnable example.
+
+:::zone-end
+
 ## Next steps
 
 > [!div class="nextstepaction"]
@@ -176,7 +237,7 @@ curl -X POST http://localhost:7071/api/agents/Joker/run \
 **Go deeper:**
 
 - [A2A Protocol](../integrations/a2a.md) — expose and consume agents via A2A
-- [Durable Extension](../integrations/durable-extension.md) — durable agent and workflow hosting
+- [Durable Extension](../integrations/durable-extension.md) — durable C# and Python agent and workflow hosting
 - [AG-UI Protocol](../integrations/ag-ui/index.md) — web-based agent UIs
 - [Foundry Hosted Agents docs](/azure/ai-foundry/agents/concepts/hosted-agents) — understand hosted agents in Microsoft Foundry
 - [Foundry Hosted Agents sample (Python)](https://github.com/microsoft-foundry/foundry-samples/tree/main/samples/python/hosted-agents/agent-framework) — run an end-to-end Agent Framework hosted-agent sample

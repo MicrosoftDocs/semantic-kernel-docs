@@ -1131,3 +1131,27 @@ Later requests cannot resurface or execute stale tool calls from the cancelled b
 - [Function Tools with Approvals](../../agents/tools/tool-approval.md)
 
 ::: zone-end
+
+::: zone pivot="programming-language-go"
+
+Go supports AG-UI human-in-the-loop flows with approval-required tools. Wrap a function tool with `tool.ApprovalRequiredFunc`, then host the agent through `aguiprovider`.
+
+```go
+approveExpense := functool.MustNew(functool.Config{
+    Name:        "approve_expense_report",
+    Description: "Approve the expense report.",
+}, func(ctx context.Context, expenseReportID string) (string, error) {
+    return fmt.Sprintf("Expense report %s approved", expenseReportID), nil
+})
+
+a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Config: agent.Config{
+        Tools: []tool.Tool{tool.ApprovalRequiredFunc(approveExpense)},
+    },
+})
+```
+
+> [!TIP]
+> See the [AG-UI human-in-the-loop sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/agui/step04_human_in_loop/server/main.go) for a complete runnable example.
+
+::: zone-end

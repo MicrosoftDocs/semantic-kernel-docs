@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: reference
 ms.author: edvan
-ms.date: 04/01/2026
+ms.date: 05/27/2026
 ms.service: agent-framework
 ---
 
@@ -479,6 +479,30 @@ if __name__ == "__main__":
 
 :::zone-end
 
+:::zone pivot="programming-language-go"
+
+Go middleware can terminate a run before provider invocation by returning without calling `next`, or it can stop forwarding updates after a condition is met.
+
+```go
+guardrail := agent.MiddlewareFunc(func(next agent.RunFunc, ctx context.Context, messages []*message.Message, options ...agent.Option) iter.Seq2[*agent.ResponseUpdate, error] {
+    return func(yield func(*agent.ResponseUpdate, error) bool) {
+        if violatesPolicy(messages) {
+            yield(&agent.ResponseUpdate{
+                Contents: message.Contents{&message.TextContent{Text: "I can't help with that request."}},
+            }, nil)
+            return
+        }
+
+        for update, err := range next(ctx, messages, options...) {
+            if !yield(update, err) {
+                return
+            }
+        }
+    }
+})
+```
+
+:::zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

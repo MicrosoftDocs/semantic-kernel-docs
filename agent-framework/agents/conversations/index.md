@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: article
 ms.author: edvan
-ms.date: 02/13/2026
+ms.date: 05/28/2026
 ms.service: agent-framework
 ---
 
@@ -33,6 +33,16 @@ Most applications follow the same flow:
 1. Create a session (`create_session()`)
 2. Pass that session to each `run(...)`
 3. Rehydrate by service conversation ID (`get_session(...)`) or from serialized state
+
+:::zone-end
+
+:::zone pivot="programming-language-go"
+
+1. Create a session (`CreateSession(...)`)
+2. Pass that session to each `RunText(...)` with `agent.WithSession(session)`
+3. Rehydrate from serialized state with `json.Unmarshal(...)` into `agent.Session`
+
+The Go `agent` package provides the core types for conversation state: `agent.Session` for key-value state tied to a conversation and `agent.ContextProvider` for context injection and persistence.
 
 :::zone-end
 
@@ -71,6 +81,42 @@ resumed = AgentSession.from_dict(serialized)
 
 :::zone-end
 
+:::zone pivot="programming-language-go"
+```go
+session, err := a.CreateSession(ctx)
+if err != nil {
+    panic(err)
+}
+```
+
+### Use a session for multi-turn conversations
+
+```go
+resp, _ := a.RunText(ctx, "My name is Alice.", agent.WithSession(session)).Collect()
+resp, _ = a.RunText(ctx, "What is my name?", agent.WithSession(session)).Collect()
+```
+
+### Persist sessions
+
+Sessions can be serialized to JSON for storage and later resumed:
+
+```go
+data, err := json.Marshal(session)
+if err != nil {
+    panic(err)
+}
+// store data...
+
+// later:
+var resumed agent.Session
+if err := json.Unmarshal(data, &resumed); err != nil {
+    panic(err)
+}
+
+resp, err := a.RunText(ctx, "Continue from where we left off.", agent.WithSession(&resumed)).Collect()
+```
+
+:::zone-end
 ## Guide map
 
 | Page | Focus |

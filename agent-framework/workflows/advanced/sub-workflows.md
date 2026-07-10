@@ -5,25 +5,25 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: article
 ms.author: taochen
-ms.date: 03/23/2026
+ms.date: 06/22/2026
 ms.service: agent-framework
 ---
 
 <!--
   Language parity table – keep in sync when adding/removing sections.
 
-  | Section                        | C# | Python | Notes                              |
-  |--------------------------------|:--:|:------:|-------------------------------------|
-  | Overview                       | ✅ |   ✅   |                                    |
-  | Creating a Sub-Workflow        | ✅ |   ✅   |                                    |
-  | Implicit vs Explicit Wrapping  | ❌ |   ✅   | Python-specific (WorkflowExecutor) |
-  | Input and Output Types         | ✅ |   ✅   |                                    |
-  | Output Behavior                | ✅ |   ✅   |                                    |
-  | Requests and Responses         | ✅ |   ✅   |                                    |
-  | How It Works                   | ✅ |   ✅   |                                    |
-  | Multi-Level Nesting            | ✅ |   ✅   |                                    |
-  | Error Handling                 | ✅ |   ✅   |                                    |
-  | Checkpointing                  | ✅ |   ✅   |                                    |
+    | Section                        | C# | Python | Go | Notes                              |
+    |--------------------------------|:--:|:------:|:--:|------------------------------------|
+    | Overview                       | ✅ |   ✅   | ✅ |                                    |
+    | Creating a Sub-Workflow        | ✅ |   ✅   | ✅ |                                    |
+    | Implicit vs Explicit Wrapping  | ❌ |   ✅   | ❌ | Python-specific (WorkflowExecutor) |
+    | Input and Output Types         | ✅ |   ✅   | ✅ |                                    |
+    | Output Behavior                | ✅ |   ✅   | ✅ |                                    |
+    | Requests and Responses         | ✅ |   ✅   | ✅ |                                    |
+    | How It Works                   | ✅ |   ✅   | ✅ |                                    |
+    | Multi-Level Nesting            | ✅ |   ✅   | ✅ |                                    |
+    | Error Handling                 | ✅ |   ✅   | ✅ |                                    |
+    | Checkpointing                  | ✅ |   ✅   | ✅ |                                    |
 -->
 
 # Sub-Workflows
@@ -578,6 +578,331 @@ async for event in parent_workflow.run(
     if event.type == "output":
         print(event.data)
 ```
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+## Creating a Sub-Workflow
+
+In Go, you create a sub-workflow by building a `*workflow.Workflow` and binding it into the parent workflow with `inproc.BindSubworkflowAsExecutor`.
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "slices"
+    "strings"
+
+    "github.com/microsoft/agent-framework-go/workflow"
+    "github.com/microsoft/agent-framework-go/workflow/inproc"
+)
+
+func buildParentWorkflow() (*workflow.Workflow, error) {
+    uppercase := workflow.NewExecutor("UppercaseExecutor", strings.ToUpper).Bind()
+    reverse := workflow.NewExecutor("ReverseExecutor", reverseString).Bind()
+    appendSuffix := workflow.NewExecutor("AppendSuffixExecutor", func(input string) string {
+        return input + " [PROCESSED]"
+    }).Bind()
+
+    textProcessing, err := workflow.NewBuilder(uppercase).
+        AddEdge(uppercase, reverse).
+        AddEdge(reverse, appendSuffix).
+        WithOutputFrom(appendSuffix).
+        Build()
+    if err != nil {
+        return nil, err
+    }
+
+    textProcessingExecutor := inproc.BindSubworkflowAsExecutor(
+        textProcessing,
+        "TextProcessingSubWorkflow",
+    )
+
+    prefix := workflow.NewExecutor("PrefixExecutor", func(input string) string {
+        return "INPUT: " + input
+    }).Bind()
+    postProcess := workflow.NewExecutor("PostProcessExecutor", func(input string) string {
+        return "[FINAL] " + input + " [END]"
+    }).Bind()
+
+    return workflow.NewBuilder(prefix).
+        AddEdge(prefix, textProcessingExecutor).
+        AddEdge(textProcessingExecutor, postProcess).
+        WithOutputFrom(postProcess).
+        Build()
+}
+
+func reverseString(input string) string {
+    runes := []rune(input)
+    slices.Reverse(runes)
+    return string(runes)
+}
+
+func runWorkflow(ctx context.Context, parentWorkflow *workflow.Workflow) error {
+    run, err := inproc.Default.RunStreaming(ctx, parentWorkflow, "hello")
+    if err != nil {
+        return err
+    }
+    defer run.Close(ctx)
+
+    for event, err := range run.WatchStream(ctx) {
+        if err != nil {
+            return err
+        }
+        if output, ok := event.(workflow.OutputEvent); ok {
+            fmt.Println(output.Output)
+        }
+    }
+    return nil
+}
+```
+
+The bound child workflow runs as one executor from the parent workflow's perspective. Messages enter through the binding, the child workflow runs its own internal graph, and the child workflow's outputs are routed back into the parent graph.
+
+## Input and Output Types
+
+The binding inherits the protocol of the wrapped workflow. The parent workflow can send messages whose runtime types match the child workflow's accepted input types, and the binding exposes the child workflow's yielded output types as both message types and output types.
+
+This means the parent workflow's edges must connect executors whose output types match the sub-workflow's accepted inputs, and downstream executors must handle the types yielded by the child workflow:
+
+```go
+type TextProcessingRequest struct {
+    Text string
+}
+
+type TextProcessingResult struct {
+    Text string
+}
+
+orchestrator := workflow.NewExecutor("Orchestrator", func(ctx *workflow.Context, texts []string) error {
+    for _, text := range texts {
+        if err := ctx.SendMessage("", TextProcessingRequest{Text: text}); err != nil {
+            return err
+        }
+    }
+    return nil
+}).Bind()
+
+collector := workflow.NewExecutor("Collector", func(result TextProcessingResult) {
+    fmt.Println(result.Text)
+}).Bind()
+```
+
+## Output Behavior
+
+When a child workflow yields an output, the sub-workflow binding sends that output as a message from the binding to connected executors in the parent workflow. If the parent workflow also marks the sub-workflow binding with `WithOutputFrom`, the same value is emitted as a parent `workflow.OutputEvent` whose `ExecutorID` is the sub-workflow binding ID.
+
+```go
+subWorkflowExecutor := inproc.BindSubworkflowAsExecutor(textProcessing, "TextProcessingSubWorkflow")
+postProcess := workflow.NewExecutor("PostProcessExecutor", func(input string) string {
+    return "[FINAL] " + input
+}).Bind()
+
+parentWorkflow, err := workflow.NewBuilder(subWorkflowExecutor).
+    AddEdge(subWorkflowExecutor, postProcess).
+    WithOutputFrom(subWorkflowExecutor).
+    WithOutputFrom(postProcess).
+    Build()
+```
+
+Custom workflow events emitted inside the child workflow are forwarded to the parent event stream. The sub-workflow's own start and superstep lifecycle events are kept internal so the parent stream stays focused on externally meaningful events.
+
+## Requests and Responses
+
+Sub-workflows support the [request and response](../human-in-the-loop.md) mechanism. When an executor inside the sub-workflow posts an external request, the sub-workflow binding qualifies the request port ID by prepending the binding ID. For example, a child request port named `ApprovalPort` becomes `ApprovalSubWorkflow.ApprovalPort` in the parent workflow.
+
+To surface the child request through the parent workflow, add a parent `RequestPort` with the qualified ID and route requests and responses between the sub-workflow binding and that port:
+
+```go
+import "reflect"
+
+approvalPort := workflow.RequestPort{
+    ID:       "ApprovalPort",
+    Request:  reflect.TypeFor[string](),
+    Response: reflect.TypeFor[bool](),
+}
+
+approvalWorkflow, err := workflow.NewBuilder(approvalPort.Bind()).
+    Build()
+if err != nil {
+    return err
+}
+
+approvalSubWorkflow := inproc.BindSubworkflowAsExecutor(
+    approvalWorkflow,
+    "ApprovalSubWorkflow",
+)
+
+qualifiedApprovalPort := workflow.RequestPort{
+    ID:       "ApprovalSubWorkflow.ApprovalPort",
+    Request:  approvalPort.Request,
+    Response: approvalPort.Response,
+}
+qualifiedApproval := qualifiedApprovalPort.Bind()
+
+parentWorkflow, err := workflow.NewBuilder(approvalSubWorkflow).
+    AddDirectEdge(approvalSubWorkflow, qualifiedApproval, false, externalRequestOnly).
+    AddDirectEdge(qualifiedApproval, approvalSubWorkflow, false, externalResponseOnly).
+    Build()
+```
+
+The caller handles the request from the parent workflow stream and sends the response back through the same run handle. The sub-workflow binding removes the qualified prefix before delivering the response to the child workflow.
+
+```go
+run, err := inproc.Default.RunStreaming(ctx, parentWorkflow, "Approve deployment?")
+if err != nil {
+    return err
+}
+defer run.Close(ctx)
+
+for event, err := range run.WatchStream(ctx) {
+    if err != nil {
+        return err
+    }
+    switch event := event.(type) {
+    case workflow.RequestInfoEvent:
+        response, err := event.Request.CreateResponse(true)
+        if err != nil {
+            return err
+        }
+        if err := run.SendResponse(ctx, response); err != nil {
+            return err
+        }
+    case workflow.OutputEvent:
+        fmt.Println(event.Output)
+    }
+}
+```
+
+Use predicates to keep the request and response edges narrow:
+
+```go
+func externalRequestOnly(msg any) bool {
+    _, ok := msg.(*workflow.ExternalRequest)
+    return ok
+}
+
+func externalResponseOnly(msg any) bool {
+    _, ok := msg.(*workflow.ExternalResponse)
+    return ok
+}
+```
+
+## How It Works
+
+When the parent workflow routes a message to the sub-workflow binding:
+
+1. **Input delivery** — the binding accepts messages that match the child workflow's accepted input types and enqueues them into the child workflow's start executor.
+2. **Inner execution** — the child workflow runs in the same in-process execution environment and maintains its own superstep loop.
+3. **Output forwarding** — child `workflow.OutputEvent` values are sent as messages from the binding to downstream parent executors, and are also yielded from the parent if the binding is listed in `WithOutputFrom`.
+4. **Request forwarding** — child `workflow.RequestInfoEvent` requests are re-emitted with qualified port IDs and can be routed through parent `RequestPort` bindings.
+5. **Event forwarding** — custom child workflow events are added to the parent stream. Errors are surfaced as parent `workflow.ErrorEvent` values with the sub-workflow ID recorded.
+6. **Downstream dispatch** — resulting messages continue through the parent workflow edges.
+
+The child workflow keeps its state and message routing separate from the parent. Messages cross the boundary only through the edges connected to the sub-workflow binding.
+
+## Multi-Level Nesting
+
+Sub-workflows can be nested to arbitrary depth. Each child workflow is bound before it is added to the workflow that contains it:
+
+```go
+fraudCheck, err := workflow.NewBuilder(analyzePatterns).
+    AddEdge(analyzePatterns, calculateRiskScore).
+    WithOutputFrom(calculateRiskScore).
+    Build()
+if err != nil {
+    return err
+}
+
+fraudCheckExecutor := inproc.BindSubworkflowAsExecutor(fraudCheck, "FraudCheck")
+
+payment, err := workflow.NewBuilder(validatePayment).
+    AddEdge(validatePayment, fraudCheckExecutor).
+    AddEdge(fraudCheckExecutor, chargePayment).
+    WithOutputFrom(chargePayment).
+    Build()
+if err != nil {
+    return err
+}
+
+paymentExecutor := inproc.BindSubworkflowAsExecutor(payment, "Payment")
+shippingExecutor := inproc.BindSubworkflowAsExecutor(shipping, "Shipping")
+
+orderWorkflow, err := workflow.NewBuilder(orderReceived).
+    AddEdge(orderReceived, paymentExecutor).
+    AddEdge(paymentExecutor, shippingExecutor).
+    AddEdge(shippingExecutor, orderCompleted).
+    WithOutputFrom(orderCompleted).
+    Build()
+```
+
+> [!NOTE]
+> Each nesting level adds execution overhead because the child workflow runs its own superstep loop. Keep nesting depth reasonable for performance-sensitive scenarios.
+
+## Error Handling
+
+When a child workflow emits an error, the sub-workflow binding forwards it to the parent workflow as a `workflow.ErrorEvent` and sets `SubWorkflowID` to the binding ID. The parent workflow can observe these errors through the same event stream it uses for top-level workflow errors:
+
+```go
+for event, err := range run.WatchStream(ctx) {
+    if err != nil {
+        return err
+    }
+    switch event := event.(type) {
+    case workflow.ErrorEvent:
+        if event.SubWorkflowID != "" {
+            return fmt.Errorf("sub-workflow %q failed: %w", event.SubWorkflowID, event.Error)
+        }
+        return event.Error
+    case workflow.ExecutorFailedEvent:
+        return fmt.Errorf("executor %q failed: %w", event.ExecutorID, event.Error)
+    }
+}
+```
+
+Errors raised while forwarding child events are also converted to parent `workflow.ErrorEvent` values with the sub-workflow ID attached.
+
+## Checkpointing
+
+Sub-workflows support checkpointing. When the parent workflow takes a checkpoint, the sub-workflow binding stores the child workflow's checkpoint manager and any pending qualified response-port mappings in the parent executor state. On restore, the child workflow can resume with its nested execution state intact, including pending requests.
+
+```go
+checkpointManager := checkpoint.NewInMemoryManager()
+environment := inproc.Default.WithCheckpointing(checkpointManager)
+
+var checkpoints []workflow.CheckpointInfo
+run, err := environment.RunStreaming(ctx, parentWorkflow, "hello")
+if err != nil {
+    return err
+}
+defer run.Close(ctx)
+
+for event, err := range run.WatchStream(ctx) {
+    if err != nil {
+        return err
+    }
+    if completed, ok := event.(workflow.SuperStepCompletedEvent); ok {
+        if completed.CompletionInfo != nil && completed.CompletionInfo.CheckpointInfo != nil {
+            checkpoints = append(checkpoints, *completed.CompletionInfo.CheckpointInfo)
+        }
+    }
+}
+
+if len(checkpoints) == 0 {
+    return fmt.Errorf("no checkpoints were created")
+}
+
+resumedRun, err := environment.ResumeStreaming(ctx, parentWorkflow, checkpoints[len(checkpoints)-1])
+if err != nil {
+    return err
+}
+defer resumedRun.Close(ctx)
+```
+
+If a checkpoint is restored while a child workflow has a pending request, the restored parent run republishes the qualified request info event. The caller can create a response from that republished request and send it back through the parent run handle.
 
 ::: zone-end
 

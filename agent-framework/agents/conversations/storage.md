@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: article
 ms.author: edvan
-ms.date: 02/13/2026
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
@@ -62,6 +62,34 @@ await agent.run("Remember that I like Italian food.", session=session)
 
 :::zone-end
 
+:::zone pivot="programming-language-go"
+
+Go stores local chat history in `agent.Session` through an `agent.HistoryProvider`. If you don't configure a history provider, Agent Framework creates a default in-memory provider that is used when you pass an explicit local session. Configure one explicitly when you want a stable source ID or custom filters.
+
+```go
+history := agent.NewInMemoryHistoryProvider(agent.InMemoryHistoryProviderConfig{
+    SourceID: "chat_history",
+})
+
+a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Instructions: "You are a helpful assistant.",
+    Config: agent.Config{
+        Name:            "StorageAgent",
+        HistoryProvider: history,
+    },
+})
+
+session, err := a.CreateSession(ctx)
+if err != nil {
+    panic(err)
+}
+
+_, err = a.RunText(ctx, "Remember that I like Italian food.", agent.WithSession(session)).Collect()
+_, err = a.RunText(ctx, "What kind of food do I like?", agent.WithSession(session)).Collect()
+```
+
+:::zone-end
+
 ## Reducing in-memory history size
 
 If history grows too large for model limits, apply a reducer.
@@ -81,6 +109,27 @@ AIAgent agent = new OpenAIClient("<your_api_key>")
         })
     });
 ```
+
+:::zone-end
+
+:::zone pivot="programming-language-go"
+
+Use a `HistoryProvider` filter to limit the history messages loaded into the next request. For example, keep only the most recent 20 history messages:
+
+```go
+history := agent.NewInMemoryHistoryProvider(agent.InMemoryHistoryProviderConfig{
+    SourceID: "chat_history",
+    ProvideOutputMessageFilter: func(_ context.Context, messages []*message.Message) ([]*message.Message, error) {
+        if len(messages) <= 20 {
+            return messages, nil
+        }
+
+        return messages[len(messages)-20:], nil
+    },
+})
+```
+
+For semantic or token-aware reduction, use a compaction strategy before the run instead of relying only on message counts.
 
 :::zone-end
 
@@ -122,6 +171,29 @@ response = await agent.run("Continue this conversation.", session=session)
 
 :::zone-end
 
+:::zone pivot="programming-language-go"
+
+Go stores provider-specific conversation identifiers in `session.ServiceID()`. Create a session with an existing service conversation ID when you need to resume service-managed history:
+
+```go
+session, err := a.CreateSession(ctx, agent.WithServiceID("<service-conversation-id>"))
+if err != nil {
+    panic(err)
+}
+
+_, err = a.RunText(ctx, "Continue this conversation.", agent.WithSession(session)).Collect()
+```
+
+When a provider creates or updates the remote conversation identifier during a run, the session is updated and you can inspect it after the call:
+
+```go
+fmt.Println(session.ServiceID())
+```
+
+Configured local history providers are skipped for service-managed sessions so the service remains the source of conversation history.
+
+:::zone-end
+
 ## Per-service-call local history persistence
 
 Tool-calling runs can make multiple model calls before a single `agent.run()` completes. By default, local history providers persist once after the full run. If you want local history to mirror service-managed conversations more closely, set `require_per_service_call_history_persistence=True` so history providers run around each model call instead.
@@ -145,6 +217,12 @@ agent = Agent(
 > Use this mode only for framework-managed local history. If the run is already bound to a service-managed conversation (for example via `session.service_session_id` or `options={"conversation_id": ...}`), Agent Framework raises an error instead of mixing the two persistence models.
 >
 > This mode is especially useful when middleware can terminate immediately after a tool call: persisting per model call keeps local history aligned with what a service-managed conversation would keep.
+
+:::zone-end
+
+:::zone pivot="programming-language-go"
+
+Go history providers run around an agent invocation. There isn't a separate per-service-call persistence switch; if a tool loop makes multiple provider calls inside one run, persist local history after the full run or implement a custom provider/middleware for your application's storage needs.
 
 :::zone-end
 
@@ -354,9 +432,84 @@ await agent.run("Store this conversation.", session=session)
 
 :::zone-end
 
+:::zone pivot="programming-language-go"
+
+In Go, implement `agent.HistoryProvider` when you want database, Redis, blob, or file-backed history. The default helper created by `agent.NewHistoryProvider` loads prior messages in `Provide` and persists new request/response messages in `Store`. Keep any storage keys in the session so the provider instance can be reused across sessions.
+
+```go
+import (
+    "context"
+    "fmt"
+    "time"
+
+    "github.com/microsoft/agent-framework-go/agent"
+    "github.com/microsoft/agent-framework-go/message"
+)
+
+type MessageStore interface {
+    LoadMessages(context.Context, string) ([]*message.Message, error)
+    AppendMessages(context.Context, string, []*message.Message) error
+}
+
+func NewDatabaseHistoryProvider(store MessageStore) agent.HistoryProvider {
+    const stateKey = "database_history.key"
+
+    historyKey := func(session *agent.Session) string {
+        var key string
+        if ok, _ := session.Get(stateKey, &key); ok && key != "" {
+            return key
+        }
+
+        key = fmt.Sprintf("history-%d", time.Now().UnixNano())
+        session.Set(stateKey, key)
+        return key
+    }
+
+    return agent.NewHistoryProvider(agent.HistoryProviderConfig{
+        SourceID: "database_history",
+        Provide: func(ctx context.Context, invoking agent.InvokingContext) ([]*message.Message, error) {
+            session, _ := agent.GetOption(invoking.Options, agent.WithSession)
+            if session == nil {
+                return nil, nil
+            }
+
+            return store.LoadMessages(ctx, historyKey(session))
+        },
+        Store: func(ctx context.Context, invoked agent.InvokedContext) error {
+            session, _ := agent.GetOption(invoked.Options, agent.WithSession)
+            if session == nil {
+                return nil
+            }
+
+            allMessages := make([]*message.Message, 0, len(invoked.RequestMessages)+len(invoked.ResponseMessages))
+            allMessages = append(allMessages, invoked.RequestMessages...)
+            allMessages = append(allMessages, invoked.ResponseMessages...)
+
+            return store.AppendMessages(ctx, historyKey(session), allMessages)
+        },
+    })
+}
+```
+
+Attach the custom provider to the agent:
+
+```go
+a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Instructions: "You are a helpful assistant.",
+    Config: agent.Config{
+        Name:            "StorageAgent",
+        HistoryProvider: NewDatabaseHistoryProvider(store),
+    },
+})
+```
+
+Do not combine a configured local `HistoryProvider` with a service-managed session. Use either local history storage or the provider's remote conversation state for a given session.
+
+:::zone-end
+
 ## Persisting sessions across restarts
 
-Persist the full `AgentSession`, not only message text.
+Persist the full session object, not only message text.
 
 :::zone pivot="programming-language-csharp"
 
@@ -375,6 +528,48 @@ serialized = session.to_dict()
 # Store serialized payload in durable storage.
 resumed = AgentSession.from_dict(serialized)
 ```
+
+:::zone-end
+
+:::zone pivot="programming-language-go"
+
+Sessions can be persisted through JSON serialization. Store the entire `agent.Session`, not only message text or a history key.
+
+```go
+data, err := json.Marshal(session)
+if err != nil {
+    panic(err)
+}
+if err := os.WriteFile("session.json", data, 0o644); err != nil {
+    panic(err)
+}
+
+loaded, err := os.ReadFile("session.json")
+if err != nil {
+    panic(err)
+}
+
+var resumed agent.Session
+if err := json.Unmarshal(loaded, &resumed); err != nil {
+    panic(err)
+}
+
+_, err = a.RunText(ctx, "Continue this conversation.", agent.WithSession(&resumed)).Collect()
+```
+
+For database-backed storage, serialize the session to `[]byte` and store it with your preferred backend:
+
+```go
+data, _ := json.Marshal(session)
+db.Set(sessionID, data)
+
+data, _ := db.Get(sessionID)
+var resumed agent.Session
+_ = json.Unmarshal(data, &resumed)
+```
+
+> [!TIP]
+> See the [third-party session storage sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/agents/step07_3rdparty_session_storage/main.go) for a complete example.
 
 :::zone-end
 

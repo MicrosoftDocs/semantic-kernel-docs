@@ -5,23 +5,23 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 03/11/2026
+ms.date: 05/27/2026
 ms.service: agent-framework
 ---
 
 <!--
   Language parity table – keep in sync when adding/removing sections.
 
-  | Section                        | C# | Python | Notes |
-  |--------------------------------|:--:|:------:|-------|
-  | Overview                       | ✅ |   ✅   |       |
-  | When Are Checkpoints Created?  | ✅ |   ✅   |       |
-  | Capturing Checkpoints          | ✅ |   ✅   |       |
-  | Resuming from Checkpoints      | ✅ |   ✅   |       |
-  | Rehydrating from Checkpoints   | ✅ |   ✅   |       |
-  | Save Executor States           | ✅ |   ✅   |       |
-  | Security Considerations        | ✅ |   ✅   |       |
-  | Next Steps                     | ✅ |   ✅   |       |
+    | Section                        | C# | Python | Go | Notes |
+    |--------------------------------|:--:|:------:|:--:|-------|
+    | Overview                       | ✅ |   ✅   | ✅ |       |
+    | When Are Checkpoints Created?  | ✅ |   ✅   | ✅ |       |
+    | Capturing Checkpoints          | ✅ |   ✅   | ✅ |       |
+    | Resuming from Checkpoints      | ✅ |   ✅   | ✅ |       |
+    | Rehydrating from Checkpoints   | ✅ |   ✅   | ✅ |       |
+    | Save Executor States           | ✅ |   ✅   | ✅ |       |
+    | Security Considerations        | ✅ |   ✅   | ✅ |       |
+    | Next Steps                     | ✅ |   ✅   | ✅ |       |
 -->
 
 # Microsoft Agent Framework Workflows - Checkpoints
@@ -217,6 +217,39 @@ Connection details can also be supplied entirely through environment variables:
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+To enable checkpointing, configure the execution environment with a checkpoint manager. A checkpoint can then be accessed from `workflow.SuperStepCompletedEvent`, or through the run's checkpoint list.
+
+```go
+checkpointManager := checkpoint.NewInMemoryManager()
+
+run, err := inproc.Default.
+    WithCheckpointing(checkpointManager).
+    RunStreaming(ctx, wf, input)
+if err != nil {
+    return err
+}
+defer run.Close(ctx)
+
+var checkpoints []workflow.CheckpointInfo
+for evt, err := range run.WatchStream(ctx) {
+    if err != nil {
+        return err
+    }
+    if completed, ok := evt.(workflow.SuperStepCompletedEvent); ok && completed.CompletionInfo != nil {
+        if completed.CompletionInfo.CheckpointInfo != nil {
+            checkpoints = append(checkpoints, *completed.CompletionInfo.CheckpointInfo)
+        }
+    }
+}
+
+// Checkpoints can also be accessed from the run directly.
+checkpoints = run.Checkpoints()
+```
+
+::: zone-end
+
 ## Resuming from Checkpoints
 
 ::: zone pivot="programming-language-csharp"
@@ -248,6 +281,29 @@ You can resume a workflow from a specific checkpoint directly on the same workfl
 saved_checkpoint = checkpoints[5]
 async for event in workflow.run(checkpoint_id=saved_checkpoint.checkpoint_id, stream=True):
     ...
+```
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+You can restore a streaming run to a specific checkpoint directly on the same run.
+
+```go
+// Assume we want to resume from the 6th checkpoint.
+savedCheckpoint := checkpoints[5]
+if err := run.RestoreCheckpoint(ctx, savedCheckpoint); err != nil {
+    return err
+}
+
+for evt, err := range run.WatchStream(ctx) {
+    if err != nil {
+        return err
+    }
+    if outputEvent, ok := evt.(workflow.OutputEvent); ok {
+        fmt.Printf("Workflow completed with result: %v\n", outputEvent.Output)
+    }
+}
 ```
 
 ::: zone-end
@@ -297,6 +353,35 @@ async for event in workflow.run(
     stream=True,
 ):
     ...
+```
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+Or you can rehydrate a new workflow instance from a checkpoint.
+
+```go
+// Assume we want to resume from the 6th checkpoint
+savedCheckpoint := checkpoints[5]
+newWorkflow := buildWorkflow()
+
+newRun, err := inproc.Default.
+    WithCheckpointing(checkpointManager).
+    ResumeStreaming(ctx, newWorkflow, savedCheckpoint)
+if err != nil {
+    return err
+}
+defer newRun.Close(ctx)
+
+for evt, err := range newRun.WatchStream(ctx) {
+    if err != nil {
+        return err
+    }
+    if outputEvent, ok := evt.(workflow.OutputEvent); ok {
+        fmt.Printf("Workflow completed with result: %v\n", outputEvent.Output)
+    }
+}
 ```
 
 ::: zone-end
@@ -369,6 +454,54 @@ async def on_checkpoint_restore(self, state: dict[str, Any]) -> None:
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+To ensure that executor state is captured in a checkpoint, attach checkpoint hooks to the executor and store state through the workflow context.
+
+```go
+type customExecutor struct {
+    messages []string
+}
+
+func (e *customExecutor) Handle(message string) {
+    e.messages = append(e.messages, message)
+}
+
+func (e *customExecutor) OnCheckpoint(ctx *workflow.Context) error {
+    return ctx.QueueStateUpdate("CustomExecutorState", "", slices.Clone(e.messages))
+}
+```
+
+Restore the state in `OnCheckpointRestoredFunc`:
+
+```go
+func (e *customExecutor) OnCheckpointRestored(ctx *workflow.Context) error {
+    value, err := ctx.ReadState("CustomExecutorState", "")
+    if err != nil {
+        return err
+    }
+    if value == nil {
+        e.messages = nil
+        return nil
+    }
+
+    messages, ok := value.([]string)
+    if !ok {
+        return fmt.Errorf("unexpected custom executor state type %T", value)
+    }
+    e.messages = slices.Clone(messages)
+    return nil
+}
+
+executorState := &customExecutor{}
+custom := workflow.NewExecutor("CustomExecutor", executorState).Extend(&workflow.Executor{
+    OnCheckpointFunc:         executorState.OnCheckpoint,
+    OnCheckpointRestoredFunc: executorState.OnCheckpointRestored,
+}).Bind()
+```
+
+::: zone-end
+
 ## Security Considerations
 
 > [!IMPORTANT]
@@ -425,6 +558,12 @@ If your threat model does not permit pickle-based serialization at all, use `InM
 `FileCheckpointStorage` requires an explicit `storage_path` parameter — there is no default directory. While the framework validates against path traversal attacks, securing the storage directory itself (file permissions, encryption at rest, access controls) is the developer's responsibility. Only authorized processes should have read or write access to the checkpoint directory.
 
 `CosmosCheckpointStorage` relies on Azure Cosmos DB for storage. Use managed identity / RBAC where possible, scope the database and container to the workflow service, and rotate account keys if you use key-based auth. As with file storage, only authorized principals should have read or write access to the Cosmos DB container that holds checkpoint documents.
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+Go checkpoint managers serialize checkpoint state as JSON, but checkpoint storage is still trusted application state. If you use `checkpoint.NewFileSystemJSONStore`, store checkpoint files in a protected directory and restrict read/write access to authorized processes only. Custom stores are responsible for their own access control, integrity, and durability guarantees.
 
 ::: zone-end
 

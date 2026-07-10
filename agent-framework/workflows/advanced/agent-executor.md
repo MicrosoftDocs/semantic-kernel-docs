@@ -5,25 +5,25 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: article
 ms.author: taochen
-ms.date: 05/08/2026
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
 <!--
   Language parity table – keep in sync when adding/removing sections.
 
-  | Section                        | C# | Python | Notes                                     |
-  |--------------------------------|:--:|:------:|-------------------------------------------|
-  | Overview                       | ✅ |   ✅   |                                           |
-  | How It Works                   | ✅ |   ✅   |                                           |
-  | Implicit vs Explicit Creation  | ✅ |   ✅   |                                           |
-  | Input Types                    | ✅ |   ✅   | Different supported types per language     |
-  | Output and Chaining            | ✅ |   ✅   |                                           |
-  | Streaming Behavior             | ✅ |   ✅   |                                           |
-  | Shared Sessions                | ✅ |   ✅   |                                           |
-  | Configuration Options          | ✅ |   ❌   | C#-specific (AIAgentHostOptions)           |
-  | Context Modes                  | ❌ |   ✅   | Python-only                                |
-  | Checkpointing                  | ✅ |   ✅   |                                           |
+    | Section                        | C# | Python | Go | Notes                                     |
+    |--------------------------------|:--:|:------:|:--:|-------------------------------------------|
+    | Overview                       | ✅ |   ✅   | ✅ |                                           |
+    | How It Works                   | ✅ |   ✅   | ✅ |                                           |
+    | Implicit vs Explicit Creation  | ✅ |   ✅   | ❌ | Go documents explicit `agentworkflow.New` |
+    | Input Types                    | ✅ |   ✅   | ✅ | Different supported types per language     |
+    | Output and Chaining            | ✅ |   ✅   | ✅ |                                           |
+    | Streaming Behavior             | ✅ |   ✅   | ✅ |                                           |
+    | Shared Sessions                | ✅ |   ✅   | ❌ |                                           |
+    | Configuration Options          | ✅ |   ❌   | ✅ | C# uses AIAgentHostOptions; Go uses agentworkflow.Config |
+    | Context Modes                  | ❌ |   ✅   | ❌ | Python-only                                |
+    | Checkpointing                  | ✅ |   ✅   | ✅ |                                           |
 -->
 
 # Agent Executor
@@ -420,6 +420,200 @@ On restore, the executor deserializes this state, allowing the workflow to resum
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+## How It Works
+
+Go hosts agents as workflow executors with `workflow/agentworkflow`. The hosted executor uses the following **turn token** pattern:
+
+1. **Message buffering** — as messages arrive from other executors, the hosted agent collects them. If message forwarding is enabled (the default), incoming messages are also forwarded to downstream executors.
+2. **Turn token trigger** — the hosted agent processes its cached messages only after receiving a `workflow.TurnToken`.
+3. **Agent invocation** — the executor calls the underlying agent through `Run` and chooses streaming behavior from `agentworkflow.Config` or the `TurnToken`.
+4. **Output yielding** — if update events are enabled, each `*agent.ResponseUpdate` is yielded as a workflow output. If response events are enabled, the aggregated `*agent.Response` is yielded as a workflow output.
+5. **Downstream messaging** — the agent's response messages are sent to connected downstream executors.
+6. **Turn token pass-through** — after the turn completes, the executor sends a new `workflow.TurnToken` downstream so the next hosted agent can begin processing.
+
+## Custom Configuration
+
+Customize how the hosted agent executor behaves by creating the binding with `agentworkflow.New` and a `agentworkflow.Config` value:
+
+```go
+hostedAgent := agentworkflow.New(myAgent, agentworkflow.Config{
+    EmitUpdateEvents: true,
+    DisableForwardIncomingMessages: true,
+})
+
+wf, err := workflow.NewBuilder(hostedAgent).
+    WithOutputFrom(hostedAgent).
+    Build()
+if err != nil {
+    return err
+}
+```
+
+> [!TIP]
+> See the [agents in workflows sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/03-workflows/01-start-here/02_agents_in_workflows/main.go) for a complete runnable example.
+
+## Input Types
+
+The hosted agent executor accepts `string`, `*message.Message`, `[]*message.Message`, and `iter.Seq[*message.Message]` inputs. String inputs are converted to `message.Message` instances with the `User` role. Message inputs are buffered until the executor receives a `workflow.TurnToken`, which triggers the hosted agent to run on the accumulated batch.
+
+```go
+run, err := inproc.Default.RunStreaming(ctx, wf, nil)
+if err != nil {
+    return err
+}
+defer run.Close(ctx)
+
+if err := run.SendMessage(ctx, "Summarize this deployment plan."); err != nil {
+    return err
+}
+if err := run.SendMessage(ctx, message.NewText("Include risk notes.")); err != nil {
+    return err
+}
+if err := run.SendMessage(ctx, []*message.Message{message.NewText("Keep it concise.")}); err != nil {
+    return err
+}
+
+emitEvents := true
+if err := run.SendMessage(ctx, workflow.TurnToken{EmitEvents: &emitEvents}); err != nil {
+    return err
+}
+```
+
+## Output and Chaining
+
+After the hosted agent completes its turn, it sends the agent's response messages and a new turn token to connected downstream executors. This makes chaining agents straightforward:
+
+```go
+french := agentworkflow.New(frenchAgent, agentworkflow.Config{})
+spanish := agentworkflow.New(spanishAgent, agentworkflow.Config{})
+english := agentworkflow.New(englishAgent, agentworkflow.Config{})
+
+wf, err := workflow.NewBuilder(french).
+    AddEdge(french, spanish).
+    AddEdge(spanish, english).
+    Build()
+if err != nil {
+    return err
+}
+```
+
+## Streaming Behavior
+
+Set `EmitUpdateEvents` on `agentworkflow.Config`, or send a `workflow.TurnToken` with `EmitEvents` set, to emit agent response updates through workflow output events.
+
+```go
+hostedAgent := agentworkflow.New(myAgent, agentworkflow.Config{
+    EmitUpdateEvents: true,
+})
+
+wf, err := workflow.NewBuilder(hostedAgent).
+    WithOutputFrom(hostedAgent).
+    Build()
+if err != nil {
+    return err
+}
+
+run, err := inproc.Default.RunStreaming(ctx, wf, message.NewText("Write a status update."))
+if err != nil {
+    return err
+}
+defer run.Close(ctx)
+
+emitEvents := true
+if err := run.SendMessage(ctx, workflow.TurnToken{EmitEvents: &emitEvents}); err != nil {
+    return err
+}
+
+for evt, err := range run.WatchStream(ctx) {
+    if err != nil {
+        return err
+    }
+    if output, ok := evt.(workflow.OutputEvent); ok {
+        if update, ok := output.Output.(*agent.ResponseUpdate); ok {
+            fmt.Print(update.String())
+        }
+    }
+}
+```
+
+## Configuration Options
+
+`agentworkflow.Config` controls the hosted agent executor's behavior:
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `EmitUpdateEvents` | `false` | Emit streaming `*agent.ResponseUpdate` values during execution. `workflow.TurnToken.EmitEvents` takes precedence when set. |
+| `EmitResponseEvents` | `false` | Emit the aggregated `*agent.Response` as a workflow output event. |
+| `InterceptUserInputRequests` | `false` | Intercept `ToolApprovalRequestContent` and route it as a workflow message for handling. |
+| `InterceptUnterminatedFunctionCalls` | `false` | Intercept unresolved `FunctionCallContent` values and route them as workflow messages. |
+| `DisableReassignOtherAgentsAsUsers` | `false` | Preserve incoming assistant roles from other agents instead of reassigning them to the user role. |
+| `DisableForwardIncomingMessages` | `false` | Stop forwarding incoming messages to downstream executors before the hosted agent's generated messages. |
+
+```go
+hostedAgent := agentworkflow.New(myAgent, agentworkflow.Config{
+    EmitUpdateEvents:                  true,
+    EmitResponseEvents:                true,
+    InterceptUserInputRequests:        true,
+    InterceptUnterminatedFunctionCalls: true,
+    DisableReassignOtherAgentsAsUsers: false,
+    DisableForwardIncomingMessages:    false,
+})
+```
+
+## Checkpointing
+
+Hosted agents participate in workflow checkpointing. `agentworkflow.New` registers checkpoint and restore hooks on the executor. When a checkpoint is taken, the host stores:
+
+- The hosted agent's `agent.Session` JSON state.
+- The current turn's event-emission setting.
+- Pending tool approval and function call request state.
+
+On restore, the host recreates the agent session and restores pending request handlers before the workflow continues. Enable checkpointing through the workflow execution environment, for example with `inproc.Default.WithCheckpointing(...)`; no `agentworkflow.Config` option is required.
+
+```go
+checkpointManager := checkpoint.NewInMemoryManager()
+environment := inproc.Default.WithCheckpointing(checkpointManager)
+
+var checkpoints []workflow.CheckpointInfo
+run, err := environment.RunStreaming(ctx, wf, message.NewText("Start the review."))
+if err != nil {
+    return err
+}
+defer run.Close(ctx)
+
+emitEvents := true
+if err := run.SendMessage(ctx, workflow.TurnToken{EmitEvents: &emitEvents}); err != nil {
+    return err
+}
+
+for evt, err := range run.WatchUntilHalt(ctx) {
+    if err != nil {
+        return err
+    }
+    if completed, ok := evt.(workflow.SuperStepCompletedEvent); ok && completed.CompletionInfo != nil {
+        if completed.CompletionInfo.CheckpointInfo != nil {
+            checkpoints = append(checkpoints, *completed.CompletionInfo.CheckpointInfo)
+        }
+    }
+}
+
+if len(checkpoints) == 0 {
+    return fmt.Errorf("no checkpoints were created")
+}
+
+resumedRun, err := environment.ResumeStreaming(ctx, wf, checkpoints[len(checkpoints)-1])
+if err != nil {
+    return err
+}
+defer resumedRun.Close(ctx)
+```
+
+> [!NOTE]
+> Provider-backed sessions can still have provider-specific durability limits. Checkpointing captures the `agent.Session` state available to the Go host, not external service state that the provider does not serialize into the session.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

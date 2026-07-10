@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: dmkorolev
 ms.service: agent-framework
 ms.topic: tutorial
-ms.date: 02/11/2026
+ms.date: 07/01/2026
 ms.author: dmkorolev
 ---
 
@@ -415,6 +415,195 @@ uvicorn.run(server, host="0.0.0.0", port=9999)
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## A2A Protocol
+
+The Go Agent Framework supports the Agent-to-Agent (A2A) protocol for both hosting Agent Framework agents and consuming remote A2A agents. The Go integration uses the `provider/a2aprovider` package for both server-side hosting adapters and client-side access.
+
+Install the Agent Framework and A2A packages in your Go module:
+
+```bash
+go get github.com/microsoft/agent-framework-go
+go get github.com/a2aproject/a2a-go/v2
+```
+
+### Host an agent via A2A
+
+Create or reuse an Agent Framework agent, describe it with an A2A agent card, and expose it through one of the A2A transport bindings. In this example, `hostAgent` is any Agent Framework `*agent.Agent`; the server hosts a JSON-RPC endpoint at `/` and serves the agent card at the well-known A2A path.
+
+```go
+import (
+    "fmt"
+    "net/http"
+
+    "github.com/a2aproject/a2a-go/v2/a2a"
+    "github.com/a2aproject/a2a-go/v2/a2asrv"
+    "github.com/microsoft/agent-framework-go/provider/a2aprovider"
+)
+
+url := "http://localhost:5000"
+
+card := &a2a.AgentCard{
+    Name:               "InvoiceAgent",
+    Description:        "Handles requests relating to invoices.",
+    Version:            "1.0.0",
+    DefaultInputModes:  []string{"text"},
+    DefaultOutputModes: []string{"text"},
+    Capabilities: a2a.AgentCapabilities{
+        Streaming: false,
+    },
+    SupportedInterfaces: []*a2a.AgentInterface{
+        a2a.NewAgentInterface(url, a2a.TransportProtocolJSONRPC),
+    },
+}
+
+mux := http.NewServeMux()
+requestHandler := a2asrv.NewHandler(
+    a2aprovider.NewExecutor(hostAgent, a2aprovider.ExecutorConfig{}),
+    a2asrv.WithExtendedAgentCard(card),
+)
+mux.Handle("/", a2asrv.NewJSONRPCHandler(requestHandler))
+mux.Handle(a2asrv.WellKnownAgentCardPath, a2asrv.NewStaticAgentCardHandler(card))
+
+if err := http.ListenAndServe(":5000", mux); err != nil {
+    panic(fmt.Errorf("A2A server failed: %w", err))
+}
+```
+
+Wrap the same request handler with `a2asrv.NewRESTHandler` when you want to expose the HTTP+JSON transport binding. Set `ExecutorConfig.AllowBackgroundResponses` to `true` if the hosted agent should be allowed to return A2A tasks for long-running work.
+
+### Consume an A2A agent
+
+Resolve the remote agent card, create an A2A client from it, and wrap the client as a standard Agent Framework agent:
+
+```go
+import (
+    "context"
+
+    "github.com/a2aproject/a2a-go/v2/a2aclient"
+    "github.com/a2aproject/a2a-go/v2/a2aclient/agentcard"
+    "github.com/microsoft/agent-framework-go/agent"
+    "github.com/microsoft/agent-framework-go/provider/a2aprovider"
+)
+
+ctx := context.Background()
+
+card, err := agentcard.DefaultResolver.Resolve(ctx, "http://localhost:5000")
+if err != nil {
+    panic(err)
+}
+
+client, err := a2aclient.NewFromCard(ctx, card)
+if err != nil {
+    panic(err)
+}
+
+a := a2aprovider.NewAgent(
+    client,
+    a2aprovider.AgentConfig{
+        Config: agent.Config{
+            Name:        card.Name,
+            Description: card.Description,
+        },
+    },
+)
+
+resp, err := a.RunText(ctx, "Hello!").Collect()
+```
+
+The `a2aprovider` provider stores the A2A `context_id` and task IDs in the Agent Framework session so follow-up messages can preserve conversation continuity.
+
+### Protocol selection
+
+If a remote agent advertises multiple transport bindings, configure the preferred transport when creating the A2A client:
+
+```go
+client, err := a2aclient.NewFromCard(
+    ctx,
+    card,
+    a2aclient.WithConfig(a2aclient.Config{
+        PreferredTransports: []a2a.TransportProtocol{a2a.TransportProtocolHTTPJSON},
+    }),
+)
+```
+
+Use `a2a.TransportProtocolJSONRPC` when you want to prefer JSON-RPC instead.
+
+### Long-running tasks
+
+A2A tasks surface through Agent Framework continuation tokens. Start the run with an explicit session and `agent.AllowBackgroundResponses(true)`, then poll by calling `Run` with no new messages and the continuation token:
+
+```go
+session, err := a.CreateSession(ctx)
+if err != nil {
+    panic(err)
+}
+
+resp, err := a.RunText(
+    ctx,
+    "Process this large dataset.",
+    agent.WithSession(session),
+    agent.AllowBackgroundResponses(true),
+).Collect()
+if err != nil {
+    panic(err)
+}
+
+for resp.ContinuationToken != "" {
+    resp, err = a.Run(
+        ctx,
+        nil,
+        agent.WithSession(session),
+        agent.WithContinuationToken(resp.ContinuationToken),
+    ).Collect()
+    if err != nil {
+        panic(err)
+    }
+}
+```
+
+For interrupted streaming runs, capture `update.ContinuationToken` from the last received update and pass it to a later streaming run with `agent.WithContinuationToken(token)` and `agent.Stream(true)`.
+
+### Use remote A2A agents as tools
+
+You can also expose remote A2A agents to a host agent as function tools. Resolve each remote agent, wrap it with `a2aprovider.NewAgent`, and then convert it to a tool with `agenttool.New`. In this example, the host agent uses a Microsoft Foundry project-backed model deployment.
+
+```go
+tools := make([]tool.Tool, 0, len(agentURLs))
+
+for _, agentURL := range agentURLs {
+    card, err := agentcard.DefaultResolver.Resolve(ctx, agentURL)
+    if err != nil {
+        panic(err)
+    }
+
+    client, err := a2aclient.NewFromCard(ctx, card)
+    if err != nil {
+        panic(err)
+    }
+
+    remoteAgent := a2aprovider.NewAgent(client, a2aprovider.AgentConfig{
+        Config: agent.Config{
+            Name:        card.Name,
+            Description: card.Description,
+        },
+    })
+
+    tools = append(tools, agenttool.New(remoteAgent, agenttool.Config{}))
+}
+
+host := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Instructions: "Use your tools to delegate requests to specialized remote agents.",
+    Config: agent.Config{
+        Tools: tools,
+    },
+})
+```
+
+> [!TIP]
+> See the [A2A client-server sample](https://github.com/microsoft/agent-framework-go/tree/main/examples/05-end-to-end/a2a_client_server), [A2A provider sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/providers/a2a/main.go), and [A2A agents as tools sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/a2a/as_function_tools/main.go) for complete runnable examples.
+
+::: zone-end
 ## See Also
 
 - [Integrations Overview](./index.md)

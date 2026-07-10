@@ -5,20 +5,20 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: article
 ms.author: edvan
-ms.date: 05/05/2026
+ms.date: 05/27/2026
 ms.service: agent-framework
 ---
 <!--
   Language parity table - keep in sync when adding/removing sections.
 
-  | Section                    | C# | Python | Notes                                  |
-  |----------------------------|:--:|:------:|----------------------------------------|
-  | Why CodeAct                | ✅ |   ✅   | Shared pattern guidance                |
-  | Good fit for CodeAct       | ✅ |   ✅   | Shared decision guidance               |
-  | How CodeAct fits           | ✅ |   ✅   | Shared framework model                 |
-  | Current limitations        | ✅ |   ✅   | Shared current-state guidance          |
-  | Getting started            | ✅ |   ✅   | Both languages document Hyperlight     |
-  | Hyperlight integration     | ✅ |   ✅   | Both connectors documented separately  |
+  | Section                    | C# | Python | Go | Notes                                  |
+  |----------------------------|:--:|:------:|:--:|----------------------------------------|
+  | Why CodeAct                | ✅ |   ✅   | ❌ | Shared pattern guidance                |
+  | Good fit for CodeAct       | ✅ |   ✅   | ❌ | Shared decision guidance               |
+  | How CodeAct fits           | ✅ |   ✅   | ❌ | Shared framework model                 |
+  | Current limitations        | ✅ |   ✅   | ❌ | Shared current-state guidance          |
+  | Getting started            | ✅ |   ✅   | ❌ | C#/Python document Hyperlight          |
+  | Hyperlight integration     | ✅ |   ✅   | ❌ | No Go CodeAct backend documented       |
 -->
 
 # CodeAct
@@ -110,6 +110,13 @@ See [Hyperlight CodeAct](../integrations/hyperlight.md) for installation, exampl
 
 ::: zone-end
 
+
+::: zone pivot="programming-language-go"
+
+> [!NOTE]
+> Go support for this feature is coming soon. See the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go) for the latest status.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

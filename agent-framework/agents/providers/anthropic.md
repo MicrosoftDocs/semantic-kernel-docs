@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author:  rogerbarreto
 ms.topic: tutorial
 ms.author: rbarreto
-ms.date: 12/12/2025
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
@@ -560,6 +560,57 @@ See the [Agent getting started tutorials](../../get-started/your-first-agent.md)
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Anthropic
+
+The `anthropicprovider` package creates agents using the Anthropic API.
+
+### Installation
+
+```bash
+go get github.com/microsoft/agent-framework-go
+```
+
+### Create an Anthropic agent
+
+```go
+import (
+    "github.com/microsoft/agent-framework-go/agent"
+    "github.com/microsoft/agent-framework-go/provider/anthropicprovider"
+
+    "github.com/anthropics/anthropic-sdk-go"
+)
+
+a := anthropicprovider.NewAgent(
+    anthropic.NewClient(), // uses ANTHROPIC_API_KEY env var
+    anthropicprovider.AgentConfig{
+        Model: "claude-sonnet-4-5",
+        Instructions: "You are a helpful assistant.",
+        Config: agent.Config{
+            Name:         "ClaudeAgent",
+        },
+    },
+)
+
+resp, err := a.RunText(ctx, "Tell me a joke.").Collect()
+```
+
+### Custom options
+
+Pass Anthropic-specific parameters using `anthropicprovider.MessageNewParams`:
+
+```go
+resp, err := a.RunText(ctx, "Hello!",
+    anthropicprovider.MessageNewParams(anthropic.MessageNewParams{
+        MaxTokens: 500,
+    }),
+).Collect()
+```
+
+> [!TIP]
+> See the [Anthropic sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/providers/anthrophic/main.go) for a complete example.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

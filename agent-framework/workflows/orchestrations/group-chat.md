@@ -5,26 +5,26 @@ zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: tutorial
 ms.author: evmattso
-ms.date: 05/08/2026
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
 <!--
   Language parity table – keep in sync when adding/removing sections.
 
-  | Section                                        | C# | Python | Notes           |
-  |------------------------------------------------|:--:|:------:|-----------------|
-  | Set Up the Client                              | ✅ |   ✅   |                 |
-  | Define Your Agents                             | ✅ |   ✅   |                 |
-  | Configure Group Chat (Round-Robin / Selector)  | ✅ |   ✅   |                 |
-  | Configure Group Chat (Agent-Based Orchestrator)| ❌ |   ✅   |                 |
-  | Run the Workflow                               | ✅ |   ✅   |                 |
-  | Sample Interaction                             | ✅ |   ✅   |                 |
-  | Key Concepts                                   | ✅ |   ✅   |                 |
-  | Advanced: Custom Speaker Selection             | ✅ |   ✅   |                 |
-  | Intermediate Outputs                           | ❌ |   ✅   | Python-specific |
-  | Context Synchronization                        | ✅ |   ✅   | Shared section  |
-  | When to Use Group Chat                         | ✅ |   ✅   | Shared section  |
+    | Section                                        | C# | Python | Go | Notes           |
+    |------------------------------------------------|:--:|:------:|:--:|-----------------|
+    | Set Up the Client                              | ✅ |   ✅   | ✅ |                 |
+    | Define Your Agents                             | ✅ |   ✅   | ✅ |                 |
+    | Configure Group Chat (Round-Robin / Selector)  | ✅ |   ✅   | ✅ |                 |
+    | Configure Group Chat (Agent-Based Orchestrator)| ❌ |   ✅   | ❌ | Python-specific |
+    | Run the Workflow                               | ✅ |   ✅   | ✅ |                 |
+    | Sample Interaction                             | ✅ |   ✅   | ✅ |                 |
+    | Key Concepts                                   | ✅ |   ✅   | ✅ |                 |
+    | Advanced: Custom Speaker Selection             | ✅ |   ✅   | ✅ |                 |
+    | Intermediate Outputs                           | ❌ |   ✅   | ✅ | Python/Go-specific |
+    | Context Synchronization                        | ✅ |   ✅   | ✅ | Shared section  |
+    | When to Use Group Chat                         | ✅ |   ✅   | ✅ | Shared section  |
 -->
 
 # Microsoft Agent Framework Workflows Orchestrations - Group Chat
@@ -337,6 +337,141 @@ Workflow completed.
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+## Set Up Foundry Configuration
+
+```go
+endpoint := os.Getenv("FOUNDRY_PROJECT_ENDPOINT")
+model := cmp.Or(os.Getenv("FOUNDRY_MODEL"), "gpt-4o-mini")
+
+token, err := azidentity.NewDefaultAzureCredential(nil)
+if err != nil {
+    return err
+}
+```
+
+> [!WARNING]
+> `azidentity.NewDefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential, such as `azidentity.NewManagedIdentityCredential`, to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
+
+## Define Your Agents
+
+Create specialized agents with distinct roles in the conversation:
+
+```go
+copywriter := foundryprovider.NewAgent(
+    endpoint,
+    token,
+    foundryprovider.ModelDeployment(model),
+    foundryprovider.AgentConfig{
+        Instructions: "You are a creative copywriter. Generate catchy slogans and marketing copy. Be concise and impactful.",
+        Config:      agent.Config{Name: "CopyWriter"},
+    },
+)
+
+reviewer := foundryprovider.NewAgent(
+    endpoint,
+    token,
+    foundryprovider.ModelDeployment(model),
+    foundryprovider.AgentConfig{
+        Instructions: "You are a marketing reviewer. Evaluate slogans for clarity, impact, and brand alignment. Provide constructive feedback or approval.",
+        Config:      agent.Config{Name: "Reviewer"},
+    },
+)
+```
+
+## Configure Group Chat with Round-Robin Manager
+
+Build the group chat workflow with `agentworkflow.NewGroupChatWorkflowBuilder`. The builder takes a manager factory and the participating agents. `NewRoundRobinGroupChatManager` selects each agent in turn and stops after the configured maximum number of participant turns.
+
+```go
+managerFactory := func(agents []*agent.Agent) *agentworkflow.GroupChatManager {
+    return agentworkflow.NewRoundRobinGroupChatManager(
+        agents,
+        agentworkflow.RoundRobinGroupChatOptions{MaximumIterationCount: 5},
+    )
+}
+
+wf, err := agentworkflow.NewGroupChatWorkflowBuilder(managerFactory, copywriter, reviewer).
+    WithName("Marketing Review Group Chat").
+    WithDescription("A copywriter and reviewer collaborate on marketing copy.").
+    Build()
+if err != nil {
+    return err
+}
+```
+
+## Run the Group Chat Workflow
+
+Run the workflow with a user message and a turn token. When event emission is enabled, participant updates arrive as intermediate output events and the final transcript arrives as a terminal output event.
+
+```go
+run, err := inproc.Default.RunStreaming(ctx, wf, []*message.Message{
+    message.NewText("Create a slogan for an eco-friendly electric vehicle."),
+})
+if err != nil {
+    return err
+}
+defer run.Close(ctx)
+
+emitEvents := true
+if err := run.SendMessage(ctx, workflow.TurnToken{EmitEvents: &emitEvents}); err != nil {
+    return err
+}
+
+lastExecutorID := ""
+for evt, err := range run.WatchStream(ctx) {
+    if err != nil {
+        return err
+    }
+
+    switch e := evt.(type) {
+    case workflow.OutputEvent:
+        switch value := e.Output.(type) {
+        case *agent.ResponseUpdate:
+            if e.ExecutorID != lastExecutorID {
+                lastExecutorID = e.ExecutorID
+                fmt.Printf("\n[%s]: ", e.ExecutorID)
+            }
+            fmt.Print(value.String())
+        case []*message.Message:
+            fmt.Println("\n\n=== Final Conversation ===")
+            for _, msg := range value {
+                author := msg.AuthorName
+                if author == "" {
+                    author = string(msg.Role)
+                }
+                fmt.Printf("%s: %s\n", author, msg.String())
+            }
+        }
+    case workflow.ErrorEvent:
+        return e.Error
+    case workflow.ExecutorFailedEvent:
+        return fmt.Errorf("executor %q failed: %w", e.ExecutorID, e.Error)
+    }
+}
+```
+
+## Sample Interaction
+
+```plaintext
+[CopyWriter]: "Pure Power, Zero Impact" - Experience electric performance without compromise.
+
+[Reviewer]: This is clear and memorable. It communicates performance and sustainability directly.
+Approved.
+
+[CopyWriter]: The final slogan is: "Pure Power, Zero Impact" - Experience electric performance
+without compromise.
+
+=== Final Conversation ===
+user: Create a slogan for an eco-friendly electric vehicle.
+CopyWriter: "Pure Power, Zero Impact" - Experience electric performance without compromise.
+Reviewer: This is clear and memorable. It communicates performance and sustainability directly. Approved.
+CopyWriter: The final slogan is: "Pure Power, Zero Impact" - Experience electric performance without compromise.
+```
+
+::: zone-end
+
 ## Key Concepts
 
 ::: zone pivot="programming-language-csharp"
@@ -360,6 +495,17 @@ Workflow completed.
 - **AgentResponse Output**: The terminal output is an `AgentResponse` containing the orchestrator's completion message
 - **Event Streaming**: Process `AgentResponseUpdate` events in real-time via `workflow.run(task, stream=True)`
 - **Intermediate Outputs**: Pass `intermediate_output_from=[participant, ...]` to surface each listed participant's output as `"intermediate"` events, in addition to the orchestrator's terminal `"output"` event
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+- **GroupChatWorkflowBuilder**: Creates a star-topology workflow with a group chat host in the center and hosted agents as participants
+- **GroupChatManager**: Selects the next participant, can update broadcast history, and can terminate the conversation
+- **NewRoundRobinGroupChatManager**: Built-in manager that alternates participants in round-robin order
+- **RoundRobinGroupChatOptions**: Configures the maximum number of participant turns and an optional termination function
+- **Output Events**: By default, participant outputs are intermediate events and the group chat host yields the terminal transcript
+- **Custom Managers**: Implement `SelectNextAgent` and optional lifecycle callbacks for custom speaker selection or checkpointed state
 
 ::: zone-end
 
@@ -455,11 +601,89 @@ workflow = GroupChatBuilder(
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+Implement custom speaker selection by returning a `GroupChatManager` from the builder's manager factory:
+
+```go
+type approvalManager struct {
+    agents []*agent.Agent
+}
+
+func newApprovalManager(agents []*agent.Agent) *agentworkflow.GroupChatManager {
+    manager := &approvalManager{agents: agents}
+    return &agentworkflow.GroupChatManager{
+        SelectNextAgent: manager.selectNextAgent,
+        ShouldTerminate: manager.shouldTerminate,
+    }
+}
+
+func (m *approvalManager) selectNextAgent(_ context.Context, history []*message.Message) (*agent.Agent, error) {
+    last := lastAssistantMessage(history)
+    if last == nil || last.AuthorName == "Reviewer" {
+        return m.agentByName("CopyWriter")
+    }
+    return m.agentByName("Reviewer")
+}
+
+func (m *approvalManager) shouldTerminate(_ context.Context, history []*message.Message, iterationCount int) (bool, error) {
+    if iterationCount >= 10 {
+        return true, nil
+    }
+    last := lastAssistantMessage(history)
+    return last != nil &&
+        last.AuthorName == "Reviewer" &&
+        strings.Contains(strings.ToLower(last.String()), "approve"), nil
+}
+
+func (m *approvalManager) agentByName(name string) (*agent.Agent, error) {
+    for _, currentAgent := range m.agents {
+        if currentAgent.Name() == name {
+            return currentAgent, nil
+        }
+    }
+    return nil, fmt.Errorf("agent %q is not part of the group chat", name)
+}
+
+func lastAssistantMessage(history []*message.Message) *message.Message {
+    for i := len(history) - 1; i >= 0; i-- {
+        if history[i].Role == message.RoleAssistant {
+            return history[i]
+        }
+    }
+    return nil
+}
+
+wf, err := agentworkflow.NewGroupChatWorkflowBuilder(newApprovalManager, copywriter, reviewer).
+    WithName("Approval Group Chat").
+    Build()
+```
+
+`GroupChatManager` also supports `UpdateHistory`, `Reset`, `OnCheckpoint`, and `OnCheckpointRestored` callbacks for advanced managers that filter broadcast messages or persist manager-owned state.
+
+## Intermediate Outputs
+
+By default, `GroupChatWorkflowBuilder` emits participant outputs as intermediate workflow outputs and emits the accumulated conversation transcript as the terminal output. Use `OutputEvent.IsIntermediate()` to distinguish participant updates from the final transcript:
+
+```go
+if output, ok := evt.(workflow.OutputEvent); ok {
+    if output.IsIntermediate() {
+        fmt.Printf("intermediate from %s: %v\n", output.ExecutorID, output.Output)
+        return nil
+    }
+
+    fmt.Printf("terminal output: %v\n", output.Output)
+}
+```
+
+Calling `WithOutputFrom` or `WithIntermediateOutputFrom` on the group chat builder switches to explicit output designation. Use these methods when you want selected participant outputs instead of the default final transcript plus all participant intermediate outputs.
+
+::: zone-end
 ## Context Synchronization
 
 As mentioned at the beginning of this guide, all agents in a group chat see the full conversation history.
 
-Agents in Agent Framework relies on agent sessions ([`AgentSession`](../../agents/conversations/session.md)) to manage context. In a group chat orchestration, agents **do not** share the same session instance, but the orchestrator ensures that each agent's session is synchronized with the complete conversation history before each turn. To achieve this, after each agent's turn, the orchestrator broadcasts the response to all other agents, making sure all participants have the latest context for their next turn.
+Agents in Agent Framework rely on agent sessions ([`AgentSession`](../../agents/conversations/session.md)) to manage context. In a group chat orchestration, agents **do not** share the same session instance, but the orchestrator ensures that each agent's session is synchronized with the complete conversation history before each turn. To achieve this, after each agent's turn, the orchestrator broadcasts the response to all other agents, making sure all participants have the latest context for their next turn.
 
 <p align="center">
     <img src="../resources/images/orchestration-groupchat.png" alt="Group Chat Context Synchronization">
@@ -468,7 +692,7 @@ Agents in Agent Framework relies on agent sessions ([`AgentSession`](../../agent
 > [!TIP]
 > Agents do not share the same session instance because different [agent types](../../agents/providers/index.md) may have different implementations of the `AgentSession` abstraction. Sharing the same session instance could lead to inconsistencies in how each agent processes and maintains context.
 
-After broadcasting the response, the orchestrator then decide the next speaker and sends a request to the selected agent, which now has the full conversation history to generate its response.
+After broadcasting the response, the orchestrator decides the next speaker and sends a request to the selected agent, which now has the full conversation history to generate its response.
 
 ## When to Use Group Chat
 

@@ -395,3 +395,9 @@ Runnable examples are in the following sample folders:
 The functional workflow API is not available for C# at this time.
 
 ::: zone-end
+
+::: zone pivot="programming-language-go"
+
+The functional workflow API is not available for Go at this time. Use the graph workflow APIs in [Workflow Builder & Execution](./workflows.md).
+
+::: zone-end

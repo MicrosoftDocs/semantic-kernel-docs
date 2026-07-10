@@ -5,28 +5,28 @@ zone_pivot_groups: programming-languages
 author: bentho
 ms.topic: article
 ms.author: bentho
-ms.date: 03/26/2026
+ms.date: 05/27/2026
 ms.service: agent-framework
 ---
 
 <!--
   Language parity table – keep in sync when adding/removing sections.
 
-  | Section                          | C# | Python | Notes                                  |
-  |----------------------------------|:--:|:------:|----------------------------------------|
-  | Overview                         | ✅ |   ✅   |                                        |
-  | Core concepts                    | ✅ |   ✅   |                                        |
-  | Local evaluators                 | ✅ |   ✅   |                                        |
-  | Built-in checks                  | ✅ |   ✅   |                                        |
-  | Custom function evaluators       | ✅ |   ✅   | Python: @evaluator, C#: FunctionEvaluator.Create |
-  | Azure AI Foundry evaluators      | ✅ |   ✅   |                                        |
-  | Evaluate an agent                | ✅ |   ✅   |                                        |
-  | Evaluate with expected outputs   | ✅ |   ✅   |                                        |
-  | Evaluate pre-existing responses  | ✅ |   ✅   |                                        |
-  | Conversation split strategies    | ✅ |   ✅   |                                        |
-  | Evaluate workflows               | ✅ |   ✅   |                                        |
-  | Mix multiple evaluators          | ✅ |   ✅   |                                        |
-  | Microsoft Extensions AI evaluators | ✅ |   ❌   | .NET-specific                         |
+    | Section                          | C# | Python | Go | Notes                                  |
+    |----------------------------------|:--:|:------:|:--:|----------------------------------------|
+    | Overview                         | ✅ |   ✅   | ❌ | No Go evaluation package documented    |
+    | Core concepts                    | ✅ |   ✅   | ❌ |                                        |
+    | Local evaluators                 | ✅ |   ✅   | ❌ |                                        |
+    | Built-in checks                  | ✅ |   ✅   | ❌ |                                        |
+    | Custom function evaluators       | ✅ |   ✅   | ❌ | Python: @evaluator, C#: FunctionEvaluator.Create |
+    | Azure AI Foundry evaluators      | ✅ |   ✅   | ❌ |                                        |
+    | Evaluate an agent                | ✅ |   ✅   | ❌ |                                        |
+    | Evaluate with expected outputs   | ✅ |   ✅   | ❌ |                                        |
+    | Evaluate pre-existing responses  | ✅ |   ✅   | ❌ |                                        |
+    | Conversation split strategies    | ✅ |   ✅   | ❌ |                                        |
+    | Evaluate workflows               | ✅ |   ✅   | ❌ |                                        |
+    | Mix multiple evaluators          | ✅ |   ✅   | ❌ |                                        |
+    | Microsoft Extensions AI evaluators | ✅ |   ❌   | ❌ | .NET-specific                         |
 -->
 
 # Evaluation
@@ -651,6 +651,13 @@ AgentEvaluationResults safetyResults = await agent.EvaluateAsync(
 
 ::: zone-end
 
+
+::: zone pivot="programming-language-go"
+
+> [!NOTE]
+> Go support for this feature is coming soon. See the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go) for the latest status.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

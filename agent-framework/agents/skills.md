@@ -241,9 +241,6 @@ Use the `SkillsProvider.from_paths()` factory to discover skills from directorie
 ```python
 import os
 from pathlib import Path
-from agent_framework import Agent, SkillsProvider
-from agent_framework.foundry import FoundryChatClient
-from azure.identity import AzureCliCredential
 
 # Discover skills from the 'skills' directory
 skills_provider = SkillsProvider.from_paths(
@@ -349,6 +346,43 @@ The runner receives the resolved `FileSkill`, `FileSkillScript`, and an optional
 
 > [!NOTE]
 > If file-based skills with scripts are provided but no `script_runner` is set, `SkillsProvider` raises an error when script execution is attempted.
+
+:::zone-end
+
+:::zone pivot="programming-language-go"
+
+## File-based skills
+
+Go agents support skills through the `agent/skills` package. Skills follow the same progressive disclosure pattern: advertise -> load -> read resources -> run scripts.
+
+Discover skills from `SKILL.md` files on disk and register the skills provider as an agent context provider:
+
+```go
+import (
+    "os"
+
+    "github.com/microsoft/agent-framework-go/agent"
+    "github.com/microsoft/agent-framework-go/provider/foundryprovider"
+    "github.com/microsoft/agent-framework-go/agent/skills"
+    "github.com/microsoft/agent-framework-go/agent/skills/fsskills"
+)
+
+skillsRoot, _ := os.OpenRoot("skills")
+defer skillsRoot.Close()
+
+skillsProvider := skills.NewContextProvider(skills.ContextProviderOptions{
+    Sources: []skills.Source{
+        fsskills.NewSourceOptions(fsskills.SourceOptions{}, skillsRoot.FS()),
+    },
+})
+
+a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Instructions: "You are a helpful assistant.",
+    Config: agent.Config{
+        ContextProviders: []agent.ContextProvider{skillsProvider},
+    },
+})
+```
 
 :::zone-end
 
@@ -555,6 +589,66 @@ def convert_units(value: float, factor: float) -> str:
 ```
 
 When the decorator is used without arguments (`@skill.script`), the function name becomes the script name and the docstring becomes the description. The function's typed parameters are automatically converted into a JSON Schema that the agent uses to pass arguments.
+
+:::zone-end
+
+:::zone pivot="programming-language-go"
+
+In addition to file-based skills discovered from `SKILL.md` files, you can define skills entirely in Go code:
+
+```go
+skill := &skills.Skill{
+    Frontmatter: skills.Frontmatter{
+        Name:        "unit-converter",
+        Description: "Convert between common units using a multiplication factor.",
+    },
+    GetContent: func(context.Context) (string, error) {
+        return "Use this skill when the user asks to convert between units.", nil
+    },
+    Resources: []skills.Resource{
+        {
+            Name:        "conversion-table",
+            Description: "Lookup table of multiplication factors.",
+            Read: func(context.Context) (any, error) {
+                return conversionTable, nil
+            },
+        },
+    },
+    Scripts: []skills.Script{
+        {
+            Name:        "convert",
+            Description: "Multiplies a value by a conversion factor. Pass value and factor as positional string arguments: [\"<value>\", \"<factor>\"].",
+            Run: func(_ context.Context, _ *skills.Skill, args []string) (any, error) {
+                if len(args) != 2 {
+                    return nil, fmt.Errorf("expected value and factor")
+                }
+                value, err := strconv.ParseFloat(args[0], 64)
+                if err != nil {
+                    return nil, err
+                }
+                factor, err := strconv.ParseFloat(args[1], 64)
+                if err != nil {
+                    return nil, err
+                }
+                return map[string]any{
+                    "value":  value,
+                    "factor": factor,
+                    "result": value * factor,
+                }, nil
+            },
+        },
+    },
+}
+
+provider := skills.NewContextProvider(skills.ContextProviderOptions{
+    Skills: []*skills.Skill{skill},
+})
+```
+
+`GetContent` loads the skill instructions only when the agent calls `load_skill`. Scripts receive positional CLI-style string arguments, for example `["26.2", "1.60934"]`, and can parse those arguments however the script requires.
+
+> [!TIP]
+> See the [skills examples](https://github.com/microsoft/agent-framework-go/tree/main/examples/02-agents/skills) for complete runnable samples.
 
 :::zone-end
 

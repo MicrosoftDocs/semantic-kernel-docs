@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: tutorial
 ms.author: edvan
-ms.date: 02/09/2026
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
@@ -91,6 +91,79 @@ Or stream the response:
 
 > [!TIP]
 > See the [full sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/01-get-started/01_hello_agent.py) for the complete runnable file.
+
+:::zone-end
+
+:::zone pivot="programming-language-go"
+
+```bash
+go get github.com/microsoft/agent-framework-go
+```
+
+Create the agent:
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+
+    "github.com/microsoft/agent-framework-go/agent"
+    "github.com/microsoft/agent-framework-go/provider/foundryprovider"
+
+    "github.com/Azure/azure-sdk-for-go/sdk/azidentity"
+)
+
+func main() {
+    endpoint := os.Getenv("FOUNDRY_PROJECT_ENDPOINT")
+    model := os.Getenv("FOUNDRY_MODEL")
+
+    token, err := azidentity.NewDefaultAzureCredential(nil)
+    if err != nil {
+        panic(err)
+    }
+
+    a := foundryprovider.NewAgent(
+        endpoint,
+        token,
+        foundryprovider.ModelDeployment(model),
+        foundryprovider.AgentConfig{
+            Instructions: "You are a friendly assistant. Keep your answers brief.",
+            Config: agent.Config{
+                Name: "HelloAgent",
+            },
+        },
+    )
+```
+
+> [!WARNING]
+> `azidentity.NewDefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential, such as `azidentity.NewManagedIdentityCredential`, to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
+
+Run it:
+
+```go
+    ctx := context.Background()
+
+    resp, err := a.RunText(ctx, "What is the largest city in France?").Collect()
+    fmt.Println(resp, err)
+```
+
+Or stream the response:
+
+```go
+    for update, err := range a.RunText(ctx, "Tell me a one-sentence fun fact.", agent.Stream(true)) {
+        if err != nil {
+            panic(err)
+        }
+        fmt.Print(update)
+    }
+}
+```
+
+> [!TIP]
+> See the [full sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/01-get-started/01_hello_agent/main.go) for the complete runnable file.
 
 :::zone-end
 

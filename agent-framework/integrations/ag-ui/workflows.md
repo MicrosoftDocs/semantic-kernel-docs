@@ -358,3 +358,28 @@ Key details:
 - [Agent Framework GitHub Repository](https://github.com/microsoft/agent-framework)
 
 ::: zone-end
+
+
+::: zone pivot="programming-language-go"
+
+Go can expose workflows to AG-UI by wrapping a `workflow.Workflow` as an agent with `workflow/agentworkflow`, then hosting that agent with `provider/aguiprovider`.
+
+```go
+workflowAgent, err := agentworkflow.New(wf, agentworkflow.AgentConfig{
+    IncludeOutputsInResponse: true,
+    Config: agent.Config{
+        Name: "WorkflowAgent",
+    },
+})
+if err != nil {
+    panic(err)
+}
+
+mux := http.NewServeMux()
+mux.Handle("/", aguiprovider.NewJSONHTTPHandler(workflowAgent, aguiprovider.HandlerConfig{}))
+```
+
+> [!TIP]
+> See the [workflow as an agent sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/03-workflows/agents/workflow_as_an_agent/main.go) and the [AG-UI server sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/agui/step01_getting_started/server/main.go) for complete runnable examples.
+
+::: zone-end

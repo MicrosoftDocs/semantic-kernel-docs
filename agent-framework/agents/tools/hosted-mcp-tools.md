@@ -1,21 +1,21 @@
 ---
-title: MCP and Foundry Agents
-description: Using MCP with Foundry Agents
+title: Hosted MCP Tools
+description: Use hosted Model Context Protocol tools with Agent Framework agents.
 zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: reference
 ms.author: evmattso
-ms.date: 04/01/2026
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
-# Using MCP tools with Foundry Agents
+# Using hosted MCP tools with agents
 
 You can extend the capabilities of your Microsoft Foundry agent by connecting it to tools hosted on remote [Model Context Protocol (MCP)](/azure/ai-foundry/agents/how-to/tools/model-context-protocol) servers (bring your own MCP server endpoint).
 
 ## How to use the Model Context Protocol tool
 
-This section explains how to create a Microsoft Foundry-backed Python agent with a hosted Model Context Protocol (MCP) server integration. The agent can utilize MCP tools that are managed and executed by the Foundry service, allowing for secure and controlled access to external resources.
+This section explains how to create an agent with a hosted Model Context Protocol (MCP) server integration. The agent can utilize MCP tools that are managed and executed by the backing AI service, allowing for secure and controlled access to external resources.
 
 ### Key Features
 
@@ -339,6 +339,102 @@ if __name__ == "__main__":
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Hosted MCP tools
+
+The `hostedtool` package provides marker types for hosted tools. These tools are not executed locally — they inform the AI service that it's allowed to call the configured MCP server on the service side. In Go, use hosted MCP tools with the OpenAI Responses API through `openaiprovider.NewResponsesAgent`.
+
+### Environment setup
+
+Configure the model and MCP server endpoint through environment variables:
+
+```go
+endpoint := os.Getenv("MCP_SERVER_URL")
+if endpoint == "" {
+    endpoint = "https://learn.microsoft.com/api/mcp"
+}
+
+deployment := os.Getenv("OPENAI_RESPONSES_MODEL")
+if deployment == "" {
+    deployment = "gpt-4o-mini"
+}
+```
+
+### Basic MCP integration
+
+```go
+import (
+    "os"
+
+    "github.com/microsoft/agent-framework-go/agent"
+    "github.com/microsoft/agent-framework-go/provider/openaiprovider"
+    "github.com/microsoft/agent-framework-go/tool"
+    "github.com/microsoft/agent-framework-go/tool/hostedtool"
+)
+
+mcpTool := &hostedtool.MCPServer{
+    ServerName:        "microsoft_learn",
+    ServerDescription: "Search Microsoft Learn documentation.",
+    ServerAddress:     endpoint,
+    AllowedTools:      []string{"microsoft_docs_search"},
+}
+
+a := openaiprovider.NewResponsesAgent(client, openaiprovider.AgentConfig{
+    Model:        deployment,
+    Instructions: "You answer questions by searching Microsoft Learn content only.",
+    Config: agent.Config{
+        Name:  "MicrosoftLearnAgent",
+        Tools: []tool.Tool{mcpTool},
+    },
+})
+
+resp, err := a.RunText(ctx, "Summarize the Azure AI Agent documentation for MCP tool calling.").Collect()
+```
+
+### Authenticated MCP servers
+
+For MCP servers that require authentication, set `Authorization` or provide headers. Load secrets from your application's secret store or environment, and avoid checking them into source control.
+
+```go
+githubMCPTool := &hostedtool.MCPServer{
+    ServerName:    "github",
+    ServerAddress: "https://api.githubcopilot.com/mcp/",
+    Authorization: "Bearer " + os.Getenv("GITHUB_PAT"),
+}
+```
+
+### Multiple MCP servers
+
+Provide multiple hosted MCP server declarations when the model should be able to choose between different remote tool sets:
+
+```go
+tools := []tool.Tool{
+    &hostedtool.MCPServer{
+        ServerName:    "microsoft_learn",
+        ServerAddress: "https://learn.microsoft.com/api/mcp",
+        AllowedTools:  []string{"microsoft_docs_search"},
+    },
+    &hostedtool.MCPServer{
+        ServerName:    "github",
+        ServerAddress: "https://api.githubcopilot.com/mcp/",
+        Authorization: "Bearer " + os.Getenv("GITHUB_PAT"),
+    },
+}
+
+a := openaiprovider.NewResponsesAgent(client, openaiprovider.AgentConfig{
+    Model:        deployment,
+    Instructions: "You can search Microsoft documentation and GitHub repositories.",
+    Config: agent.Config{
+        Name:  "MultiToolAgent",
+        Tools: tools,
+    },
+})
+```
+
+> [!NOTE]
+> Hosted MCP tools require a provider that supports them, such as the OpenAI Responses API through `openaiprovider.NewResponsesAgent`.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

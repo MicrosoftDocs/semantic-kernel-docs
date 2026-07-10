@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: reference
 ms.author: edvan
-ms.date: 02/09/2026
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
@@ -102,6 +102,27 @@ if __name__ == "__main__":
 
 :::zone-end
 
+:::zone pivot="programming-language-go"
+## Web search
+
+The `hostedtool.WebSearch` type enables server-side web search when using a provider that supports it.
+
+```go
+import "github.com/microsoft/agent-framework-go/tool/hostedtool"
+
+webSearch := &hostedtool.WebSearch{}
+
+a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Config: agent.Config{
+        Tools: []tool.Tool{webSearch},
+    },
+})
+```
+
+> [!NOTE]
+> Web search is a hosted tool — the search is performed by the AI service, not locally.
+
+:::zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

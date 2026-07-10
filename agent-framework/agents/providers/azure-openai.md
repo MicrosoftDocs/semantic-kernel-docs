@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
 ms.author: westey
-ms.date: 04/01/2026
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
@@ -160,6 +160,100 @@ Python Azure OpenAI uses the same `agent_framework.openai` clients as direct Ope
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Azure OpenAI
+
+In Go, Azure OpenAI uses the same `openaiprovider` package as direct OpenAI, with Azure-specific client initialization.
+
+### Installation
+
+```bash
+go get github.com/microsoft/agent-framework-go
+```
+
+### Create an Azure OpenAI agent
+
+```go
+import (
+    "cmp"
+    "fmt"
+    "os"
+
+    "github.com/microsoft/agent-framework-go/agent"
+    "github.com/microsoft/agent-framework-go/provider/openaiprovider"
+
+    "github.com/Azure/azure-sdk-for-go/sdk/azidentity"
+    openai "github.com/openai/openai-go/v3"
+    "github.com/openai/openai-go/v3/azure"
+)
+
+endpoint := os.Getenv("AZURE_OPENAI_ENDPOINT")
+deployment := os.Getenv("AZURE_OPENAI_DEPLOYMENT_NAME")
+apiVersion := cmp.Or(os.Getenv("AZURE_OPENAI_API_VERSION"), "2025-01-01-preview")
+
+token, err := azidentity.NewDefaultAzureCredential(nil)
+if err != nil {
+    panic(err)
+}
+
+a := openaiprovider.NewChatCompletionsAgent(
+    openai.NewClient(
+        azure.WithEndpoint(endpoint, apiVersion),
+        azure.WithTokenCredential(token),
+    ),
+    openaiprovider.AgentConfig{
+        Model: deployment,
+        Instructions: "You are a helpful assistant.",
+        Config: agent.Config{
+            Name:         "AzureAgent",
+        },
+    },
+)
+
+resp, err := a.RunText(ctx, "Hello!").Collect()
+```
+
+> [!WARNING]
+> `azidentity.NewDefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential, such as `azidentity.NewManagedIdentityCredential`, to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
+
+### Use the Responses API
+
+Use `openaiprovider.NewResponsesAgent` with the same Azure-configured OpenAI client when your Azure OpenAI deployment supports the Responses API:
+
+```go
+responsesAgent := openaiprovider.NewResponsesAgent(
+    openai.NewClient(
+        azure.WithEndpoint(endpoint, apiVersion),
+        azure.WithTokenCredential(token),
+    ),
+    openaiprovider.AgentConfig{
+        Model: deployment,
+        Instructions: "You are a helpful assistant.",
+        Config: agent.Config{
+            Name: "AzureResponsesAgent",
+        },
+    },
+)
+
+response, err := responsesAgent.RunText(ctx, "Summarize the latest deployment status.").Collect()
+if err != nil {
+    return err
+}
+fmt.Println(response.String())
+```
+
+### Environment variables
+
+| Variable | Description |
+|---|---|
+| `AZURE_OPENAI_ENDPOINT` | Your Azure OpenAI resource endpoint |
+| `AZURE_OPENAI_DEPLOYMENT_NAME` | The deployment/model name |
+| `AZURE_OPENAI_API_VERSION` | API version (e.g., `2025-01-01-preview`) |
+
+> [!TIP]
+> See the [Azure OpenAI sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/providers/azure/main.go) for a complete example.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

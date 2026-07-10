@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: tutorial
 ms.author: evmattso
-ms.date: 11/07/2025
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
@@ -557,5 +557,27 @@ async def capture_photo() -> str:
 - [AG-UI Overview](index.md)
 - [Getting Started Tutorial](getting-started.md)
 - [Agent Framework Documentation](../../overview/index.md)
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+Go AG-UI servers can leave tool calls for the frontend by disabling automatic function calling on the hosted agent.
+
+```go
+a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Instructions: "You are a helpful assistant.",
+    Config: agent.Config{
+        Name:                "AGUIAssistant",
+        DisableFuncAutoCall: true,
+    },
+})
+
+mux := http.NewServeMux()
+mux.Handle("/", aguiprovider.NewJSONHTTPHandler(a, aguiprovider.HandlerConfig{}))
+```
+
+> [!TIP]
+> See the [AG-UI frontend tools sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/agui/step03_frontend_tools/server/main.go) for a complete runnable example.
 
 ::: zone-end
