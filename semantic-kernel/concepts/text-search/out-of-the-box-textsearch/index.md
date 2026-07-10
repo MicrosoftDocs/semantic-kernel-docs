@@ -2,7 +2,7 @@
 title: Out-of-the-box Text Search (Preview)
 description: Out-of-the-box Text Search
 author: markwallace
-ms.topic: conceptual
+ms.topic: article
 ms.author: markwallace
 ms.date: 10/21/2024
 ms.service: semantic-kernel

@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: reference
 ms.author: edvan
-ms.date: 04/01/2026
+ms.date: 05/27/2026
 ms.service: agent-framework
 ---
 
@@ -227,6 +227,23 @@ if __name__ == "__main__":
 
 :::zone-end
 
+:::zone pivot="programming-language-go"
+
+Use `agent.Session` for state that should follow a conversation across runs. Middleware can read the session from options with `agent.GetOption`.
+
+```go
+const countKey = "run_count"
+
+counter := agent.MiddlewareFunc(func(next agent.RunFunc, ctx context.Context, messages []*message.Message, options ...agent.Option) iter.Seq2[*agent.ResponseUpdate, error] {
+    session, _ := agent.GetOption(options, agent.WithSession)
+    var count int
+    _, _ = session.Get(countKey, &count)
+    session.Set(countKey, count+1)
+    return next(ctx, messages, options...)
+})
+```
+
+:::zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

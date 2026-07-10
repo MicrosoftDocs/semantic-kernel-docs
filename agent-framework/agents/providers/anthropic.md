@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author:  rogerbarreto
 ms.topic: tutorial
 ms.author: rbarreto
-ms.date: 12/12/2025
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
@@ -148,6 +148,18 @@ public sealed class AnthropicAzureTokenCredential(TokenCredential tokenCredentia
 > [!TIP]
 > See the [.NET samples](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples) for complete runnable examples.
 
+## Tools
+
+| Tool | Status | Notes |
+|---|---|---|
+| [Function Tools](../tools/function-tools.md) | ✅ | Standard `AIFunction` instances via `AIFunctionFactory.Create(...)`. |
+| [Tool Approval](../tools/tool-approval.md) | ✅ | Provided by the function-invoking chat client; works with any function-tool call. |
+| [Code Interpreter](../tools/code-interpreter.md) | ❌ | Not supported by the .NET Anthropic client today. |
+| [File Search](../tools/file-search.md) | ❌ | Not supported. |
+| [Web Search](../tools/web-search.md) | ❌ | Not supported by the .NET Anthropic client today. |
+| [Hosted MCP Tools](../tools/hosted-mcp-tools.md) | ✅ | Supported. |
+| [Local MCP Tools](../tools/local-mcp-tools.md) | ✅ | Supported. |
+
 ## Using the Agent
 
 The agent is a standard `AIAgent` and supports all standard agent operations.
@@ -175,6 +187,9 @@ Set up the required environment variables for Anthropic authentication:
 # Required for Anthropic API access
 ANTHROPIC_API_KEY="your-anthropic-api-key"
 ANTHROPIC_CHAT_MODEL="claude-sonnet-4-5-20250929"  # or your preferred model
+
+# Optional: override the Anthropic API endpoint (e.g. for Foundry-compatible deployments)
+ANTHROPIC_BASE_URL="https://your-custom-endpoint.com"
 ```
 
 Alternatively, you can use a `.env` file in your project root:
@@ -182,6 +197,7 @@ Alternatively, you can use a `.env` file in your project root:
 ```env
 ANTHROPIC_API_KEY=your-anthropic-api-key
 ANTHROPIC_CHAT_MODEL=claude-sonnet-4-5-20250929
+# ANTHROPIC_BASE_URL=https://your-custom-endpoint.com  # optional
 ```
 
 You can get an API key from the [Anthropic Console](https://console.anthropic.com/).
@@ -231,6 +247,27 @@ async def explicit_config_example():
     print(result.text)
 ```
 
+### Using a Custom Base URL
+
+Pass `base_url` directly to `AnthropicClient` to point it at any Anthropic-compatible endpoint, such as a Foundry-hosted deployment. This lets you keep the same `AnthropicClient` code and only change the endpoint, rather than switching to `AnthropicFoundryClient`:
+
+```python
+async def custom_base_url_example():
+    agent = AnthropicClient(
+        model="claude-haiku-4-5",
+        api_key="your-api-key-here",
+        base_url="https://your-foundry-resource.services.ai.azure.com/models/anthropic",
+    ).as_agent(
+        name="HelpfulAssistant",
+        instructions="You are a helpful assistant.",
+    )
+
+    result = await agent.run("What can you do?")
+    print(result.text)
+```
+
+`base_url` falls back to the `ANTHROPIC_BASE_URL` environment variable when not passed explicitly.
+
 ### Using Anthropic on Foundry
 
 After you've setup Anthropic on Foundry, ensure you have the following environment variables set:
@@ -258,11 +295,23 @@ async def foundry_example():
 > [!NOTE]
 > If you prefer configuring a full Anthropic-compatible endpoint instead of a resource name, set `ANTHROPIC_FOUNDRY_BASE_URL` in addition to `ANTHROPIC_FOUNDRY_API_KEY`.
 
+## Tools
+
+`AnthropicClient` exposes hosted Anthropic tool factories alongside standard function tool support. Use `client.get_*_tool(...)` to build a tool and pass it through `tools=` on `as_agent(...)` or `Agent(...)`.
+
+| Tool | Factory / construction | Status | Notes |
+|---|---|---|---|
+| [Function Tools](../tools/function-tools.md) | Pass any Python callable or `@ai_function` | ✅ | Invoked locally in your Python process. |
+| [Tool Approval](../tools/tool-approval.md) | Handled by the framework's function-invoking chat client | ✅ | Works with any function-tool call. |
+| [Code Interpreter](../tools/code-interpreter.md) | `client.get_code_interpreter_tool()` | ✅ | Required for [Anthropic Skills](#anthropic-skills). |
+| [File Search](../tools/file-search.md) | n/a | ❌ | Not exposed by the Anthropic API. |
+| [Web Search](../tools/web-search.md) | `client.get_web_search_tool()` | ✅ | Hosted Anthropic web search. |
+| [Hosted MCP Tools](../tools/hosted-mcp-tools.md) | `client.get_mcp_tool(name=..., url=...)` | ✅ | Remote MCP servers invoked by Anthropic. |
+| [Local MCP Tools](../tools/local-mcp-tools.md) | `MCPStreamableHTTPTool` / `MCPStdioTool` | ✅ | Runs in your process. |
+
+For richer examples — combining hosted MCP, web search, extended thinking, and Anthropic Skills — see [Hosted Tools](#hosted-tools) below.
+
 ## Agent Features
-
-### Function Tools
-
-Equip your agent with custom functions:
 
 ```python
 from typing import Annotated
@@ -325,7 +374,7 @@ async def hosted_tools_example():
             ),
             client.get_web_search_tool(),
         ],
-        max_tokens=20000,
+        default_options={"max_tokens": 20000},
     )
 
     result = await agent.run("Can you compare Python decorators with C# attributes?")
@@ -337,7 +386,6 @@ async def hosted_tools_example():
 Anthropic supports extended thinking capabilities through the `thinking` feature, which allows the model to show its reasoning process:
 
 ```python
-from agent_framework import TextReasoningContent, UsageContent
 from agent_framework.anthropic import AnthropicClient
 
 async def thinking_example():
@@ -358,11 +406,11 @@ async def thinking_example():
 
     async for chunk in agent.run(query, stream=True):
         for content in chunk.contents:
-            if isinstance(content, TextReasoningContent):
+            if content.type == "text_reasoning":
                 # Display thinking in a different color
                 print(f"\033[32m{content.text}\033[0m", end="", flush=True)
-            if isinstance(content, UsageContent):
-                print(f"\n\033[34m[Usage: {content.details}]\033[0m\n", end="", flush=True)
+            if content.type == "usage":
+                print(f"\n\033[34m[Usage: {content.usage_details}]\033[0m\n", end="", flush=True)
         if chunk.text:
             print(chunk.text, end="", flush=True)
     print()
@@ -373,7 +421,7 @@ async def thinking_example():
 Anthropic provides managed skills that extend agent capabilities, such as creating PowerPoint presentations. Skills require the Code Interpreter tool to function:
 
 ```python
-from agent_framework import HostedFileContent
+from agent_framework import Content
 from agent_framework.anthropic import AnthropicClient
 
 async def skills_example():
@@ -399,7 +447,7 @@ async def skills_example():
     print(f"User: {query}")
     print("Agent: ", end="", flush=True)
 
-    files: list[HostedFileContent] = []
+    files: list[Content] = []
     async for chunk in agent.run(query, stream=True):
         for content in chunk.contents:
             match content.type:
@@ -512,6 +560,57 @@ See the [Agent getting started tutorials](../../get-started/your-first-agent.md)
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Anthropic
+
+The `anthropicprovider` package creates agents using the Anthropic API.
+
+### Installation
+
+```bash
+go get github.com/microsoft/agent-framework-go
+```
+
+### Create an Anthropic agent
+
+```go
+import (
+    "github.com/microsoft/agent-framework-go/agent"
+    "github.com/microsoft/agent-framework-go/provider/anthropicprovider"
+
+    "github.com/anthropics/anthropic-sdk-go"
+)
+
+a := anthropicprovider.NewAgent(
+    anthropic.NewClient(), // uses ANTHROPIC_API_KEY env var
+    anthropicprovider.AgentConfig{
+        Model: "claude-sonnet-4-5",
+        Instructions: "You are a helpful assistant.",
+        Config: agent.Config{
+            Name:         "ClaudeAgent",
+        },
+    },
+)
+
+resp, err := a.RunText(ctx, "Tell me a joke.").Collect()
+```
+
+### Custom options
+
+Pass Anthropic-specific parameters using `anthropicprovider.MessageNewParams`:
+
+```go
+resp, err := a.RunText(ctx, "Hello!",
+    anthropicprovider.MessageNewParams(anthropic.MessageNewParams{
+        MaxTokens: 500,
+    }),
+).Collect()
+```
+
+> [!TIP]
+> See the [Anthropic sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/providers/anthrophic/main.go) for a complete example.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

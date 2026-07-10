@@ -1,28 +1,30 @@
 ---
 title: Azure OpenAI Agents
-description: Learn how to use Microsoft Agent Framework with Azure OpenAI services — Chat Completions, Responses, and Assistants APIs.
+description: Learn how to use Microsoft Agent Framework with Azure OpenAI services — Chat Completions and Responses APIs.
 zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
 ms.author: westey
-ms.date: 04/01/2026
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
 # Azure OpenAI Agents
 
-Microsoft Agent Framework supports three distinct Azure OpenAI client types, each targeting a different API surface with different tool capabilities:
+Microsoft Agent Framework supports two Azure OpenAI client types, each targeting a different API surface with different tool capabilities. **Responses is the recommended primary client**: it supports the full set of hosted tools. Use Chat Completion when you need broad model compatibility or have an existing Chat Completions integration to keep.
 
 | Client Type | API | Best For |
 |---|---|---|
+| **Responses** (recommended) | [Responses API](/azure/ai-services/openai/how-to/responses) | Full-featured agents with hosted tools (code interpreter, file search, web search, hosted MCP) |
 | **Chat Completion** | [Chat Completions API](/azure/ai-services/openai/how-to/chatgpt) | Simple agents, broad model support |
-| **Responses** | [Responses API](/azure/ai-services/openai/how-to/responses) | Full-featured agents with hosted tools (code interpreter, file search, web search, hosted MCP) |
-| **Assistants** | [Assistants API](/azure/ai-services/openai/how-to/assistant) | Server-managed agents with code interpreter and file search |
 
 > [!TIP]
-> For direct OpenAI equivalents (`OpenAIChatClient`, `OpenAIChatCompletionClient`, `OpenAIAssistantsClient`), see the [OpenAI provider page](./openai.md). The tool support is identical.
+> For direct OpenAI equivalents (`OpenAIChatClient`, `OpenAIChatCompletionClient`), see the [OpenAI provider page](./openai.md). The tool support is identical.
 
 ::: zone pivot="programming-language-csharp"
+
+> [!NOTE]
+> The Azure OpenAI Assistants API is deprecated. New code should use the Responses client. If you are migrating from an existing Assistants-based app, see the [Semantic Kernel migration guide](../../migration-guide/from-semantic-kernel/index.md).
 
 ## Getting Started
 
@@ -50,9 +52,26 @@ AzureOpenAIClient client = new AzureOpenAIClient(
 > [!WARNING]
 > `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
+## Responses Client
+
+The Responses client is the recommended primary client and provides the richest tool support including code interpreter, file search, web search, and hosted MCP.
+
+```csharp
+var responsesClient = client.GetResponsesClient();
+
+AIAgent agent = responsesClient.AsAIAgent(
+    model: "gpt-4o-mini",
+    instructions: "You are a helpful coding assistant.",
+    name: "CodeHelper");
+
+Console.WriteLine(await agent.RunAsync("Write a Python function to sort a list."));
+```
+
+**Supported tools:** Function tools, tool approval, code interpreter, file search, web search, hosted MCP, local MCP tools.
+
 ## Chat Completion Client
 
-The Chat Completion client provides a straightforward way to create agents using the ChatCompletion API.
+The Chat Completion client provides a straightforward way to create agents using the Chat Completions API. Use it when you need broad model compatibility or have an existing Chat Completions integration.
 
 ```csharp
 var chatClient = client.GetChatClient("gpt-4o-mini");
@@ -66,37 +85,10 @@ Console.WriteLine(await agent.RunAsync("Tell me a joke about a pirate."));
 
 **Supported tools:** Function tools, web search, local MCP tools.
 
-## Responses Client
-
-The Responses client provides the richest tool support including code interpreter, file search, web search, and hosted MCP.
-
-```csharp
-var responsesClient = client.GetResponseClient("gpt-4o-mini");
-
-AIAgent agent = responsesClient.AsAIAgent(
-    instructions: "You are a helpful coding assistant.",
-    name: "CodeHelper");
-
-Console.WriteLine(await agent.RunAsync("Write a Python function to sort a list."));
-```
-
-**Supported tools:** Function tools, tool approval, code interpreter, file search, web search, hosted MCP, local MCP tools.
-
 ## Assistants Client
 
-The Assistants client creates server-managed agents with built-in code interpreter and file search.
-
-```csharp
-var assistantsClient = client.GetAssistantClient();
-
-AIAgent agent = assistantsClient.AsAIAgent(
-    instructions: "You are a data analysis assistant.",
-    name: "DataHelper");
-
-Console.WriteLine(await agent.RunAsync("Analyze trends in the uploaded data."));
-```
-
-**Supported tools:** Function tools, code interpreter, file search, local MCP tools.
+> [!NOTE]
+> The Azure OpenAI Assistants API is deprecated. The Agent Framework no longer documents an Assistants client — use the Responses client above for new code. For migrating an existing app, see the [Semantic Kernel migration guide](../../migration-guide/from-semantic-kernel/index.md).
 
 ### Function Tools
 
@@ -133,9 +125,26 @@ await foreach (var update in agent.RunStreamingAsync("Tell me a joke about a pir
 
 ## Using the Agent
 
-All three client types produce a standard `AIAgent` that supports the same agent operations (streaming, threads, middleware).
+Both client types produce a standard `AIAgent` that supports the same agent operations (streaming, threads, middleware).
 
 For more information, see the [Get Started tutorials](../../get-started/your-first-agent.md).
+
+## Tools
+
+The Azure OpenAI .NET clients share their tool surface with the matching OpenAI clients. See the [OpenAI provider page](./openai.md#tools) for the full per-client matrix — the Responses and Chat Completion Azure variants mirror their direct-OpenAI equivalents.
+
+| Tool | Responses | Chat Completion |
+|---|:---:|:---:|
+| [Function Tools](../tools/function-tools.md) | ✅ | ✅ |
+| [Tool Approval](../tools/tool-approval.md) | ✅ | ✅ |
+| [Code Interpreter](../tools/code-interpreter.md) | ✅ | ❌ |
+| [File Search](../tools/file-search.md) | ✅ | ❌ |
+| [Web Search](../tools/web-search.md) | ✅ | ✅ |
+| [Hosted MCP Tools](../tools/hosted-mcp-tools.md) | ✅ | ❌ |
+| [Local MCP Tools](../tools/local-mcp-tools.md) | ✅ | ✅ |
+
+> [!NOTE]
+> **Tool Approval** is provided by the framework's function-invoking chat client, so it works with any function-tool call regardless of the underlying API.
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
@@ -145,8 +154,106 @@ For more information, see the [Get Started tutorials](../../get-started/your-fir
 > [!IMPORTANT]
 > Python Azure OpenAI guidance now lives on the [OpenAI provider page](./openai.md). Use that page for `OpenAIChatCompletionClient`, `OpenAIChatClient`, and `OpenAIEmbeddingClient`, deployment-name-to-`model` mapping, explicit Azure routing inputs such as `credential` or `azure_endpoint`, `api_version` configuration after Azure is selected, plus `base_url` guidance for full `.../openai/v1` URLs. If `OPENAI_API_KEY` is also present, the generic clients stay on OpenAI unless you pass explicit Azure routing inputs. If only `AZURE_OPENAI_*` settings are present, Azure environment fallback still works. The old Python `AzureOpenAI*` compatibility classes were removed from the current `agent_framework.azure` namespace, so migrate older code to `agent_framework.openai`. For new Python solutions, we recommend deploying models with Microsoft Foundry and connecting to them with `FoundryChatClient` instead of staying on the Azure OpenAI-specific path. If you need Foundry project endpoints or the Foundry Agent Service instead, see the [Foundry provider page](./microsoft-foundry.md). For a broader migration checklist, see the [Python significant changes guide](../../support/upgrade/python-2026-significant-changes.md).
 
+## Tools
+
+Python Azure OpenAI uses the same `agent_framework.openai` clients as direct OpenAI, so the tool surface is identical. See the [Tools section on the OpenAI provider page](./openai.md#tools) for the full per-client matrix.
+
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Azure OpenAI
+
+In Go, Azure OpenAI uses the same `openaiprovider` package as direct OpenAI, with Azure-specific client initialization.
+
+### Installation
+
+```bash
+go get github.com/microsoft/agent-framework-go
+```
+
+### Create an Azure OpenAI agent
+
+```go
+import (
+    "cmp"
+    "fmt"
+    "os"
+
+    "github.com/microsoft/agent-framework-go/agent"
+    "github.com/microsoft/agent-framework-go/provider/openaiprovider"
+
+    "github.com/Azure/azure-sdk-for-go/sdk/azidentity"
+    openai "github.com/openai/openai-go/v3"
+    "github.com/openai/openai-go/v3/azure"
+)
+
+endpoint := os.Getenv("AZURE_OPENAI_ENDPOINT")
+deployment := os.Getenv("AZURE_OPENAI_DEPLOYMENT_NAME")
+apiVersion := cmp.Or(os.Getenv("AZURE_OPENAI_API_VERSION"), "2025-01-01-preview")
+
+token, err := azidentity.NewDefaultAzureCredential(nil)
+if err != nil {
+    panic(err)
+}
+
+a := openaiprovider.NewChatCompletionsAgent(
+    openai.NewClient(
+        azure.WithEndpoint(endpoint, apiVersion),
+        azure.WithTokenCredential(token),
+    ),
+    openaiprovider.AgentConfig{
+        Model: deployment,
+        Instructions: "You are a helpful assistant.",
+        Config: agent.Config{
+            Name:         "AzureAgent",
+        },
+    },
+)
+
+resp, err := a.RunText(ctx, "Hello!").Collect()
+```
+
+> [!WARNING]
+> `azidentity.NewDefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential, such as `azidentity.NewManagedIdentityCredential`, to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
+
+### Use the Responses API
+
+Use `openaiprovider.NewResponsesAgent` with the same Azure-configured OpenAI client when your Azure OpenAI deployment supports the Responses API:
+
+```go
+responsesAgent := openaiprovider.NewResponsesAgent(
+    openai.NewClient(
+        azure.WithEndpoint(endpoint, apiVersion),
+        azure.WithTokenCredential(token),
+    ),
+    openaiprovider.AgentConfig{
+        Model: deployment,
+        Instructions: "You are a helpful assistant.",
+        Config: agent.Config{
+            Name: "AzureResponsesAgent",
+        },
+    },
+)
+
+response, err := responsesAgent.RunText(ctx, "Summarize the latest deployment status.").Collect()
+if err != nil {
+    return err
+}
+fmt.Println(response.String())
+```
+
+### Environment variables
+
+| Variable | Description |
+|---|---|
+| `AZURE_OPENAI_ENDPOINT` | Your Azure OpenAI resource endpoint |
+| `AZURE_OPENAI_DEPLOYMENT_NAME` | The deployment/model name |
+| `AZURE_OPENAI_API_VERSION` | API version (e.g., `2025-01-01-preview`) |
+
+> [!TIP]
+> See the [Azure OpenAI sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/providers/azure/main.go) for a complete example.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

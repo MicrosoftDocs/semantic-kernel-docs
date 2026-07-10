@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: reference
 ms.author: edvan
-ms.date: 04/01/2026
+ms.date: 05/27/2026
 ms.service: agent-framework
 ---
 
@@ -131,8 +131,8 @@ async def exception_handling_middleware(
         print(f"[ExceptionHandlingMiddleware] Caught TimeoutError: {e}")
         # Override function result to provide custom message in response.
         context.result = (
-            "Request Timeout: The data service is taking longer than expected to respond.",
-            "Respond with message - 'Sorry for the inconvenience, please try again later.'",
+            "Request Timeout: The data service is taking longer than expected to respond. "
+            "Respond with message - 'Sorry for the inconvenience, please try again later.'"
         )
 
 
@@ -217,8 +217,8 @@ async def exception_handling_middleware(
         print(f"[ExceptionHandlingMiddleware] Caught TimeoutError: {e}")
         # Override function result to provide custom message in response.
         context.result = (
-            "Request Timeout: The data service is taking longer than expected to respond.",
-            "Respond with message - 'Sorry for the inconvenience, please try again later.'",
+            "Request Timeout: The data service is taking longer than expected to respond. "
+            "Respond with message - 'Sorry for the inconvenience, please try again later.'"
         )
 
 
@@ -250,6 +250,29 @@ if __name__ == "__main__":
 
 :::zone-end
 
+:::zone pivot="programming-language-go"
+
+Go middleware receives the response stream from `next`, so it can handle provider or downstream middleware errors as they are yielded.
+
+```go
+fallback := agent.MiddlewareFunc(func(next agent.RunFunc, ctx context.Context, messages []*message.Message, options ...agent.Option) iter.Seq2[*agent.ResponseUpdate, error] {
+    return func(yield func(*agent.ResponseUpdate, error) bool) {
+        for update, err := range next(ctx, messages, options...) {
+            if err != nil {
+                yield(&agent.ResponseUpdate{
+                    Contents: message.Contents{&message.TextContent{Text: "Sorry, I couldn't complete that request."}},
+                }, nil)
+                return
+            }
+            if !yield(update, nil) {
+                return
+            }
+        }
+    }
+})
+```
+
+:::zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

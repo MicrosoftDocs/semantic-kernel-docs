@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: tutorial
 ms.author: evmattso
-ms.date: 04/01/2026
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
@@ -508,7 +508,7 @@ Here's an enhanced client using `AGUIChatClient` that displays tool execution:
 import asyncio
 import os
 
-from agent_framework import Agent, ToolCallContent, ToolResultContent
+from agent_framework import Agent
 from agent_framework_ag_ui import AGUIChatClient
 
 
@@ -518,7 +518,7 @@ async def main():
     print(f"Connecting to AG-UI server at: {server_url}\n")
 
     # Create AG-UI chat client
-    chat_client = AGUIChatClient(server_url=server_url)
+    chat_client = AGUIChatClient(endpoint=server_url)
     
     # Create agent with the chat client
     agent = Agent(
@@ -547,9 +547,9 @@ async def main():
                 
                 # Display tool calls and results
                 for content in update.contents:
-                    if isinstance(content, ToolCallContent):
+                    if content.type == "function_call":
                         print(f"\n\033[95m[Calling tool: {content.name}]\033[0m")
-                    elif isinstance(content, ToolResultContent):
+                    elif content.type == "function_result":
                         result_text = content.result if isinstance(content.result, str) else str(content.result)
                         print(f"\033[94m[Tool result: {result_text}]\033[0m")
 
@@ -710,5 +710,33 @@ Now that you understand backend tool rendering, you can:
 - [AG-UI Overview](index.md)
 - [Getting Started with AG-UI](getting-started.md)
 - [Function Tools Tutorial](../../agents/tools/function-tools.md)
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+Go AG-UI servers can expose normal Agent Framework function tools. Create tools with `tool/functool`, attach them to the hosted agent, and serve the agent with `aguiprovider.NewJSONHTTPHandler`.
+
+```go
+searchRestaurants := functool.MustNew(functool.Config{
+    Name:        "search_restaurants",
+    Description: "Search for restaurants in a location.",
+}, func(ctx context.Context, in restaurantSearchRequest) (restaurantSearchResponse, error) {
+    return restaurantSearchResponse{
+        Location: in.Location,
+        Cuisine:  in.Cuisine,
+        Results:  []restaurantInfo{{Name: "The Golden Fork", Cuisine: in.Cuisine}},
+    }, nil
+})
+
+a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Config: agent.Config{
+        Tools: []tool.Tool{searchRestaurants},
+    },
+})
+```
+
+> [!TIP]
+> See the [AG-UI backend tools sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/agui/step02_backend_tools/server/main.go) for a complete runnable example.
 
 ::: zone-end

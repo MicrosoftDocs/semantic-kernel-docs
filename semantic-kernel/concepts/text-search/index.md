@@ -3,7 +3,7 @@ title: Text Search with Semantic Kernel (Preview)
 description: Describes what a Semantic Kernel Text Search is, an provides a basic example of how to use one and how to get started.
 zone_pivot_groups: programming-languages
 author: markwallace
-ms.topic: conceptual
+ms.topic: article
 ms.author: markwallace
 ms.date: 07/10/2024
 ms.service: semantic-kernel

@@ -3,7 +3,7 @@ title: AzureAIAgent Foundry GA Migration Guide
 description: Describes the steps for developers to update their usage of AzureAIAgent for a GA Foundry Project.
 zone_pivot_groups: programming-languages
 author: crickman
-ms.topic: conceptual
+ms.topic: article
 ms.author: crickman
 ms.date: 05/16/2025
 ms.service: semantic-kernel

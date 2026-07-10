@@ -29,33 +29,14 @@ The Agent Framework repository includes sample agents and workflows in the `pyth
 
 | Sample | Description |
 |--------|-------------|
-| [weather_agent_azure](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/devui/weather_agent_azure) | A weather agent using Azure OpenAI |
-| [foundry_agent](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/devui/foundry_agent) | Agent using Microsoft Foundry |
-| [azure_responses_agent](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/devui/azure_responses_agent) | Agent using Azure Responses API |
-| [fanout_workflow](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/devui/fanout_workflow) | Workflow demonstrating fan-out pattern |
-| [spam_workflow](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/devui/spam_workflow) | Workflow for spam detection |
-| [workflow_agents](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/devui/workflow_agents) | Multiple agents in a workflow |
+| [agent_weather](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/devui/agent_weather) | A weather agent using Microsoft Foundry |
+| [agent_foundry](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/devui/agent_foundry) | Minimal agent using Microsoft Foundry |
+| [workflow_declarative](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/devui/workflow_declarative) | YAML-defined workflow |
+| [workflow_fanout](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/devui/workflow_fanout) | Workflow demonstrating fan-out/fan-in patterns |
+| [workflow_spam](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/devui/workflow_spam) | Workflow for spam detection |
+| [workflow_with_agents](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/devui/workflow_with_agents) | Multiple agents in a workflow |
 
-## Running the Samples
-
-### Clone and Navigate
-
-```bash
-git clone https://github.com/microsoft/agent-framework.git
-cd agent-framework/python/samples/02-agents/devui
-```
-
-### Set Up Environment
-
-Each sample may require environment variables. Check for `.env.example` files:
-
-```bash
-# Copy and edit the example file
-cp weather_agent_azure/.env.example weather_agent_azure/.env
-# Edit .env with your credentials
-```
-
-### Launch DevUI
+## Running with DevUI
 
 ```bash
 # Discover all samples
@@ -106,14 +87,16 @@ agent = Agent(
 
 ```python
 # my_workflow/__init__.py
-from agent_framework.workflows import WorkflowBuilder
+from agent_framework import WorkflowBuilder, WorkflowContext, executor
+from typing_extensions import Never
 
-# Define your workflow
-workflow = (
-    WorkflowBuilder(start_executor="my_executor")
-    # Add executors and edges
-    .build()
-)
+
+@executor(id="my_executor")
+async def my_executor(message: str, ctx: WorkflowContext[Never, str]) -> None:
+    await ctx.yield_output(message)
+
+
+workflow = WorkflowBuilder(start_executor=my_executor).build()
 ```
 
 ## Related Resources
@@ -124,6 +107,12 @@ workflow = (
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+> [!NOTE]
+> Go support for this feature is coming soon. See the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go) for the latest status.
+
+::: zone-end
 ## Next Steps
 
 - [Overview](./index.md) - Return to DevUI overview

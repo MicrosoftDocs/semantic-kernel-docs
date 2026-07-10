@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: tutorial
 ms.author: evmattso
-ms.date: 04/01/2026
+ms.date: 07/10/2026
 ms.service: agent-framework
 ---
 
@@ -629,10 +629,10 @@ The server middleware must remove approval protocol messages after processing:
 - **Solution**: After converting approval responses, remove both the `request_approval` tool call and its result message
 - **Reason**: Prevents "tool_calls must be followed by tool messages" errors
 
-## Next Steps
+## Next steps
 
-<!-- - **[Learn State Management](state-management.md)**: Manage shared state with approval workflows -->
-- **[Explore Function Tools](../../agents/tools/tool-approval.md)**: Learn more about approval patterns in Agent Framework
+> [!div class="nextstepaction"]
+> [MCP Apps Compatibility](./mcp-apps.md)
 
 ::: zone-end
 
@@ -795,49 +795,76 @@ if __name__ == "__main__":
 - **`require_confirmation=True`**: Activates approval workflow for marked tools
 - **Tool-level control**: Only tools marked with `approval_mode="always_require"` will request approval
 
-## Understanding Approval Events
+## Understanding Approval Interrupts
 
-When a tool requires approval, the client receives these events:
+When a tool requires approval, the run finishes with a canonical AG-UI interrupt.
 
-### Approval Request Event
+### Approval Interrupt
 
-```python
+```json
 {
-    "type": "APPROVAL_REQUEST",
-    "approvalId": "approval_abc123",
-    "steps": [
-        {
-            "toolCallId": "call_xyz789",
-            "toolCallName": "transfer_money",
-            "arguments": {
+  "type": "RUN_FINISHED",
+  "threadId": "thread-1",
+  "runId": "run-1",
+  "outcome": {
+    "type": "interrupt",
+    "interrupts": [
+      {
+        "id": "approval-1",
+        "reason": "tool_call",
+        "message": "Approve tool call transfer_money?",
+        "toolCallId": "call-1",
+        "responseSchema": {
+          "type": "object",
+          "properties": {
+            "accepted": { "type": "boolean" },
+            "arguments": { "type": "object" }
+          },
+          "required": ["accepted"]
+        },
+        "metadata": {
+          "agent_framework": {
+            "type": "function_approval_request",
+            "function_call": {
+              "call_id": "call-1",
+              "name": "transfer_money",
+              "arguments": {
                 "from_account": "1234567890",
                 "to_account": "0987654321",
                 "amount": 500.00,
                 "currency": "USD"
+              }
             }
+          }
         }
-    ],
-    "message": "Do you approve the following actions?"
+      }
+    ]
+  }
 }
 ```
 
-### Approval Response Format
+Tool approval interrupts use `reason: "tool_call"` and include a `toolCallId`. The final `ChatResponseUpdate`
+from `AGUIChatClient` preserves the `outcome` and `interrupts` values in `additional_properties`.
+`Interrupt` and `ResumeEntry` are protocol types from `ag_ui.core`, not Agent Framework-specific models.
 
-The client must send an approval response:
+### Resume Format
 
-```python
-# Approve
+Resume the same thread with a canonical `resume` array. Use `accepted: false` to reject the operation while allowing
+the agent to continue. Use `status: "cancelled"` without a payload to cancel the interrupted run.
+
+```json
 {
-    "type": "APPROVAL_RESPONSE",
-    "approvalId": "approval_abc123",
-    "approved": True
-}
-
-# Reject
-{
-    "type": "APPROVAL_RESPONSE",
-    "approvalId": "approval_abc123",
-    "approved": False
+  "threadId": "thread-1",
+  "messages": [],
+  "resume": [
+    {
+      "interruptId": "approval-1",
+      "status": "resolved",
+      "payload": {
+        "accepted": true
+      }
+    }
+  ]
 }
 ```
 
@@ -851,7 +878,7 @@ Here's a client using `AGUIChatClient` that handles approval requests:
 import asyncio
 import os
 
-from agent_framework import Agent, ToolCallContent, ToolResultContent
+from agent_framework import Agent
 from agent_framework_ag_ui import AGUIChatClient
 
 
@@ -863,11 +890,12 @@ def display_approval_request(update) -> None:
     
     # Display tool call details from update contents
     for i, content in enumerate(update.contents, 1):
-        if isinstance(content, ToolCallContent):
+        if content.type == "function_approval_request":
+            function_call = content.function_call
             print(f"\nAction {i}:")
-            print(f"  Tool: \033[95m{content.name}\033[0m")
+            print(f"  Tool: \033[95m{function_call.name}\033[0m")
             print(f"  Arguments:")
-            for key, value in (content.arguments or {}).items():
+            for key, value in (function_call.arguments or {}).items():
                 print(f"    {key}: {value}")
     
     print("\n\033[93m" + "=" * 60 + "\033[0m")
@@ -879,7 +907,7 @@ async def main():
     print(f"Connecting to AG-UI server at: {server_url}\n")
 
     # Create AG-UI chat client
-    chat_client = AGUIChatClient(server_url=server_url)
+    chat_client = AGUIChatClient(endpoint=server_url)
     
     # Create agent with the chat client
     agent = Agent(
@@ -901,47 +929,44 @@ async def main():
                 break
 
             print("\nAssistant: ", end="", flush=True)
-            pending_approval_update = None
+            pending_interrupts = []
 
             async for update in agent.run(message, session=thread, stream=True):
-                # Check if this is an approval request
-                # (Approval requests are detected by specific metadata or content markers)
-                if update.additional_properties and update.additional_properties.get("requires_approval"):
-                    pending_approval_update = update
+                # Check if this update carries an approval request.
+                if any(content.type == "function_approval_request" for content in update.contents):
                     display_approval_request(update)
-                    break  # Exit the loop to handle approval
 
-                elif event_type == "RUN_FINISHED":
-                    print(f"\n\033[92m[Run Finished]\033[0m")
+                if update.text:
+                    print(f"\033[96m{update.text}\033[0m", end="", flush=True)
 
-                elif event_type == "RUN_ERROR":
-                    error_msg = event.get("message", "Unknown error")
-                    print(f"\n\033[91m[Error: {error_msg}]\033[0m")
+                properties = update.additional_properties or {}
+                outcome = properties.get("outcome")
+                if isinstance(outcome, dict) and outcome.get("type") == "interrupt":
+                    pending_interrupts = outcome.get("interrupts", [])
 
-            # Handle approval request
-            if pending_approval:
-                approval_id = pending_approval.get("approvalId")
-                user_choice = input("\nApprove this action? (yes/no): ").strip().lower()
-                approved = user_choice in ("yes", "y")
+            if pending_interrupts:
+                resume_entries = []
+                for interrupt in pending_interrupts:
+                    prompt = interrupt.get("message", "Approve this action?")
+                    user_choice = input(f"\n{prompt} (yes/no): ").strip().lower()
+                    resume_entries.append({
+                        "interruptId": interrupt["id"],
+                        "status": "resolved",
+                        "payload": {"accepted": user_choice in ("yes", "y")},
+                    })
 
-                print(f"\n\033[93m[Sending approval response: {approved}]\033[0m\n")
-
-                async for event in client.send_approval_response(approval_id, approved):
-                    event_type = event.get("type", "")
-
-                    if event_type == "TEXT_MESSAGE_CONTENT":
-                        print(f"\033[96m{event.get('delta', '')}\033[0m", end="", flush=True)
-
-                    elif event_type == "TOOL_CALL_RESULT":
-                        content = event.get("content", "")
-                        print(f"\033[94m[Tool Result: {content}]\033[0m")
-
-                    elif event_type == "RUN_FINISHED":
-                        print(f"\n\033[92m[Run Finished]\033[0m")
-
-                    elif event_type == "RUN_ERROR":
-                        error_msg = event.get("message", "Unknown error")
-                        print(f"\n\033[91m[Error: {error_msg}]\033[0m")
+                print("\nAssistant: ", end="", flush=True)
+                async for update in agent.run(
+                    [],
+                    session=thread,
+                    stream=True,
+                    options={
+                        "available_interrupts": pending_interrupts,
+                        "resume": resume_entries,
+                    },
+                ):
+                    if update.text:
+                        print(f"\033[96m{update.text}\033[0m", end="", flush=True)
 
             print()
 
@@ -999,41 +1024,9 @@ I understand. The transfer has been cancelled and no money was moved.
 
 ## Custom Confirmation Messages
 
-You can customize the approval messages by providing a custom confirmation strategy:
-
-```python
-from typing import Any
-from agent_framework_ag_ui import AgentFrameworkAgent, ConfirmationStrategy
-
-
-class BankingConfirmationStrategy(ConfirmationStrategy):
-    """Custom confirmation messages for banking operations."""
-    
-    def on_approval_accepted(self, steps: list[dict[str, Any]]) -> str:
-        """Message when user approves the action."""
-        tool_name = steps[0].get("toolCallName", "action")
-        return f"Thank you for confirming. Proceeding with {tool_name}..."
-    
-    def on_approval_rejected(self, steps: list[dict[str, Any]]) -> str:
-        """Message when user rejects the action."""
-        return "Action cancelled. No changes have been made to your account."
-    
-    def on_state_confirmed(self) -> str:
-        """Message when state changes are confirmed."""
-        return "Changes confirmed and applied."
-    
-    def on_state_rejected(self) -> str:
-        """Message when state changes are rejected."""
-        return "Changes discarded."
-
-
-# Use custom strategy
-wrapped_agent = AgentFrameworkAgent(
-    agent=agent,
-    require_confirmation=True,
-    confirmation_strategy=BankingConfirmationStrategy(),
-)
-```
+Customize approval and confirmation messages in your AG-UI client UI when rendering approval interrupts from the
+server. The Python `AgentFrameworkAgent` exposes approval requests and interrupt metadata; it doesn't take a
+server-side confirmation strategy object.
 
 ## Best Practices
 
@@ -1116,17 +1109,49 @@ def transfer_funds(...): pass
 def close_account(...): pass
 ```
 
-## Next Steps
+## Batched Approvals and Cancellation
 
-Now that you understand human-in-the-loop, you can:
+One model response can contain both approval-required tools and tools that do not require approval. Resolving the
+visible interrupt also completes the other tool calls from that batch according to their approval decisions. For
+example, a `never_require` sibling executes and its `TOOL_CALL_RESULT` is streamed in the resumed run even when the
+approval-required sibling is rejected.
 
-- **[Learn State Management](state-management.md)**: Manage shared state with approval workflows
-- **[Explore Advanced Patterns](../../agents/tools/tool-approval.md)**: Learn more about approval patterns in Agent Framework
+Cancelling with `status: "cancelled"` aborts the approval resume and clears queued approval state for the thread.
+Later requests cannot resurface or execute stale tool calls from the cancelled batch.
+
+## Next steps
+
+> [!div class="nextstepaction"]
+> [MCP Apps Compatibility](./mcp-apps.md)
 
 ## Additional Resources
 
 - [AG-UI Overview](index.md)
 - [Backend Tool Rendering](backend-tool-rendering.md)
 - [Function Tools with Approvals](../../agents/tools/tool-approval.md)
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+Go supports AG-UI human-in-the-loop flows with approval-required tools. Wrap a function tool with `tool.ApprovalRequiredFunc`, then host the agent through `aguiprovider`.
+
+```go
+approveExpense := functool.MustNew(functool.Config{
+    Name:        "approve_expense_report",
+    Description: "Approve the expense report.",
+}, func(ctx context.Context, expenseReportID string) (string, error) {
+    return fmt.Sprintf("Expense report %s approved", expenseReportID), nil
+})
+
+a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Config: agent.Config{
+        Tools: []tool.Tool{tool.ApprovalRequiredFunc(approveExpense)},
+    },
+})
+```
+
+> [!TIP]
+> See the [AG-UI human-in-the-loop sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/agui/step04_human_in_loop/server/main.go) for a complete runnable example.
 
 ::: zone-end

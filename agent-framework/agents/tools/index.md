@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: reference
 ms.author: edvan
-ms.date: 02/09/2026
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
@@ -15,34 +15,131 @@ Agent Framework supports many different types of tools that extend agent capabil
 
 ## Tool Types
 
+:::zone pivot="programming-language-csharp"
+
 | Tool Type | Description |
 |-----------|-------------|
 | [Function Tools](./function-tools.md) | Custom code that agents can call during conversations |
-| [Tool Approval](./tool-approval.md) | Human-in-the-loop approval for tool invocations |
 | [Code Interpreter](./code-interpreter.md) | Execute code in a sandboxed environment |
 | [File Search](./file-search.md) | Search through uploaded files |
 | [Web Search](./web-search.md) | Search the web for information |
-| [Hosted MCP Tools](./hosted-mcp-tools.md) | MCP tools hosted by Microsoft Foundry |
-| [Local MCP Tools](./local-mcp-tools.md) | MCP tools running locally or on custom servers |
+| [Hosted MCP Tools](./hosted-mcp-tools.md) | MCP servers invoked by the provider runtime |
+| [Local MCP Tools](./local-mcp-tools.md) | MCP servers running locally or on custom hosts |
+| [Foundry Toolboxes](../providers/microsoft-foundry.md#toolboxes) | Named, versioned bundles of hosted tool configurations managed in a Foundry project |
+
+:::zone-end
+
+:::zone pivot="programming-language-python"
+
+| Tool Type | Description |
+|-----------|-------------|
+| [Function Tools](./function-tools.md) | Custom code that agents can call during conversations |
+| [Code Interpreter](./code-interpreter.md) | Execute code in a sandboxed environment |
+| [File Search](./file-search.md) | Search through uploaded files |
+| [Web Search](./web-search.md) | Search the web for information |
+| [Hosted MCP Tools](./hosted-mcp-tools.md) | MCP servers invoked by the provider runtime |
+| [Local MCP Tools](./local-mcp-tools.md) | MCP servers running locally or on custom hosts |
+| [Foundry Toolboxes](../providers/microsoft-foundry.md#toolboxes) | Named, versioned bundles of hosted tool configurations managed in a Foundry project |
+| [Image Generation](../providers/microsoft-foundry.md#image-generation) | Hosted image generation on the Foundry / OpenAI Responses runtime |
+| [Shell](../providers/openai.md#tools) | Hosted shell execution on the OpenAI Responses runtime — distinct from the GitHub Copilot CLI's built-in shell/file/URL runtime tools |
+| [Bing Grounding](../providers/microsoft-foundry.md#bing-grounding) | Web grounding via your own Grounding with Bing Search resource — experimental |
+| [Bing Custom Search](../providers/microsoft-foundry.md#bing-custom-search) | Bing grounding restricted to a curated domain list — preview |
+| [Azure AI Search](../providers/microsoft-foundry.md#azure-ai-search) | Query an Azure AI Search index through a Foundry connection — experimental |
+| [SharePoint](../providers/microsoft-foundry.md#sharepoint) | Ground answers in SharePoint content — preview |
+| [Microsoft Fabric](../providers/microsoft-foundry.md#microsoft-fabric) | Query a Fabric data agent — preview |
+| [Memory Search](../providers/microsoft-foundry.md#memory-search) | Search a Foundry-managed memory store — preview |
+| [Computer Use](../providers/microsoft-foundry.md#computer-use) | Drive a desktop or browser environment — preview |
+| [Browser Automation](../providers/microsoft-foundry.md#browser-automation) | Drive a browser via Azure Playwright — preview |
+| [Agent-to-Agent (A2A) tool](../providers/microsoft-foundry.md#agent-to-agent-a2a) | Call a remote A2A agent as a tool from a Foundry agent — preview |
+
+> [!NOTE]
+> Tools marked **experimental** or **preview** are documented on the relevant provider page and emit an `ExperimentalWarning` the first time they are used in a process.
+
+:::zone-end
+
+:::zone pivot="programming-language-go"
+
+| Tool Type | Package | Description |
+|---|---|---|
+| [Function Tools](./function-tools.md) | `tool/functool` | Typed Go functions with JSON schemas that the agent can call |
+| [Agent as Function Tool](#using-an-agent-as-a-function-tool) | `tool/agenttool` | Wrap an agent as a `tool.FuncTool` so another agent can call it |
+| [Local MCP Tools](./local-mcp-tools.md) | `tool/mcptool` | Connect to MCP servers and expose their tools as `tool.FuncTool` values |
+| [Web Search](./web-search.md) | `tool/hostedtool.WebSearch` | Declare provider-side web search when the backing service supports it |
+| [File Search](./file-search.md) | `tool/hostedtool.FileSearch` | Declare provider-side file or vector-store search |
+| [Code Interpreter](./code-interpreter.md) | `tool/hostedtool.CodeInterpreter` | Declare provider-side code execution |
+| [Hosted MCP Tools](./hosted-mcp-tools.md) | `tool/hostedtool.MCPServer` | Declare an MCP server for the provider runtime to call |
+| [Local shell tool](./function-tools.md#use-the-local-shell-tool) | `tool/shelltool` | Run local shell commands through a function tool that requires approval by default |
+
+All tools implement the `tool.Tool` interface:
+
+```go
+type Tool interface {
+    Name() string
+    Description() string
+}
+```
+
+Function tools additionally implement `tool.FuncTool`:
+
+```go
+import "context"
+
+type FuncTool interface {
+    Tool
+    Schema() any
+    ReturnSchema() any
+    Call(ctx context.Context, arguments string) (any, error)
+}
+```
+
+Most applications create function tools with `functool.New` or `functool.MustNew` rather than implementing `FuncTool` directly. The framework uses the Go function signature or struct tags to build the schema exposed to the model.
+
+Pass tools to the agent via `agent.Config.Tools`:
+
+```go
+a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Instructions: "You are a helpful assistant.",
+    Config: agent.Config{
+        Tools: []tool.Tool{weatherTool, calculatorTool},
+    },
+})
+```
+
+Or add tools per-run:
+
+```go
+resp, err := a.RunText(ctx, "What's the weather?", agent.WithTool(weatherTool)).Collect()
+```
+
+:::zone-end
+
+## Tool Approval
+
+[Tool Approval](./tool-approval.md) is a framework feature that lets you gate tool invocations through a human-in-the-loop decision before the model receives the result. It works with providers whose clients invoke tools locally; service-side hosted tools follow the provider's own approval behavior. See the [Tool Approval](./tool-approval.md) page for the full pattern, including how approvals interact with sessions, streaming, and middleware.
+
+:::zone pivot="programming-language-go"
+
+For Go, mark an invocable tool with `tool.ApprovalRequiredFunc` or use a tool that already implements `tool.ApprovalRequiredTool`, such as the local shell tool. Approval requests and responses flow through the tool auto-call middleware, so they work with providers that return local function calls.
+
+:::zone-end
 
 :::zone pivot="programming-language-csharp"
 
 ## Provider Support Matrix
 
-The OpenAI and Azure OpenAI providers each offer multiple client types with different tool capabilities. Azure OpenAI clients mirror their OpenAI equivalents.
+The OpenAI and Azure OpenAI providers each offer two client types — Responses and Chat Completion — with different tool capabilities. Azure OpenAI clients mirror their OpenAI equivalents. [Copilot Studio](../providers/copilot-studio.md) and [A2A](../providers/agent-to-agent.md) agents run on a remote service so their capabilities are configured on the remote agent rather than through the Agent Framework client — they are not listed in the matrix.
 
-| Tool Type | [Chat Completion](../providers/azure-openai.md) | [Responses](../providers/azure-openai.md) | [Assistants](../providers/azure-openai.md) | [Foundry](../providers/microsoft-foundry.md) | [Anthropic](../providers/anthropic.md) | [Ollama](../providers/ollama.md) | [GitHub Copilot](../providers/github-copilot.md) | [Copilot Studio](../providers/copilot-studio.md) |
-|-----------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| [Function Tools](./function-tools.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [Tool Approval](./tool-approval.md) | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
-| [Code Interpreter](./code-interpreter.md) | ❌ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
-| [File Search](./file-search.md) | ❌ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
-| [Web Search](./web-search.md) | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| [Hosted MCP Tools](./hosted-mcp-tools.md) | ❌ | ✅ | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ |
-| [Local MCP Tools](./local-mcp-tools.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |
+| Tool Type | [Responses](../providers/openai.md#tools) | [Chat Completion](../providers/openai.md#tools) | [Foundry](../providers/microsoft-foundry.md#tools) | [Anthropic](../providers/anthropic.md#tools) | [Ollama](../providers/ollama.md#tools) | [GitHub Copilot](../providers/github-copilot.md#tools) |
+|-----------|:---:|:---:|:---:|:---:|:---:|:---:|
+| [Function Tools](./function-tools.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [Code Interpreter](./code-interpreter.md) | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ |
+| [File Search](./file-search.md) | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ |
+| [Web Search](./web-search.md) | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| [Hosted MCP Tools](./hosted-mcp-tools.md) | ✅ | ❌ | ✅ | ✅ | ❌ | ✅ |
+| [Local MCP Tools](./local-mcp-tools.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 > [!NOTE]
-> The **Chat Completion**, **Responses**, and **Assistants** columns apply to both OpenAI and Azure OpenAI — the Azure variants mirror the same tool support as their OpenAI counterparts.
+> The **Responses** and **Chat Completion** columns apply to both OpenAI and Azure OpenAI — the Azure variants mirror the same tool support as their OpenAI counterparts. The deprecated OpenAI **Assistants** API is no longer documented; for migration guidance see the [Semantic Kernel migration guide](../../migration-guide/from-semantic-kernel/index.md).
 
 :::zone-end
 
@@ -50,21 +147,57 @@ The OpenAI and Azure OpenAI providers each offer multiple client types with diff
 
 ## Provider Support Matrix
 
-The OpenAI and Azure OpenAI providers each offer multiple client types with different tool capabilities. Azure OpenAI clients mirror their OpenAI equivalents.
+The OpenAI and Azure OpenAI providers each offer multiple client types with different tool capabilities. Azure OpenAI clients mirror their OpenAI equivalents. The Foundry column applies to `FoundryChatClient` — for `FoundryAgent`, the tools are configured on the Foundry agent definition (see [What works and what doesn't with `FoundryAgent`](../providers/microsoft-foundry.md#what-works-and-what-doesnt-with-foundryagent)). [Copilot Studio](../providers/copilot-studio.md) and [A2A](../providers/agent-to-agent.md) agents run on a remote service so their capabilities are configured on the remote agent rather than through the Agent Framework client — they are not listed in the matrix.
 
-| Tool Type | [Chat Completion](../providers/azure-openai.md) | [Responses](../providers/azure-openai.md) | [Assistants](../providers/azure-openai.md) | [Foundry](../providers/microsoft-foundry.md) | [Anthropic](../providers/anthropic.md) | [Claude Agent](../providers/anthropic.md) | [Ollama](../providers/ollama.md) | [GitHub Copilot](../providers/github-copilot.md) |
-|-----------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| [Function Tools](./function-tools.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [Tool Approval](./tool-approval.md) | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
-| [Code Interpreter](./code-interpreter.md) | ❌ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
-| [File Search](./file-search.md) | ❌ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
-| [Web Search](./web-search.md) | ✅ | ✅ | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ |
-| [Image Generation](./code-interpreter.md) | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
-| [Hosted MCP Tools](./hosted-mcp-tools.md) | ❌ | ✅ | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ |
-| [Local MCP Tools](./local-mcp-tools.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Tool Type | [Responses](../providers/openai.md#tools) | [Chat Completion](../providers/openai.md#tools) | [Foundry](../providers/microsoft-foundry.md#tools) | [Anthropic](../providers/anthropic.md#tools) | [Ollama](../providers/ollama.md#tools) | [Foundry Local](../providers/foundry-local.md#tools) | [GitHub Copilot](../providers/github-copilot.md#tools) |
+|-----------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| [Function Tools](./function-tools.md) | ✅ | ✅ | ✅ | ✅ | ⚠️¹ | ⚠️¹ | ✅ |
+| [Code Interpreter](./code-interpreter.md) | ✅ | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ |
+| [File Search](./file-search.md) | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| [Web Search](./web-search.md) | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
+| [Image Generation](../providers/microsoft-foundry.md#image-generation) | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Hosted Shell (`get_shell_tool`) | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Built-in shell / file system / URL fetch | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅² |
+| [Hosted MCP Tools](./hosted-mcp-tools.md) | ✅ | ❌ | ✅ | ✅ | ❌ | ❌ | ✅ |
+| [Local MCP Tools](./local-mcp-tools.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [Foundry Toolboxes](../providers/microsoft-foundry.md#toolboxes) | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| [Bing Grounding](../providers/microsoft-foundry.md#bing-grounding) (experimental) | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| [Bing Custom Search](../providers/microsoft-foundry.md#bing-custom-search) (preview) | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| [Azure AI Search](../providers/microsoft-foundry.md#azure-ai-search) (experimental) | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| [SharePoint](../providers/microsoft-foundry.md#sharepoint) (preview) | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| [Microsoft Fabric](../providers/microsoft-foundry.md#microsoft-fabric) (preview) | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| [Memory Search](../providers/microsoft-foundry.md#memory-search) (preview) | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| [Computer Use](../providers/microsoft-foundry.md#computer-use) (preview) | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| [Browser Automation](../providers/microsoft-foundry.md#browser-automation) (preview) | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| [Agent-to-Agent (A2A) tool](../providers/microsoft-foundry.md#agent-to-agent-a2a) (preview) | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
+
+¹ Depends on the chosen local model supporting function calling.
+² Built into the GitHub Copilot CLI runtime, gated by a permission handler. Different surface from OpenAI's `get_shell_tool`.
 
 > [!NOTE]
-> The **Chat Completion**, **Responses**, and **Assistants** columns apply to both OpenAI and Azure OpenAI — the Azure variants mirror the same tool support as their OpenAI counterparts. Local MCP Tools work with any provider that supports function tools.
+> The **Responses** and **Chat Completion** columns apply to both OpenAI and Azure OpenAI — the Azure variants mirror the same tool support as their OpenAI counterparts. Local MCP Tools work with any provider that supports function tools.
+
+:::zone-end
+
+:::zone pivot="programming-language-go"
+
+## Provider Support Matrix
+
+The Go SDK exposes Microsoft Foundry through `foundryprovider` and OpenAI/Azure OpenAI through `openaiprovider`. Hosted tools in `tool/hostedtool` are declarations: the Go SDK sends them to the provider, and the provider decides whether that hosted capability is available.
+
+| Tool Type | [Foundry](../providers/microsoft-foundry.md#tools) | [Responses](../providers/openai.md#tools) | [Chat Completions](../providers/openai.md#tools) | [Anthropic](../providers/anthropic.md#tools) |
+|-----------|:---:|:---:|:---:|:---:|
+| [Function Tools](./function-tools.md) | ✅ | ✅ | ✅ | ✅ |
+| [Agent as Function Tool](#using-an-agent-as-a-function-tool) | ✅ | ✅ | ✅ | ✅ |
+| [Local MCP Tools](./local-mcp-tools.md) | ✅ | ✅ | ✅ | ✅ |
+| [Web Search](./web-search.md) | ✅ | ✅ | ✅ | ❌ |
+| [File Search](./file-search.md) | ❌ | ✅ | ❌ | ❌ |
+| [Code Interpreter](./code-interpreter.md) | ✅ | ✅ | ❌ | ❌ |
+| [Hosted MCP Tools](./hosted-mcp-tools.md) | ❌ | ✅ | ❌ | ❌ |
+| [Local shell tool](./function-tools.md#use-the-local-shell-tool) | ✅ | ✅ | ✅ | ✅ |
+
+> [!NOTE]
+> Local MCP tools and the local shell tool are function tools from the provider's point of view, so they follow function-tool support. Hosted tools such as `hostedtool.FileSearch`, `hostedtool.CodeInterpreter`, and `hostedtool.MCPServer` are executed by the AI service, not by the Go process.
 
 :::zone-end
 
@@ -154,6 +287,44 @@ weather_tool = weather_agent.as_tool(
     arg_description="The weather query or location"
 )
 ```
+
+:::zone-end
+
+:::zone pivot="programming-language-go"
+
+Wrap an agent with `agenttool.New` to make it available as a `tool.FuncTool` for another agent:
+
+```go
+import (
+    "github.com/microsoft/agent-framework-go/agent"
+    "github.com/microsoft/agent-framework-go/provider/foundryprovider"
+    "github.com/microsoft/agent-framework-go/tool"
+    "github.com/microsoft/agent-framework-go/tool/agenttool"
+)
+
+weatherAgent := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Instructions: "You answer questions about the weather.",
+    Config: agent.Config{
+        Name:        "WeatherAgent",
+        Description: "An agent that answers weather questions.",
+        Tools:       []tool.Tool{weatherTool},
+    },
+})
+
+mainAgent := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Instructions: "You are a helpful assistant.",
+    Config: agent.Config{
+        Tools: []tool.Tool{agenttool.New(weatherAgent, agenttool.Config{})},
+    },
+})
+
+resp, err := mainAgent.RunText(ctx, "Should I bring an umbrella to Amsterdam?").Collect()
+```
+
+You can also expose the same wrapped agent through MCP with `mcptool.AddTool`, because `agenttool.New` returns a function tool.
+
+> [!TIP]
+> See the [agent as function tool sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/agents/step12_as_function_tool/main.go) and the [agent as MCP tool sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/agents/step10_as_mcp_tool/main.go) for complete runnable examples.
 
 :::zone-end
 

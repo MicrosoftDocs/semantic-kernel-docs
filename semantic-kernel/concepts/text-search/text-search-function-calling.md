@@ -3,7 +3,7 @@ title: Semantic Kernel Text Search Function Calling (Preview)
 description: Describes how to use Semantic Kernel search plugins with function calling.
 zone_pivot_groups: programming-languages
 author: markwallace
-ms.topic: conceptual
+ms.topic: article
 ms.author: markwallace
 ms.date: 07/10/2024
 ms.service: semantic-kernel

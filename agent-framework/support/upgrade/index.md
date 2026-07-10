@@ -2,7 +2,7 @@
 title: Upgrade guides for Agent Framework
 description: Guides for upgrading between Agent Framework versions, covering breaking changes and migration steps.
 author: eavanvalkenburg
-ms.topic: conceptual
+ms.topic: article
 ms.author: edvan
 ms.date: 02/12/2026
 ms.service: agent-framework

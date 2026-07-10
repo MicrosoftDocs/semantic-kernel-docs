@@ -3,7 +3,7 @@ title: Migrating from Memory Stores to Vector Stores
 description: Describes how to migrate from using memory stores to vector stores in semantic kernel.
 zone_pivot_groups: programming-languages
 author: westey-m
-ms.topic: conceptual
+ms.topic: article
 ms.author: westey
 ms.date: 03/06/2025
 ms.service: semantic-kernel

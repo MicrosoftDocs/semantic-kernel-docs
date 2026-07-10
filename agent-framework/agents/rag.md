@@ -43,6 +43,9 @@ AIAgent agent = azureOpenAIClient
 
 The `TextSearchProvider` requires a function that provides the search results given a query. This can be implemented using any search technology, e.g. Azure AI Search, or a web search engine.
 
+> [!TIP]
+> See the [Vector Stores integration](../integrations/index.md#vector-stores) documentation for more information on how to use a vector store for search results.
+
 Here is an example of a mock search function that returns pre-defined results based on the query.
 `SourceName` and `SourceLink` are optional, but if provided will be used by the agent to cite the source of the information when answering the user's question.
 
@@ -304,6 +307,12 @@ Each connector provides the same `create_search_function` method that can be bri
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+> [!NOTE]
+> Go support for this feature is coming soon. See the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go) for the latest status.
+
+::: zone-end
 ## Graph RAG
 
 For GraphRAG using graph traversal enriched search with Cypher queries, see the [Neo4j GraphRAG Provider](../integrations/neo4j-graphrag.md).

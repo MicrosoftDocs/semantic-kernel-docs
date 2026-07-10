@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: dmkorolev
 ms.service: agent-framework
 ms.topic: tutorial
-ms.date: 02/11/2026
+ms.date: 07/01/2026
 ms.author: dmkorolev
 ---
 
@@ -315,6 +315,9 @@ The Responses API is similar to Chat Completions but is stateful, allowing you t
 Like Chat Completions, it supports the `stream` parameter, which controls the output format: either a single JSON response or a stream of events.
 The Responses API defines its own streaming event types, including `response.created`, `response.output_item.added`, `response.output_item.done`, `response.completed`, and others.
 
+> [!IMPORTANT]
+> OpenAI response and conversation IDs are opaque service-side IDs. OpenAI scopes `resp_*` and `conv_*` IDs to the backing API key or project by default, so they are usually constrained when that boundary matches your app or tenant boundary. Risk appears when a hosted agent uses one backing key or project for multiple end users, echoes raw OpenAI IDs to clients, and accepts those IDs back without checking ownership. Store them server-side, map them from your own client session IDs, and verify the authenticated user or tenant before passing them as `previous_response_id` or `conversation`.
+
 #### Create a Conversation and Response
 
 You can send a Responses request directly, or you can first create a conversation using the Conversations API
@@ -612,14 +615,42 @@ export AZURE_OPENAI_API_VERSION="your-api-version"
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+Go uses the `provider/openaiprovider` package with the official OpenAI Go client. Use `openaiprovider.NewChatCompletionsAgent` for Chat Completions-compatible endpoints and configure Azure OpenAI with the OpenAI client's Azure options.
+
+```go
+import (
+  "github.com/microsoft/agent-framework-go/provider/openaiprovider"
+
+  "github.com/openai/openai-go/v3"
+  "github.com/openai/openai-go/v3/azure"
+)
+
+a := openaiprovider.NewChatCompletionsAgent(
+  openai.NewClient(
+    azure.WithEndpoint(endpoint, apiVersion),
+    azure.WithTokenCredential(token),
+  ),
+  openaiprovider.AgentConfig{
+    Model: deployment,
+    Instructions: "You are a helpful assistant.",
+  },
+)
+```
+
+> [!TIP]
+> See the [OpenAI provider sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/providers/openai/main.go) and [Azure OpenAI provider sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/providers/azure/main.go) for complete runnable examples.
+
+::: zone-end
 ## See Also
 
 - [Integrations Overview](./index.md)
 - [A2A Integration](./a2a.md)
-- [OpenAI Chat Completions API Reference](https://platform.openai.com/docs/api-reference/chat)
-- [OpenAI Responses API Reference](https://platform.openai.com/docs/api-reference/responses)
+- [OpenAI Chat Completions API Reference](https://developers.openai.com/api/reference/chat-completions/overview)
+- [OpenAI Responses API Reference](https://developers.openai.com/api/reference/responses/overview)
 
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Purview](purview.md)
+> [Hyperlight CodeAct](hyperlight.md)

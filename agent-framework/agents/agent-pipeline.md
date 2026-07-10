@@ -3,9 +3,9 @@ title: Agent Pipeline Architecture
 description: Understand how agents build their internal pipeline of middleware, context providers, and chat clients.
 zone_pivot_groups: programming-languages
 author: eavanvalkenburg
-ms.topic: conceptual
+ms.topic: article
 ms.author: edvan
-ms.date: 04/02/2026
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
@@ -50,6 +50,24 @@ The `Agent` class builds a pipeline through class composition with two main comp
 3. **RawChatClient** - Provider-specific implementation (Azure OpenAI, OpenAI, Anthropic, etc.) that communicates with the LLM
 
 When you call `run()`, your request flows through the Agent layers, then into the ChatClient pipeline for LLM communication.
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+## Agent pipeline architecture
+
+![Go Agent Pipeline Architecture](../media/agent-pipeline-go.svg)
+
+In Go, agents use a layered middleware pipeline. Middlewares wrap the agent's `Run` function, each calling `next` to pass control to the next layer.
+
+When an agent runs, its lifecycle is applied in this order:
+
+1. **Custom agent middleware** - Your registered `agent.Config.Middlewares`, applied in declaration order around the whole agent lifecycle
+2. **History provider** - Loads prior messages and later stores request/response messages
+3. **Context providers** - Inject context, options, and state from registered `agent.ContextProvider` instances
+4. **Provider middleware** - Provider-registered middleware such as tool auto-calling, structured outputs, and response authoring
+5. **Provider** - The underlying LLM provider, such as OpenAI or Anthropic
 
 ::: zone-end
 
@@ -102,6 +120,43 @@ It also inherits from `AgentTelemetryLayer` which handles emitting spans, events
 Both of these layers, do nothing when they are not configured.
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+Add middleware by implementing the `Middleware` interface or using `agent.MiddlewareFunc` for lightweight middleware:
+
+```go
+type Middleware interface {
+    Run(next RunFunc, ctx context.Context, messages []*message.Message,
+        options ...agent.Option) iter.Seq2[*agent.ResponseUpdate, error]
+}
+```
+
+Each middleware receives the `next` function in the chain and can modify messages or options before calling `next`, process responses after calling `next`, or short-circuit the pipeline.
+
+```go
+timing := agent.MiddlewareFunc(
+    func(next agent.RunFunc, ctx context.Context, messages []*message.Message, options ...agent.Option) iter.Seq2[*agent.ResponseUpdate, error] {
+        start := time.Now()
+        return func(yield func(*agent.ResponseUpdate, error) bool) {
+            defer log.Printf("agent run completed in %s", time.Since(start))
+            for update, err := range next(ctx, messages, options...) {
+                if !yield(update, err) {
+                    return
+                }
+            }
+        }
+    },
+)
+
+a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Config: agent.Config{
+        Middlewares: []agent.Middleware{timing},
+    },
+})
+```
+
+::: zone-end
+
 For detailed middleware and observability patterns, see [Agent Middleware](./middleware/index.md) and [Observability](./observability.md).
 
 ### Context layer
@@ -145,6 +200,20 @@ agent = Agent(
 ```
 
 Context providers can also attach chat or function middleware to a single invocation via `SessionContext.extend_middleware()`. The agent flattens those additions in provider order before entering the ChatClient pipeline.
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+Context providers run inside the agent lifecycle after custom middleware has entered the run and before provider middleware calls the model. Context providers can add messages or options before the provider call and persist state after the run.
+
+```go
+a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Config: agent.Config{
+        ContextProviders: []agent.ContextProvider{memoryProvider},
+    },
+})
+```
 
 ::: zone-end
 
@@ -209,6 +278,21 @@ The `RawChatClient` within the ChatClient implements the provider-specific logic
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+Provider middleware runs after history and context providers, immediately before the underlying LLM provider. Agent-level helpers such as OpenTelemetry and run logging are registered as custom agent middleware and wrap the earlier lifecycle steps.
+
+| Component | Registration | Layer | Purpose |
+|---|---|---|---|
+| Auto-call | `agent/harness/toolautocall` | Provider middleware | Automatically invokes function tools |
+| Structured output | `agent.WithStructuredOutput` | Provider middleware | Handles structured output parsing |
+| OpenTelemetry | `provider/otelprovider` | Agent middleware | Traces agent invocations |
+| Run logger | `agent.Config.Logger` | Agent middleware | Logs agent interactions |
+
+`agent.ContextProvider` values are lifecycle components rather than `agent.Middleware` implementations. They run between custom agent middleware and provider middleware.
+
+::: zone-end
+
 ### Execution flow
 
 When you invoke an agent, the request flows through the pipeline:
@@ -244,6 +328,18 @@ When you invoke an agent, the request flows through the pipeline:
 
 > [!NOTE]
 > Specialized agents may work differently to the pipeline described here.
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+1. **Custom agent middleware** executes first and wraps the full agent lifecycle.
+2. **History provider** loads conversation history for the current session when local history is active.
+3. **Context providers** add messages, options, or state before the provider call.
+4. **Provider middleware** executes, including tool auto-call middleware and structured-output handling when enabled.
+5. The **provider** sends the request to the model.
+6. Response updates flow back through provider middleware and custom agent middleware.
+7. **History providers** and **context providers** store response state after a successful run.
 
 ::: zone-end
 

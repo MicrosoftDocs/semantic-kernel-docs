@@ -4,7 +4,7 @@ titleSuffix: Microsoft Foundry
 description: Learn different Agent Framework agent types.
 ms.service: agent-framework
 ms.topic: tutorial
-ms.date: 04/01/2026
+ms.date: 07/01/2026
 ms.reviewer: ssalgado
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
@@ -48,7 +48,7 @@ These agents support a wide range of functionality out of the box:
 1. Function calling.
 1. Multi-turn conversations with local chat history management or service provided chat history management.
 1. Custom service provided tools (for example, MCP, Code Execution).
-1. Structured output.
+1. Structured outputs.
 
 To create one of these agents, simply construct a `ChatClientAgent` using the `IChatClient` implementation of your choice.
 
@@ -213,7 +213,7 @@ These agents support a wide range of functionality out of the box:
 1. Function calling
 1. Multi-turn conversations with local chat history management or service provided chat history management
 1. Custom service provided tools (for example, MCP, Code Execution)
-1. Structured output
+1. Structured outputs
 1. Streaming responses
 
 To create one of these agents, simply construct an `Agent` using the chat client implementation of your choice.
@@ -340,6 +340,74 @@ Agent Framework also includes protocol-backed agents, such as:
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Agent overview
+
+In Go, agents are created through provider-specific constructors that return an `*agent.Agent`. The core types are:
+
+- `agent.Agent` — The main agent type with `Run`, `RunText`, `RunMessage` methods
+- `agent.Config` — Configuration for name, instructions, tools, middleware, and context providers
+- `agent.ProviderConfig` — Provider-level configuration (run function, session management)
+
+```go
+import (
+    "github.com/microsoft/agent-framework-go/agent"
+    "github.com/microsoft/agent-framework-go/provider/foundryprovider"
+    "github.com/microsoft/agent-framework-go/tool"
+)
+
+a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Instructions: "You are a helpful assistant.",
+    Config: agent.Config{
+        Name:        "MyAgent",
+        Tools:       []tool.Tool{myTool},
+        Middlewares: []agent.Middleware{logger},
+    },
+})
+```
+
+### Running the agent
+
+```go
+// Non-streaming
+resp, err := a.RunText(ctx, "Hello!").Collect()
+
+// Streaming
+for update, err := range a.RunText(ctx, "Hello!", agent.Stream(true)) {
+    // process each update
+}
+
+// With message objects
+msg := message.New(&message.TextContent{Text: "Hello!"})
+resp, err := a.RunMessage(ctx, msg).Collect()
+```
+
+### Sessions
+
+Sessions maintain conversation state across multiple turns:
+
+```go
+session, err := a.CreateSession(ctx)
+resp, _ := a.RunText(ctx, "My name is Alice.", agent.WithSession(session)).Collect()
+resp, _ = a.RunText(ctx, "What is my name?", agent.WithSession(session)).Collect()
+```
+
+### Supported providers
+
+| Provider | Package | Constructor |
+|---|---|---|
+| [Microsoft Foundry](./providers/microsoft-foundry.md) | `foundryprovider` | `foundryprovider.NewAgent(endpoint, credential, target, config)` |
+| [OpenAI Chat Completions](./providers/openai.md) | `openaiprovider` | `openaiprovider.NewChatCompletionsAgent(client, config)` |
+| [OpenAI Responses](./providers/openai.md) | `openaiprovider` | `openaiprovider.NewResponsesAgent(client, config)` |
+| [Anthropic](./providers/anthropic.md) | `anthropicprovider` | `anthropicprovider.NewAgent(client, config)` |
+| [Google Gemini](https://github.com/microsoft/agent-framework-go/tree/main/examples/02-agents/providers/gemini) | `geminiprovider` | `geminiprovider.NewAgent(client, config)` |
+| [A2A](./providers/agent-to-agent.md) | `a2aprovider` | `a2aprovider.NewAgent(client, config)` |
+| [AG-UI](../integrations/ag-ui/getting-started.md) | `aguiprovider` | `aguiprovider.NewAgent(client, config)` |
+
+> [!TIP]
+> See the [Go examples](https://github.com/microsoft/agent-framework-go/tree/main/examples) for complete runnable samples.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

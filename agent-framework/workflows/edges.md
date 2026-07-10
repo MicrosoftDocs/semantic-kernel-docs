@@ -3,23 +3,23 @@ title: Microsoft Agent Framework Workflows - Edges
 description: Edges define how messages flow between executors in a workflow.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
-ms.topic: conceptual
+ms.topic: article
 ms.author: taochen
-ms.date: 03/05/2026
+ms.date: 05/27/2026
 ms.service: agent-framework
 ---
 
 <!--
   Language parity table – keep in sync when adding/removing sections.
 
-  | Section                | C# | Python | Notes |
-  |------------------------|:--:|:------:|-------|
-  | Edge Types (overview)  | ✅ |   ✅   |       |
-  | Direct Edges           | ✅ |   ✅   |       |
-  | Fan-in Edges           | ✅ |   ✅   |       |
-  | Conditional Edges      | ✅ |   ✅   |       |
-  | Switch-Case Edges      | ✅ |   ✅   |       |
-  | Multi-Selection Edges  | ✅ |   ✅   |       |
+    | Section                | C# | Python | Go | Notes |
+    |------------------------|:--:|:------:|:--:|-------|
+    | Edge Types (overview)  | ✅ |   ✅   | ✅ |       |
+    | Direct Edges           | ✅ |   ✅   | ✅ |       |
+    | Fan-in Edges           | ✅ |   ✅   | ✅ |       |
+    | Conditional Edges      | ✅ |   ✅   | ✅ |       |
+    | Switch-Case Edges      | ✅ |   ✅   | ✅ |       |
+    | Multi-Selection Edges  | ✅ |   ✅   | ✅ |       |
 -->
 
 # Edges
@@ -61,6 +61,16 @@ workflow = builder.build()
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+```go
+wf, err := workflow.NewBuilder(sourceExecutor).
+    AddEdge(sourceExecutor, targetExecutor).
+    Build()
+```
+
+::: zone-end
+
 ### Fan-in Edges
 
 Collect messages from multiple sources into a single target:
@@ -76,7 +86,20 @@ builder.AddFanInBarrierEdge(sources: [ worker1, worker2, worker3 ], target: aggr
 ::: zone pivot="programming-language-python"
 
 ```python
-builder.add_fan_in_edge([worker1, worker2, worker3], aggregator_executor)
+builder.add_fan_in_edges([worker1, worker2, worker3], aggregator_executor)
+```
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+```go
+workers := []workflow.ExecutorBinding{worker1, worker2, worker3}
+
+wf, err := workflow.NewBuilder(startExecutor).
+    AddFanOutEdge(startExecutor, workers).
+    AddFanInBarrierEdge(workers, aggregatorExecutor).
+    Build()
 ```
 
 ::: zone-end
@@ -538,7 +561,7 @@ def get_condition(expected_result: bool):
         try:
             # Prefer parsing a structured DetectionResult from the agent JSON text.
             # Using model_validate_json ensures type safety and raises if the shape is wrong.
-            detection = DetectionResult.model_validate_json(message.agent_run_response.text)
+            detection = DetectionResult.model_validate_json(message.agent_response.text)
             # Route only when the spam flag matches the expected path.
             return detection.is_spam == expected_result
         except Exception:
@@ -558,7 +581,7 @@ Define executors to handle different routing outcomes:
 async def handle_email_response(response: AgentExecutorResponse, ctx: WorkflowContext[Never, str]) -> None:
     """Handle legitimate emails by drafting a professional response."""
     # Downstream of the email assistant. Parse a validated EmailResponse and yield the workflow output.
-    email_response = EmailResponse.model_validate_json(response.agent_run_response.text)
+    email_response = EmailResponse.model_validate_json(response.agent_response.text)
     await ctx.yield_output(f"Email sent:\n{email_response.response}")
 
 
@@ -566,7 +589,7 @@ async def handle_email_response(response: AgentExecutorResponse, ctx: WorkflowCo
 async def handle_spam_classifier_response(response: AgentExecutorResponse, ctx: WorkflowContext[Never, str]) -> None:
     """Handle spam emails by marking them appropriately."""
     # Spam path. Confirm the DetectionResult and yield the workflow output. Guard against accidental non spam input.
-    detection = DetectionResult.model_validate_json(response.agent_run_response.text)
+    detection = DetectionResult.model_validate_json(response.agent_response.text)
     if detection.is_spam:
         await ctx.yield_output(f"Email marked as spam: {detection.reason}")
     else:
@@ -580,7 +603,7 @@ async def to_email_assistant_request(
 ) -> None:
     """Transform spam detection response into a request for the email assistant."""
     # Parse the detection result and extract the email content for the assistant
-    detection = DetectionResult.model_validate_json(response.agent_run_response.text)
+    detection = DetectionResult.model_validate_json(response.agent_response.text)
 
     # Create a new request for the email assistant with the original email content
     request = AgentExecutorRequest(
@@ -614,7 +637,7 @@ async def main() -> None:
                 "Always return JSON with fields is_spam (bool), reason (string), and email_content (string). "
                 "Include the original email content in email_content."
             ),
-            response_format=DetectionResult,
+            default_options={"response_format": DetectionResult},
         ),
         id="spam_detection_agent",
     )
@@ -627,7 +650,7 @@ async def main() -> None:
                 "Your input might be a JSON object that includes 'email_content'; base your reply on that content. "
                 "Return JSON with a single field 'response' containing the drafted reply."
             ),
-            response_format=EmailResponse,
+            default_options={"response_format": EmailResponse},
         ),
         id="email_assistant_agent",
     )
@@ -700,6 +723,32 @@ if __name__ == "__main__":
 ### Complete Implementation
 
 For the complete working implementation, see the [edge_condition.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/control-flow/edge_condition.py) sample in the Agent Framework repository.
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+### Build the Workflow with Conditional Edges
+
+Use `AddDirectEdge` with a condition function to route messages based on runtime values:
+
+```go
+wf, err := workflow.NewBuilder(spamDetector).
+    AddDirectEdge(spamDetector, emailAssistant, false, func(msg any) bool {
+        result, ok := msg.(DetectionResult)
+        return ok && !result.IsSpam
+    }).
+    AddDirectEdge(spamDetector, spamHandler, false, func(msg any) bool {
+        result, ok := msg.(DetectionResult)
+        return ok && result.IsSpam
+    }).
+    WithOutputFrom(emailAssistant, spamHandler).
+    Build()
+```
+
+### Conditional Edge Sample Code
+
+For the complete working implementation, see the [edge condition sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/03-workflows/conditional-edges/01_edge_condition/main.go) in the Agent Framework Go repository.
 
 ::: zone-end
 
@@ -1187,7 +1236,7 @@ async def to_detection_result(response: AgentExecutorResponse, ctx: WorkflowCont
     """Transform agent response into a typed DetectionResult with email ID."""
 
     # Parse the agent's structured JSON output
-    parsed = DetectionResultAgent.model_validate_json(response.agent_run_response.text)
+    parsed = DetectionResultAgent.model_validate_json(response.agent_response.text)
     email_id: str = ctx.get_state(CURRENT_EMAIL_ID_KEY)
 
     # Create typed message for switch-case routing
@@ -1215,7 +1264,7 @@ async def submit_to_email_assistant(detection: DetectionResult, ctx: WorkflowCon
 async def finalize_and_send(response: AgentExecutorResponse, ctx: WorkflowContext[Never, str]) -> None:
     """Parse email assistant response and yield final output."""
 
-    parsed = EmailResponse.model_validate_json(response.agent_run_response.text)
+    parsed = EmailResponse.model_validate_json(response.agent_response.text)
     await ctx.yield_output(f"Email sent: {parsed.response}")
 
 @executor(id="handle_spam")
@@ -1263,7 +1312,7 @@ async def main():
                 "Always return JSON with fields 'spam_decision' (one of NotSpam, Spam, Uncertain) "
                 "and 'reason' (string)."
             ),
-            response_format=DetectionResultAgent,
+            default_options={"response_format": DetectionResultAgent},
         ),
         id="spam_detection_agent",
     )
@@ -1274,7 +1323,7 @@ async def main():
             instructions=(
                 "You are an email assistant that helps users draft responses to emails with professionalism."
             ),
-            response_format=EmailResponse,
+            default_options={"response_format": EmailResponse},
         ),
         id="email_assistant_agent",
     )
@@ -1361,6 +1410,37 @@ The switch-case pattern scales much better as the number of routing decisions gr
 ### Switch-Case Sample Code
 
 For the complete working implementation, see the [switch_case_edge_group.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/control-flow/switch_case_edge_group.py) sample in the Agent Framework repository.
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+### Build Workflow with Switch-Case Pattern
+
+Use `AddSwitch` to group ordered cases and an optional default target:
+
+```go
+builder := workflow.NewBuilder(spamDetector)
+builder.AddSwitch(spamDetector).
+    AddCase(func(msg any) bool {
+        result, ok := msg.(DetectionResult)
+        return ok && result.Decision == NotSpam
+    }, emailAssistant).
+    AddCase(func(msg any) bool {
+        result, ok := msg.(DetectionResult)
+        return ok && result.Decision == Spam
+    }, spamHandler).
+    WithDefault(manualReview).
+    AddToBuilder(builder).
+    AddEdge(emailAssistant, sendEmail).
+    WithOutputFrom(sendEmail, spamHandler, manualReview)
+
+wf, err := builder.Build()
+```
+
+### Switch-Case Sample Code
+
+For the complete working implementation, see the [switch case sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/03-workflows/conditional-edges/02_switch_case/main.go) in the Agent Framework Go repository.
 
 ::: zone-end
 
@@ -1992,7 +2072,7 @@ async def store_email(email_text: str, ctx: WorkflowContext[AgentExecutorRequest
 async def to_analysis_result(response: AgentExecutorResponse, ctx: WorkflowContext[AnalysisResult]) -> None:
     """Transform agent response into enriched analysis result."""
 
-    parsed = AnalysisResultAgent.model_validate_json(response.agent_run_response.text)
+    parsed = AnalysisResultAgent.model_validate_json(response.agent_response.text)
     email_id: str = ctx.get_state(CURRENT_EMAIL_ID_KEY)
     email: Email = ctx.get_state(f"{EMAIL_STATE_PREFIX}{email_id}")
 
@@ -2023,7 +2103,7 @@ async def submit_to_email_assistant(analysis: AnalysisResult, ctx: WorkflowConte
 async def finalize_and_send(response: AgentExecutorResponse, ctx: WorkflowContext[Never, str]) -> None:
     """Final step for email assistant branch."""
 
-    parsed = EmailResponse.model_validate_json(response.agent_run_response.text)
+    parsed = EmailResponse.model_validate_json(response.agent_response.text)
     await ctx.yield_output(f"Email sent: {parsed.response}")
 
 @executor(id="summarize_email")
@@ -2040,7 +2120,7 @@ async def summarize_email(analysis: AnalysisResult, ctx: WorkflowContext[AgentEx
 async def merge_summary(response: AgentExecutorResponse, ctx: WorkflowContext[AnalysisResult]) -> None:
     """Merge summary back into analysis result for database persistence."""
 
-    summary = EmailSummaryModel.model_validate_json(response.agent_run_response.text)
+    summary = EmailSummaryModel.model_validate_json(response.agent_response.text)
     email_id: str = ctx.get_state(CURRENT_EMAIL_ID_KEY)
     email: Email = ctx.get_state(f"{EMAIL_STATE_PREFIX}{email_id}")
 
@@ -2105,7 +2185,7 @@ async def main() -> None:
                 "Always return JSON with fields 'spam_decision' (one of NotSpam, Spam, Uncertain) "
                 "and 'reason' (string)."
             ),
-            response_format=AnalysisResultAgent,
+            default_options={"response_format": AnalysisResultAgent},
         ),
         id="email_analysis_agent",
     )
@@ -2116,7 +2196,7 @@ async def main() -> None:
             instructions=(
                 "You are an email assistant that helps users draft responses to emails with professionalism."
             ),
-            response_format=EmailResponse,
+            default_options={"response_format": EmailResponse},
         ),
         id="email_assistant_agent",
     )
@@ -2125,7 +2205,7 @@ async def main() -> None:
     email_summary_agent = AgentExecutor(
         chat_client.as_agent(
             instructions="You are an assistant that helps users summarize emails.",
-            response_format=EmailSummaryModel,
+            default_options={"response_format": EmailSummaryModel},
         ),
         id="email_summary_agent",
     )
@@ -2185,7 +2265,7 @@ Run the workflow and observe parallel execution through custom events:
     """
 
     # Stream events to see parallel execution
-    async for event in workflow.run_stream(email):
+    async for event in workflow.run(email, stream=True):
         if isinstance(event.data, DatabaseEvent):
             print(f"Database: {event}")
         elif event.type == "output":
@@ -2237,6 +2317,54 @@ Run the workflow and observe parallel execution through custom events:
 ### Multi-Selection Sample Code
 
 For the complete working implementation, see the [multi_selection_edge_group.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/control-flow/multi_selection_edge_group.py) sample in the Agent Framework repository.
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+### Build Multi-Selection Workflow
+
+Use `AddFanOutEdge` with `workflow.WithEdgeAssigner` when one message should route to a subset of multiple targets:
+
+```go
+func routeAnalysis(_ int, msg any) iter.Seq[int] {
+    return func(yield func(int) bool) {
+        analysis, ok := msg.(AnalysisResult)
+        if !ok {
+            return
+        }
+
+        switch analysis.Decision {
+        case Spam:
+            yield(0) // spam handler
+        case NotSpam:
+            if !yield(1) { // email assistant
+                return
+            }
+            if analysis.EmailLength > longEmailThreshold {
+                yield(2) // summarizer
+            }
+        default:
+            yield(3) // uncertain handler
+        }
+    }
+}
+
+wf, err := workflow.NewBuilder(analyzeEmail).
+    AddFanOutEdge(
+        analyzeEmail,
+        []workflow.ExecutorBinding{spamHandler, emailAssistant, summarizer, uncertainHandler},
+        workflow.WithEdgeAssigner(routeAnalysis),
+    ).
+    AddEdge(emailAssistant, sendEmail).
+    AddEdge(summarizer, databaseAccess).
+    WithOutputFrom(spamHandler, sendEmail, uncertainHandler, databaseAccess).
+    Build()
+```
+
+### Multi-Selection Sample Code
+
+For the complete working implementation, see the [multi-selection sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/03-workflows/conditional-edges/03_multi_selection/main.go) in the Agent Framework Go repository.
 
 ::: zone-end
 

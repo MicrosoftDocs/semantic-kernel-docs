@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: dmytrostruk
 ms.topic: reference
 ms.author: dmytrostruk
-ms.date: 04/01/2026
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
@@ -296,7 +296,7 @@ class LoggingFunctionMiddleware(FunctionMiddleware):
 
 Chat middleware intercepts chat requests sent to AI models. It uses the `ChatContext` which contains:
 
-- `chat_client`: The chat client being invoked
+- `client`: The chat client being invoked
 - `messages`: List of messages being sent to the AI service
 - `options`: The options for the chat request
 - `stream`: Boolean indicating if this is a streaming invocation
@@ -893,6 +893,59 @@ if __name__ == "__main__":
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Middleware overview
+
+Middleware in Go intercepts and modifies agent behavior at the run level. All middleware implements the `agent.Middleware` interface.
+
+### Built-in and framework-provided middleware
+
+| Component | Registration | Layer | Purpose |
+|---|---|---|---|
+| Auto-call | `agent/harness/toolautocall` | Provider middleware | Automatically invokes function tools |
+| Structured output | `agent.WithStructuredOutput` | Provider middleware | Handles structured output parsing |
+| OpenTelemetry | `provider/otelprovider` | Agent middleware | Traces agent invocations |
+| Run logger | `agent.Config.Logger` | Agent middleware | Logs agent interactions |
+
+Context providers are adjacent lifecycle components rather than `agent.Middleware` implementations. They run after custom agent middleware has entered the run and before provider middleware calls the model.
+
+### Registering middleware
+
+```go
+import otelprovider "github.com/microsoft/agent-framework-go/provider/otelprovider"
+
+a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Config: agent.Config{
+        Middlewares: []agent.Middleware{
+            otelprovider.NewMiddleware(otelprovider.MiddlewareConfig{}),
+            myCustomMiddleware,
+        },
+    },
+})
+```
+
+Middleware registered in `agent.Config.Middlewares` is applied in the order declared; the first middleware wraps the outermost custom layer. That custom layer wraps history providers, context providers, and provider middleware.
+
+### Creating middleware
+
+Use `agent.MiddlewareFunc` when a full struct type is unnecessary:
+
+```go
+addGuidance := agent.MiddlewareFunc(
+    func(next agent.RunFunc, ctx context.Context, messages []*message.Message, options ...agent.Option) iter.Seq2[*agent.ResponseUpdate, error] {
+        guided := append([]*message.Message{message.NewText("Keep the response concise and avoid exposing secrets.")}, messages...)
+        return next(ctx, guided, options...)
+    },
+)
+
+a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Config: agent.Config{
+        Middlewares: []agent.Middleware{addGuidance},
+    },
+})
+```
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

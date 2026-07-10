@@ -2,7 +2,7 @@
 title: Support for Semantic Kernel
 description: Support for Semantic Kernel
 author: johnmaeda
-ms.topic: conceptual
+ms.topic: article
 ms.author: johnmaeda
 ms.date: 02/07/2023
 ms.service: semantic-kernel 

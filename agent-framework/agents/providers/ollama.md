@@ -131,6 +131,20 @@ asyncio.run(main())
 
 ---
 
+## Tools
+
+The Python Ollama clients (`OllamaChatClient` and `OpenAIChatClient` pointed at an Ollama-compatible endpoint) support locally invoked tools. Hosted tool types do not exist because Ollama is a local model runtime.
+
+| Tool | Status | Notes |
+|---|---|---|
+| [Function Tools](#function-tools) | ✅ | Standard Python callables or `@ai_function`. Whether the selected model can actually call them depends on the model itself. |
+| [Tool Approval](../tools/tool-approval.md) | ✅ | Provided by the framework's function-invoking chat client; works with any function-tool call. |
+| [Code Interpreter](../tools/code-interpreter.md) | ❌ | No hosted code interpreter. |
+| [File Search](../tools/file-search.md) | ❌ | No hosted file search. |
+| [Web Search](../tools/web-search.md) | ❌ | No hosted web search. |
+| [Hosted MCP Tools](../tools/hosted-mcp-tools.md) | ❌ | Ollama does not expose hosted MCP. |
+| [Local MCP Tools](../tools/local-mcp-tools.md) | ✅ | Runs in your process and works with any chat client. |
+
 ## Function Tools
 
 # [Native Ollama](#tab/ollama-native)
@@ -202,6 +216,12 @@ async def streaming_example():
 
 :::zone-end
 
+:::zone pivot="programming-language-go"
+
+> [!NOTE]
+> Go support for this feature is coming soon. See the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go) for the latest status.
+
+:::zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]
