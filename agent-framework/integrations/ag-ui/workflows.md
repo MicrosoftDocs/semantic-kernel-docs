@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: tutorial
 ms.author: evmattso
-ms.date: 04/09/2026
+ms.date: 07/10/2026
 ms.service: agent-framework
 ---
 
@@ -124,7 +124,7 @@ Workflow runs emit a richer set of AG-UI events compared to single-agent runs:
 | `CUSTOM` (`status`) | Workflow state changes | Contains `{"state": "<value>"}` in the event value |
 | `CUSTOM` (`request_info`) | Workflow requests human input | Contains the request payload for the client to render a prompt |
 | `CUSTOM` (`workflow_output`) | Workflow produces output | Emitted for both `"output"` (terminal) and `"intermediate"` workflow events. Terminal outputs carry the final answer; intermediate outputs surface as `text_reasoning` content when the workflow runs behind `as_agent()`. |
-| `RUN_FINISHED` | Run completes | May include `interrupts` if the workflow is waiting for input |
+| `RUN_FINISHED` | Run completes | Includes `outcome.type == "interrupt"` and `outcome.interrupts` when the workflow is waiting for input |
 
 Clients can use `STEP_STARTED` / `STEP_FINISHED` events to render progress indicators showing which agent is currently active.
 
@@ -136,19 +136,29 @@ Workflows can pause execution to collect human input or tool approvals. The AG-U
 
 1. During execution, the workflow raises a pending request (for example, a `HandoffAgentUserRequest` asking for more details, or a tool with `approval_mode="always_require"`).
 2. The AG-UI bridge emits a `CUSTOM` event with `name="request_info"` containing the request data.
-3. The run finishes with a `RUN_FINISHED` event whose `interrupts` field contains a list of pending request objects:
+3. The run finishes with a `RUN_FINISHED` event whose `outcome.interrupts` field contains the pending requests:
 
     ```json
     {
       "type": "RUN_FINISHED",
       "threadId": "abc123",
       "runId": "run_xyz",
-      "interrupts": [
-        {
-          "id": "request-id-1",
-          "value": { "request_type": "HandoffAgentUserRequest", "data": "..." }
-        }
-      ]
+      "outcome": {
+        "type": "interrupt",
+        "interrupts": [
+          {
+            "id": "request-id-1",
+            "reason": "input_required",
+            "message": "Provide the requested information.",
+            "responseSchema": { "type": "string" },
+            "metadata": {
+              "agent_framework": {
+                "request_type": "HandoffAgentUserRequest"
+              }
+            }
+          }
+        ]
+      }
     }
     ```
 
@@ -156,24 +166,25 @@ Workflows can pause execution to collect human input or tool approvals. The AG-U
 
 ### How resume works
 
-The client sends a new request with the `resume` payload containing the user's responses keyed by interrupt ID:
+The client sends a new request with a canonical `resume` array. Each entry identifies the interrupt and supplies the
+user's response:
 
 ```json
 {
   "threadId": "abc123",
   "messages": [],
-  "resume": {
-    "interrupts": [
-      {
-        "id": "request-id-1",
-        "value": "User's response text or approval decision"
-      }
-    ]
-  }
+  "resume": [
+    {
+      "interruptId": "request-id-1",
+      "status": "resolved",
+      "payload": "User's response text or approval decision"
+    }
+  ]
 }
 ```
 
-The server converts the resume payload into workflow responses and continues execution from where it paused.
+The server converts the resume payload into workflow responses and continues execution from where it paused. To
+cancel the interrupted run instead, set `status` to `"cancelled"` and omit `payload`.
 
 ## Complete Example: Multi-Agent Handoff Workflow
 
@@ -304,7 +315,7 @@ TOOL_CALL_END
 TOOL_CALL_START       toolCallName=submit_refund
 TOOL_CALL_ARGS        delta='{"order_id":"12345","amount":"$129.99",...}'
 TOOL_CALL_END
-RUN_FINISHED          interrupts=[{id: "...", value: {function_approval_request}}]
+RUN_FINISHED          outcome={type: "interrupt", interrupts: [{id: "...", reason: "tool_call"}]}
 ```
 
 The client can then display an approval dialog and resume with the user's decision.

@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: tutorial
 ms.author: evmattso
-ms.date: 04/01/2026
+ms.date: 07/10/2026
 ms.service: agent-framework
 ---
 
@@ -795,49 +795,76 @@ if __name__ == "__main__":
 - **`require_confirmation=True`**: Activates approval workflow for marked tools
 - **Tool-level control**: Only tools marked with `approval_mode="always_require"` will request approval
 
-## Understanding Approval Events
+## Understanding Approval Interrupts
 
-When a tool requires approval, the client receives these events:
+When a tool requires approval, the run finishes with a canonical AG-UI interrupt.
 
-### Approval Request Event
+### Approval Interrupt
 
-```python
+```json
 {
-    "type": "APPROVAL_REQUEST",
-    "approvalId": "approval_abc123",
-    "steps": [
-        {
-            "toolCallId": "call_xyz789",
-            "toolCallName": "transfer_money",
-            "arguments": {
+  "type": "RUN_FINISHED",
+  "threadId": "thread-1",
+  "runId": "run-1",
+  "outcome": {
+    "type": "interrupt",
+    "interrupts": [
+      {
+        "id": "approval-1",
+        "reason": "tool_call",
+        "message": "Approve tool call transfer_money?",
+        "toolCallId": "call-1",
+        "responseSchema": {
+          "type": "object",
+          "properties": {
+            "accepted": { "type": "boolean" },
+            "arguments": { "type": "object" }
+          },
+          "required": ["accepted"]
+        },
+        "metadata": {
+          "agent_framework": {
+            "type": "function_approval_request",
+            "function_call": {
+              "call_id": "call-1",
+              "name": "transfer_money",
+              "arguments": {
                 "from_account": "1234567890",
                 "to_account": "0987654321",
                 "amount": 500.00,
                 "currency": "USD"
+              }
             }
+          }
         }
-    ],
-    "message": "Do you approve the following actions?"
+      }
+    ]
+  }
 }
 ```
 
-### Approval Response Format
+Tool approval interrupts use `reason: "tool_call"` and include a `toolCallId`. The final `ChatResponseUpdate`
+from `AGUIChatClient` preserves the `outcome` and `interrupts` values in `additional_properties`.
+`Interrupt` and `ResumeEntry` are protocol types from `ag_ui.core`, not Agent Framework-specific models.
 
-The client must send an approval response:
+### Resume Format
 
-```python
-# Approve
+Resume the same thread with a canonical `resume` array. Use `accepted: false` to reject the operation while allowing
+the agent to continue. Use `status: "cancelled"` without a payload to cancel the interrupted run.
+
+```json
 {
-    "type": "APPROVAL_RESPONSE",
-    "approvalId": "approval_abc123",
-    "approved": True
-}
-
-# Reject
-{
-    "type": "APPROVAL_RESPONSE",
-    "approvalId": "approval_abc123",
-    "approved": False
+  "threadId": "thread-1",
+  "messages": [],
+  "resume": [
+    {
+      "interruptId": "approval-1",
+      "status": "resolved",
+      "payload": {
+        "accepted": true
+      }
+    }
+  ]
 }
 ```
 
@@ -902,24 +929,44 @@ async def main():
                 break
 
             print("\nAssistant: ", end="", flush=True)
-            pending_approval_update = None
+            pending_interrupts = []
 
             async for update in agent.run(message, session=thread, stream=True):
                 # Check if this update carries an approval request.
                 if any(content.type == "function_approval_request" for content in update.contents):
-                    pending_approval_update = update
                     display_approval_request(update)
-                    break  # Exit the loop to handle approval
 
                 if update.text:
                     print(f"\033[96m{update.text}\033[0m", end="", flush=True)
 
-            # Handle approval request
-            if pending_approval_update is not None:
-                user_choice = input("\nApprove this action? (yes/no): ").strip().lower()
-                approved = user_choice in ("yes", "y")
-                print(f"\n\033[93m[Approval selected: {approved}]\033[0m")
-                print("Send this decision through your AG-UI client's resume/approval payload.")
+                properties = update.additional_properties or {}
+                outcome = properties.get("outcome")
+                if isinstance(outcome, dict) and outcome.get("type") == "interrupt":
+                    pending_interrupts = outcome.get("interrupts", [])
+
+            if pending_interrupts:
+                resume_entries = []
+                for interrupt in pending_interrupts:
+                    prompt = interrupt.get("message", "Approve this action?")
+                    user_choice = input(f"\n{prompt} (yes/no): ").strip().lower()
+                    resume_entries.append({
+                        "interruptId": interrupt["id"],
+                        "status": "resolved",
+                        "payload": {"accepted": user_choice in ("yes", "y")},
+                    })
+
+                print("\nAssistant: ", end="", flush=True)
+                async for update in agent.run(
+                    [],
+                    session=thread,
+                    stream=True,
+                    options={
+                        "available_interrupts": pending_interrupts,
+                        "resume": resume_entries,
+                    },
+                ):
+                    if update.text:
+                        print(f"\033[96m{update.text}\033[0m", end="", flush=True)
 
             print()
 
@@ -977,7 +1024,9 @@ I understand. The transfer has been cancelled and no money was moved.
 
 ## Custom Confirmation Messages
 
-Customize approval and confirmation messages in your AG-UI client UI when rendering approval events from the server. The Python `AgentFrameworkAgent` exposes approval events; it doesn't take a server-side confirmation strategy object.
+Customize approval and confirmation messages in your AG-UI client UI when rendering approval interrupts from the
+server. The Python `AgentFrameworkAgent` exposes approval requests and interrupt metadata; it doesn't take a
+server-side confirmation strategy object.
 
 ## Best Practices
 
@@ -1059,6 +1108,16 @@ def transfer_funds(...): pass
 @tool(approval_mode="always_require")
 def close_account(...): pass
 ```
+
+## Batched Approvals and Cancellation
+
+One model response can contain both approval-required tools and tools that do not require approval. Resolving the
+visible interrupt also completes the other tool calls from that batch according to their approval decisions. For
+example, a `never_require` sibling executes and its `TOOL_CALL_RESULT` is streamed in the resumed run even when the
+approval-required sibling is rejected.
+
+Cancelling with `status: "cancelled"` aborts the approval resume and clears queued approval state for the thread.
+Later requests cannot resurface or execute stale tool calls from the cancelled batch.
 
 ## Next steps
 

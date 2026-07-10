@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: tutorial
 ms.author: evmattso
-ms.date: 04/01/2026
+ms.date: 07/10/2026
 ms.service: agent-framework
 ---
 
@@ -396,7 +396,7 @@ Or using uv:
 uv pip install agent-framework-ag-ui --prerelease=allow
 ```
 
-This will automatically install `agent-framework-core`, `fastapi`, and `uvicorn` as dependencies.
+This will automatically install `agent-framework-core`, `fastapi`, `uvicorn`, and `sse-starlette` as dependencies.
 
 ### Server Code
 
@@ -652,6 +652,8 @@ data: {"type":"TEXT_MESSAGE_END","messageId":"..."}
 data: {"type":"RUN_FINISHED","threadId":"...","runId":"..."}
 ```
 
+For an idle stream, curl may also display `: keepalive` comment lines. These are SSE transport comments, not AG-UI events.
+
 ## How It Works
 
 ### Server-Side Flow
@@ -684,6 +686,8 @@ The AG-UI protocol uses:
 - Run IDs for tracking individual executions
 - Event type naming: UPPERCASE with underscores (e.g., `RUN_STARTED`, `TEXT_MESSAGE_CONTENT`)
 - Field naming: camelCase (e.g., `threadId`, `runId`, `messageId`)
+- SSE keepalive comments every 15 seconds while a stream is idle. Clients that process only `data:` lines ignore
+  these comments automatically.
 
 ## Common Patterns
 
@@ -704,8 +708,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-add_agent_framework_fastapi_endpoint(app, agent, "/agent")
+add_agent_framework_fastapi_endpoint(
+    app,
+    agent,
+    "/agent",
+    keepalive_seconds=30,  # Defaults to 15; set to None to disable
+)
 ```
+
+`keepalive_seconds` must be a positive number or `None`.
 
 ### Multiple Agents
 
@@ -767,6 +778,9 @@ httpx.AsyncClient(timeout=60.0)  # 60 seconds should be enough
 ```
 
 For long-running agents, increase the timeout accordingly.
+
+Idle streams emit an SSE keepalive comment every 15 seconds by default. If a proxy closes idle connections sooner,
+configure a smaller positive `keepalive_seconds` value when registering the endpoint.
 
 ### Thread Context Lost
 

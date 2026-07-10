@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: overview
 ms.author: evmattso
-ms.date: 11/07/2025
+ms.date: 07/10/2026
 ms.service: agent-framework
 ---
 
@@ -209,7 +209,7 @@ The AG-UI integration uses a clean, modular architecture:
 
 ### Key Components
 
-- **FastAPI Endpoint**: HTTP endpoint that handles SSE streaming and request routing
+- **FastAPI Endpoint**: HTTP endpoint that handles SSE streaming, configurable keepalive comments, and request routing
 - **AgentFrameworkAgent**: Lightweight wrapper that adapts Agent Framework agents to AG-UI protocol
 - **Orchestrators**: Handle different execution flows (default, human-in-the-loop, state management)
 - **Event Bridge**: Converts Agent Framework events to AG-UI protocol events
