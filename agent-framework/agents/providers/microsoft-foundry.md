@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
 ms.author: westey
-ms.date: 04/02/2026
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
@@ -600,6 +600,196 @@ async with Agent(client=client, name="MCPAgent", tools=[mcp_tool]) as agent:
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+## Foundry in Go
+
+The Go SDK provides Microsoft Foundry agents through `github.com/microsoft/agent-framework-go/provider/foundryprovider`.
+
+The package supports two agent targets:
+
+| Target | Go shape | Use when |
+|---|---|---|
+| Project-backed model deployment | `foundryprovider.ModelDeployment("gpt-4o-mini")` | Your app owns instructions, tools, and conversation flow. |
+| Existing server-side Foundry agent | `foundryprovider.ServerAgent("my-agent")` | The agent definition is already configured in Foundry. |
+
+## Configuration
+
+Set your Foundry project endpoint and model deployment:
+
+```bash
+FOUNDRY_PROJECT_ENDPOINT="https://<your-project>.services.ai.azure.com/api/projects/<project-id>"
+FOUNDRY_MODEL="gpt-4o-mini"
+```
+
+## Project-backed Foundry agent
+
+Use `ModelDeployment` when you want to create an Agent Framework agent in code and pass instructions, tools, middleware, and context providers from your Go application.
+
+```go
+import (
+    "context"
+    "os"
+
+    "github.com/Azure/azure-sdk-for-go/sdk/azidentity"
+    "github.com/microsoft/agent-framework-go/agent"
+    "github.com/microsoft/agent-framework-go/provider/foundryprovider"
+)
+
+endpoint := os.Getenv("FOUNDRY_PROJECT_ENDPOINT")
+model := os.Getenv("FOUNDRY_MODEL")
+
+token, err := azidentity.NewDefaultAzureCredential(nil)
+if err != nil {
+    panic(err)
+}
+
+a := foundryprovider.NewAgent(
+    endpoint,
+    token,
+    foundryprovider.ModelDeployment(model),
+    foundryprovider.AgentConfig{
+        Instructions: "You are good at telling jokes.",
+        Config: agent.Config{
+            Name: "Joker",
+        },
+    },
+)
+
+resp, err := a.RunText(context.Background(), "Tell me a joke about a pirate.").Collect()
+```
+
+## Existing server-side Foundry agent
+
+Use `ServerAgent` when you want to invoke an agent already configured in Foundry. The server-side agent owns its instructions and tools, so `AgentConfig.Instructions` is ignored for this target.
+
+```go
+a := foundryprovider.NewAgent(
+    endpoint,
+    token,
+    foundryprovider.ServerAgent("my-agent"),
+    foundryprovider.AgentConfig{
+        Config: agent.Config{
+            Name: "my-agent",
+        },
+    },
+)
+
+resp, err := a.RunText(ctx, "Summarize the current project status.").Collect()
+```
+
+## Tools
+
+Project-backed Foundry agents support the standard Go Agent Framework tool surface for local tools and supported hosted tool declarations.
+
+| Tool | Status | Notes |
+|---|---|---|
+| [Function Tools](../tools/function-tools.md) | Supported | Functions run in your Go process. |
+| [Tool Approval](../tools/tool-approval.md) | Supported | Works with local function tools through the tool auto-call loop. |
+| [Code Interpreter](../tools/code-interpreter.md) | Supported | Use `&hostedtool.CodeInterpreter{}`. |
+| [Web Search](../tools/web-search.md) | Supported | Use `&hostedtool.WebSearch{}`. |
+| [Local MCP Tools](../tools/local-mcp-tools.md) | Supported | Use `tool/mcptool` to connect to an MCP server and expose its tools locally. |
+| [Hosted MCP Tools](../tools/hosted-mcp-tools.md) | Not currently documented for Go Foundry | Use local MCP tools when you need MCP servers with Go Foundry agents. |
+| Foundry Toolboxes | Not currently exposed through a Go helper. |
+
+For local function tools, add `tool.Tool` values through `agent.Config.Tools`:
+
+```go
+a := foundryprovider.NewAgent(
+    endpoint,
+    token,
+    foundryprovider.ModelDeployment(model),
+    foundryprovider.AgentConfig{
+        Instructions: "You are a helpful assistant.",
+        Config: agent.Config{
+            Tools: []tool.Tool{weatherTool},
+        },
+    },
+)
+```
+
+For hosted code execution, pass the hosted tool declaration:
+
+```go
+a := foundryprovider.NewAgent(
+    endpoint,
+    token,
+    foundryprovider.ModelDeployment(model),
+    foundryprovider.AgentConfig{
+        Instructions: "You solve problems with code.",
+        Config: agent.Config{
+            Tools: []tool.Tool{&hostedtool.CodeInterpreter{}},
+        },
+    },
+)
+```
+
+## Client headers and served model
+
+Foundry accepts `x-client-*` headers per run. Add them with `foundryprovider.WithClientHeader` or `foundryprovider.WithClientHeaders`:
+
+```go
+resp, err := a.RunText(
+    ctx,
+    "Hello!",
+    foundryprovider.WithClientHeader("x-client-scenario", "docs"),
+).Collect()
+```
+
+When Foundry returns the `x-ms-served-model` response header, the Go provider adds it to response/update additional properties as `ServedModel`.
+
+```go
+if servedModel, ok := resp.AdditionalProperties["ServedModel"].(string); ok {
+    fmt.Println(servedModel)
+}
+```
+
+## Foundry memory provider
+
+Use `foundryprovider.NewMemoryProvider` when you want an Agent Framework agent to retrieve from and update a Foundry-managed memory store around each run.
+
+```go
+import (
+    "log/slog"
+
+    "github.com/microsoft/agent-framework-go/agent"
+    "github.com/microsoft/agent-framework-go/provider/foundryprovider"
+)
+
+memoryProvider := foundryprovider.NewMemoryProvider(
+    endpoint,
+    tokenCredential,
+    "memory-store-sample",
+    func(*agent.Session) string { return "user-123" },
+    foundryprovider.MemoryProviderConfig{
+        Logger: slog.Default(),
+    },
+)
+
+a := foundryprovider.NewAgent(
+    endpoint,
+    tokenCredential,
+    foundryprovider.ModelDeployment(model),
+    foundryprovider.AgentConfig{
+        Instructions: "Use known memories about the user when responding.",
+        Config: agent.Config{
+            Name:             "FoundryMemoryAgent",
+            ContextProviders: []agent.ContextProvider{memoryProvider},
+        },
+    },
+)
+```
+
+The endpoint must be a project-scoped Microsoft Foundry endpoint, and the memory store must already exist in that project. The scope callback should return a stable user, tenant, or conversation partition key.
+
+> [!TIP]
+> See the [Foundry memory Go sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/agents/step22_foundry_memory/main.go) for a complete runnable example.
+
+## Current Go gaps
+
+Go support does not currently include Foundry hosted deployment/lifecycle/admin APIs, embeddings clients, or Go-specific helpers for Foundry Toolboxes. Use the Foundry portal or service SDKs for those operations.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: reference
 ms.author: evmattso
-ms.date: 04/01/2026
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
@@ -328,6 +328,58 @@ if __name__ == "__main__":
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+## MCP Tool Types
+
+The `mcptool` package lets agents use tools from Model Context Protocol (MCP) servers.
+
+### Connect to an MCP server
+
+```go
+import (
+    "github.com/microsoft/agent-framework-go/tool/mcptool"
+
+    "github.com/modelcontextprotocol/go-sdk/mcp"
+)
+
+session, err := mcptool.Connect(ctx, &mcp.StreamableClientTransport{
+    Endpoint: "https://learn.microsoft.com/api/mcp",
+})
+if err != nil {
+    panic(err)
+}
+defer session.Close()
+```
+
+### List and use MCP tools
+
+```go
+tools, err := mcptool.ListTools(ctx, session)
+if err != nil {
+    panic(err)
+}
+
+a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Instructions: "You are a helpful assistant.",
+    Config: agent.Config{
+        Tools: tools,
+    },
+})
+
+resp, err := a.RunText(ctx, "How to create an Azure storage account using az cli?").Collect()
+```
+
+### Supported transports
+
+- **HTTP/SSE** - `mcp.StreamableClientTransport{Endpoint: "https://..."}`
+- **Stdio** - Launch a local MCP server process
+
+> [!TIP]
+> See the [MCP tools sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/mcp/agent_mcp_server/main.go) for a complete runnable example.
+
+::: zone-end
+
 ## Exposing an Agent as an MCP Server
 
 You can expose an agent as an MCP server, allowing it to be used as a tool by any MCP-compatible client (such as VS Code GitHub Copilot Agents or other agents). The agent's name and description become the MCP server metadata.
@@ -416,6 +468,46 @@ async def run():
 if __name__ == "__main__":
     anyio.run(run)
 ```
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+Wrap the agent with `agenttool.New`, register it with an MCP server using `mcptool.AddTool`, and run the server over stdio:
+
+```go
+import (
+    "context"
+
+    "github.com/microsoft/agent-framework-go/agent"
+    "github.com/microsoft/agent-framework-go/provider/foundryprovider"
+    "github.com/microsoft/agent-framework-go/tool/agenttool"
+    "github.com/microsoft/agent-framework-go/tool/mcptool"
+    "github.com/modelcontextprotocol/go-sdk/mcp"
+)
+
+jokeAgent := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Instructions: "You are good at telling jokes.",
+    Config: agent.Config{
+        Name:        "Joker",
+        Description: "An agent that tells jokes.",
+    },
+})
+
+server := mcp.NewServer(&mcp.Implementation{
+    Name:    "agent-mcp-server",
+    Version: "1.0.0",
+}, nil)
+
+mcptool.AddTool(server, agenttool.New(jokeAgent, agenttool.Config{}))
+
+if err := server.Run(context.Background(), &mcp.StdioTransport{}); err != nil {
+    panic(err)
+}
+```
+
+> [!TIP]
+> See the [agent as MCP tool sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/agents/step10_as_mcp_tool/main.go) for a complete runnable example.
 
 ::: zone-end
 

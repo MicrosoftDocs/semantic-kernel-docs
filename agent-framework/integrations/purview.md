@@ -141,3 +141,10 @@ Now that you added the above code to your agent, perform the following steps to 
 - [Code Sample: Purview Policy Enforcement Sample (Python)](https://github.com/microsoft/agent-framework/tree/main/python/samples/05-end-to-end/purview_agent).
 
 ::: zone-end
+
+::: zone pivot="programming-language-go"
+
+> [!NOTE]
+> Go support for this feature is coming soon. See the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go) for the latest status.
+
+::: zone-end

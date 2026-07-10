@@ -1,11 +1,11 @@
 ---
 title: Durable Extension
-description: Learn how to make Agent Framework agents and workflows durable with Azure Functions or bring-your-own-compute hosting.
+description: Learn how to make C# and Python Agent Framework agents and workflows durable with Azure Functions or bring-your-own-compute hosting.
 zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: reference
 ms.author: edvan
-ms.date: 05/28/2026
+ms.date: 06/18/2026
 ms.service: agent-framework
 ---
 
@@ -17,6 +17,9 @@ The extension supports two hosting models in C# and Python:
 
 - **Azure Functions** for managed, serverless hosting with the Azure Functions programming model.
 - **Bring-your-own-compute / self-hosted** for running durable agents and workflows in your own worker process, service, container, Kubernetes environment, or existing app infrastructure.
+
+> [!NOTE]
+> Go support for the Durable Extension is coming soon. For Go hosting today, see [A2A Protocol](a2a.md) and the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go).
 
 ## Overview
 
@@ -265,6 +268,7 @@ See the [Python Azure Functions samples](https://github.com/microsoft/agent-fram
 | C# | Bring-your-own-compute / self-hosted | [.NET Durable Agents - Console Apps](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/04-hosting/DurableAgents/ConsoleApps), [.NET Durable Workflows - Console Apps](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/04-hosting/DurableWorkflows/ConsoleApps) |
 | Python | Azure Functions | [Python Azure Functions samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/04-hosting/azure_functions) |
 | Python | Bring-your-own-compute / self-hosted | [Python Durable Task samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/04-hosting/durabletask) |
+| Go | Not currently supported | See the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go) for the latest status. |
 
 ## Stateful agent threads with conversation history
 
@@ -1472,6 +1476,12 @@ def agent_orchestration_workflow(context: df.DurableOrchestrationContext):
 
 :::zone-end
 
+:::zone pivot="programming-language-go"
+
+> [!NOTE]
+> Go support for this feature is coming soon. See the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go) for the latest status.
+
+:::zone-end
 ### Test the orchestration
 
 Ensure your local development dependencies from the first tutorial are still running:

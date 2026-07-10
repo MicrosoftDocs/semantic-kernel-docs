@@ -5,21 +5,21 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 03/11/2026
+ms.date: 05/27/2026
 ms.service: agent-framework
 ---
 
 <!--
   Language parity table – keep in sync when adding/removing sections.
 
-  | Section                    | C# | Python | Notes                                           |
-  |----------------------------|:--:|:------:|--------------------------------------------------|
-  | Basic usage                | ✅ |   ✅   |                                                  |
-  | Mermaid output             | ✅ |   ✅   |                                                  |
-  | DOT output                 | ✅ |   ✅   |                                                  |
-  | File export (SVG/PNG/PDF)  | ❌ |   ✅   | Python `WorkflowViz` has export/save_ methods    |
-  | GraphViz CLI export        | ✅ |   ❌   | C# shows shell piping to `dot` CLI               |
-  | Sample link                | ✅ |   ✅   |                                                  |
+  | Section                    | C# | Python | Go | Notes                                           |
+  |----------------------------|:--:|:------:|:--:|--------------------------------------------------|
+  | Basic usage                | ✅ |   ✅   | ✅ | Go exposes workflow reflection metadata          |
+  | Mermaid output             | ✅ |   ✅   | ❌ | No built-in Go renderer                          |
+  | DOT output                 | ✅ |   ✅   | ❌ | No built-in Go renderer                          |
+  | File export (SVG/PNG/PDF)  | ❌ |   ✅   | ❌ | Python `WorkflowViz` has export/save_ methods    |
+  | GraphViz CLI export        | ✅ |   ❌   | ❌ | C# shows shell piping to `dot` CLI               |
+  | Sample link                | ✅ |   ✅   | ❌ | No built-in Go visualization sample              |
 -->
 
 # Microsoft Agent Framework Workflows - Visualization
@@ -107,6 +107,29 @@ For a complete working implementation with visualization, see the [Concurrent wi
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+Go doesn't currently include a built-in Mermaid, DOT, or image renderer for workflows. It does expose workflow metadata that you can use to build custom visualization or inspection tools.
+
+```go
+for sourceID, edges := range wf.ReflectEdges() {
+  for _, edge := range edges {
+    fmt.Printf("%s -> %v\n", sourceID, edge.Connection.SinkIDs)
+  }
+}
+
+for executorID, binding := range wf.ReflectExecutors() {
+  fmt.Printf("executor %s: %s\n", executorID, binding.ImplementationID)
+}
+
+for portID, port := range wf.ReflectPorts() {
+  fmt.Printf("request port %s: %s -> %s\n", portID, port.RequestType.TypeName, port.ResponseType.TypeName)
+}
+```
+
+Use this metadata if you need to generate your own Mermaid or Graphviz output.
+
+::: zone-end
 The exported diagram will look similar to the following for the example workflow:
 
 ```mermaid

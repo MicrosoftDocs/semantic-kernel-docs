@@ -5,25 +5,25 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 05/08/2026
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
 <!--
   Language parity table – keep in sync when adding/removing sections.
 
-  | Section                                       | C# | Python | Notes           |
-  |-----------------------------------------------|:--:|:------:|-----------------|
-  | Set Up the Azure OpenAI Client                | ✅ |   ✅   |                 |
-  | Define Your Agents                            | ✅ |   ✅   |                 |
-  | Set Up the Sequential Orchestration           | ✅ |   ✅   |                 |
-  | Run the Sequential Workflow                   | ✅ |   ✅   |                 |
-  | Sample Output                                 | ✅ |   ✅   |                 |
-  | Sequential with Human-in-the-Loop             | ✅ |   ✅   |                 |
-  | Advanced: Mixing Agents with Custom Executors | ❌ |   ✅   | Python-specific |
-  | Controlling Context Between Agents             | ❌ |   ✅   | Python-specific |
-  | Intermediate Outputs                           | ❌ |   ✅   | Python-specific |
-  | Key Concepts                                  | ✅ |   ✅   |                 |
+    | Section                                       | C# | Python | Go | Notes           |
+    |-----------------------------------------------|:--:|:------:|:--:|-----------------|
+    | Set Up the Azure OpenAI Client                | ✅ |   ✅   | ✅ |                 |
+    | Define Your Agents                            | ✅ |   ✅   | ✅ |                 |
+    | Set Up the Sequential Orchestration           | ✅ |   ✅   | ✅ |                 |
+    | Run the Sequential Workflow                   | ✅ |   ✅   | ✅ |                 |
+    | Sample Output                                 | ✅ |   ✅   | ✅ |                 |
+    | Sequential with Human-in-the-Loop             | ✅ |   ✅   | ✅ |                 |
+    | Advanced: Mixing Agents with Custom Executors | ❌ |   ✅   | ✅ | Python/Go-specific |
+    | Controlling Context Between Agents             | ❌ |   ✅   | ✅ | Python/Go-specific |
+    | Intermediate Outputs                           | ❌ |   ✅   | ✅ | Python/Go-specific |
+    | Key Concepts                                  | ✅ |   ✅   | ✅ |                 |
 -->
 
 # Microsoft Agent Framework Workflows Orchestrations - Sequential
@@ -511,6 +511,253 @@ while pending_responses is not None:
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+Go can build sequential agent workflows with `workflow/agentworkflow`. `NewSequentialWorkflowBuilder` hosts each agent as a workflow executor, connects them in order, and yields the final message batch as workflow output.
+
+## Set Up Foundry Configuration
+
+```go
+endpoint := os.Getenv("FOUNDRY_PROJECT_ENDPOINT")
+model := cmp.Or(os.Getenv("FOUNDRY_MODEL"), "gpt-4o-mini")
+
+token, err := azidentity.NewDefaultAzureCredential(nil)
+if err != nil {
+    return err
+}
+```
+
+> [!WARNING]
+> `azidentity.NewDefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential, such as `azidentity.NewManagedIdentityCredential`, to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
+
+## Define Your Go Agents
+
+Create specialized agents that will work in sequence:
+
+```go
+newTranslationAgent := func(language string) *agent.Agent {
+    return foundryprovider.NewAgent(
+        endpoint,
+        token,
+        foundryprovider.ModelDeployment(model),
+        foundryprovider.AgentConfig{
+            Instructions: fmt.Sprintf(
+                "You are a translation assistant who only responds in %s. Respond to any input by outputting the name of the input language and then translating the input to %s.",
+                language,
+                language,
+            ),
+            Config: agent.Config{Name: language},
+        },
+    )
+}
+
+frenchAgent := newTranslationAgent("French")
+spanishAgent := newTranslationAgent("Spanish")
+englishAgent := newTranslationAgent("English")
+```
+
+## Set Up the Sequential Orchestration
+
+```go
+wf, err := agentworkflow.NewSequentialWorkflowBuilder(
+    frenchAgent,
+    spanishAgent,
+    englishAgent,
+).
+    WithName("translation-pipeline").
+    Build()
+if err != nil {
+    return err
+}
+```
+
+## Run the Sequential Workflow
+
+Execute the workflow and process the output events:
+
+```go
+run, err := inproc.Default.RunStreaming(ctx, wf, []*message.Message{message.NewText("Hello, world!")})
+if err != nil {
+    return err
+}
+defer run.Close(ctx)
+
+emitEvents := true
+if err := run.SendMessage(ctx, workflow.TurnToken{EmitEvents: &emitEvents}); err != nil {
+    return err
+}
+
+lastExecutorID := ""
+for evt, err := range run.WatchStream(ctx) {
+    if err != nil {
+        return err
+    }
+    switch e := evt.(type) {
+    case workflow.OutputEvent:
+        switch value := e.Output.(type) {
+        case *agent.ResponseUpdate:
+            if e.ExecutorID != lastExecutorID {
+                lastExecutorID = e.ExecutorID
+                fmt.Printf("\n%s: ", e.ExecutorID)
+            }
+            fmt.Print(value.String())
+        case []*message.Message:
+            fmt.Println("\n===== Final Response =====")
+            for _, msg := range value {
+                fmt.Printf("%s: %s\n", msg.Role, msg.String())
+            }
+        }
+    case workflow.ErrorEvent:
+        return e.Error
+    case workflow.ExecutorFailedEvent:
+        return fmt.Errorf("executor %q failed: %w", e.ExecutorID, e.Error)
+    }
+}
+```
+
+## Sample Output
+
+```plaintext
+French: English detected. Bonjour, le monde !
+Spanish: French detected. ¡Hola, mundo!
+English: Spanish detected. Hello, world!
+
+===== Final Response =====
+assistant: Spanish detected. Hello, world!
+```
+
+## Sequential Orchestration with Human-in-the-Loop
+
+Sequential workflows can pause for tool approval when a hosted agent uses an approval-required tool. Wrap the tool with `tool.ApprovalRequiredFunc`, then listen for `workflow.RequestInfoEvent` and respond with a `ToolApprovalResponseContent`.
+
+### Define Agents with Approval-Required Tools
+
+```go
+deployAgent := foundryprovider.NewAgent(
+    endpoint,
+    token,
+    foundryprovider.ModelDeployment(model),
+    foundryprovider.AgentConfig{
+        Instructions: "You are a DevOps engineer. Check staging status first, then deploy to production.",
+        Config: agent.Config{
+            Name:  "DeployAgent",
+            Tools: []tool.Tool{tool.ApprovalRequiredFunc(deployTool)},
+        },
+    },
+)
+
+verifyAgent := foundryprovider.NewAgent(
+    endpoint,
+    token,
+    foundryprovider.ModelDeployment(model),
+    foundryprovider.AgentConfig{
+        Instructions: "You are a QA engineer. Verify that the deployment was successful and summarize the results.",
+        Config:      agent.Config{Name: "VerifyAgent"},
+    },
+)
+
+wf, err := agentworkflow.NewSequentialWorkflowBuilder(deployAgent, verifyAgent).
+    WithName("deployment-pipeline").
+    Build()
+if err != nil {
+    return err
+}
+```
+
+### Build and Run with Approval Handling
+
+Handle approval requests in the event stream:
+
+```go
+for evt, err := range run.WatchStream(ctx) {
+    if err != nil {
+        return err
+    }
+
+    requestEvent, ok := evt.(workflow.RequestInfoEvent)
+    if !ok {
+        continue
+    }
+
+    requestContent, ok := requestEvent.Request.Data.As(reflect.TypeFor[*message.ToolApprovalRequestContent]())
+    if !ok {
+        continue
+    }
+
+    approvalRequest := requestContent.(*message.ToolApprovalRequestContent)
+    response, err := requestEvent.Request.CreateResponse(approvalRequest.CreateResponse(true, "approved"))
+    if err != nil {
+        return err
+    }
+
+    if err := run.SendResponse(ctx, response); err != nil {
+        return err
+    }
+}
+```
+
+## Advanced: Mixing Agents with Custom Executors
+
+For mixed pipelines, host agents with `agentworkflow.New` and connect them to custom executors with `workflow.NewBuilder`:
+
+```go
+writer := agentworkflow.New(writerAgent, agentworkflow.Config{})
+
+summarizer := workflow.NewExecutor("Summarizer", func(messages []*message.Message) string {
+    return summarizeMessages(messages)
+}).Bind()
+
+wf, err := workflow.NewBuilder(writer).
+    AddEdge(writer, summarizer).
+    WithOutputFrom(summarizer).
+    Build()
+if err != nil {
+    return err
+}
+```
+
+## Controlling Context Between Agents
+
+`NewSequentialWorkflowBuilder` uses the default hosted-agent configuration, where each downstream agent receives the previous agent's incoming messages and response messages. To chain only the previous agent responses, set `WithChainOnlyAgentResponses(true)`:
+
+```go
+wf, err := agentworkflow.NewSequentialWorkflowBuilder(frenchAgent, spanishAgent, englishAgent).
+    WithChainOnlyAgentResponses(true).
+    Build()
+if err != nil {
+    return err
+}
+```
+
+## Intermediate Outputs
+
+By default, `NewSequentialWorkflowBuilder` emits each participant's output as an intermediate workflow output and emits the final message batch as the terminal output. To explicitly select the participant outputs you want, combine `WithIntermediateOutputFrom` and `WithOutputFrom`:
+
+```go
+wf, err := agentworkflow.NewSequentialWorkflowBuilder(frenchAgent, spanishAgent, englishAgent).
+    WithIntermediateOutputFrom(frenchAgent, spanishAgent).
+    WithOutputFrom(englishAgent).
+    Build()
+if err != nil {
+    return err
+}
+```
+
+Use `OutputEvent.IsIntermediate()` to distinguish intermediate participant outputs from terminal outputs.
+
+## Key Concepts
+
+- **Sequential Processing**: Each agent or executor processes the output of the previous step in order.
+- **agentworkflow.NewSequentialWorkflowBuilder()**: Creates a pipeline workflow from a collection of agents.
+- **Hosted Agents**: `agentworkflow.New` exposes agent configuration options for message forwarding, role reassignment, update events, and request interception.
+- **Custom Executors**: Manual `workflow.NewBuilder` pipelines can mix hosted agents and deterministic executors.
+- **Tool Approval**: Approval-required tools pause the workflow and emit `RequestInfoEvent` values containing `ToolApprovalRequestContent`.
+- **Intermediate Outputs**: `WithIntermediateOutputFrom` marks selected participant outputs with `workflow.OutputTagIntermediate`.
+
+> [!TIP]
+> See the [agent workflow patterns sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/03-workflows/01-start-here/03_agent_workflow_patterns/main.go) and [agents in workflows sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/03-workflows/01-start-here/02_agents_in_workflows/main.go) for complete runnable sequential workflows.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

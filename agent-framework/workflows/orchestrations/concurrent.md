@@ -5,23 +5,23 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 05/08/2026
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
 <!--
   Language parity table – keep in sync when adding/removing sections.
 
-  | Section                                    | C# | Python | Notes           |
-  |--------------------------------------------|:--:|:------:|-----------------|
-  | Client Setup and Agent Definition          | ✅ |   ✅   |                 |
-  | Set Up the Concurrent Orchestration        | ✅ |   ✅   |                 |
-  | Run the Concurrent Workflow                | ✅ |   ✅   |                 |
-  | Sample Output                              | ✅ |   ✅   |                 |
-  | Advanced: Custom Agent Executors           | ❌ |   ✅   | Python-specific |
-  | Advanced: Custom Aggregator                | ❌ |   ✅   | Python-specific |
-  | Intermediate Outputs                       | ❌ |   ✅   | Python-specific |
-  | Key Concepts                               | ✅ |   ✅   |                 |
+    | Section                                    | C# | Python | Go | Notes           |
+    |--------------------------------------------|:--:|:------:|:--:|-----------------|
+    | Client Setup and Agent Definition          | ✅ |   ✅   | ✅ |                 |
+    | Set Up the Concurrent Orchestration        | ✅ |   ✅   | ✅ |                 |
+    | Run the Concurrent Workflow                | ✅ |   ✅   | ✅ |                 |
+    | Sample Output                              | ✅ |   ✅   | ✅ |                 |
+    | Advanced: Custom Agent Executors           | ❌ |   ✅   | ✅ | Python/Go-specific |
+    | Advanced: Custom Aggregator                | ❌ |   ✅   | ✅ | Python/Go-specific |
+    | Intermediate Outputs                       | ❌ |   ✅   | ✅ | Python/Go-specific |
+    | Key Concepts                               | ✅ |   ✅   | ✅ |                 |
 -->
 
 # Microsoft Agent Framework Workflows Orchestrations - Concurrent
@@ -442,6 +442,193 @@ async for event in workflow.run("Analyze our new product launch strategy.", stre
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+Go supports concurrent agent workflows with `agentworkflow.NewConcurrentWorkflowBuilder`. You can also build the same pattern manually with fan-out and fan-in edges when you need custom executor behavior.
+
+## Set Up Foundry Configuration
+
+Configure the Foundry project endpoint, model deployment, and authentication:
+
+```go
+endpoint := os.Getenv("FOUNDRY_PROJECT_ENDPOINT")
+model := cmp.Or(os.Getenv("FOUNDRY_MODEL"), "gpt-4o-mini")
+
+token, err := azidentity.NewDefaultAzureCredential(nil)
+if err != nil {
+    return err
+}
+```
+
+> [!WARNING]
+> `azidentity.NewDefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential, such as `azidentity.NewManagedIdentityCredential`, to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
+
+## Define Your Agents
+
+Create multiple specialized agents that will work on the same task concurrently:
+
+```go
+newTranslationAgent := func(language string) *agent.Agent {
+    return foundryprovider.NewAgent(
+        endpoint,
+        token,
+        foundryprovider.ModelDeployment(model),
+        foundryprovider.AgentConfig{
+            Instructions: fmt.Sprintf(
+                "You are a translation assistant who only responds in %s. Respond to any input by outputting the name of the input language and then translating the input to %s.",
+                language,
+                language,
+            ),
+            Config: agent.Config{Name: language},
+        },
+    )
+}
+
+agents := []*agent.Agent{
+    newTranslationAgent("French"),
+    newTranslationAgent("Spanish"),
+    newTranslationAgent("English"),
+}
+```
+
+## Set Up the Concurrent Orchestration
+
+Build the workflow with `agentworkflow.NewConcurrentWorkflowBuilder`:
+
+```go
+wf, err := agentworkflow.NewConcurrentWorkflowBuilder(agents...).
+    WithName("translation-concurrent").
+    Build()
+if err != nil {
+    return err
+}
+```
+
+## Run the Concurrent Workflow and Collect Results
+
+Run the workflow with a user message and a turn token. When event emission is enabled, agent updates are surfaced as workflow output events before the final aggregated output.
+
+```go
+run, err := inproc.Default.RunStreaming(ctx, wf, []*message.Message{message.NewText("Hello, world!")})
+if err != nil {
+    return err
+}
+defer run.Close(ctx)
+
+emitEvents := true
+if err := run.SendMessage(ctx, workflow.TurnToken{EmitEvents: &emitEvents}); err != nil {
+    return err
+}
+
+for evt, err := range run.WatchStream(ctx) {
+    if err != nil {
+        return err
+    }
+    if output, ok := evt.(workflow.OutputEvent); ok {
+        switch value := output.Output.(type) {
+        case *agent.ResponseUpdate:
+            fmt.Printf("%s: %s\n", output.ExecutorID, value.String())
+        case []*message.Message:
+            fmt.Println("===== Final Aggregated Results =====")
+            for _, msg := range value {
+                fmt.Printf("%s: %s\n", msg.Role, msg.String())
+            }
+        }
+    }
+}
+```
+
+## Sample Output
+
+```plaintext
+French: English detected. Bonjour, le monde !
+Spanish: English detected. ¡Hola, mundo!
+English: English detected. Hello, world!
+
+===== Final Aggregated Results =====
+assistant: English detected. Bonjour, le monde !
+assistant: English detected. ¡Hola, mundo!
+assistant: English detected. Hello, world!
+```
+
+## Advanced: Custom Agent Executors
+
+Build concurrent workflows manually when you need custom executor behavior. A custom executor can call an agent and then participate in a fan-out/fan-in workflow.
+
+```go
+agentExecutor := func(id string, ag *agent.Agent) workflow.ExecutorBinding {
+    return workflow.BindNewExecutorFunc(id, func(_ string, executorID string) (*workflow.Executor, error) {
+        return workflow.NewExecutor(executorID, func(ctx *workflow.Context, prompt string) (string, error) {
+            response, err := ag.RunText(ctx, prompt).Collect()
+            if err != nil {
+                return "", err
+            }
+            return response.String(), nil
+        }), nil
+    })
+}
+
+researcher := agentExecutor("researcher", researcherAgent)
+marketer := agentExecutor("marketer", marketerAgent)
+aggregate := aggregateStrings("ConcurrentAggregationExecutor")
+
+wf, err := workflow.NewBuilder(start).
+    AddFanOutEdge(start, []workflow.ExecutorBinding{researcher, marketer}).
+    AddFanInBarrierEdge([]workflow.ExecutorBinding{researcher, marketer}, aggregate).
+    WithOutputFrom(aggregate).
+    Build()
+```
+
+## Advanced: Custom Aggregator
+
+Use `WithAggregator` to replace the default message aggregation behavior:
+
+```go
+wf, err := agentworkflow.NewConcurrentWorkflowBuilder(agents...).
+    WithName("translation-concurrent").
+    WithAggregator(func(_ context.Context, batches [][]*message.Message) []*message.Message {
+        results := make([]*message.Message, 0, len(batches))
+        for _, batch := range batches {
+            if len(batch) > 0 {
+                results = append(results, batch[len(batch)-1])
+            }
+        }
+        return results
+    }).
+    Build()
+if err != nil {
+    return err
+}
+```
+
+## Intermediate Outputs
+
+By default, `NewConcurrentWorkflowBuilder` emits participant and batching outputs as intermediate workflow outputs and emits the aggregated result as the terminal output. For custom executor workflows, mark branch executors as intermediate and the aggregator as terminal:
+
+```go
+wf, err := workflow.NewBuilder(start).
+    AddFanOutEdge(start, []workflow.ExecutorBinding{physics, chemistry}).
+    AddFanInBarrierEdge([]workflow.ExecutorBinding{physics, chemistry}, aggregate).
+    WithIntermediateOutputFrom(physics, chemistry).
+    WithOutputFrom(aggregate).
+    Build()
+```
+
+Each `workflow.OutputEvent` includes the `ExecutorID` that produced the output. Use `OutputEvent.IsIntermediate()` to distinguish intermediate branch outputs from the final aggregate.
+
+## Key Concepts
+
+- **Parallel Execution**: All agents or executors process the input independently.
+- **agentworkflow.NewConcurrentWorkflowBuilder()**: Creates a concurrent workflow from a collection of agents.
+- **Fan-out/Fan-in Edges**: Custom concurrent workflows use `AddFanOutEdge` and `AddFanInBarrierEdge`.
+- **Message Aggregation**: The default aggregator returns the last message from each participant; custom aggregators can replace that behavior.
+- **Event Streaming**: Output events can surface individual agent updates and final aggregated results.
+- **Intermediate Outputs**: `WithIntermediateOutputFrom` marks selected outputs with `workflow.OutputTagIntermediate`.
+
+> [!TIP]
+> See the [concurrent workflow sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/03-workflows/concurrent/concurrent/main.go) and [agent workflow patterns sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/03-workflows/01-start-here/03_agent_workflow_patterns/main.go) for complete runnable examples.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

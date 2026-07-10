@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: article
 ms.author: edvan
-ms.date: 02/13/2026
+ms.date: 05/28/2026
 ms.service: agent-framework
 ---
 
@@ -35,6 +35,30 @@ The C# `AgentSession` is an abstract base class. Concrete implementations (creat
 
 :::zone-end
 
+:::zone pivot="programming-language-go"
+
+| Field | Purpose |
+|---|---|
+| `agent.Session` | Key-value state container tied to a conversation |
+
+Sessions provide typed key-value storage:
+
+```go
+type UserPrefs struct {
+    Theme    string `json:"theme"`
+    Language string `json:"language"`
+}
+
+session.Set("user_prefs", UserPrefs{Theme: "dark", Language: "en"})
+
+var prefs UserPrefs
+session.Get("user_prefs", &prefs)
+
+session.Delete("user_prefs")
+```
+
+:::zone-end
+
 ## Service session ID scoping
 
 When service-managed history is used, a session can contain a service-issued session identifier. For example, OpenAI Responses may use a `resp_*` response ID as `previous_response_id`, and the OpenAI Conversations API may use a `conv_*` conversation ID as the conversation.
@@ -61,6 +85,20 @@ session = agent.create_session()
 
 first = await agent.run("My name is Alice.", session=session)
 second = await agent.run("What is my name?", session=session)
+```
+
+:::zone-end
+
+:::zone pivot="programming-language-go"
+
+```go
+session, err := a.CreateSession(ctx)
+if err != nil {
+    panic(err)
+}
+
+resp, _ := a.RunText(ctx, "Hello!", agent.WithSession(session)).Collect()
+resp, _ = a.RunText(ctx, "Follow-up question.", agent.WithSession(session)).Collect()
 ```
 
 :::zone-end
@@ -115,6 +153,38 @@ AgentSession resumed = await agent.DeserializeSessionAsync(serialized);
 serialized = session.to_dict()
 resumed = AgentSession.from_dict(serialized)
 ```
+
+:::zone-end
+
+:::zone pivot="programming-language-go"
+
+```go
+data, err := json.Marshal(session)
+if err != nil {
+    panic(err)
+}
+
+// Save to disk, database, etc.
+if err := os.WriteFile("session.json", data, 0o644); err != nil {
+    panic(err)
+}
+
+// Later, restore the session.
+loaded, err := os.ReadFile("session.json")
+if err != nil {
+    panic(err)
+}
+
+var resumedSession agent.Session
+if err := json.Unmarshal(loaded, &resumedSession); err != nil {
+    panic(err)
+}
+
+resp, _ := a.RunText(ctx, "Continue from where we left off.", agent.WithSession(&resumedSession)).Collect()
+```
+
+> [!TIP]
+> See the [persisted conversation sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/agents/step06_persisted_conversation/main.go) for a complete example.
 
 :::zone-end
 

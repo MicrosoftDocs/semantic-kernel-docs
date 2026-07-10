@@ -5,16 +5,35 @@ zone_pivot_groups: programming-languages
 author: dmytrostruk
 ms.topic: tutorial
 ms.author: dmytrostruk
-ms.date: 06/08/2026
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
+
+<!--
+    Language parity table - keep in sync when adding/removing sections.
+
+    | Section                       | C# | Python | Go | Notes                                      |
+    |-------------------------------|:--:|:------:|:--:|--------------------------------------------|
+    | Getting Started / Installation| ✅ |   ✅   | ✅ | Python and Go use package/module install.  |
+    | Configuration                 | ❌ |   ✅   | ❌ | Python-specific environment variable table.|
+    | Create an Agent               | ✅ |   ✅   | ✅ |                                            |
+    | Function Tools                | ✅ |   ✅   | ✅ |                                            |
+    | Context Providers             | ❌ |   ✅   | ❌ | Python-specific content in this page.      |
+    | Streaming Responses           | ✅ |   ✅   | ✅ |                                            |
+    | Session Management            | ✅ |   ✅   | ✅ |                                            |
+    | Permissions                   | ✅ |   ✅   | ✅ |                                            |
+    | MCP Servers                   | ✅ |   ✅   | ✅ |                                            |
+    | Observability                 | ❌ |   ✅   | ❌ | Python-specific content in this page.      |
+    | Tools                         | ✅ |   ✅   | ✅ |                                            |
+    | Using the Agent               | ✅ |   ✅   | ✅ |                                            |
+-->
 
 # GitHub Copilot Agents
 
 Microsoft Agent Framework supports creating agents that use the [GitHub Copilot SDK](https://github.com/github/copilot-sdk) as their backend. GitHub Copilot agents provide access to powerful coding-oriented AI capabilities, including shell command execution, file operations, URL fetching, and Model Context Protocol (MCP) server integration.
 
 > [!IMPORTANT]
-> GitHub Copilot agents require the GitHub Copilot CLI to be installed and authenticated. For security, it is recommended to run agents with shell or file permissions in a containerized environment (Docker/Dev Container).
+> GitHub Copilot agents require an authenticated GitHub Copilot runtime. Some SDKs use an installed CLI, while the Go SDK uses the bundled runtime by default. For security, it is recommended to run agents with shell or file permissions in a containerized environment (Docker/Dev Container).
 
 ::: zone pivot="programming-language-csharp"
 
@@ -472,6 +491,245 @@ For more information on how to run and interact with agents, see the [Agent gett
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+## Getting Started
+
+Install the Microsoft Agent Framework Go module and the GitHub Copilot SDK for Go. The Agent Framework Go SDK requires Go 1.25 or later.
+
+```bash
+go get github.com/microsoft/agent-framework-go github.com/github/copilot-sdk/go
+```
+
+## Create a GitHub Copilot Agent
+
+Create and start a `copilot.Client`, then pass it to `copilotprovider.NewAgent`.
+
+```go
+import (
+    "context"
+    "fmt"
+
+    copilot "github.com/github/copilot-sdk/go"
+    "github.com/microsoft/agent-framework-go/provider/copilotprovider"
+)
+
+ctx := context.Background()
+
+copilotClient := copilot.NewClient(nil)
+if err := copilotClient.Start(ctx); err != nil {
+    panic(err)
+}
+defer func() { _ = copilotClient.Stop() }()
+
+copilotAgent := copilotprovider.NewAgent(
+    copilotClient,
+    copilotprovider.AgentConfig{
+        Instructions: "You are a helpful assistant.",
+    },
+)
+
+response, err := copilotAgent.RunText(ctx, "What is Microsoft Agent Framework?").Collect()
+if err != nil {
+    panic(err)
+}
+fmt.Println(response)
+```
+
+### With Tools and Instructions
+
+You can provide function tools and custom instructions when creating the agent:
+
+```go
+import (
+    "context"
+    "fmt"
+
+    copilot "github.com/github/copilot-sdk/go"
+    "github.com/microsoft/agent-framework-go/agent"
+    "github.com/microsoft/agent-framework-go/provider/copilotprovider"
+    "github.com/microsoft/agent-framework-go/tool"
+    "github.com/microsoft/agent-framework-go/tool/functool"
+)
+
+weatherTool := functool.MustNew(
+    functool.Config{
+        Name:        "GetWeather",
+        Description: "Get the weather for a given location.",
+    },
+    func(_ context.Context, location string) (string, error) {
+        return fmt.Sprintf("The weather in %s is sunny with a high of 25C.", location), nil
+    },
+)
+
+copilotAgent := copilotprovider.NewAgent(
+    copilotClient,
+    copilotprovider.AgentConfig{
+        Instructions: "You are a helpful weather agent.",
+        Config: agent.Config{
+            Tools: []tool.Tool{weatherTool},
+        },
+    },
+)
+
+response, err := copilotAgent.RunText(ctx, "What's the weather like in Seattle?").Collect()
+if err != nil {
+    panic(err)
+}
+fmt.Println(response)
+```
+
+## Agent Features
+
+### Streaming Responses
+
+Get responses as they are generated:
+
+```go
+for update, err := range copilotAgent.RunText(ctx, "Tell me a short story.", agent.Stream(true)) {
+    if err != nil {
+        panic(err)
+    }
+    fmt.Print(update)
+}
+
+fmt.Println()
+```
+
+### Session Management
+
+Maintain conversation context across multiple interactions using sessions:
+
+```go
+session, err := copilotAgent.CreateSession(ctx)
+if err != nil {
+    panic(err)
+}
+
+// First turn
+response, err := copilotAgent.RunText(ctx, "My name is Alice.", agent.WithSession(session)).Collect()
+if err != nil {
+    panic(err)
+}
+fmt.Println(response)
+
+// Second turn - the agent remembers the context
+response, err = copilotAgent.RunText(ctx, "What is my name?", agent.WithSession(session)).Collect()
+if err != nil {
+    panic(err)
+}
+fmt.Println(response)
+```
+
+### Permissions
+
+By default, the agent cannot execute shell commands, read/write files, or fetch URLs. To enable these capabilities, provide a permission handler via `copilot.SessionConfig`:
+
+```go
+import (
+    "bufio"
+    "fmt"
+    "os"
+    "strings"
+
+    copilot "github.com/github/copilot-sdk/go"
+    "github.com/github/copilot-sdk/go/rpc"
+    "github.com/microsoft/agent-framework-go/provider/copilotprovider"
+)
+
+func promptPermission(request copilot.PermissionRequest, _ copilot.PermissionInvocation) (rpc.PermissionDecision, error) {
+    fmt.Printf("\n[Permission Request: %s]\n", request.Kind())
+    fmt.Print("Approve? (y/n): ")
+
+    input, _ := bufio.NewReader(os.Stdin).ReadString('\n')
+    input = strings.TrimSpace(strings.ToUpper(input))
+    if input == "Y" || input == "YES" {
+        return &rpc.PermissionDecisionApproveOnce{}, nil
+    }
+    return &rpc.PermissionDecisionReject{}, nil
+}
+
+copilotAgent := copilotprovider.NewAgent(
+    copilotClient,
+    copilotprovider.AgentConfig{
+        SessionConfig: &copilot.SessionConfig{
+            OnPermissionRequest: promptPermission,
+        },
+    },
+)
+
+response, err := copilotAgent.RunText(ctx, "List all files in the current directory").Collect()
+if err != nil {
+    panic(err)
+}
+fmt.Println(response)
+```
+
+### MCP Servers
+
+Connect to local (stdio) or remote (HTTP) MCP servers for extended capabilities:
+
+```go
+import (
+    copilot "github.com/github/copilot-sdk/go"
+    "github.com/microsoft/agent-framework-go/provider/copilotprovider"
+)
+
+mcpServers := map[string]copilot.MCPServerConfig{
+    // Local stdio server
+    "filesystem": copilot.MCPStdioServerConfig{
+        Command: "npx",
+        Args:    []string{"-y", "@modelcontextprotocol/server-filesystem", "."},
+        Tools:   []string{"*"},
+    },
+    // Remote HTTP server
+    "microsoft-learn": copilot.MCPHTTPServerConfig{
+        URL:   "https://learn.microsoft.com/api/mcp",
+        Tools: []string{"*"},
+    },
+}
+
+copilotAgent := copilotprovider.NewAgent(
+    copilotClient,
+    copilotprovider.AgentConfig{
+        Instructions: "You are a helpful assistant with access to the filesystem and Microsoft Learn.",
+        SessionConfig: &copilot.SessionConfig{
+            OnPermissionRequest: promptPermission,
+            MCPServers:          mcpServers,
+        },
+    },
+)
+
+response, err := copilotAgent.RunText(ctx, "Search Microsoft Learn for 'Azure Functions' and summarize the top result").Collect()
+if err != nil {
+    panic(err)
+}
+fmt.Println(response)
+```
+
+> [!TIP]
+> See the [Go GitHub Copilot sample](https://github.com/microsoft/agent-framework-go/tree/main/examples/02-agents/providers/github-copilot/main.go) for a complete runnable example.
+
+## Tools
+
+| Tool | Status | Notes |
+|---|---|---|
+| [Function Tools](../tools/function-tools.md) | ✅ | Standard Go `tool.Tool` instances, including `functool` functions. |
+| [Tool Approval](../tools/tool-approval.md) | ✅ | Function tools can use the standard Go tool approval support; Copilot runtime permissions are handled by `SessionConfig.OnPermissionRequest`. |
+| [Code Interpreter](../tools/code-interpreter.md) | ❌ | Not a Copilot CLI capability. |
+| [File Search](../tools/file-search.md) | ❌ | Not a Copilot CLI capability. |
+| [Web Search](../tools/web-search.md) | ❌ | Not exposed as a hosted tool. |
+| Shell / file system / URL fetching | ✅ | Built into the Copilot CLI runtime and gated by the [Permissions](#permissions-2) handler you provide. |
+| [Hosted MCP Tools](../tools/hosted-mcp-tools.md) | ✅ | Remote (HTTP) MCP servers configured via `copilot.SessionConfig.MCPServers`. See [MCP Servers](#mcp-servers-2). |
+| [Local MCP Tools](../tools/local-mcp-tools.md) | ✅ | Local (stdio) MCP servers configured via `copilot.SessionConfig.MCPServers`. See [MCP Servers](#mcp-servers-2). |
+
+## Using the Agent
+
+The agent is a standard `*agent.Agent` and supports all standard agent operations.
+
+For more information on how to run and interact with agents, see the [Agent getting started tutorials](../../get-started/your-first-agent.md).
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

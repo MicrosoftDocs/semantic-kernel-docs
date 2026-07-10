@@ -497,6 +497,13 @@ uvicorn.run(server, host="0.0.0.0", port=9999)
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+> [!NOTE]
+> This migration guide applies to the C# and Python Agent Framework A2A packages. For Go A2A usage, see [A2A integration](../integrations/a2a.md).
+
+::: zone-end
+
 ## See also
 
 - [A2A Agent](../agents/providers/agent-to-agent.md) - full reference for the A2A agent provider

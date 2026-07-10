@@ -4,7 +4,7 @@ description: Learn how to test your Microsoft Agent Framework agents with AG-UI'
 zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: tutorial
-ms.date: 04/01/2026
+ms.date: 07/01/2026
 ms.author: evmattso
 ms.service: agent-framework
 ---
@@ -243,6 +243,23 @@ If you see authentication errors:
 
 :::zone-end
 
+:::zone pivot="programming-language-go"
+
+Go AG-UI servers expose an HTTP endpoint that Dojo-compatible clients can call. Host the agent with `aguiprovider.NewJSONHTTPHandler`, then point Dojo at the server URL.
+
+```go
+mux := http.NewServeMux()
+mux.Handle("/", aguiprovider.NewJSONHTTPHandler(myAgent, aguiprovider.HandlerConfig{}))
+
+if err := http.ListenAndServe(":8888", mux); err != nil {
+    log.Fatal(err)
+}
+```
+
+> [!TIP]
+> See the [AG-UI getting started server sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/agui/step01_getting_started/server/main.go) for a complete runnable server.
+
+:::zone-end
 ::: zone pivot="programming-language-csharp"
 
 Coming soon.

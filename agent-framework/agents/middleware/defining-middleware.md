@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: dmytrostruk
 ms.topic: tutorial
 ms.author: dmytrostruk
-ms.date: 04/01/2026
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
@@ -737,6 +737,71 @@ if __name__ == "__main__":
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Defining middleware
+
+Middleware in Go implements the `agent.Middleware` interface:
+
+```go
+type Middleware interface {
+    Run(next agent.RunFunc, ctx context.Context, messages []*message.Message,
+        options ...agent.Option) iter.Seq2[*agent.ResponseUpdate, error]
+}
+```
+
+### Using a function as middleware
+
+For simple middleware, use `agent.MiddlewareFunc`:
+
+```go
+import "github.com/microsoft/agent-framework-go/agent"
+
+var loggingMiddleware = agent.MiddlewareFunc(
+    func(next agent.RunFunc, ctx context.Context, messages []*message.Message,
+        options ...agent.Option) iter.Seq2[*agent.ResponseUpdate, error] {
+        log.Println("Agent invoked with", len(messages), "messages")
+        return next(ctx, messages, options...)
+    },
+)
+```
+
+### Struct-based middleware
+
+For middleware that carries state, implement the interface on a struct:
+
+```go
+type TimingMiddleware struct{}
+
+func (t *TimingMiddleware) Run(next agent.RunFunc, ctx context.Context,
+    messages []*message.Message, options ...agent.Option) iter.Seq2[*agent.ResponseUpdate, error] {
+    start := time.Now()
+    result := next(ctx, messages, options...)
+    return func(yield func(*agent.ResponseUpdate, error) bool) {
+        for update, err := range result {
+            if !yield(update, err) {
+                return
+            }
+        }
+        log.Printf("Agent run took %v", time.Since(start))
+    }
+}
+```
+
+### Chaining middleware
+
+Register middleware on the agent configuration. The runtime chains them in the order provided:
+
+```go
+a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Config: agent.Config{
+        Middlewares: []agent.Middleware{mw1, mw2},
+    },
+})
+```
+
+Middleware is chained in reverse order — `mw1` wraps `mw2`, which wraps the provider.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

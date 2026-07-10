@@ -12,17 +12,17 @@ ms.service: agent-framework
 <!--
   Language parity table – keep in sync when adding/removing sections.
 
-  | Section                          | C# | Python | Notes                         |
-  |----------------------------------|:--:|:------:|-------------------------------|
-  | What is an agent harness?        | ✅ |   ✅   | Shared concept                |
-  | What makes up a harness          | ✅ |   ✅   | Shared concept                |
-  | Creating a harness agent         | ✅ |   ✅   |                               |
-  | Enabling compaction              | ✅ |   ✅   |                               |
-  | Customizing and disabling        | ✅ |   ✅   |                               |
-  | Plan and execute workflow        | ✅ |   ✅   | Shared concept                |
-  | Looping until done               | ✅ |   ✅   |                               |
-  | Shell and background agents      | ✅ |   ✅   |                               |
-  | A sample terminal UX             | ✅ |   ✅   |                               |
+    | Section                          | C# | Python | Go | Notes                                             |
+    |----------------------------------|:--:|:------:|:--:|---------------------------------------------------|
+    | What is an agent harness?        | ✅ |   ✅   | ✅ | Shared concept                                    |
+    | What makes up a harness          | ✅ |   ✅   | ✅ | Go exposes supported pieces as packages           |
+    | Creating a harness agent         | ✅ |   ✅   | ✅ | Go composes providers and middleware explicitly   |
+    | Enabling compaction              | ✅ |   ✅   | ✅ | Go uses the compaction context provider           |
+    | Customizing and disabling        | ✅ |   ✅   | ✅ | Go opts in by adding/removing config entries      |
+    | Plan and execute workflow        | ✅ |   ✅   | ✅ | Go uses the agent mode context provider           |
+    | Looping until done               | ✅ |   ✅   | ✅ | Go uses loop middleware                           |
+    | Shell and background agents      | ✅ |   ✅   | ❌ | No packaged Go harness shell/background utilities |
+    | A sample terminal UX             | ✅ |   ✅   | ❌ | No packaged Go harness console sample             |
 -->
 
 # Agent harnesses
@@ -280,6 +280,13 @@ agent = create_harness_agent(
     background_agents=[web_search_agent, code_agent],
 )
 ```
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+> [!NOTE]
+> Go support for agent harnesses is coming soon. See the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go) for the latest status.
 
 ::: zone-end
 

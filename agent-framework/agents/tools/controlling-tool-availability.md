@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: article
 ms.author: edvan
-ms.date: 06/03/2026
+ms.date: 06/23/2026
 ms.service: agent-framework
 ---
 
@@ -224,6 +224,13 @@ tool_choice: ToolMode = {"mode": "required", "required_function_name": "get_reco
 | **Experimental status** | Both helpers emit `ExperimentalWarning` on first call per process. Suppress with `warnings.filterwarnings("ignore", category=FutureWarning)` if desired. |
 | **Per-run scope** | The live tool list is a fresh copy created from `normalize_tools` at the start of each `agent.run()` call. The caller's original `tools` container is never mutated. |
 | **CodeAct exclusion** | Not available for `agent-framework-monty` or `agent-framework-hyperlight` CodeAct providers. |
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+> [!NOTE]
+> The runtime tool availability APIs covered on this page are currently Python-only. For Go tool patterns, see [Function Tools](./function-tools.md) and [Using function tools with human in the loop approvals](./tool-approval.md).
 
 ::: zone-end
 

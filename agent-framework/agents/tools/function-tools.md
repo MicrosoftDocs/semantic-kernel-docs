@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
 ms.author: westey
-ms.date: 03/16/2026
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
@@ -178,6 +178,118 @@ This pattern is a good fit for long-lived tool state. Use `FunctionInvocationCon
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Function tools
+
+Function tools let agents call custom Go functions. The `functool` package provides a simple way to define type-safe tools with automatic schema generation.
+
+### Define a function tool
+
+```go
+import (
+    "context"
+
+    "github.com/microsoft/agent-framework-go/tool"
+    "github.com/microsoft/agent-framework-go/tool/functool"
+)
+
+var weatherTool = functool.MustNew(functool.Config{
+    Name:        "weather",
+    Description: "Get the current weather for a given location",
+}, func(_ context.Context, location string) (string, error) {
+    return fmt.Sprintf("The weather in %s is cloudy with a high of 15°C.", location), nil
+})
+```
+
+The function signature determines the tool's input schema. The `context.Context` parameter is injected by the framework and is not exposed to the model.
+
+### Structured input types
+
+For tools with multiple parameters, define a struct:
+
+```go
+type WeatherInput struct {
+    Location string `json:"location" jsonschema:"description=The city to check weather for"`
+    Unit     string `json:"unit" jsonschema:"description=Temperature unit (celsius or fahrenheit),enum=celsius,enum=fahrenheit"`
+}
+
+var weatherTool = functool.MustNew(functool.Config{
+    Name:        "weather",
+    Description: "Get weather for a location",
+}, func(_ context.Context, input WeatherInput) (string, error) {
+    return fmt.Sprintf("Weather in %s: 15°%s", input.Location, input.Unit), nil
+})
+```
+
+### Create an agent with tools
+
+```go
+a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Instructions: "You are a helpful assistant.",
+    Config: agent.Config{
+        Tools: []tool.Tool{weatherTool},
+    },
+})
+
+resp, err := a.RunText(ctx, "What is the weather like in Amsterdam?").Collect()
+```
+
+### Use an agent as a function tool
+
+Any agent can be wrapped as a function tool for use by another agent:
+
+```go
+import "github.com/microsoft/agent-framework-go/tool/agenttool"
+
+weatherAgent := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Instructions: "You answer questions about the weather.",
+    Config: agent.Config{
+        Name:        "WeatherAgent",
+        Description: "An agent that answers weather questions.",
+        Tools:       []tool.Tool{weatherTool},
+    },
+})
+
+mainAgent := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Instructions: "You are a helpful assistant who responds in French.",
+    Config: agent.Config{
+        Tools: []tool.Tool{agenttool.New(weatherAgent, agenttool.Config{})},
+    },
+})
+```
+
+### Use the local shell tool
+
+The Go SDK includes `tool/shelltool` for local shell execution. The tool requires approval by default and can be paired with an environment context provider so the model knows the current shell family, working directory, and common tool versions.
+
+```go
+import "github.com/microsoft/agent-framework-go/tool/shelltool"
+
+shell, err := shelltool.NewLocal(shelltool.LocalConfig{
+    Mode: shelltool.ModeStateless,
+})
+if err != nil {
+    return err
+}
+defer shell.Close()
+
+envProvider := shelltool.NewEnvironmentProvider(shell, shelltool.EnvironmentProviderConfig{})
+
+a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Instructions: "Run shell commands only when needed and summarize the result.",
+    Config: agent.Config{
+        Tools:            []tool.Tool{shell},
+        ContextProviders: []agent.ContextProvider{envProvider},
+    },
+})
+```
+
+Use `shelltool.ModeStateless` when each call should run in a fresh shell. Use `shelltool.ModePersistent` only when a single agent session needs shell state such as changed directories or exported environment variables to persist across calls. Set `AcknowledgeUnsafe: true` only when you provide an independent isolation boundary and do not need the built-in approval gate.
+
+> [!TIP]
+> See the [function tools sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/agents/step03_using_function_tools/main.go), the [agent as tool sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/agents/step12_as_function_tool/main.go), and the [shell with environment sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/agents/step21_shell_with_environment/main.go) for complete examples.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

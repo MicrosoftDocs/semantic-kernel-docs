@@ -5,24 +5,24 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 05/08/2026
+ms.date: 05/27/2026
 ms.service: agent-framework
 ---
 
 <!--
   Language parity table – keep in sync when adding/removing sections.
 
-  | Section                              | C# | Python | Notes                  |
-  |--------------------------------------|:--:|:------:|------------------------|
-  | Introduction                         | ✅ |   ✅   |                        |
-  | Define Your Specialized Agents       | ✅ |   ✅   |                        |
-  | Build the Magentic Workflow          | ✅ |   ✅   |                        |
-  | Intermediate Outputs                 | ❌ |   ✅   | Python-only            |
-  | Run the Workflow with Event Streaming| ✅ |   ✅   |                        |
-  | Human-in-the-Loop Plan Review        | ✅ |   ✅   |                        |
-  | Key Concepts                         | ✅ |   ✅   |                        |
-  | Workflow Execution Flow              | ✅ |   ✅   |                        |
-  | Complete Example                     | ✅ |   ✅   |                        |
+    | Section                              | C# | Python | Go | Notes                  |
+    |--------------------------------------|:--:|:------:|:--:|------------------------|
+    | Introduction                         | ✅ |   ✅   | ❌ | No Go Magentic builder |
+    | Define Your Specialized Agents       | ✅ |   ✅   | ❌ |                        |
+    | Build the Magentic Workflow          | ✅ |   ✅   | ❌ |                        |
+    | Intermediate Outputs                 | ❌ |   ✅   | ❌ | Python-only            |
+    | Run the Workflow with Event Streaming| ✅ |   ✅   | ❌ |                        |
+    | Human-in-the-Loop Plan Review        | ✅ |   ✅   | ❌ |                        |
+    | Key Concepts                         | ✅ |   ✅   | ❌ |                        |
+    | Workflow Execution Flow              | ✅ |   ✅   | ❌ |                        |
+    | Complete Example                     | ✅ |   ✅   | ❌ |                        |
 -->
 
 # Microsoft Agent Framework Workflows Orchestrations - Magentic
@@ -582,6 +582,12 @@ See complete samples in the [Agent Framework Samples repository](https://github.
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+> [!NOTE]
+> Go support for this feature is coming soon. See the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go) for the latest status.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

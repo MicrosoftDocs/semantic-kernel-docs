@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: tutorial
 ms.author: evmattso
-ms.date: 04/01/2026
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
@@ -710,5 +710,33 @@ Now that you understand backend tool rendering, you can:
 - [AG-UI Overview](index.md)
 - [Getting Started with AG-UI](getting-started.md)
 - [Function Tools Tutorial](../../agents/tools/function-tools.md)
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+Go AG-UI servers can expose normal Agent Framework function tools. Create tools with `tool/functool`, attach them to the hosted agent, and serve the agent with `aguiprovider.NewJSONHTTPHandler`.
+
+```go
+searchRestaurants := functool.MustNew(functool.Config{
+    Name:        "search_restaurants",
+    Description: "Search for restaurants in a location.",
+}, func(ctx context.Context, in restaurantSearchRequest) (restaurantSearchResponse, error) {
+    return restaurantSearchResponse{
+        Location: in.Location,
+        Cuisine:  in.Cuisine,
+        Results:  []restaurantInfo{{Name: "The Golden Fork", Cuisine: in.Cuisine}},
+    }, nil
+})
+
+a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Config: agent.Config{
+        Tools: []tool.Tool{searchRestaurants},
+    },
+})
+```
+
+> [!TIP]
+> See the [AG-UI backend tools sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/agui/step02_backend_tools/server/main.go) for a complete runnable example.
 
 ::: zone-end

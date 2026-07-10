@@ -5,27 +5,27 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 03/09/2026
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
 <!--
   Language parity table – keep in sync when adding/removing sections.
 
-  | Section                        | C# | Python | Notes                              |
-  |--------------------------------|:--:|:------:|----------------------------------  |
-  | What You'll Build              | ✅ |   ✅   |                                    |
-  | Concepts Covered               | ✅ |   ✅   |                                    |
-  | Prerequisites                  | ✅ |   ✅   |                                    |
-  | Client/Agent Setup             | ✅ |   ✅   | Different Azure services           |
-  | Create Specialized Agents      | ✅ |   ✅   |                                    |
-  | Build the Workflow             | ✅ |   ✅   |                                    |
-  | Shared Session Pattern         | ❌ |   ❌   | Planned for future tutorial        |
-  | Execute with Streaming         | ✅ |   ✅   |                                    |
-  | Resource Cleanup               | ✅ |   ❌   | C#-specific (Azure Foundry agents) |
-  | How It Works                   | ✅ |   ✅   |                                    |
-  | Key Concepts                   | ✅ |   ✅   |                                    |
-  | Complete Implementation        | ✅ |   ✅   |                                    |
+    | Section                        | C# | Python | Go | Notes                              |
+    |--------------------------------|:--:|:------:|:--:|----------------------------------  |
+    | What You'll Build              | ✅ |   ✅   | ✅ |                                    |
+    | Concepts Covered               | ✅ |   ✅   | ✅ |                                    |
+    | Prerequisites                  | ✅ |   ✅   | ✅ |                                    |
+    | Client/Agent Setup             | ✅ |   ✅   | ✅ | Different Azure services           |
+    | Create Specialized Agents      | ✅ |   ✅   | ✅ |                                    |
+    | Build the Workflow             | ✅ |   ✅   | ✅ |                                    |
+    | Shared Session Pattern         | ❌ |   ❌   | ❌ | Planned for future tutorial        |
+    | Execute with Streaming         | ✅ |   ✅   | ✅ |                                    |
+    | Resource Cleanup               | ✅ |   ❌   | ❌ | C#-specific (Azure Foundry agents) |
+    | How It Works                   | ✅ |   ✅   | ✅ |                                    |
+    | Key Concepts                   | ✅ |   ✅   | ✅ |                                    |
+    | Complete Implementation        | ✅ |   ✅   | ✅ | Go includes complete sample        |
 -->
 
 # Agents in Workflows
@@ -337,6 +337,232 @@ For the complete working implementation, see [azure_ai_agents_streaming.py](http
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+## What You'll Build
+
+You'll create a workflow that:
+
+- Uses Azure OpenAI agents as workflow executors
+- Implements a French translation agent
+- Implements a Spanish translation agent
+- Implements an English translation agent
+- Connects agents in a sequential workflow pipeline
+- Streams real-time updates as agents process requests
+
+### Concepts Covered
+
+- [Agents in Workflows](./agents-in-workflows.md)
+- [Direct Edges](./edges.md#direct-edges)
+- [Workflow Builder](./index.md)
+
+## Prerequisites
+
+- Go 1.25 or later
+- Microsoft Foundry project endpoint and model deployment configured
+- Azure CLI authentication or another Azure credential source
+
+## Step 1: Set Up Foundry Configuration
+
+```go
+endpoint := os.Getenv("FOUNDRY_PROJECT_ENDPOINT")
+model := cmp.Or(os.Getenv("FOUNDRY_MODEL"), "gpt-4o-mini")
+
+token, err := azidentity.NewDefaultAzureCredential(nil)
+if err != nil {
+    return err
+}
+```
+
+> [!WARNING]
+> `azidentity.NewDefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential, such as `azidentity.NewManagedIdentityCredential`, to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
+
+## Step 2: Create Agent Factory Function
+
+Create agents with specific translation instructions:
+
+```go
+newTranslationAgent := func(language string) *agent.Agent {
+    return foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+        Instructions: fmt.Sprintf(
+            "Translate the user's text to %s. Return only the translation.",
+            language,
+        ),
+        Config: agent.Config{Name: language + "Agent"},
+    })
+}
+```
+
+## Step 3: Create Specialized Foundry Agents
+
+```go
+frenchAgent := newTranslationAgent("French")
+spanishAgent := newTranslationAgent("Spanish")
+englishAgent := newTranslationAgent("English")
+```
+
+## Step 4: Build the Workflow
+
+Agents can be used as workflow executors, enabling AI-powered workflow steps.
+
+Bind each agent as a workflow executor, then connect the executors with edges:
+
+```go
+import (
+    "github.com/microsoft/agent-framework-go/agent"
+    "github.com/microsoft/agent-framework-go/workflow/agentworkflow"
+    "github.com/microsoft/agent-framework-go/message"
+    "github.com/microsoft/agent-framework-go/workflow"
+    "github.com/microsoft/agent-framework-go/workflow/inproc"
+)
+
+cfg := agentworkflow.Config{DisableForwardIncomingMessages: true}
+french := agentworkflow.New(frenchAgent, cfg)
+spanish := agentworkflow.New(spanishAgent, cfg)
+english := agentworkflow.New(englishAgent, cfg)
+
+wf, err := workflow.NewBuilder(french).
+    AddEdge(french, spanish).
+    AddEdge(spanish, english).
+    WithOutputFrom(english).
+    Build()
+if err != nil {
+    return err
+}
+```
+
+## Step 5: Execute with Streaming
+
+Run the workflow and enable update events with a `workflow.TurnToken`:
+
+```go
+run, err := inproc.Default.RunStreaming(ctx, wf, message.NewText("Hello World"))
+if err != nil {
+    return err
+}
+defer run.Close(ctx)
+
+emitEvents := true
+if err := run.SendMessage(ctx, workflow.TurnToken{EmitEvents: &emitEvents}); err != nil {
+    return err
+}
+
+for evt, err := range run.WatchStream(ctx) {
+    if err != nil {
+        return err
+    }
+    if out, ok := evt.(workflow.OutputEvent); ok {
+        if update, ok := out.Output.(*agent.ResponseUpdate); ok {
+            fmt.Printf("%s: %s\n", out.ExecutorID, update.String())
+        }
+    }
+}
+```
+
+## How It Works
+
+1. **Client Setup**: Uses an Azure credential with the OpenAI client.
+2. **Agent Creation**: Creates specialized agents with language-specific instructions.
+3. **Agent Hosting**: Uses `agentworkflow.New` to bind each agent as a workflow executor.
+4. **Sequential Processing**: The French executor runs first, then Spanish, then English.
+5. **Turn Token Pattern**: Hosted agents buffer messages and run when they receive a `workflow.TurnToken`.
+6. **Streaming Updates**: `workflow.OutputEvent` values can contain `*agent.ResponseUpdate` outputs for real-time progress.
+
+## Key Concepts
+
+- **Azure OpenAI Agent**: An `agent.Agent` backed by Azure OpenAI.
+- **agentworkflow.New**: Adapts an agent for use as a workflow executor.
+- **workflow.TurnToken**: Signal that triggers hosted agents to process buffered messages.
+- **Workflow OutputEvent**: Carries agent response updates and final workflow outputs.
+- **Sequential Workflow**: Agents connected in a pipeline where output flows from one to the next.
+
+## Complete Implementation
+
+```go
+package main
+
+import (
+    "cmp"
+    "context"
+    "fmt"
+    "log"
+    "os"
+
+    "github.com/microsoft/agent-framework-go/agent"
+    "github.com/microsoft/agent-framework-go/workflow/agentworkflow"
+    "github.com/microsoft/agent-framework-go/message"
+    "github.com/microsoft/agent-framework-go/workflow"
+    "github.com/microsoft/agent-framework-go/workflow/inproc"
+
+    "github.com/Azure/azure-sdk-for-go/sdk/azidentity"
+    "github.com/microsoft/agent-framework-go/provider/foundryprovider"
+)
+
+func main() {
+    ctx := context.Background()
+    endpoint := os.Getenv("FOUNDRY_PROJECT_ENDPOINT")
+    model := cmp.Or(os.Getenv("FOUNDRY_MODEL"), "gpt-4o-mini")
+
+    credential, err := azidentity.NewDefaultAzureCredential(nil)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    newTranslationAgent := func(language string) *agent.Agent {
+        return foundryprovider.NewAgent(endpoint, credential, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+            Instructions: fmt.Sprintf(
+                "Translate the user's text to %s. Return only the translation.",
+                language,
+            ),
+            Config: agent.Config{Name: language + "Agent"},
+        })
+    }
+
+    cfg := agentworkflow.Config{DisableForwardIncomingMessages: true}
+    french := agentworkflow.New(newTranslationAgent("French"), cfg)
+    spanish := agentworkflow.New(newTranslationAgent("Spanish"), cfg)
+    english := agentworkflow.New(newTranslationAgent("English"), cfg)
+
+    wf, err := workflow.NewBuilder(french).
+        AddEdge(french, spanish).
+        AddEdge(spanish, english).
+        WithOutputFrom(english).
+        Build()
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    run, err := inproc.Default.RunStreaming(ctx, wf, message.NewText("Hello World"))
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer run.Close(ctx)
+
+    emitEvents := true
+    if err := run.SendMessage(ctx, workflow.TurnToken{EmitEvents: &emitEvents}); err != nil {
+        log.Fatal(err)
+    }
+
+    for evt, err := range run.WatchStream(ctx) {
+        if err != nil {
+            log.Fatal(err)
+        }
+        if out, ok := evt.(workflow.OutputEvent); ok {
+            if update, ok := out.Output.(*agent.ResponseUpdate); ok {
+                fmt.Printf("%s: %s\n", out.ExecutorID, update.String())
+            }
+        }
+    }
+}
+```
+
+> [!WARNING]
+> `azidentity.NewDefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential, such as `azidentity.NewManagedIdentityCredential`, to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
+
+> [!TIP]
+> See the [agents in workflows sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/03-workflows/01-start-here/02_agents_in_workflows/main.go) for a complete example.
+
+::: zone-end
 ## Next Steps
 
 > [!div class="nextstepaction"]

@@ -5,21 +5,21 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: article
 ms.author: taochen
-ms.date: 03/05/2026
+ms.date: 05/27/2026
 ms.service: agent-framework
 ---
 
 <!--
   Language parity table – keep in sync when adding/removing sections.
 
-  | Section                | C# | Python | Notes |
-  |------------------------|:--:|:------:|-------|
-  | Edge Types (overview)  | ✅ |   ✅   |       |
-  | Direct Edges           | ✅ |   ✅   |       |
-  | Fan-in Edges           | ✅ |   ✅   |       |
-  | Conditional Edges      | ✅ |   ✅   |       |
-  | Switch-Case Edges      | ✅ |   ✅   |       |
-  | Multi-Selection Edges  | ✅ |   ✅   |       |
+    | Section                | C# | Python | Go | Notes |
+    |------------------------|:--:|:------:|:--:|-------|
+    | Edge Types (overview)  | ✅ |   ✅   | ✅ |       |
+    | Direct Edges           | ✅ |   ✅   | ✅ |       |
+    | Fan-in Edges           | ✅ |   ✅   | ✅ |       |
+    | Conditional Edges      | ✅ |   ✅   | ✅ |       |
+    | Switch-Case Edges      | ✅ |   ✅   | ✅ |       |
+    | Multi-Selection Edges  | ✅ |   ✅   | ✅ |       |
 -->
 
 # Edges
@@ -61,6 +61,16 @@ workflow = builder.build()
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+```go
+wf, err := workflow.NewBuilder(sourceExecutor).
+    AddEdge(sourceExecutor, targetExecutor).
+    Build()
+```
+
+::: zone-end
+
 ### Fan-in Edges
 
 Collect messages from multiple sources into a single target:
@@ -77,6 +87,19 @@ builder.AddFanInBarrierEdge(sources: [ worker1, worker2, worker3 ], target: aggr
 
 ```python
 builder.add_fan_in_edges([worker1, worker2, worker3], aggregator_executor)
+```
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+```go
+workers := []workflow.ExecutorBinding{worker1, worker2, worker3}
+
+wf, err := workflow.NewBuilder(startExecutor).
+    AddFanOutEdge(startExecutor, workers).
+    AddFanInBarrierEdge(workers, aggregatorExecutor).
+    Build()
 ```
 
 ::: zone-end
@@ -700,6 +723,32 @@ if __name__ == "__main__":
 ### Complete Implementation
 
 For the complete working implementation, see the [edge_condition.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/control-flow/edge_condition.py) sample in the Agent Framework repository.
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+### Build the Workflow with Conditional Edges
+
+Use `AddDirectEdge` with a condition function to route messages based on runtime values:
+
+```go
+wf, err := workflow.NewBuilder(spamDetector).
+    AddDirectEdge(spamDetector, emailAssistant, false, func(msg any) bool {
+        result, ok := msg.(DetectionResult)
+        return ok && !result.IsSpam
+    }).
+    AddDirectEdge(spamDetector, spamHandler, false, func(msg any) bool {
+        result, ok := msg.(DetectionResult)
+        return ok && result.IsSpam
+    }).
+    WithOutputFrom(emailAssistant, spamHandler).
+    Build()
+```
+
+### Conditional Edge Sample Code
+
+For the complete working implementation, see the [edge condition sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/03-workflows/conditional-edges/01_edge_condition/main.go) in the Agent Framework Go repository.
 
 ::: zone-end
 
@@ -1361,6 +1410,37 @@ The switch-case pattern scales much better as the number of routing decisions gr
 ### Switch-Case Sample Code
 
 For the complete working implementation, see the [switch_case_edge_group.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/control-flow/switch_case_edge_group.py) sample in the Agent Framework repository.
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+### Build Workflow with Switch-Case Pattern
+
+Use `AddSwitch` to group ordered cases and an optional default target:
+
+```go
+builder := workflow.NewBuilder(spamDetector)
+builder.AddSwitch(spamDetector).
+    AddCase(func(msg any) bool {
+        result, ok := msg.(DetectionResult)
+        return ok && result.Decision == NotSpam
+    }, emailAssistant).
+    AddCase(func(msg any) bool {
+        result, ok := msg.(DetectionResult)
+        return ok && result.Decision == Spam
+    }, spamHandler).
+    WithDefault(manualReview).
+    AddToBuilder(builder).
+    AddEdge(emailAssistant, sendEmail).
+    WithOutputFrom(sendEmail, spamHandler, manualReview)
+
+wf, err := builder.Build()
+```
+
+### Switch-Case Sample Code
+
+For the complete working implementation, see the [switch case sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/03-workflows/conditional-edges/02_switch_case/main.go) in the Agent Framework Go repository.
 
 ::: zone-end
 
@@ -2237,6 +2317,54 @@ Run the workflow and observe parallel execution through custom events:
 ### Multi-Selection Sample Code
 
 For the complete working implementation, see the [multi_selection_edge_group.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/control-flow/multi_selection_edge_group.py) sample in the Agent Framework repository.
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+### Build Multi-Selection Workflow
+
+Use `AddFanOutEdge` with `workflow.WithEdgeAssigner` when one message should route to a subset of multiple targets:
+
+```go
+func routeAnalysis(_ int, msg any) iter.Seq[int] {
+    return func(yield func(int) bool) {
+        analysis, ok := msg.(AnalysisResult)
+        if !ok {
+            return
+        }
+
+        switch analysis.Decision {
+        case Spam:
+            yield(0) // spam handler
+        case NotSpam:
+            if !yield(1) { // email assistant
+                return
+            }
+            if analysis.EmailLength > longEmailThreshold {
+                yield(2) // summarizer
+            }
+        default:
+            yield(3) // uncertain handler
+        }
+    }
+}
+
+wf, err := workflow.NewBuilder(analyzeEmail).
+    AddFanOutEdge(
+        analyzeEmail,
+        []workflow.ExecutorBinding{spamHandler, emailAssistant, summarizer, uncertainHandler},
+        workflow.WithEdgeAssigner(routeAnalysis),
+    ).
+    AddEdge(emailAssistant, sendEmail).
+    AddEdge(summarizer, databaseAccess).
+    WithOutputFrom(spamHandler, sendEmail, uncertainHandler, databaseAccess).
+    Build()
+```
+
+### Multi-Selection Sample Code
+
+For the complete working implementation, see the [multi-selection sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/03-workflows/conditional-edges/03_multi_selection/main.go) in the Agent Framework Go repository.
 
 ::: zone-end
 

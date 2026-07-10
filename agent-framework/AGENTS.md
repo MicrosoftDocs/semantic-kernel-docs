@@ -33,7 +33,7 @@ agent-framework/
 │   ├── observability.md
 │   ├── rag.md
 │   ├── multimodal.md
-│   ├── background-responses.md  # C# only (zone pivot)
+│   ├── background-responses.md
 │   ├── tools/                 # 1 page per tool type
 │   │   ├── index.md           # Tools overview & landing
 │   │   └── ...
@@ -99,8 +99,10 @@ agent-framework/
 
 2. **Zone pivots for languages**: Every page that shows code uses
    `zone_pivot_groups: programming-languages` in its YAML frontmatter.
-   Code blocks are wrapped in `:::zone pivot="programming-language-csharp"`
-   and `:::zone pivot="programming-language-python"` sections.
+   Code blocks are wrapped in `:::zone pivot="programming-language-csharp"`,
+   `:::zone pivot="programming-language-python"`, and
+   `:::zone pivot="programming-language-go"` sections when the feature is
+   supported in those SDKs.
 
 3. **Code snippets as source of truth**: Prefer `:::code` directives that point
    to sample files in the code repo, so docs stay synced with runnable samples.
@@ -119,7 +121,7 @@ agent-framework/
 
 | Parameter | Description |
 |-----------|-------------|
-| `language` | `"python"` or `"csharp"` |
+| `language` | `"python"`, `"csharp"`, or `"go"` |
 | `source` | Snippet source path using docset-relative syntax (for example, `~/...` or `~/../<dependent-repo>/...`) |
 | `id` | Matches a snippet tag in the source file (`# <name>` / `# </name>` for Python, `// <name>` / `// </name>` for C#) |
 | `range` | Line range (e.g. `"2-24,26"`). **Cannot coexist with `id`** |
@@ -129,6 +131,7 @@ agent-framework/
 
 - Python samples: `~/../agent-framework-code/python/samples/<section>/<file>.py`
 - .NET samples: `~/../agent-framework-code/dotnet/samples/<section>/<project folder>/<file>.cs`
+- Go samples: `~/../agent-framework-go/examples/<section>/<file>.go`
 
 The dependent repository alias (`agent-framework-code`) is configured in
 `.openpublishing.publish.config.json` under `dependent_repositories`.
@@ -147,11 +150,18 @@ C# content here
 Python content here
 
 :::zone-end
+
+:::zone pivot="programming-language-go"
+
+Go content here
+
+:::zone-end
 ```
 
 Available pivots are defined in `zone-pivot-groups.yml`:
 - `programming-language-csharp`
 - `programming-language-python`
+- `programming-language-go`
 
 ## Frontmatter template
 
@@ -220,7 +230,7 @@ Every docs page maps to sample files in both repos:
 ## When adding a new docs page
 
 1. Create the `.md` file with proper frontmatter (see template above)
-2. Add zone pivots for both C# and Python
+2. Add zone pivots for C#, Python, and Go when the feature is supported in those SDKs
 3. Use `:::code` directives — never paste code inline
 4. Add the page to the root `TOC.yml` in the appropriate section
 5. Add a `## Next steps` section at the bottom with a `> [!div class="nextstepaction"]` link
@@ -234,11 +244,10 @@ You must update:
 2. The mapping table in the sample repo's `AGENTS.md`
 3. The mapping table in this file (above)
 
-## Python-only and C#-only pages
+## Language-specific pages
 
 Some concepts exist in only one language:
-- `agents/background-responses.md` — C# only (wrap in `:::zone pivot="programming-language-csharp"`)
 - `response_stream.py`, `typed_options.py` — Python only samples (under `02-agents/`)
 
-Use zone pivots to show language-specific content. Add a note in the other
+Use zone pivots to show language-specific content. Add a note in another
 language's zone if the feature is not yet supported.

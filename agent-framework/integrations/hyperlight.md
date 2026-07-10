@@ -5,24 +5,24 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: article
 ms.author: edvan
-ms.date: 05/05/2026
+ms.date: 05/27/2026
 ms.service: agent-framework
 ---
 <!--
   Language parity table - keep in sync when adding/removing sections.
 
-  | Section                         | C# | Python | Notes                             |
-  |---------------------------------|:--:|:------:|-----------------------------------|
-  | Why Hyperlight CodeAct          | ✅ |   ✅   | Shared integration overview       |
-  | Getting started                 | ✅ |   ✅   | Both languages documented         |
-  | Package installation            | ✅ |   ✅   | Both languages preview            |
-  | HyperlightCodeActProvider       | ✅ |   ✅   | Both languages documented         |
-  | Approvals and host tools        | ✅ |   ✅   | Both languages documented         |
-  | Manual execute_code wiring      | ✅ |   ✅   | C# uses HyperlightExecuteCodeFunction; Python uses HyperlightExecuteCodeTool |
-  | Filesystem and network settings | ✅ |   ✅   | Both languages documented         |
-  | Output guidance                 | ✅ |   ✅   | Both languages documented         |
-  | Benchmark framing               | ❌ |   ✅   | Python sample only today          |
-  | Current limitations             | ✅ |   ✅   | Both languages documented         |
+    | Section                         | C# | Python | Go | Notes                             |
+    |---------------------------------|:--:|:------:|:--:|-----------------------------------|
+    | Why Hyperlight CodeAct          | ✅ |   ✅   | ❌ | Shared integration overview       |
+    | Getting started                 | ✅ |   ✅   | ❌ | C#/Python documented              |
+    | Package installation            | ✅ |   ✅   | ❌ | C#/Python preview                 |
+    | HyperlightCodeActProvider       | ✅ |   ✅   | ❌ | No Go Hyperlight package          |
+    | Approvals and host tools        | ✅ |   ✅   | ❌ | C#/Python documented              |
+    | Manual execute_code wiring      | ✅ |   ✅   | ❌ | C# uses HyperlightExecuteCodeFunction; Python uses HyperlightExecuteCodeTool |
+    | Filesystem and network settings | ✅ |   ✅   | ❌ | C#/Python documented              |
+    | Output guidance                 | ✅ |   ✅   | ❌ | C#/Python documented              |
+    | Benchmark framing               | ❌ |   ✅   | ❌ | Python sample only today          |
+    | Current limitations             | ✅ |   ✅   | ❌ | C#/Python documented              |
 -->
 
 # Hyperlight CodeAct
@@ -400,6 +400,13 @@ This package is still alpha, and a few constraints are worth planning around:
 
 ::: zone-end
 
+
+::: zone pivot="programming-language-go"
+
+> [!NOTE]
+> Go support for this feature is coming soon. See the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go) for the latest status.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

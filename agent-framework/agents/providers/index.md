@@ -5,13 +5,13 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: reference
 ms.author: edvan
-ms.date: 03/25/2026
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
 # Providers Overview
 
-Microsoft Agent Framework supports several types of agents to accommodate different use cases and requirements. All agents are derived from a common base class (`AIAgent` in .NET, `BaseAgent` in Python), which provides a consistent interface for all agent types.
+Microsoft Agent Framework supports several types of agents to accommodate different use cases and requirements. Agents expose a consistent interface across languages (`AIAgent` in .NET, `BaseAgent` in Python, and `*agent.Agent` in Go).
 
 ## Provider Comparison
 
@@ -73,6 +73,34 @@ Agent Framework supports many different inference services through chat clients.
 
 :::zone-end
 
+:::zone pivot="programming-language-go"
+## Providers overview
+
+The Go Agent Framework supports multiple LLM providers. Each provider package creates a standard `*agent.Agent` with a provider-specific constructor.
+
+| Provider | Package | Import Path |
+|---|---|---|
+| Microsoft Foundry | `foundryprovider` | `github.com/microsoft/agent-framework-go/provider/foundryprovider` |
+| OpenAI Chat Completions | `openaiprovider` | `github.com/microsoft/agent-framework-go/provider/openaiprovider` |
+| OpenAI Responses | `openaiprovider` | `github.com/microsoft/agent-framework-go/provider/openaiprovider` |
+| Anthropic | `anthropicprovider` | `github.com/microsoft/agent-framework-go/provider/anthropicprovider` |
+| Google Gemini | `geminiprovider` | `github.com/microsoft/agent-framework-go/provider/geminiprovider` |
+| GitHub Copilot | `copilotprovider` | `github.com/microsoft/agent-framework-go/provider/copilotprovider` |
+| A2A | `a2aprovider` | `github.com/microsoft/agent-framework-go/provider/a2aprovider` |
+| AG-UI | `aguiprovider` | `github.com/microsoft/agent-framework-go/provider/aguiprovider` |
+
+Provider constructors are package-specific. For example, the Foundry provider creates a project-backed agent from a Foundry project endpoint, credential, and model deployment:
+
+```go
+a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Instructions: "You are a helpful assistant.",
+    Config: agent.Config{
+        Name: "MyAgent",
+    },
+})
+```
+
+:::zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

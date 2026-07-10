@@ -20,7 +20,7 @@ ms.service: agent-framework
 
 ::: zone pivot="programming-language-python"
 
-Agent Framework Python AG-UI endpoints are compatible with the AG-UI ecosystem's [MCP Apps](https://docs.ag-ui.com/concepts/mcp-apps) feature. MCP Apps allows frontend applications to embed MCP-powered tools and resources alongside your AG-UI agent — no changes needed on the Python side.
+Agent Framework Python AG-UI endpoints are compatible with the AG-UI ecosystem's [MCP Apps](https://docs.ag-ui.com/agentic-protocols) feature. MCP Apps allows frontend applications to embed MCP-powered tools and resources alongside your AG-UI agent — no changes needed on the Python side.
 
 ## Architecture
 
@@ -87,7 +87,7 @@ const middleware = new MCPAppsMiddleware({
 });
 ```
 
-For full setup instructions, see the [CopilotKit MCP Apps documentation](https://docs.copilotkit.ai/copilotkit-mcp/mcp-overview) and the [AG-UI MCP Apps documentation](https://docs.ag-ui.com/concepts/mcp-apps).
+For full setup instructions, see the [CopilotKit MCP Apps documentation](https://docs.copilotkit.ai/built-in-agent/generative-ui/mcp-apps) and the [AG-UI agentic protocols documentation](https://docs.ag-ui.com/agentic-protocols).
 
 ## What Is Not in Scope
 
@@ -106,8 +106,16 @@ If your application doesn't need the MCP Apps middleware layer, your Agent Frame
 
 ## Additional Resources
 
-- [AG-UI MCP Apps Documentation](https://docs.ag-ui.com/concepts/mcp-apps)
-- [CopilotKit MCP Apps Documentation](https://docs.copilotkit.ai/copilotkit-mcp/mcp-overview)
+- [AG-UI Agentic Protocols Documentation](https://docs.ag-ui.com/agentic-protocols)
+- [CopilotKit MCP Apps Documentation](https://docs.copilotkit.ai/built-in-agent/generative-ui/mcp-apps)
 - [Agent Framework GitHub Repository](https://github.com/microsoft/agent-framework)
+
+::: zone-end
+
+
+::: zone pivot="programming-language-go"
+
+> [!NOTE]
+> Go support for this feature is coming soon. See the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go) for the latest status.
 
 ::: zone-end

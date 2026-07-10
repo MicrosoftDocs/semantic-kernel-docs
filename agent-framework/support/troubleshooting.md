@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: article
 ms.author: edvan
-ms.date: 02/09/2026
+ms.date: 05/27/2026
 ms.service: agent-framework
 ---
 
@@ -34,6 +34,11 @@ Ensure you're using .NET 8.0 SDK or later. Run `dotnet --version` to check your 
 Ensure you're using Python 3.10 or later. Run `python --version` to check your installed version.
 :::zone-end
 
+:::zone pivot="programming-language-go"
+
+Ensure you're using Go 1.25 or later. Run `go version` to check your installed version. If dependencies fail to resolve, run `go mod tidy` and verify your module imports `github.com/microsoft/agent-framework-go` packages that exist in the current SDK.
+
+:::zone-end
 ## Getting Help
 
 If you can't find a solution here, visit our [GitHub Discussions](https://github.com/microsoft/agent-framework/discussions) for community support.

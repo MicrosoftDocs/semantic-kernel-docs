@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: article
 ms.author: edvan
-ms.date: 05/20/2026
+ms.date: 06/23/2026
 ms.service: agent-framework
 ---
 
@@ -413,6 +413,13 @@ FIDES is shipping as experimental on purpose, so the team can iterate on the erg
 4. **Quarantined LLM is single-turn.** `quarantined_llm` is intentionally tools-free and one-shot. Multi-turn quarantined sub-agents are doable but not in this release.
 
 If you hit a bug or have a feature request, open an issue on [the repository](https://github.com/microsoft/agent-framework/issues). For broader feedback on the security model — especially defaults, propagation, and approval ergonomics — join the conversation in [discussion #5624](https://github.com/microsoft/agent-framework/discussions/5624).
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+> [!NOTE]
+> FIDES is currently Python-only. For Go agents, follow the general guidance in [Agent Safety](./safety.md) and gate high-risk tools behind [Tool Approval](./tools/tool-approval.md).
 
 ::: zone-end
 

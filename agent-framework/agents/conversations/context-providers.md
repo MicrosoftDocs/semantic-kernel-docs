@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: article
 ms.author: edvan
-ms.date: 02/13/2026
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
@@ -63,6 +63,20 @@ await agent.run("Remember that I prefer vegetarian food.", session=session)
 ```
 
 `RawAgent` may auto-add `InMemoryHistoryProvider()` with the default source id `"in_memory"` in specific cases, but add it explicitly when you want deterministic local memory behavior.
+
+:::zone-end
+
+:::zone pivot="programming-language-go"
+
+Configure providers through `agent.Config.ContextProviders` when creating an agent. Context providers inject additional context before each agent run and can persist state after each run.
+
+```go
+a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Config: agent.Config{
+        ContextProviders: []agent.ContextProvider{provider},
+    },
+})
+```
 
 :::zone-end
 
@@ -386,6 +400,44 @@ class DatabaseHistoryProvider(HistoryProvider):
 > audit = InMemoryHistoryProvider("audit", load_messages=False, store_context_messages=True)
 > agent = OpenAIChatClient().as_agent(context_providers=[primary, audit])
 > ```
+
+:::zone-end
+
+:::zone pivot="programming-language-go"
+
+Define a custom context provider with a `Provide` callback:
+
+```go
+import (
+    "context"
+
+    "github.com/microsoft/agent-framework-go/agent"
+    "github.com/microsoft/agent-framework-go/message"
+)
+
+provider := agent.NewContextProvider(agent.ContextProviderConfig{
+    SourceID: "user_memory",
+    Provide: func(ctx context.Context, invoking agent.InvokingContext) ([]*message.Message, []agent.Option, error) {
+        return nil, []agent.Option{agent.WithInstructions("User prefers short answers.")}, nil
+    },
+})
+```
+
+Context providers can read and write session state:
+
+```go
+Provide: func(ctx context.Context, invoking agent.InvokingContext) ([]*message.Message, []agent.Option, error) {
+    session, _ := agent.GetOption(invoking.Options, agent.WithSession)
+    var state MyState
+    _, _ = session.Get("my_key", &state)
+    return nil, nil, nil
+},
+Store: func(ctx context.Context, invoked agent.InvokedContext) error {
+    session, _ := agent.GetOption(invoked.Options, agent.WithSession)
+    session.Set("my_key", updatedState)
+    return nil
+},
+```
 
 :::zone-end
 

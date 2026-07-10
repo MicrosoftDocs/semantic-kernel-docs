@@ -5,21 +5,21 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: article
 ms.author: taochen
-ms.date: 03/05/2026
+ms.date: 05/27/2026
 ms.service: agent-framework
 ---
 
 <!--
   Language parity table – keep in sync when adding/removing sections.
 
-  | Section              | C#  | Python | Notes                                          |
-  |----------------------|:---:|:------:|-------------------------------------------------|
-  | Built-in Event Types | ✅  |   ✅   | Python has extra status/failed; C# has separate |
-  |                      |     |        | AgentResponse classes vs Python "data" type     |
-  | Consuming Events     | ✅  |   ✅   |                                                 |
-  | Defining Custom      | ✅  |   ✅   |                                                 |
-  | Emitting Custom      | ✅  |   ✅   |                                                 |
-  | Consuming Custom     | ✅  |   ✅   |                                                 |
+    | Section              | C#  | Python | Go | Notes                                          |
+    |----------------------|:---:|:------:|:--:|-------------------------------------------------|
+    | Built-in Event Types | ✅  |   ✅   | ✅ | Python has extra status/failed; C# has separate |
+    |                      |     |        |    | AgentResponse classes vs Python "data" type     |
+    | Consuming Events     | ✅  |   ✅   | ✅ |                                                 |
+    | Defining Custom      | ✅  |   ✅   | ✅ |                                                 |
+    | Emitting Custom      | ✅  |   ✅   | ✅ |                                                 |
+    | Consuming Custom     | ✅  |   ✅   | ✅ |                                                 |
 -->
 
 # Events
@@ -192,6 +192,22 @@ event = WorkflowEvent(type="metrics", data={"latency_ms": 42, "tokens": 128})
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+Define a custom event by creating a type that implements the `workflow.Event` interface. The `Data` method returns the event payload.
+
+```go
+type ProgressEvent struct {
+    Step string
+}
+
+func (e ProgressEvent) Data() any {
+    return e.Step
+}
+```
+
+::: zone-end
+
 ### Emitting Custom Events
 
 ::: zone pivot="programming-language-csharp"
@@ -244,6 +260,24 @@ class CustomExecutor(Executor):
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+Emit custom events from an executor handler by calling `AddEvent` on the `workflow.Context`:
+
+```go
+customExecutor := workflow.NewExecutor("CustomExecutor", func(ctx *workflow.Context, message string) error {
+    if err := ctx.AddEvent(ProgressEvent{Step: "Validating input"}); err != nil {
+        return err
+    }
+
+    // Executor logic...
+
+    return ctx.AddEvent(ProgressEvent{Step: "Processing complete"})
+}).Bind()
+```
+
+::: zone-end
+
 ### Consuming Custom Events
 
 ::: zone pivot="programming-language-csharp"
@@ -283,6 +317,62 @@ async for event in workflow.run(input_message, stream=True):
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+Use a type switch or type assertion to filter for your custom event type in the event stream:
+
+```go
+for evt, err := range run.WatchStream(ctx) {
+    if err != nil {
+        return err
+    }
+
+    switch e := evt.(type) {
+    case ProgressEvent:
+        fmt.Printf("Progress: %v\n", e.Data())
+    case workflow.OutputEvent:
+        fmt.Printf("Done: %v\n", e.Output)
+        return nil
+    }
+}
+```
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+## Events
+
+Workflows emit events during execution. Events can be observed through the run object.
+
+### Observe events
+
+```go
+run, err := inproc.Default.Run(ctx, wf, input)
+for evt := range run.NewEvents() {
+    switch e := evt.(type) {
+    case workflow.ExecutorCompletedEvent:
+        fmt.Printf("Executor %s completed: %v\n", e.ExecutorID, e.Result)
+    case workflow.OutputEvent:
+        fmt.Printf("Output from %s: %v\n", e.ExecutorID, e.Output)
+    }
+}
+```
+
+### Streaming events
+
+For streaming workflows, use `inproc.Default.RunStreaming` and `WatchStream`:
+
+```go
+run, err := inproc.Default.RunStreaming(ctx, wf, input)
+for evt, err := range run.WatchStream(ctx) {
+    if err != nil {
+        panic(err)
+    }
+    // process streaming events
+}
+```
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

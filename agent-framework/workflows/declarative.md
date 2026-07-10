@@ -14,21 +14,21 @@ ms.service: agent-framework
 
   Sections (presence in each language zone):
 
-  | Section                        | C# | Python | Notes                                          |
-  |--------------------------------|:--:|:------:|------------------------------------------------|
-  | Basic YAML Structure           | ✅ |   ✅   |                                                |
-  | Prerequisites                  | ✅ |   ✅   |                                                |
-  | Your First Declarative Workflow| ✅ |   ✅   |                                                |
-  | Core Concepts                  | ✅ |   ✅   |                                                |
-  | Variable Namespaces            | ✅ |   ✅   | Python adds `Workflow.Inputs`                  |
-  | Expression Language            | ✅ |   ✅   |                                                |
-  | Configuration Options          | ✅ |   ✅   |                                                |
-  | Agent Provider / Registry      | ✅ |   ✅   |                                                |
-  | Workflow Execution             | ✅ |   ✅   |                                                |
-  | Resuming from Checkpoints      | ✅ |   ✅   |                                                |
-  | Actions Reference              | ✅ |   ✅   |                                                |
-  | Advanced Patterns              | ✅ |   ✅   |                                                |
-  | Next Steps                     | ✅ |   ✅   |                                                |
+  | Section                        | C# | Python | Go | Notes                                          |
+  |--------------------------------|:--:|:------:|:--:|------------------------------------------------|
+  | Basic YAML Structure           | ✅ |   ✅   | ❌ | No Go declarative workflow package             |
+  | Prerequisites                  | ✅ |   ✅   | ❌ |                                                |
+  | Your First Declarative Workflow| ✅ |   ✅   | ❌ |                                                |
+  | Core Concepts                  | ✅ |   ✅   | ❌ |                                                |
+  | Variable Namespaces            | ✅ |   ✅   | ❌ | Python adds `Workflow.Inputs`                  |
+  | Expression Language            | ✅ |   ✅   | ❌ |                                                |
+  | Configuration Options          | ✅ |   ✅   | ❌ |                                                |
+  | Agent Provider / Registry      | ✅ |   ✅   | ❌ |                                                |
+  | Workflow Execution             | ✅ |   ✅   | ❌ |                                                |
+  | Resuming from Checkpoints      | ✅ |   ✅   | ❌ |                                                |
+  | Actions Reference              | ✅ |   ✅   | ❌ |                                                |
+  | Advanced Patterns              | ✅ |   ✅   | ❌ |                                                |
+  | Next Steps                     | ✅ |   ✅   | ❌ |                                                |
 
   Action-kind parity (verified against source at C:\code\agent-framework):
     - C#: dotnet/src/Microsoft.Agents.AI.Workflows.Declarative/Interpreter/WorkflowActionVisitor.cs
@@ -99,7 +99,7 @@ The YAML structure differs slightly between C# and Python implementations. See t
 
 ## Action Types
 
-Declarative workflows support a wide range of action kinds covering variable management, control flow, agent and tool invocation, HTTP and MCP integration, human-in-the-loop, and conversation control. The complete language-specific reference appears in each zone below.
+Declarative workflows support a wide range of action kinds covering variable management, control flow, agent and tool invocation, HTTP and MCP integration, human-in-the-loop, and conversation control. The complete language-specific reference appears in each zone below; for an at-a-glance availability matrix across both languages, see [Actions Quick Reference](#actions-quick-reference) at the bottom of this article.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -3212,5 +3212,12 @@ actions:
 ::: zone pivot="programming-language-python"
 
 - [Python Declarative Workflow Samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/03-workflows/declarative) - Explore complete working examples
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+> [!NOTE]
+> Go support for this feature is coming soon. See the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go) for the latest status.
 
 ::: zone-end

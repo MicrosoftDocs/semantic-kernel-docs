@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: tutorial
 ms.author: edvan
-ms.date: 02/09/2026
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
@@ -61,6 +61,45 @@ Use `AgentSession` to maintain context across multiple calls:
 
 > [!TIP]
 > See the [full sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/01-get-started/03_multi_turn.py) for the complete runnable file.
+
+:::zone-end
+
+:::zone pivot="programming-language-go"
+
+Use `agent.Session` to maintain context across multiple calls:
+
+```go
+a := foundryprovider.NewAgent(
+    endpoint,
+    token,
+    foundryprovider.ModelDeployment(model),
+    foundryprovider.AgentConfig{
+        Instructions: "You are a friendly assistant. Keep your answers brief.",
+        Config: agent.Config{
+            Name: "ConversationAgent",
+        },
+    },
+)
+
+ctx := context.Background()
+
+// Create a session to maintain conversation history.
+session, err := a.CreateSession(ctx)
+if err != nil {
+    panic(err)
+}
+
+// First turn.
+resp, err := a.RunText(ctx, "My name is Alice and I love hiking.", agent.WithSession(session)).Collect()
+fmt.Println(resp, err)
+
+// Second turn — the agent remembers the user's name and hobby.
+resp, err = a.RunText(ctx, "What do you remember about me?", agent.WithSession(session)).Collect()
+fmt.Println(resp, err)
+```
+
+> [!TIP]
+> See the [full sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/01-get-started/03_multi_turn/main.go) for the complete runnable file.
 
 :::zone-end
 

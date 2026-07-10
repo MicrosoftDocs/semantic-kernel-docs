@@ -22,6 +22,9 @@ This tutorial walks you through building an AI agent from scratch, adding one co
 | [Step 6: Agent Harness](harness.md) | Create a harness agent that plans and tracks multi-step tasks |
 | [Step 7: Host Your Agent](hosting.md) | Expose the agent via hosting infrastructure |
 
+> [!IMPORTANT]
+> The Agent Framework for Go is in public preview. Declarative agents, RAG, CodeAct, and functional workflows are not yet available. File issues on GitHub (https://github.com/microsoft/agent-framework-go/issues).
+
 ## Next steps
 
 > [!div class="nextstepaction"]

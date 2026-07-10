@@ -805,3 +805,34 @@ Now that you understand the basics of AG-UI, you can:
 - [AG-UI Protocol Specification](https://docs.ag-ui.com/)
 
 ::: zone-end
+
+::: zone pivot="programming-language-go"
+
+Go supports AG-UI through `provider/aguiprovider` for both servers and clients.
+
+```go
+import "github.com/microsoft/agent-framework-go/provider/aguiprovider"
+
+mux := http.NewServeMux()
+mux.Handle("/", aguiprovider.NewJSONHTTPHandler(myAgent, aguiprovider.HandlerConfig{}))
+
+if err := http.ListenAndServe(":8888", mux); err != nil {
+    log.Fatal(err)
+}
+```
+
+Use `aguiprovider.NewAgent` when your Go app needs to call an AG-UI server as an agent:
+
+```go
+import aguiSSEClient "github.com/ag-ui-protocol/ag-ui/sdks/community/go/pkg/client/sse"
+
+a := aguiprovider.NewAgent(
+    aguiSSEClient.NewClient(aguiSSEClient.Config{Endpoint: serverURL}),
+    aguiprovider.AgentConfig{},
+)
+```
+
+> [!TIP]
+> See the [AG-UI getting started server](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/agui/step01_getting_started/server/main.go) and [client](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/agui/step01_getting_started/client/main.go) samples for complete runnable examples.
+
+::: zone-end
