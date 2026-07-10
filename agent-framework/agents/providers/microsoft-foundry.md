@@ -503,6 +503,24 @@ response = await agent.run("Hello!", session=session)
 > [!TIP]
 > See the [`using_deployed_agent.py` sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/04-hosting/foundry-hosted-agents/responses/using_deployed_agent.py) for a complete example, including resolving the latest version automatically.
 
+### Setting a custom HTTP timeout
+
+By default, `FoundryAgent` (and `RawFoundryAgent`) inherits the OpenAI SDK's built-in timeout (5 s connect / 600 s total). On multi-turn conversations or slow networks this can surface as a `ConnectTimeout`. Pass `timeout=` (in seconds) at construction time to override it:
+
+```python
+from agent_framework.foundry import FoundryAgent
+from azure.identity import AzureCliCredential
+
+agent = FoundryAgent(
+    project_endpoint="https://your-project.services.ai.azure.com",
+    agent_name="my-prompt-agent",
+    credential=AzureCliCredential(),
+    timeout=120.0,  # seconds; set to None to use the SDK default
+)
+```
+
+The value is applied via `with_options(timeout=...)` on a per-agent copy of the HTTP client, so it does not affect other agents or clients that share the same `AIProjectClient`.
+
 > [!WARNING]
 > The older Python `AzureAIClient`, `AzureAIProjectAgentProvider`, `AzureAIAgentClient`, `AzureAIAgentsProvider`, and Azure AI embedding compatibility surfaces were removed from the current `agent_framework.azure` namespace. For current Python code, use `FoundryChatClient` when your app owns instructions and tools, `FoundryAgent` when the agent definition lives in Foundry, and `FoundryEmbeddingClient` for Foundry models-endpoint embeddings.
 

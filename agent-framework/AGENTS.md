@@ -16,14 +16,15 @@ agent-framework/
 ├── overview/
 │   ├── index.md               # "What is Agent Framework" landing
 │   └── index.md
-├── get-started/               # 6-step progressive tutorial
+├── get-started/               # 7-step progressive tutorial
 │   ├── index.md               # Tutorial landing page
 │   ├── your-first-agent.md    # Step 1
 │   ├── add-tools.md           # Step 2
 │   ├── multi-turn.md          # Step 3
 │   ├── memory.md              # Step 4
 │   ├── workflows.md           # Step 5
-│   └── hosting.md             # Step 6
+│   ├── harness.md             # Step 6
+│   └── hosting.md             # Step 7
 ├── agents/                    # Deep-dive reference
 │   ├── index.md               # Agents overview & landing
 │   ├── running-agents.md
@@ -92,7 +93,7 @@ agent-framework/
 
 ## Design principles
 
-1. **Progressive then deep**: Get-started (01→06) is a linear tutorial that
+1. **Progressive then deep**: Get-started (01→07) is a linear tutorial that
    builds complexity step by step. Agents/workflows/integrations are reference
    docs organized by topic — users land here from "Go deeper" links.
 
@@ -196,6 +197,7 @@ Every docs page maps to sample files in both repos:
 | `get-started/multi-turn.md` | `01-get-started/03_multi_turn.py` | `01-get-started/03_MultiTurn.cs` |
 | `get-started/memory.md` | `01-get-started/04_memory.py` | `01-get-started/04_Memory.cs` |
 | `get-started/workflows.md` | `01-get-started/07_first_graph_workflow.py` | `01-get-started/05_FirstWorkflow.cs` |
+| `get-started/harness.md` | `02-agents/harness/` | `02-agents/Harness/` |
 | `get-started/hosting.md` | `04-hosting/azure_functions/01_single_agent/function_app.py` | `01-get-started/06_HostYourAgent.cs` |
 | `agents/tools/function-tools.md` | `02-agents/tools/function_tools.py` | `02-agents/tools/FunctionTools.cs` |
 | `agents/tools/web-search.md` | `02-agents/tools/web_search.py` | `02-agents/tools/WebSearch.cs` |

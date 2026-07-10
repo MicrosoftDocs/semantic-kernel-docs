@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: SergeyMenshykh
 ms.topic: article
 ms.author: semenshi
-ms.date: 07/02/2026
+ms.date: 07/08/2026
 ms.service: agent-framework
 ---
 
@@ -292,19 +292,20 @@ The provider searches up to two levels deep.
 
 ### Customizing resource and script discovery
 
-By default, resources are discovered from `references/` and `assets/` subdirectories, and scripts from `scripts/`, per the [agentskills.io specification](https://agentskills.io/specification). Recognized resource extensions are `.md`, `.json`, `.yaml`, `.yml`, `.csv`, `.xml`, and `.txt`. Use `resource_extensions`, `script_extensions`, `resource_filter`, and `script_filter` to customize discovery:
+By default, resources are discovered from `references/` and `assets/` subdirectories, and scripts from `scripts/`, per the [agentskills.io specification](https://agentskills.io/specification). Recognized resource extensions are `.md`, `.json`, `.yaml`, `.yml`, `.csv`, `.xml`, and `.txt`. It searches up to two levels deep within each skill directory. Use `resource_extensions`, `script_extensions`, `search_depth`, `resource_filter`, and `script_filter` to customize discovery:
 
 ```python
 skills_provider = SkillsProvider.from_paths(
     skill_paths=Path(__file__).parent / "skills",
     resource_extensions=(".md", ".txt"),
     script_extensions=(".py", ".sh"),
+    search_depth=3,  # Search up to 3 levels deep (default is 2)
     resource_filter=lambda skill_name, path: path.startswith("references/"),
     script_filter=lambda skill_name, path: path.startswith("scripts/"),
 )
 ```
 
-Use `"."` to include files at the skill root level in addition to subdirectories.
+The `resource_filter` and `script_filter` predicates receive the skill name and the file's relative path, letting you restrict files by location, naming convention, or any custom logic. Use `"."` to include files at the skill root level in addition to subdirectories.
 
 ### Script execution
 
@@ -774,6 +775,58 @@ var skillsProvider = new AgentSkillsProviderBuilder()
 
 :::zone-end
 
+:::zone pivot="programming-language-python"
+
+## MCP-based skills
+
+> [!NOTE]
+> MCP-based skills are experimental and may change in future releases. Using `MCPSkillsSource` emits a `FutureWarning` under the `MCP_SKILLS` feature flag.
+
+Skills can be discovered from MCP (Model Context Protocol) servers that expose skill resources under the `skill://` URI scheme. The MCP server advertises skills via a `skill://index.json` discovery document, and the framework fetches each skill's `SKILL.md` body on demand via `resources/read`.
+
+Wrap an MCP `ClientSession` in `MCPSkillsSource` and pass it to `SkillsProvider`:
+
+```python
+import os
+from agent_framework import Agent, MCPSkillsSource, SkillsProvider, ToolApprovalMiddleware
+from agent_framework.foundry import FoundryChatClient
+from azure.identity import AzureCliCredential
+from mcp.client.session import ClientSession
+from mcp.client.streamable_http import streamable_http_client
+
+mcp_url = os.environ["MCP_SKILLS_SERVER_URL"]
+
+# Connect to the MCP server over streamable HTTP
+async with streamable_http_client(url=mcp_url) as (read, write, _), ClientSession(read, write) as session:
+    await session.initialize()
+
+    # MCPSkillsSource reads skill://index.json and creates one skill per
+    # skill-md entry; SKILL.md bodies are fetched on demand.
+    skills_provider = SkillsProvider(MCPSkillsSource(client=session))
+
+    client = FoundryChatClient(
+        project_endpoint=os.environ["FOUNDRY_PROJECT_ENDPOINT"],
+        model=os.environ.get("FOUNDRY_MODEL", "gpt-4o-mini"),
+        credential=AzureCliCredential(),
+    )
+
+    async with Agent(
+        client=client,
+        instructions="You are a helpful assistant. Use available skills to answer the user.",
+        context_providers=[skills_provider],
+        middleware=[ToolApprovalMiddleware(auto_approval_rules=[SkillsProvider.all_tools_auto_approval_rule])],
+    ) as agent:
+        response = await agent.run("...")
+```
+
+> [!NOTE]
+> The Python `MCPSkillsSource` supports only `skill-md` index entries (index entries of any other type are silently skipped). Unlike the .NET implementation, it does **not** support archive-type skills. If `skill://index.json` is absent, unreadable, empty, or fails to parse, the source returns an empty list.
+
+> [!IMPORTANT]
+> An external MCP server controls what skill content - including instructions and scripts the agent may run - reaches the agent. Only connect `MCPSkillsSource` to servers you have vetted and trust, and treat their responses as untrusted input.
+
+:::zone-end
+
 :::zone pivot="programming-language-csharp"
 
 ## Skill sources
@@ -1016,23 +1069,187 @@ var skillsProvider = new AgentSkillsProvider(volumeConverterSkill, temperatureCo
 
 :::zone pivot="programming-language-python"
 
-## Source composition: advanced multi-source scenarios
+## Skill sources
 
-For simple scenarios with a single skill or a list of skills, pass them directly to the `SkillsProvider` constructor. For file-based skills, use the `SkillsProvider.from_paths()` factory. For advanced scenarios, compose source classes to control discovery, filtering, and deduplication:
+A `SkillsProvider` retrieves skills from one or more **sources** - objects that derive from `SkillsSource`. Sources fall into two categories: **leaf sources** that discover or hold skills (such as `FileSkillsSource` for file-based skills), and **decorators** that transform the output of another source (aggregation, deduplication, caching, and filtering). You can also create a [custom source](#custom-sources).
 
-- **`FileSkillsSource`** - discovers skills from `SKILL.md` files on disk.
-- **`InMemorySkillsSource`** - wraps any `Skill` instances (code-defined or class-based) in memory.
-- **`AggregatingSkillsSource`** - combines multiple sources into one.
-- **`FilteringSkillsSource`** - applies a predicate to include or exclude skills.
-- **`DeduplicatingSkillsSource`** - removes duplicate skill names (case-insensitive, first-wins).
+Every source implements a single method - `async def get_skills(self, context: SkillsSourceContext) -> list[Skill]`. The `SkillsSourceContext` carries information about the current request:
+
+- `agent` - the agent (`SupportsAgentRun`) requesting skills.
+- `session` - the `AgentSession` associated with the invocation, or `None` when there is no session.
+
+This context flows through the whole source pipeline, so a `FilteringSkillsSource` predicate or a custom source can base its logic on it - for example, returning a different set of skills depending on the requesting agent.
+
+### Leaf sources
+
+- **`FileSkillsSource`** - discovers skills from `SKILL.md` files on disk. Accepts one or more directory paths, an optional `script_runner`, and discovery options (`resource_extensions`, `script_extensions`, `search_depth`, `resource_filter`, `script_filter`) documented in [File-based skills](#file-based-skills).
+- **`InMemorySkillsSource`** - wraps `Skill` instances (code-defined or class-based) in memory.
+- **`MCPSkillsSource`** - discovers skills from an MCP server (see [MCP-based skills](#mcp-based-skills)).
+
+```python
+from pathlib import Path
+from agent_framework import FileSkillsSource, InMemorySkillsSource
+
+file_source = FileSkillsSource(Path(__file__).parent / "skills", script_runner=my_runner)
+in_memory_source = InMemorySkillsSource([volume_converter_skill, temperature_converter_skill])
+```
+
+### Combinator
+
+**`AggregatingSkillsSource`** combines multiple sources into one. Skills are returned in registration order with no deduplication or filtering applied.
+
+```python
+from agent_framework import AggregatingSkillsSource
+
+aggregated = AggregatingSkillsSource([file_source, in_memory_source])
+```
+
+### Decorators
+
+Decorators wrap an inner source and transform its output. They can be chained to build a pipeline.
+
+- **`DeduplicatingSkillsSource`** - removes duplicate skill names (case-insensitive, first occurrence wins). Duplicates are logged at warning level.
+- **`CachingSkillsSource`** - caches the skill list returned by the inner source. Concurrent callers for the same cache key share a single in-flight fetch, so the inner source is queried at most once per key. Accepts two optional keyword arguments:
+  - `refresh_interval` (`timedelta | None`) - when set, a cached list is treated as stale once it is older than the interval, so the next call re-queries the inner source. When `None` (the default), cached results never expire. Useful for inner sources whose skills change over the process lifetime, such as `MCPSkillsSource`.
+  - `cache_isolation_key_selector` (`Callable[[SkillsSourceContext], str | None]`) - derives a cache key from the context to isolate cached results (for example, per agent or tenant). Keys should be low-cardinality and stable. Returning `None` (or leaving it `None`) uses a single shared cache bucket.
+- **`FilteringSkillsSource`** - applies a predicate to include or exclude skills. The predicate receives the skill **and** a `SkillsSourceContext`: `Callable[[Skill, SkillsSourceContext], bool]`.
+
+```python
+from datetime import timedelta
+from agent_framework import (
+    CachingSkillsSource,
+    DeduplicatingSkillsSource,
+    FilteringSkillsSource,
+)
+
+deduplicated = DeduplicatingSkillsSource(aggregated)
+
+cached = CachingSkillsSource(
+    deduplicated,
+    refresh_interval=timedelta(minutes=5),
+    cache_isolation_key_selector=lambda context: context.agent.name,
+)
+
+filtered = FilteringSkillsSource(
+    cached,
+    predicate=lambda skill, context: skill.frontmatter.name != "experimental-skill",
+)
+```
+
+### Custom sources
+
+When the built-in sources do not cover your scenario, implement your own. Subclass `SkillsSource` for a leaf source (one that produces skills from a new origin such as a database or remote service), or subclass `DelegatingSkillsSource` for a decorator that transforms another source's output.
+
+#### Leaf source
+
+Derive from `SkillsSource` and implement `get_skills`. The `SkillsSourceContext` argument lets the source tailor its result to the current request - for example, returning a different set of skills depending on the requesting agent:
+
+```python
+from agent_framework import Skill, SkillsSource, SkillsSourceContext
+
+class TenantSkillsSource(SkillsSource):
+    def __init__(self, store: "SkillStore") -> None:
+        self._store = store
+
+    async def get_skills(self, context: SkillsSourceContext) -> list[Skill]:
+        # Use the requesting agent to decide which skills to load.
+        tenant_id = context.agent.name or "default"
+        return await self._store.get_skills_for_tenant(tenant_id)
+```
+
+#### Custom decorator
+
+Derive from `DelegatingSkillsSource`, call `self.inner_source.get_skills(context)`, and transform or observe the result. This is the same pattern the built-in caching, deduplication, and filtering decorators use. For example, a decorator that logs how many skills were returned per request without changing the result:
+
+```python
+import logging
+from agent_framework import DelegatingSkillsSource, Skill, SkillsSourceContext
+
+logger = logging.getLogger(__name__)
+
+class MetricsSkillsSource(DelegatingSkillsSource):
+    async def get_skills(self, context: SkillsSourceContext) -> list[Skill]:
+        skills = await self.inner_source.get_skills(context)
+        logger.info("Returned %d skills to agent %s.", len(skills), context.agent.name)
+        return skills
+```
+
+Both custom sources can be passed to `SkillsProvider` directly or nested inside a larger pipeline, just like the built-in sources.
+
+:::zone-end
+
+:::zone pivot="programming-language-python"
+
+## Provider construction
+
+`SkillsProvider` is the component that exposes skills to an agent. It wraps one or more sources and registers the `load_skill`, `read_skill_resource`, and `run_skill_script` tools. There are three ways to create one:
+
+1. **From skill instances** - pass a single `Skill` or a sequence of skills to the constructor. Best for code-defined and class-based skills. Automatically applies deduplication and caching.
+2. **From file paths** - use the `SkillsProvider.from_paths()` factory. Best for single-source file-based skills. Automatically applies deduplication and caching.
+3. **Direct source composition** - construct the source pipeline yourself using the public `SkillsSource` classes and pass it to the constructor. You control the full pipeline. Best when you need control over ordering, conditional logic, caching keys, or custom decorator behavior.
+
+### From skill instances
+
+```python
+from agent_framework import SkillsProvider
+
+# Single skill or a list of skills - deduplicated and cached automatically.
+skills_provider = SkillsProvider(volume_converter_skill)
+skills_provider = SkillsProvider([volume_converter_skill, temperature_converter_skill])
+```
+
+### From file paths
+
+```python
+from pathlib import Path
+from agent_framework import SkillsProvider
+
+skills_provider = SkillsProvider.from_paths(
+    skill_paths=Path(__file__).parent / "skills",
+    script_runner=my_runner,
+)
+```
+
+### Composing sources directly
+
+When you need full control, compose source classes yourself and pass the resulting pipeline to `SkillsProvider`. See [Skill sources](#skill-sources) for the full list of available sources and their options.
+
+The example below builds a multi-source pipeline with explicit control over each decorator. The example uses placeholder objects:
+
+- `volume_converter_skill` - any `InlineSkill` instance, built as shown in [Code-defined skills](#code-defined-skills).
+- `temperature_converter_skill` - any `ClassSkill` instance, built as shown in [Class-based skills](#class-based-skills).
+- `my_runner` - a `SkillScriptRunner` callable, defined as shown in [Script execution](#script-execution).
+
+```python
+from pathlib import Path
+from agent_framework import (
+    AggregatingSkillsSource,
+    CachingSkillsSource,
+    DeduplicatingSkillsSource,
+    FileSkillsSource,
+    InMemorySkillsSource,
+    SkillsProvider,
+)
+
+# 1. Create the leaf sources
+file_source = FileSkillsSource(Path(__file__).parent / "skills", script_runner=my_runner)
+in_memory_source = InMemorySkillsSource([volume_converter_skill, temperature_converter_skill])
+
+# 2. Aggregate them, then add deduplication and caching decorators
+aggregated = AggregatingSkillsSource([file_source, in_memory_source])
+deduplicated = DeduplicatingSkillsSource(aggregated)
+cached = CachingSkillsSource(deduplicated)
+
+# 3. Create the provider from the composed pipeline
+skills_provider = SkillsProvider(cached)
+```
+
+> [!IMPORTANT]
+> A caller-supplied `SkillsSource` is used **as-is**: it is *not* automatically deduplicated or wrapped in a `CachingSkillsSource`. Auto-caching a context-aware source in a single shared bucket could replay one agent's or tenant's skills for another. Compose `DeduplicatingSkillsSource` and `CachingSkillsSource` (optionally with a `cache_isolation_key_selector`) yourself when you need them. The automatic deduplication and caching applies only when you pass skills or file paths directly (options 1 and 2 above).
 
 ### Mixed skill types
 
-Combine file-based, code-defined, and class-based skills in one provider using `AggregatingSkillsSource`. The example below uses placeholder objects:
-
-- `volume_converter_skill` - any `InlineSkill` instance, built as shown in [Code-defined skills](#code-defined-skills).
-- `TemperatureConverterSkill` - any `ClassSkill` subclass, built as shown in [Class-based skills](#class-based-skills).
-- `my_runner` - a `SkillScriptRunner` callable, defined as shown in [Script execution](#script-execution).
+Combine file-based, code-defined, and class-based skills in one provider using `AggregatingSkillsSource`:
 
 ```python
 from pathlib import Path
@@ -1061,7 +1278,7 @@ skills_provider = SkillsProvider(
 
 ### Skill filtering
 
-Use `FilteringSkillsSource` to control which skills the agent sees. The predicate receives each `Skill` and returns `True` to include it. For example, to load skills from a shared directory but hide an experimental one:
+Use `FilteringSkillsSource` to control which skills the agent sees. The predicate receives each `Skill` and the `SkillsSourceContext`, and returns `True` to include the skill. For example, to load skills from a shared directory but hide an experimental one:
 
 ```python
 from pathlib import Path
@@ -1076,7 +1293,7 @@ skills_provider = SkillsProvider(
     DeduplicatingSkillsSource(
         FilteringSkillsSource(
             FileSkillsSource(Path(__file__).parent / "skills"),
-            predicate=lambda skill: skill.frontmatter.name != "experimental-tools",
+            predicate=lambda skill, context: skill.frontmatter.name != "experimental-tools",
         )
     )
 )
@@ -1117,6 +1334,19 @@ skills_provider = SkillsProvider.from_paths(
 ```
 
 `disable_caching` is also available on the `SkillsProvider` constructor for code-defined and class-based skills.
+
+To keep caching enabled but re-discover skills periodically (for example, when a file-based or MCP source changes over the process lifetime), pass `cache_refresh_interval`. The built-in cache is treated as stale once it is older than the interval, so the next run re-queries the source:
+
+```python
+from datetime import timedelta
+
+skills_provider = SkillsProvider.from_paths(
+    skill_paths=Path(__file__).parent / "skills",
+    cache_refresh_interval=timedelta(minutes=5),
+)
+```
+
+`cache_refresh_interval` affects only the cache the provider builds internally (from skills or file paths); it is ignored when `disable_caching=True` and has no effect on a caller-supplied `SkillsSource` (compose your own `CachingSkillsSource` with a `refresh_interval` for those).
 
 > [!NOTE]
 > Disabling caching is useful during development when skill content changes frequently. In production, leave caching enabled (the default) for better performance.
@@ -1274,11 +1504,11 @@ var skillsProvider = new AgentSkillsProvider(
 
 :::zone pivot="programming-language-python"
 
-Use `require_script_approval=True` on `SkillsProvider` to gate all script execution behind human approval. Instead of executing immediately, the agent pauses and returns approval requests via `result.user_input_requests`:
+All tools exposed by `SkillsProvider` (`load_skill`, `read_skill_resource`, and `run_skill_script`) require approval by default. When a tool call requires approval, the agent pauses and returns approval requests via `result.user_input_requests` instead of executing immediately. You approve or reject each request with `request.to_function_approval_response(approved=...)` and send the responses back:
 
 ```python
 from textwrap import dedent
-from agent_framework import Agent, InlineSkill, SkillFrontmatter, SkillsProvider
+from agent_framework import Agent, Content, InlineSkill, Message, SkillFrontmatter, SkillsProvider
 
 deployment_skill = InlineSkill(
     frontmatter=SkillFrontmatter(
@@ -1296,7 +1526,8 @@ def deploy(version: str, environment: str = "staging") -> str:
     """Deploy the application to the specified environment."""
     return f"Deployed version {version} to {environment}"
 
-skills_provider = SkillsProvider(deployment_skill, require_script_approval=True)
+# All skill tools require approval by default.
+skills_provider = SkillsProvider(deployment_skill)
 
 async with Agent(
     client=client,
@@ -1306,24 +1537,74 @@ async with Agent(
     # Use a session so the agent retains context across approval round-trips
     session = agent.create_session()
 
-    result = await agent.run(
-        "Deploy version 2.5.0 to production",
-        session=session,
-    )
+    result = await agent.run("Deploy version 2.5.0 to production", session=session)
 
-    # Handle approval requests
+    # Collect a response for every request and send them in one run so the
+    # loop always makes progress.
     while result.user_input_requests:
+        approval_responses: list[Content] = []
         for request in result.user_input_requests:
-            print(f"Script: {request.function_call.name}")
-            print(f"Args: {request.function_call.arguments}")
+            if request.function_call is None:
+                approval_responses.append(request.to_function_approval_response(approved=False))
+                continue
+            print(f"Approve {request.function_call.name}? Args: {request.function_call.arguments}")
+            # In a real application, prompt the user here.
+            approval_responses.append(request.to_function_approval_response(approved=True))
 
-            approval = request.to_function_approval_response(approved=True)
-            result = await agent.run(approval, session=session)
+        result = await agent.run(Message(role="user", contents=approval_responses), session=session)
 
     print(result)
 ```
 
-When a script is rejected (`approved=False`), the agent is informed that the user declined and can respond accordingly.
+When a tool call is rejected (`approved=False`), the agent is informed that the user declined and can respond accordingly.
+
+### Auto-approving trusted tools
+
+Rather than prompting for every call, install `ToolApprovalMiddleware` with one of the static auto-approval rules exposed by `SkillsProvider`. This lets the read-only tools run automatically while still prompting for script execution:
+
+```python
+from agent_framework import Agent, SkillsProvider, ToolApprovalMiddleware
+
+skills_provider = SkillsProvider(deployment_skill)
+
+# Auto-approve read-only skill tools (load_skill, read_skill_resource).
+# run_skill_script still requires explicit approval via result.user_input_requests.
+approval_middleware = ToolApprovalMiddleware(
+    auto_approval_rules=[SkillsProvider.read_only_tools_auto_approval_rule],
+)
+
+agent = Agent(
+    client=client,
+    instructions="You are a deployment assistant.",
+    context_providers=[skills_provider],
+    middleware=[approval_middleware],
+)
+```
+
+Two rules are available:
+
+- `SkillsProvider.read_only_tools_auto_approval_rule` - approves only the read-only tools (`load_skill`, `read_skill_resource`) while still prompting for `run_skill_script`.
+- `SkillsProvider.all_tools_auto_approval_rule` - approves every skill tool, including `run_skill_script` (no manual approval loop needed).
+
+Both rules reject any call carrying a `server_label`, so they stay scoped to this provider's local tools and never auto-approve a same-named hosted tool. The rules only apply to tools that still require approval - tools opted out via the `disable_*_approval` arguments below run without approval regardless.
+
+### Disabling approval for specific tools
+
+For trusted skills, pass `disable_load_skill_approval`, `disable_read_skill_resource_approval`, and/or `disable_run_skill_script_approval` to opt individual tools out of the approval flow entirely (they are registered with `approval_mode="never_require"`):
+
+```python
+skills_provider = SkillsProvider(
+    deployment_skill,
+    disable_load_skill_approval=True,
+    disable_read_skill_resource_approval=True,
+    # disable_run_skill_script_approval remains False - scripts still require approval
+)
+```
+
+These arguments are also available on `SkillsProvider.from_paths()`.
+
+> [!WARNING]
+> Only disable approval, or auto-approve script execution, for skills and scripts from sources you trust. Skill instructions are injected into the agent's context, and `run_skill_script` executes code supplied by the source.
 
 :::zone-end
 
@@ -1366,7 +1647,7 @@ skills_provider = SkillsProvider.from_paths(
 ```
 
 > [!NOTE]
-> The custom template must contain `{skills}` (skill list), `{resource_instructions}` (resource tool hint), and `{runner_instructions}` (script tool hint) placeholders. Literal braces must be escaped as `{{` and `}}`.
+> The custom template must contain the `{skills}` placeholder for the generated skills list. It may optionally contain `{resource_instructions}` (resource tool hint) and `{runner_instructions}` (script tool hint) placeholders; when present, they are filled with built-in guidance, and when omitted they are simply not rendered (the corresponding tools are still registered). Literal braces must be escaped as `{{` and `}}`.
 
 :::zone-end
 
@@ -1607,12 +1888,12 @@ Agent Skills and [Agent Framework Workflows](../workflows/index.md) both extend 
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [CodeAct](./code_act.md)
+> [Agent Harness](./harness.md)
 
 ### Related content
 
 - [Agent Skills specification](https://agentskills.io/)
-- [CodeAct](./code_act.md)
+- [Agent Harness](./harness.md)
 - [Context Providers](./conversations/context-providers.md)
 - [Running Agents](./running-agents.md)
 - [Tools Overview](./tools/index.md)

@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: tutorial
 ms.author: edvan
-ms.date: 02/09/2026
+ms.date: 07/08/2026
 ms.service: agent-framework
 ---
 
@@ -75,7 +75,7 @@ Build and run the workflow:
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Step 6: Host Your Agent](./hosting.md)
+> [Step 6: Agent Harness](./harness.md)
 
 **Go deeper:**
 

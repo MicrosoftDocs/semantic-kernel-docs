@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: article
 ms.author: westey
-ms.date: 06/26/2026
+ms.date: 07/08/2026
 ms.service: agent-framework
 ---
 
@@ -330,7 +330,7 @@ It's organized around observers, UI components, and slash commands, all extensib
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Agent Skills](skills.md)
+> [CodeAct](./code_act.md)
 
 ### Go deeper
 

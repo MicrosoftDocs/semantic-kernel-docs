@@ -1,15 +1,15 @@
 ---
-title: "Step 6: Host Your Agent"
+title: "Step 7: Host Your Agent"
 description: "Deploy your agent so users and other agents can interact with it."
 zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: tutorial
 ms.author: edvan
-ms.date: 02/09/2026
+ms.date: 07/08/2026
 ms.service: agent-framework
 ---
 
-# Step 6: Host Your Agent
+# Step 7: Host Your Agent
 
 Once you've built your agent, you need to host it so users and other agents can interact with it.
 

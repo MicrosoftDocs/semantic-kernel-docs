@@ -16,7 +16,9 @@ items:
     href: get-started/memory.md
   - name: "Step 5: Workflows"
     href: get-started/workflows.md
-  - name: "Step 6: Host Your Agent"
+  - name: "Step 6: Agent Harness"
+    href: get-started/harness.md
+  - name: "Step 7: Host Your Agent"
     href: get-started/hosting.md
 - name: Agents
   items:
