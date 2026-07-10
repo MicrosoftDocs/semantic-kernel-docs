@@ -325,7 +325,7 @@ response = await agent.run(
 print(response.text)
 ```
 
-Use `ctx.kwargs` inside the tool instead of declaring blanket `**kwargs` on the tool callable. Legacy `**kwargs` tools still work for compatibility, but will be removed before GA.
+Use `ctx.kwargs` inside the tool instead of declaring blanket `**kwargs` on the tool callable. Unexpected runtime keyword arguments are rejected; new tools should consume runtime data through `FunctionInvocationContext`.
 
 Any parameter annotated as `FunctionInvocationContext` is treated as the injected runtime context parameter, regardless of its name, and it is not exposed in the JSON schema shown to the model. If you provide an explicit schema/input model, a plain unannotated parameter named `ctx` is also recognized as the injected context parameter.
 

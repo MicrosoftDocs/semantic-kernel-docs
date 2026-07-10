@@ -48,7 +48,7 @@ These agents support a wide range of functionality out of the box:
 1. Function calling.
 1. Multi-turn conversations with local chat history management or service provided chat history management.
 1. Custom service provided tools (for example, MCP, Code Execution).
-1. Structured output.
+1. Structured outputs.
 
 To create one of these agents, simply construct a `ChatClientAgent` using the `IChatClient` implementation of your choice.
 
@@ -213,7 +213,7 @@ These agents support a wide range of functionality out of the box:
 1. Function calling
 1. Multi-turn conversations with local chat history management or service provided chat history management
 1. Custom service provided tools (for example, MCP, Code Execution)
-1. Structured output
+1. Structured outputs
 1. Streaming responses
 
 To create one of these agents, simply construct an `Agent` using the chat client implementation of your choice.

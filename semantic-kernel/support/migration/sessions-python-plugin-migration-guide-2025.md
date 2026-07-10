@@ -2,7 +2,7 @@
 title: Sessions Python Plugin Migration Guide - May 2025
 description: Outlines the changes introduced to the SessionsPythonPlugin and provides steps for migrating.
 author: SergeyMenshykh
-ms.topic: conceptual
+ms.topic: article
 ms.author: semenshi
 ms.date: 05/07/2025
 ms.service: semantic-kernel

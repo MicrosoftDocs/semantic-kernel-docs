@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: tutorial
 ms.author: evmattso
-ms.date: 03/12/2026
+ms.date: 05/08/2026
 ms.service: agent-framework
 ---
 
@@ -22,6 +22,7 @@ ms.service: agent-framework
   | Sample Interaction                             | ✅ |   ✅   |                 |
   | Key Concepts                                   | ✅ |   ✅   |                 |
   | Advanced: Custom Speaker Selection             | ✅ |   ✅   |                 |
+  | Intermediate Outputs                           | ❌ |   ✅   | Python-specific |
   | Context Synchronization                        | ✅ |   ✅   | Shared section  |
   | When to Use Group Chat                         | ✅ |   ✅   | Shared section  |
 -->
@@ -232,6 +233,7 @@ def round_robin_selector(state: GroupChatState) -> str:
 workflow = GroupChatBuilder(
     participants=[researcher, writer],
     termination_condition=lambda conversation: len(conversation) >= 4,
+    intermediate_output_from=[researcher, writer],
     selection_func=round_robin_selector,
 ).build()
 ```
@@ -263,12 +265,13 @@ workflow = GroupChatBuilder(
     # The agent orchestrator will intelligently decide when to end before this limit but just in case
     termination_condition=lambda messages: sum(1 for msg in messages if msg.role == "assistant") >= 4,
     orchestrator_agent=orchestrator_agent,
+    intermediate_output_from=[researcher, writer],
 ).build()
 ```
 
 ## Run the Group Chat Workflow
 
-Execute the workflow and process events:
+Execute the workflow and process streaming participant updates. The non-streaming terminal output is an `AgentResponse`; streaming terminal output is emitted as `AgentResponseUpdate` chunks.
 
 ```python
 from agent_framework import AgentResponseUpdate, Message
@@ -278,12 +281,11 @@ task = "What are the key benefits of async/await in Python?"
 print(f"Task: {task}\n")
 print("=" * 80)
 
-final_conversation: list[Message] = []
 last_author: str | None = None
-
 # Run the workflow with streaming enabled
-async for event in workflow.run(task, stream=True):
-    if event.type == "output" and isinstance(event.data, AgentResponseUpdate):
+stream = workflow.run(task, stream=True)
+async for event in stream:
+    if event.type in ("intermediate", "output") and isinstance(event.data, AgentResponseUpdate):
         # Print streaming agent updates
         author = event.data.author_name
         if author != last_author:
@@ -292,16 +294,11 @@ async for event in workflow.run(task, stream=True):
             print(f"[{author}]:", end=" ", flush=True)
             last_author = author
         print(event.data.text, end="", flush=True)
-    elif event.type == "output" and isinstance(event.data, list):
-        # Workflow completed - data is a list of Message
-        final_conversation = event.data
-
-if final_conversation:
+result = await stream.get_final_response()
+if outputs := result.get_outputs():
     print("\n\n" + "=" * 80)
-    print("Final Conversation:")
-    for msg in final_conversation:
-        print(f"\n[{msg.author_name}]\n{msg.text}")
-        print("-" * 80)
+    print("Final Response:")
+    print(outputs[-1])
 
 print("\nWorkflow completed.")
 ```
@@ -360,8 +357,9 @@ Workflow completed.
 - **GroupChatBuilder**: Creates workflows with configurable speaker selection
 - **GroupChatState**: Provides conversation state for selection decisions
 - **Iterative Collaboration**: Agents build upon each other's contributions
+- **AgentResponse Output**: The terminal output is an `AgentResponse` containing the orchestrator's completion message
 - **Event Streaming**: Process `AgentResponseUpdate` events in real-time via `workflow.run(task, stream=True)`
-- **list[Message] Output**: All orchestrations return a list of chat messages
+- **Intermediate Outputs**: Pass `intermediate_output_from=[participant, ...]` to surface each listed participant's output as `"intermediate"` events, in addition to the orchestrator's terminal `"output"` event
 
 ::: zone-end
 
@@ -441,6 +439,19 @@ workflow = GroupChatBuilder(
 
 > [!IMPORTANT]
 > When using a custom implementation of `BaseGroupChatOrchestrator` for advanced scenarios, all properties must be set, including `participant_registry`, `max_rounds`, and `termination_condition`. `max_rounds` and `termination_condition` set in the builder will be ignored.
+
+## Intermediate Outputs
+
+By default, only the orchestrator's final output surfaces as a workflow `"output"` (terminal) event. Pass `intermediate_output_from` with the participants you want to designate as intermediate sources to also surface their individual outputs as `"intermediate"` events:
+
+```python
+workflow = GroupChatBuilder(
+    participants=[researcher, writer],
+    termination_condition=lambda conversation: len(conversation) >= 4,
+    selection_func=round_robin_selector,
+    intermediate_output_from=[researcher, writer],
+).build()
+```
 
 ::: zone-end
 

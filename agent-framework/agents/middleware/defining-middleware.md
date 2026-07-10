@@ -741,3 +741,10 @@ if __name__ == "__main__":
 
 > [!div class="nextstepaction"]
 > [Chat-Level Middleware](chat-middleware.md)
+
+::: zone pivot="programming-language-python"
+
+> [!TIP]
+> Function middleware can also gate tool calls and work together with progressive tool exposure (`FunctionInvocationContext.add_tools` / `remove_tools`) to enforce tool ordering without a workflow. See [Controlling tool availability](../tools/controlling-tool-availability.md).
+
+::: zone-end

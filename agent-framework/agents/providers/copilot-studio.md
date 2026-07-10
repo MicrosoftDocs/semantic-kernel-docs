@@ -36,6 +36,10 @@ AIAgent agent = copilotClient.AsAIAgent(
 Console.WriteLine(await agent.RunAsync("What are our company policies on remote work?"));
 ```
 
+## Tools
+
+Copilot Studio agents run remotely: the agent definition (topics, knowledge sources, generative actions, plugins, MCP servers) is authored in the Copilot Studio portal. The Agent Framework Copilot Studio client invokes the published agent and surfaces its responses — it does **not** expose Agent Framework tool types (function tools, code interpreter, file search, hosted/local MCP, etc.) at the client. To extend the agent's capabilities, configure those capabilities on the Copilot Studio agent itself.
+
 :::zone-end
 
 :::zone pivot="programming-language-python"
@@ -76,6 +80,10 @@ async def main():
 
 asyncio.run(main())
 ```
+
+## Tools
+
+`CopilotStudioAgent` invokes a Copilot Studio agent that runs remotely. The agent's behavior — topics, knowledge sources, generative actions, plugins, MCP servers — is configured in the Copilot Studio portal, not in your Python code. The Agent Framework client does **not** expose Agent Framework tool types (function tools, code interpreter, file search, hosted/local MCP, etc.) at the client. To extend the agent's capabilities, configure those capabilities on the Copilot Studio agent itself.
 
 ## Streaming
 

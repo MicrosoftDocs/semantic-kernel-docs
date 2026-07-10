@@ -14,11 +14,490 @@ This document lists all significant changes in Python releases since the start o
 - 🔴 **Breaking** — Requires code changes to upgrade
 - 🟡 **Enhancement** — New capability or improvement; existing code continues to work
 
-This document tracks the significant Python changes across the 2026 preview-to-1.0.0 transition, so please refer to it when upgrading between versions to ensure you don't miss any important changes. For detailed upgrade instructions on specific topics (e.g., options migration), refer to the linked upgrade guides or the linked PR's.
+This document tracks significant Python changes across all 2026 releases, so please refer to it when upgrading between versions to ensure you don't miss any important changes. For detailed upgrade instructions on specific topics (e.g., options migration), refer to the linked upgrade guides or the linked PR's.
 
 ---
 
-## python-1.0.0
+## python-1.8.0 (June 4, 2026)
+
+**Release Notes:** [python-1.8.0](https://github.com/microsoft/agent-framework/releases/tag/python-1.8.0)
+
+### 🔴 `github-copilot-sdk` upgraded to v1.0.0 with breaking API changes
+
+**PR:** [#6292](https://github.com/microsoft/agent-framework/pull/6292)
+
+PR `#6292` upgrades `agent-framework-github-copilot` from `github-copilot-sdk` 1.0.0b2 to the stable **1.0.0** release, adapting to all breaking API changes introduced in the GA version.
+
+- **`SubprocessConfig` removed** — use `RuntimeConnection.for_stdio(path=...)` + keyword arguments on `CopilotClient` (`connection`, `log_level`, `base_directory`).
+- **Import paths moved** — `copilot.generated.session_events` → `copilot.session_events`.
+- **Settings renamed** — `copilot_home` → `base_directory`; the environment variable is now `GITHUB_COPILOT_BASE_DIRECTORY` (was `GITHUB_COPILOT_COPILOT_HOME`).
+- **Permission handlers** — use concrete decision types instead of `PermissionRequestResult(kind=...)`. The built-in `PermissionHandler.approve_all` replaces manual approve patterns.
+- **Default deny handler** — now returns `PermissionDecisionUserNotAvailable()` (matching SDK fallback behavior).
+- **Permission handler type** — now supports both sync and async callbacks (`Callable[..., PermissionRequestResult | Awaitable[PermissionRequestResult]]`).
+
+**Before:**
+```python
+from copilot import CopilotClient, SubprocessConfig
+from copilot.generated.session_events import PermissionRequest
+from copilot.session import PermissionRequestResult
+
+# Client construction
+client = CopilotClient(SubprocessConfig(cli_path="/path/to/cli", log_level="debug", copilot_home="/custom/home"))
+
+# Permission handler
+def approve_shell(request: PermissionRequest, context: dict[str, str]) -> PermissionRequestResult:
+    if request.kind == "shell":
+        return PermissionRequestResult(kind="approved")
+    return PermissionRequestResult(kind="denied-interactively-by-user")
+
+# Agent
+agent = GitHubCopilotAgent(default_options={"copilot_home": "/custom/home", "on_permission_request": approve_shell})
+```
+
+**After:**
+```python
+from copilot import CopilotClient, RuntimeConnection
+from copilot.generated.rpc import PermissionDecisionDeniedInteractivelyByUser, PermissionDecisionUserNotAvailable
+from copilot.session import PermissionHandler, PermissionRequestResult
+from copilot.session_events import PermissionRequest
+
+# Client construction
+client = CopilotClient(connection=RuntimeConnection.for_stdio(path="/path/to/cli"), log_level="debug", base_directory="/custom/home")
+
+# Permission handler — use concrete decision types or PermissionHandler.approve_all
+def approve_shell(request: PermissionRequest, context: dict[str, str]) -> PermissionRequestResult:
+    if request.kind == "shell":
+        return PermissionHandler.approve_all(request, context)
+    return PermissionDecisionUserNotAvailable()
+
+# Agent
+agent = GitHubCopilotAgent(default_options={"base_directory": "/custom/home", "on_permission_request": approve_shell})
+```
+
+---
+
+### 🟡 Progressive tool exposure via `FunctionInvocationContext`
+
+**PR:** [#6233](https://github.com/microsoft/agent-framework/pull/6233)
+
+Adds support for progressively exposing tools during a run using `FunctionInvocationContext`. Tools can now be dynamically added or removed based on prior tool results within the same agent run.
+
+For full documentation including patterns, caveats, and tool-ordering examples, see [Controlling tool availability](../../agents/tools/controlling-tool-availability.md).
+
+---
+
+### 🟡 MCP-based skills discovery (`McpSkillsSource`)
+
+**PR:** [#6169](https://github.com/microsoft/agent-framework/pull/6169)
+
+Adds `McpSkillsSource` to `agent-framework-core`, enabling skill discovery and loading via MCP servers.
+
+---
+
+### 🟡 Bedrock native structured output support via Converse API
+
+**PR:** [#6052](https://github.com/microsoft/agent-framework/pull/6052)
+
+`agent-framework-bedrock` now implements native structured output support through the AWS Bedrock Converse API, allowing `response_format` to work with Bedrock models.
+
+---
+
+### 🟡 Foundry Adaptive Evals integration (rubric-generation)
+
+**PR:** [#6101](https://github.com/microsoft/agent-framework/pull/6101)
+
+Adds Foundry Adaptive Evals integration to `agent-framework-foundry` for automated rubric generation in evaluation workflows.
+
+---
+
+### 🟡 Mistral AI embedding client package
+
+**PR:** [#5480](https://github.com/microsoft/agent-framework/pull/5480)
+
+New `agent-framework-mistral` package providing a Mistral AI embedding client.
+
+---
+
+### 🟡 `agent-framework-declarative` promoted to release candidate
+
+**PR:** [#6256](https://github.com/microsoft/agent-framework/pull/6256)
+
+The `agent-framework-declarative` package is promoted from beta to release candidate stage.
+
+---
+
+## python-1.7.0 (May 28, 2026)
+
+**Release Notes:** [python-1.7.0](https://github.com/microsoft/agent-framework/releases/tag/python-1.7.0)
+
+### 🔴 Declarative: Python-only actions removed and alias kinds renamed to C# canonical names
+
+**PR:** [#6126](https://github.com/microsoft/agent-framework/pull/6126)
+
+PR `#6126` removes Python-only declarative actions and renames alias kinds to match the C# canonical names for cross-language consistency.
+
+- Python-only declarative action types that had no C# equivalent are removed.
+- Action alias kinds are now aligned with C# naming conventions; update existing declarative YAML/JSON files accordingly.
+
+---
+
+### 🟡 `HarnessAgent` and background-agents harness provider
+
+**PRs:** [#6041](https://github.com/microsoft/agent-framework/pull/6041), [#6069](https://github.com/microsoft/agent-framework/pull/6069)
+
+Adds `HarnessAgent` to `agent-framework-core`, enabling harness-backed agent patterns for background processing.
+
+---
+
+### 🟡 `A2AAgentSession` with referenced task IDs and input-required support
+
+**PR:** [#5980](https://github.com/microsoft/agent-framework/pull/5980)
+
+Adds `A2AAgentSession` to `agent-framework-a2a` and `agent-framework-core`, supporting referenced task IDs and input-required flow for A2A protocol interactions.
+
+---
+
+### 🟡 Experimental prompt-agent conversion and deployment APIs
+
+**PR:** [#5959](https://github.com/microsoft/agent-framework/pull/5959)
+
+Adds experimental APIs to `agent-framework-foundry` for converting prompt definitions into agents and deploying them programmatically.
+
+---
+
+## python-1.6.0 (May 21, 2026)
+
+**Release Notes:** [python-1.6.0](https://github.com/microsoft/agent-framework/releases/tag/python-1.6.0)
+
+### 🔴 Instrumentation enabled by default
+
+**PR:** [#5865](https://github.com/microsoft/agent-framework/pull/5865)
+
+PR `#5865` enables OpenTelemetry instrumentation by default in `agent-framework-core` and `agent-framework-foundry`.
+
+- Agent runs now emit telemetry spans automatically without explicit opt-in.
+- If you previously disabled instrumentation or have custom telemetry pipelines, verify that the default behavior does not conflict.
+- To disable, pass `enable_instrumentation=False` where applicable.
+
+**Before:**
+```python
+from agent_framework import Agent
+from agent_framework.observability import configure_otel_providers
+
+# Had to explicitly enable instrumentation
+configure_otel_providers(enable_console_exporters=True)
+
+agent = Agent(client=client, enable_instrumentation=True)
+```
+
+**After:**
+```python
+from agent_framework import Agent
+
+# Instrumentation is now on by default — no opt-in needed
+agent = Agent(client=client)
+
+# To explicitly disable:
+agent = Agent(client=client, enable_instrumentation=False)
+```
+
+---
+
+### 🟡 Shell tool with local and Docker execution support
+
+**PR:** [#5664](https://github.com/microsoft/agent-framework/pull/5664)
+
+Adds a built-in shell tool to `agent-framework-core` that supports both local execution and Docker-based sandboxed execution.
+
+---
+
+### 🟡 New `agent-framework-monty` CodeAct provider package
+
+**PR:** [#5915](https://github.com/microsoft/agent-framework/pull/5915)
+
+Introduces the `agent-framework-monty` package for Monty-backed CodeAct integrations (alpha stage).
+
+---
+
+## python-1.4.0 (May 14, 2026)
+
+**Release Notes:** [python-1.4.0](https://github.com/microsoft/agent-framework/releases/tag/python-1.4.0)
+
+### 🔴 [Experimental Skills API] Align file skill folder discovery with agentskills.io spec
+
+**PR:** [#5807](https://github.com/microsoft/agent-framework/pull/5807)
+
+PR `#5807` updates the experimental skills API to align file-based skill folder discovery with the agentskills.io specification.
+
+- Skill folder resolution logic has changed; update custom skill directory layouts if using the experimental skills API.
+
+---
+
+### 🔴 [Experimental Skills API] Extract skill spec metadata into `SkillFrontmatter`
+
+**PR:** [#5775](https://github.com/microsoft/agent-framework/pull/5775)
+
+PR `#5775` moves skill specification metadata into a dedicated `SkillFrontmatter` dataclass.
+
+- If you directly access skill metadata fields, update references to use `SkillFrontmatter` attributes.
+
+---
+
+### 🔴 DevUI: Tighten default access controls and CORS posture
+
+**PR:** [#5740](https://github.com/microsoft/agent-framework/pull/5740)
+
+PR `#5740` tightens the default access control and CORS configuration for `agent-framework-devui`.
+
+- Default CORS origins are now more restrictive.
+- If your DevUI setup relies on cross-origin access from custom domains, explicitly configure allowed origins.
+
+---
+
+### 🔴 A2A: Migrate to a2a-sdk v1.0
+
+**PR:** [#5752](https://github.com/microsoft/agent-framework/pull/5752)
+
+PR `#5752` migrates `agent-framework-a2a` to `a2a-sdk` v1.0.
+
+- The A2A protocol types and transport APIs follow the a2a-sdk 1.0 conventions.
+- Update any code that directly interacts with A2A protocol types.
+
+---
+
+### 🟡 AG-UI: Tool result display channel and release candidate promotion
+
+**PRs:** [#5762](https://github.com/microsoft/agent-framework/pull/5762), [#5844](https://github.com/microsoft/agent-framework/pull/5844)
+
+Adds tool result display channel to `agent-framework-ag-ui` and promotes the package to release candidate stage.
+
+---
+
+## python-1.3.0 (May 7, 2026)
+
+**Release Notes:** [python-1.3.0](https://github.com/microsoft/agent-framework/releases/tag/python-1.3.0)
+
+### 🔴 [Experimental Skills API] Restructure agent skills to multi-source architecture
+
+**PR:** [#5584](https://github.com/microsoft/agent-framework/pull/5584)
+
+PR `#5584` restructures the experimental skills API to support multi-source skill loading.
+
+- Skill registration and discovery logic changed for the experimental skills feature.
+- If using the experimental skills API, review the new multi-source loading conventions.
+
+---
+
+### 🟡 `ClassSkill` for class-based skill definitions
+
+**PR:** [#5678](https://github.com/microsoft/agent-framework/pull/5678)
+
+Adds `ClassSkill` to `agent-framework-core` for class-based skill definitions with declarative metadata and automatic method discovery.
+
+---
+
+### 🟡 Information-flow control prompt injection defense
+
+**PR:** [#5331](https://github.com/microsoft/agent-framework/pull/5331)
+
+Adds an information-flow control mechanism to `agent-framework-core` that helps defend against prompt injection attacks.
+
+---
+
+### 🟡 `github-copilot-sdk` upgraded to v1.0.0b2
+
+**PR:** [#5665](https://github.com/microsoft/agent-framework/pull/5665)
+
+Upgrades `agent-framework-github-copilot` to `github-copilot-sdk>=1.0.0b2`, adding `instruction_directories`, `copilot_home` configuration, and runtime options forwarding on session resume.
+
+---
+
+### 🟡 Enforce `approval_mode` in Claude and GitHub Copilot agents
+
+**PR:** [#5562](https://github.com/microsoft/agent-framework/pull/5562)
+
+`agent-framework-claude` and `agent-framework-github-copilot` now enforce the `approval_mode` decorator on function tools, consistent with other agent implementations.
+
+---
+
+### 🟡 OpenAI and Gemini `allowed_tools` tool choice support
+
+**PR:** [#5322](https://github.com/microsoft/agent-framework/pull/5322)
+
+Adds support for `allowed_tools` tool choice in `agent-framework-openai`, allowing you to constrain which tools the model may call.
+
+---
+
+## python-1.2.2 (April 29, 2026)
+
+**Release Notes:** [python-1.2.2](https://github.com/microsoft/agent-framework/releases/tag/python-1.2.2)
+
+### 🔴 Orchestration terminal outputs standardized as `AgentResponse`
+
+**PR:** [#5301](https://github.com/microsoft/agent-framework/pull/5301)
+
+PR `#5301` standardizes orchestration terminal outputs as `AgentResponse` so `Workflow.as_agent()` returns the final answer only.
+
+- Sequential-approval (`with_request_info`) and concurrent (`intermediate_outputs=True`) flows now follow the same output contract.
+- If you consume orchestration results directly, expect `AgentResponse` objects instead of raw text or mixed types.
+
+**Before:**
+```python
+# Orchestration returned mixed types (raw strings, dicts, etc.)
+result = await workflow.as_agent().run("Draft a report")
+text = str(result)  # had to handle various types
+```
+
+**After:**
+```python
+# Orchestration now always returns AgentResponse
+result = await workflow.as_agent().run("Draft a report")
+text = result.text  # consistent AgentResponse API
+```
+
+---
+
+### 🟡 Azure AI Content Understanding context provider
+
+**PR:** [#4829](https://github.com/microsoft/agent-framework/pull/4829)
+
+New alpha package `agent-framework-azure-contentunderstanding` — auto-analyzes file attachments (documents, images, audio, video) and injects structured results into the LLM context.
+
+---
+
+### 🟡 Hosted Durable Workflow support via foundry hosting
+
+**PR:** [#5531](https://github.com/microsoft/agent-framework/pull/5531)
+
+Adds hosted Durable Workflow support to `agent-framework-foundry-hosting`, propagating full conversation history to workflow agents.
+
+---
+
+## python-1.1.0 (April 21, 2026)
+
+**Release Notes:** [python-1.1.0](https://github.com/microsoft/agent-framework/releases/tag/python-1.1.0)
+
+### 🔴 `CosmosCheckpointStorage` restricted pickle deserialization by default
+
+**PR:** [#5200](https://github.com/microsoft/agent-framework/issues/5200)
+
+`CosmosCheckpointStorage` now uses restricted pickle deserialization by default, matching `FileCheckpointStorage` behavior.
+
+- If your checkpoints contain application-defined types, pass them via `allowed_checkpoint_types=["my_app.models:MyState"]`.
+- Without this, deserialization of custom types will raise `WorkflowCheckpointException`.
+
+**Before:**
+```python
+from agent_framework.azure.cosmos import CosmosCheckpointStorage
+
+storage = CosmosCheckpointStorage(endpoint=endpoint, database="mydb", container="checkpoints")
+```
+
+**After:**
+```python
+from agent_framework.azure.cosmos import CosmosCheckpointStorage
+
+storage = CosmosCheckpointStorage(
+    endpoint=endpoint,
+    database="mydb",
+    container="checkpoints",
+    allowed_checkpoint_types=["my_app.models:MyState"],
+)
+```
+
+---
+
+### 🟡 `GeminiChatClient` added
+
+**PR:** [#4847](https://github.com/microsoft/agent-framework/pull/4847)
+
+New `agent-framework-gemini` package with `GeminiChatClient` for Google Gemini API and Vertex AI support.
+
+---
+
+### 🟡 Hyperlight CodeAct package
+
+**PR:** [#5185](https://github.com/microsoft/agent-framework/pull/5185)
+
+New `agent-framework-hyperlight` package for Hyperlight-based CodeAct sandboxed code execution.
+
+---
+
+### 🟡 Foundry Toolboxes support
+
+**PR:** [#5346](https://github.com/microsoft/agent-framework/pull/5346)
+
+Adds support for Foundry Toolboxes in `agent-framework-foundry`, enabling managed tool configurations from Azure AI Foundry.
+
+---
+
+### 🟡 `finish_reason` on `AgentResponse` and `AgentResponseUpdate`
+
+**PR:** [#5211](https://github.com/microsoft/agent-framework/pull/5211)
+
+Adds `finish_reason` field to `AgentResponse` and `AgentResponseUpdate`, allowing consumers to check why the model stopped generating.
+
+---
+
+### 🟡 Hosted agent V2 support in Foundry
+
+**PR:** [#5379](https://github.com/microsoft/agent-framework/pull/5379)
+
+Adds hosted agent V2 support in `agent-framework-foundry` for the latest Foundry agent service capabilities.
+
+---
+
+## python-1.0.1 (April 9, 2026)
+
+**Release Notes:** [python-1.0.1](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.1)
+
+### 🔴 `FileCheckpointStorage` restricted pickle deserialization (security hardening)
+
+**PR:** [#4941](https://github.com/microsoft/agent-framework/pull/4941)
+
+Checkpoint deserialization now flows through a restricted unpickler by default, which only permits a built-in set of safe Python types and all `agent_framework` framework types.
+
+- If your application stores custom types in checkpoints, pass their `"module:qualname"` identifiers via the new `allowed_checkpoint_types` constructor parameter — otherwise loads will raise `WorkflowCheckpointException`.
+- See [Security Considerations](../../workflows/checkpoints.md?pivots=programming-language-python#security-considerations) for details.
+
+**Before:**
+```python
+from agent_framework.workflows import FileCheckpointStorage
+
+storage = FileCheckpointStorage(directory="./checkpoints")
+```
+
+**After:**
+```python
+from agent_framework import FileCheckpointStorage
+
+storage = FileCheckpointStorage(
+    directory="./checkpoints",
+    allowed_checkpoint_types=["my_app.models:MyState", "my_app.models:TaskResult"],
+)
+```
+
+---
+
+### 🔴 Handoff workflow context management fix
+
+**PR:** [#5136](https://github.com/microsoft/agent-framework/pull/5136)
+
+PR `#5136` fixes handoff workflow context management. This is a behavioral change — handoff agents now correctly maintain isolated context across transitions.
+
+---
+
+### 🟡 Cosmos DB NoSQL checkpoint storage for workflows
+
+**PR:** [#4916](https://github.com/microsoft/agent-framework/pull/4916)
+
+New `agent-framework-azure-cosmos` package providing Cosmos DB NoSQL-backed checkpoint storage for Python workflows.
+
+---
+
+## python-1.0.0 (April 2, 2026)
+
+**Release Notes:** [python-1.0.0](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0)
 
 This section captures the significant Python changes that landed after `python-1.0.0rc6` and are now part of `python-1.0.0`.
 
@@ -629,7 +1108,7 @@ def handle_tool(invocation: dict[str, Any]) -> dict[str, Any]:
 
 **After:**
 ```python
-from copilot.types import ToolInvocation, ToolResult
+from copilot.tools import ToolInvocation, ToolResult
 
 
 def handle_tool(invocation: ToolInvocation) -> ToolResult:
@@ -893,7 +1372,8 @@ model_id = settings.model_id
 
 **After:**
 ```python
-from agent_framework.openai import OpenAISettings, load_settings
+from agent_framework import load_settings
+from agent_framework.openai import OpenAISettings
 
 settings = load_settings(OpenAISettings, env_prefix="OPENAI_")
 api_key = settings["api_key"]
@@ -926,7 +1406,7 @@ Fixes multiple failures when using reasoning models (e.g., gpt-5-mini, gpt-5.2) 
 Amazon Bedrock is now included in the `agent-framework-core[all]` extras and is available via the `agent_framework.amazon` lazy import surface. Tool-choice behavior was also fixed: unset tool-choice values now remain unset so providers use their service defaults, while explicitly set values are preserved.
 
 ```python
-from agent_framework.amazon import BedrockClient
+from agent_framework.amazon import BedrockChatClient
 ```
 
 ---
@@ -968,7 +1448,7 @@ When OpenTelemetry is installed, trace context (e.g., W3C `traceparent`) is auto
 The `agent-framework-azurefunctions` package now supports running `Workflow` graphs on Azure Durable Functions. Pass a `workflow` parameter to `AgentFunctionApp` to automatically register agent entities, activity functions, and HTTP endpoints.
 
 ```python
-from agent_framework.azurefunctions import AgentFunctionApp
+from agent_framework.azure import AgentFunctionApp
 
 app = AgentFunctionApp(workflow=my_workflow)
 # Automatically registers:
@@ -1008,9 +1488,9 @@ tools = [HostedCodeInterpreterTool(), HostedWebSearchTool()]
 
 **After:**
 ```python
-from agent_framework.openai import OpenAIResponsesClient
+from agent_framework.openai import OpenAIChatClient
 
-client = OpenAIResponsesClient()
+client = OpenAIChatClient()
 tools = [client.get_code_interpreter_tool(), client.get_web_search_tool()]
 ```
 
@@ -1026,6 +1506,7 @@ The Python session and context-provider migration was completed. `AgentThread` a
 - `agent.get_new_thread()` → `agent.create_session()`
 - `agent.get_new_thread(service_thread_id=...)` → `agent.get_session(service_session_id=...)`
 - `context_provider=` / `chat_message_store_factory=` patterns are replaced by `context_providers=[...]`
+- `ChatMessageStore` was **removed**. Use `HistoryProvider` (or `InMemoryHistoryProvider` for the default in-memory case), both exported from `agent_framework`. If no context provider is passed, the agent auto-injects `InMemoryHistoryProvider`.
 
 **Before:**
 ```python
@@ -1218,7 +1699,7 @@ message = Message(role="user", contents=[Content.from_text("Hello")])
 ```
 
 > [!NOTE]
-> `ChatClient`, `ChatResponse`, `ChatOptions`, and `ChatMessageStore` are **not** renamed by this change.
+> `ChatClient`, `ChatResponse`, and `ChatOptions` are **not** renamed by this change.
 
 ---
 
@@ -1547,7 +2028,7 @@ from agent_framework import WorkflowEvent
 
 **Before:**
 ```python
-async for event in workflow.run_stream(input_message):
+async for event in workflow.run(input_message, stream=True):
     if isinstance(event, WorkflowOutputEvent):
         print(f"Output from {event.executor_id}: {event.data}")
     elif isinstance(event, RequestInfoEvent):
@@ -1558,7 +2039,7 @@ async for event in workflow.run_stream(input_message):
 
 **After:**
 ```python
-async for event in workflow.run_stream(input_message):
+async for event in workflow.run(input_message, stream=True):
     if event.type == "output":
         print(f"Output from {event.executor_id}: {event.data}")
     elif event.type == "request_info":
@@ -1584,7 +2065,7 @@ async for event in workflow.run_stream("Write a blog post about AI agents."):
 ```python
 from agent_framework import AgentResponseUpdate
 
-async for event in workflow.run_stream("Write a blog post about AI agents."):
+async for event in workflow.run("Write a blog post about AI agents.", stream=True):
     if event.type == "output" and isinstance(event.data, AgentResponseUpdate):
         print(event.data, end="", flush=True)
     elif event.type == "output":
@@ -1633,6 +2114,7 @@ async for event in workflow.send_responses_streaming(
 async for event in workflow.run(
     checkpoint_id=checkpoint_id,
     responses=[approved_response],
+    stream=True,
 ):
     ...
 ```
@@ -1787,7 +2269,7 @@ func = AIFunction(get_weather)
 
 **After:**
 ```python
-from agent_framework.core import tool, FunctionTool
+from agent_framework import FunctionTool, tool
 
 @tool
 def get_weather(city: str) -> str:
@@ -1819,7 +2301,7 @@ builder.participant_factories(factory1, factory2)
 
 **After:**
 ```python
-from agent_framework.workflows import MagenticBuilder
+from agent_framework.orchestrations import MagenticBuilder
 
 builder = MagenticBuilder()
 builder.with_manager(manager)
@@ -1911,7 +2393,7 @@ elif isinstance(content, FunctionCallContent):
 
 **After:**
 ```python
-from agent_framework.core import Content
+from agent_framework import Content
 
 if content.type == "text":
     print(content.text)
@@ -1932,7 +2414,7 @@ uri = UriContent(uri="https://example.com/image.png", media_type="image/png")
 
 **After:**
 ```python
-from agent_framework.core import Content
+from agent_framework import Content
 
 text = Content.from_text("Hello world")
 data = Content.from_data(data=b"binary", media_type="application/octet-stream")
@@ -2034,14 +2516,11 @@ result = await endpoint.run(
 
 **After:**
 ```python
-from agent_framework.ag_ui import AGUIEndpoint
+from agent_framework.ag_ui import AgentFrameworkAgent
 
-endpoint = AGUIEndpoint(agent=agent)
-result = await endpoint.run(
-    request=request,
-    streaming=True,
-    timeout=30
-)
+agui_agent = AgentFrameworkAgent(agent=agent)
+async for event in agui_agent.run(request):
+    ...
 ```
 
 ---
@@ -2082,9 +2561,9 @@ agent = client.create_agent()
 
 **After:**
 ```python
-from agent_framework.core import ChatClient
+from agent_framework.openai import OpenAIChatClient
 
-client = ChatClient(...)
+client = OpenAIChatClient(...)
 agent = client.as_agent()
 ```
 
@@ -2105,8 +2584,8 @@ async for event in workflow.run_stream(...):
 
 **After:**
 ```python
-async for event in workflow.run_stream(...):
-    if isinstance(event, WorkflowOutputEvent):
+async for event in workflow.run(..., stream=True):
+    if event.type == "output":
         executor = event.executor_id
 ```
 
@@ -2153,10 +2632,9 @@ handoff = HandoffOrchestrator(
 
 **After:**
 ```python
-from agent_framework.workflows import (
+from agent_framework.orchestrations import (
     GroupChatOrchestrator,
     HandoffAgentExecutor,
-    AgentApprovalExecutor
 )
 
 # Group chat with star topology
@@ -2209,7 +2687,7 @@ response = await client.get_response(
 **PR:** [#3139](https://github.com/microsoft/agent-framework/pull/3139)
 
 - `display_name` parameter removed from agents
-- `context_providers` (plural, accepting list) changed to `context_provider` (singular, only 1 allowed)
+- `context_providers` remains the current plural sequence parameter for providers
 - `middleware` now requires a list (no longer accepts single instance)
 - `AggregateContextProvider` removed from code (use sample implementation if needed)
 
@@ -2229,16 +2707,16 @@ aggregate = AggregateContextProvider([provider1, provider2])
 
 **After:**
 ```python
-from agent_framework.core import Agent
+from agent_framework import Agent
 
-# Only one context provider allowed; combine manually if needed
 agent = Agent(
     name="my-agent",  # display_name removed
-    context_provider=provider1,  # singular, only 1
+    client=client,
+    context_providers=[provider1, provider2],
     middleware=[my_middleware],  # must be a list now
 )
 
-# For multiple context providers, create your own aggregate
+# For reusable provider composition, create your own aggregate
 class MyAggregateProvider:
     def __init__(self, providers):
         self.providers = providers
@@ -2309,12 +2787,43 @@ No significant changes in this release.
 
 | Release | Release Notes | Type | Change | PR |
 |---------|---------------|------|--------|-----|
-| 1.0.0 | PR only | 🔴 Breaking | `Message(..., text=...)` construction is fully removed; create text messages with `contents=[...]` instead | [#5062](https://github.com/microsoft/agent-framework/pull/5062) |
-| 1.0.0 | PR only | 🟡 Enhancement | Released Python packages (`agent-framework`, `agent-framework-core`, `agent-framework-openai`, `agent-framework-foundry`) no longer require `--pre`; beta connectors still do | [#5062](https://github.com/microsoft/agent-framework/pull/5062) |
-| 1.0.0 | PR only | 🔴 Breaking | Python embeddings moved to `agent_framework.foundry`; use `agent-framework-foundry`, `FoundryEmbeddingClient`, and `FOUNDRY_MODELS_*` settings instead of the removed `agent-framework-azure-ai` package | [#5056](https://github.com/microsoft/agent-framework/pull/5056) |
-| 1.0.0 | PR only | 🔴 Breaking | `workflow.run()` now uses explicit `function_invocation_kwargs` / `client_kwargs`, with global vs per-executor targeting determined by executor IDs | [#5010](https://github.com/microsoft/agent-framework/pull/5010) |
-| 1.0.0 | PR only | 🟡 Enhancement | `GitHubCopilotAgent` now invokes context-provider `before_run` / `after_run` hooks and includes provider-added prompt context | [#5013](https://github.com/microsoft/agent-framework/pull/5013) |
-| 1.0.0 | PR only | 🟡 Enhancement | Python structured output now accepts JSON schema mappings as `response_format`, with parsed JSON surfaced on `response.value` | [#5022](https://github.com/microsoft/agent-framework/pull/5022) |
+| 1.8.0 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.8.0) | 🔴 Breaking | `github-copilot-sdk` upgraded to v1.0.0: `SubprocessConfig` removed (use `RuntimeConnection` + kwargs), import paths moved to `copilot.session_events`, `copilot_home` → `base_directory`, permission handlers use concrete decision types | [#6292](https://github.com/microsoft/agent-framework/pull/6292) |
+| 1.8.0 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.8.0) | 🟡 Enhancement | Progressive tool exposure via `FunctionInvocationContext` | [#6233](https://github.com/microsoft/agent-framework/pull/6233) |
+| 1.8.0 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.8.0) | 🟡 Enhancement | MCP-based skills discovery (`McpSkillsSource`) | [#6169](https://github.com/microsoft/agent-framework/pull/6169) |
+| 1.8.0 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.8.0) | 🟡 Enhancement | Bedrock native structured output support via Converse API | [#6052](https://github.com/microsoft/agent-framework/pull/6052) |
+| 1.8.0 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.8.0) | 🟡 Enhancement | Foundry Adaptive Evals integration (rubric-generation) | [#6101](https://github.com/microsoft/agent-framework/pull/6101) |
+| 1.8.0 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.8.0) | 🟡 Enhancement | Mistral AI embedding client package | [#5480](https://github.com/microsoft/agent-framework/pull/5480) |
+| 1.8.0 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.8.0) | 🟡 Enhancement | `agent-framework-declarative` promoted to release candidate | [#6256](https://github.com/microsoft/agent-framework/pull/6256) |
+| 1.7.0 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.7.0) | 🔴 Breaking | Declarative: Python-only actions removed and alias kinds renamed to C# canonical names | [#6126](https://github.com/microsoft/agent-framework/pull/6126) |
+| 1.7.0 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.7.0) | 🟡 Enhancement | `HarnessAgent` and background-agents harness provider added | [#6041](https://github.com/microsoft/agent-framework/pull/6041) |
+| 1.7.0 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.7.0) | 🟡 Enhancement | `A2AAgentSession` with referenced task IDs and input-required support | [#5980](https://github.com/microsoft/agent-framework/pull/5980) |
+| 1.6.0 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.6.0) | 🔴 Breaking | Instrumentation enabled by default for core and foundry packages | [#5865](https://github.com/microsoft/agent-framework/pull/5865) |
+| 1.6.0 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.6.0) | 🟡 Enhancement | Shell tool with local and Docker execution support | [#5664](https://github.com/microsoft/agent-framework/pull/5664) |
+| 1.6.0 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.6.0) | 🟡 Enhancement | New `agent-framework-monty` CodeAct provider package | [#5915](https://github.com/microsoft/agent-framework/pull/5915) |
+| 1.4.0 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.4.0) | 🔴 Breaking | [Experimental Skills] Align file skill folder discovery with agentskills.io spec | [#5807](https://github.com/microsoft/agent-framework/pull/5807) |
+| 1.4.0 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.4.0) | 🔴 Breaking | [Experimental Skills] Extract skill spec metadata into `SkillFrontmatter` | [#5775](https://github.com/microsoft/agent-framework/pull/5775) |
+| 1.4.0 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.4.0) | 🔴 Breaking | DevUI: Tighten default access controls and CORS posture | [#5740](https://github.com/microsoft/agent-framework/pull/5740) |
+| 1.4.0 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.4.0) | 🔴 Breaking | A2A: Migrate to a2a-sdk v1.0 | [#5752](https://github.com/microsoft/agent-framework/pull/5752) |
+| 1.3.0 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.3.0) | 🔴 Breaking | [Experimental Skills] Restructure agent skills to multi-source architecture | [#5584](https://github.com/microsoft/agent-framework/pull/5584) |
+| 1.3.0 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.3.0) | 🟡 Enhancement | `ClassSkill` for class-based skill definitions with declarative metadata | [#5678](https://github.com/microsoft/agent-framework/pull/5678) |
+| 1.3.0 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.3.0) | 🟡 Enhancement | Information-flow control prompt injection defense | [#5331](https://github.com/microsoft/agent-framework/pull/5331) |
+| 1.3.0 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.3.0) | 🟡 Enhancement | `github-copilot-sdk` upgraded to v1.0.0b2 with `instruction_directories` and `copilot_home` | [#5665](https://github.com/microsoft/agent-framework/pull/5665) |
+| 1.2.2 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.2.2) | 🔴 Breaking | Orchestration terminal outputs standardized as `AgentResponse`; `Workflow.as_agent()` returns final answer only | [#5301](https://github.com/microsoft/agent-framework/pull/5301) |
+| 1.2.2 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.2.2) | 🟡 Enhancement | Azure AI Content Understanding context provider package | [#4829](https://github.com/microsoft/agent-framework/pull/4829) |
+| 1.1.0 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.1.0) | 🔴 Breaking | `CosmosCheckpointStorage` restricted pickle deserialization by default | [#5200](https://github.com/microsoft/agent-framework/issues/5200) |
+| 1.1.0 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.1.0) | 🟡 Enhancement | `GeminiChatClient` added | [#4847](https://github.com/microsoft/agent-framework/pull/4847) |
+| 1.1.0 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.1.0) | 🟡 Enhancement | Hyperlight CodeAct package | [#5185](https://github.com/microsoft/agent-framework/pull/5185) |
+| 1.1.0 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.1.0) | 🟡 Enhancement | Foundry Toolboxes support | [#5346](https://github.com/microsoft/agent-framework/pull/5346) |
+| 1.1.0 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.1.0) | 🟡 Enhancement | `finish_reason` on `AgentResponse` and `AgentResponseUpdate` | [#5211](https://github.com/microsoft/agent-framework/pull/5211) |
+| 1.0.1 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.1) | 🔴 Breaking | `FileCheckpointStorage` restricted pickle deserialization (security hardening) | [#4941](https://github.com/microsoft/agent-framework/pull/4941) |
+| 1.0.1 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.1) | 🔴 Breaking | Handoff workflow context management fix | [#5136](https://github.com/microsoft/agent-framework/pull/5136) |
+| 1.0.1 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.1) | 🟡 Enhancement | Cosmos DB NoSQL checkpoint storage for workflows | [#4916](https://github.com/microsoft/agent-framework/pull/4916) |
+| 1.0.0 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0) | 🔴 Breaking | `Message(..., text=...)` construction is fully removed; create text messages with `contents=[...]` instead | [#5062](https://github.com/microsoft/agent-framework/pull/5062) |
+| 1.0.0 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0) | 🟡 Enhancement | Released Python packages (`agent-framework`, `agent-framework-core`, `agent-framework-openai`, `agent-framework-foundry`) no longer require `--pre`; beta connectors still do | [#5062](https://github.com/microsoft/agent-framework/pull/5062) |
+| 1.0.0 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0) | 🔴 Breaking | Python embeddings moved to `agent_framework.foundry`; use `agent-framework-foundry`, `FoundryEmbeddingClient`, and `FOUNDRY_MODELS_*` settings instead of the removed `agent-framework-azure-ai` package | [#5056](https://github.com/microsoft/agent-framework/pull/5056) |
+| 1.0.0 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0) | 🔴 Breaking | `workflow.run()` now uses explicit `function_invocation_kwargs` / `client_kwargs`, with global vs per-executor targeting determined by executor IDs | [#5010](https://github.com/microsoft/agent-framework/pull/5010) |
+| 1.0.0 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0) | 🟡 Enhancement | `GitHubCopilotAgent` now invokes context-provider `before_run` / `after_run` hooks and includes provider-added prompt context | [#5013](https://github.com/microsoft/agent-framework/pull/5013) |
+| 1.0.0 | [Notes](https://github.com/microsoft/agent-framework/releases/tag/python-1.0.0) | 🟡 Enhancement | Python structured output now accepts JSON schema mappings as `response_format`, with parsed JSON surfaced on `response.value` | [#5022](https://github.com/microsoft/agent-framework/pull/5022) |
 | 1.0.0rc6 | PR only | 🔴 Breaking | Deprecated Azure/OpenAI compatibility surfaces were removed; use provider-leading OpenAI clients or Foundry Python clients instead | [#4990](https://github.com/microsoft/agent-framework/pull/4990) |
 | 1.0.0rc6 | PR only | 🔴 Breaking | Provider-leading refactor: split `agent-framework-openai`, `agent-framework-foundry`, and `agent-framework-foundry-local`; rename OpenAI clients; move Foundry to `agent_framework.foundry`; deprecate Azure AI and Assistants compatibility paths | [#4818](https://github.com/microsoft/agent-framework/pull/4818) |
 | 1.0.0rc6 | PR only | 🔴 Breaking | `agent-framework-core` is now intentionally slim; install explicit provider packages such as `agent-framework-openai` or `agent-framework-foundry`, and install `mcp` manually for MCP tooling on minimal installs, or use the `agent-framework` meta package for the broader default experience | [#4904](https://github.com/microsoft/agent-framework/pull/4904) |

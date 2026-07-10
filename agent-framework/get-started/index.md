@@ -4,7 +4,7 @@ description: A step-by-step tutorial to build your first agent and progressively
 author: eavanvalkenburg
 ms.topic: tutorial
 ms.author: edvan
-ms.date: 02/12/2026
+ms.date: 07/08/2026
 ms.service: agent-framework
 ---
 
@@ -19,7 +19,8 @@ This tutorial walks you through building an AI agent from scratch, adding one co
 | [Step 3: Multi-Turn Conversations](multi-turn.md) | Maintain conversation state with sessions |
 | [Step 4: Memory & Persistence](memory.md) | Inject persistent context via context providers |
 | [Step 5: Workflows](workflows.md) | Compose a multi-step workflow |
-| [Step 6: Host Your Agent](hosting.md) | Expose the agent via hosting infrastructure |
+| [Step 6: Agent Harness](harness.md) | Create a harness agent that plans and tracks multi-step tasks |
+| [Step 7: Host Your Agent](hosting.md) | Expose the agent via hosting infrastructure |
 
 ## Next steps
 

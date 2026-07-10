@@ -4,7 +4,7 @@ description: Essential security guidelines for building secure AG-UI application
 author: moonbox3
 ms.topic: reference
 ms.author: evmattso
-ms.date: 11/11/2025
+ms.date: 07/10/2026
 ms.service: agent-framework
 ---
 
@@ -149,6 +149,15 @@ Forwarded properties contain arbitrary JSON that passes through the system. Trea
 ## Authentication and Authorization
 
 AG-UI does not include built-in authorization mechanism. It is up to your application to prevent unauthorized use of the exposed AG-UI endpoint. 
+
+### Approval State Storage
+
+The Python integration validates tool approval resumes against server-owned Approval State. The default store is
+bounded and process-local, and contains only the approval data needed to validate and continue pending requests.
+
+Approval State is not an authentication, tenant authorization, or distributed durability mechanism. Authenticate and
+authorize every endpoint request, and choose deployment and storage architecture that matches your availability and
+worker topology requirements.
 
 ### Session ID Management
 
