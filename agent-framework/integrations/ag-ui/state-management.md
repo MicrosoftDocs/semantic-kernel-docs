@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: tutorial
 ms.author: evmattso
-ms.date: 04/01/2026
+ms.date: 07/10/2026
 ms.service: agent-framework
 ---
 
@@ -798,7 +798,7 @@ recipe_agent = AgentFrameworkAgent(
 When enabled:
 
 1. State updates stream as the agent generates tool arguments (predictive updates via `STATE_DELTA` events)
-2. Agent requests approval before executing the tool (via `FUNCTION_APPROVAL_REQUEST` event)
+2. Agent pauses before executing the tool with a `tool_call` interrupt in `RUN_FINISHED.outcome.interrupts`
 3. If approved, the tool executes and final state is emitted (via `STATE_SNAPSHOT` event)
 4. If rejected, the predictive state changes are discarded
 
