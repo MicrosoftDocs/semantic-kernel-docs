@@ -30,7 +30,110 @@ The provider manages three types of memory:
 
 ::: zone pivot="programming-language-csharp"
 
-This provider is not yet available for C#. See the Python tab for usage examples.
+> [!NOTE]
+> The .NET package (`AgentMemory`) is an independent, community-maintained .NET port of the Neo4j Labs memory provider — it is not an official Neo4j Labs package. See the [AgentMemory (.NET) repository](https://github.com/joslat/agent-memory-dotnet) for source and details.
+
+## Prerequisites
+
+- A Neo4j instance (self-hosted or [Neo4j AuraDB](https://neo4j.com/cloud/aura/))
+- An Azure OpenAI or Microsoft Foundry deployment (a chat model + an embedding model)
+- Environment variables set: `NEO4J_URI`, `NEO4J_USER`, `NEO4J_PASSWORD`, `AZURE_OPENAI_ENDPOINT`
+- Azure CLI credentials configured (`az login`), or an API key
+- .NET 9.0 or later
+
+## Installation
+
+```bash
+dotnet add package AgentMemory
+dotnet add package AgentMemory.AgentFramework
+```
+
+## Usage
+
+```csharp
+using Azure.AI.OpenAI;
+using Azure.Identity;
+using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using AgentMemory.Abstractions.Services;
+using AgentMemory.AgentFramework;
+using AgentMemory.AgentFramework.Tools;
+using AgentMemory.Core;
+using AgentMemory.Core.Stubs;
+
+var builder = Host.CreateApplicationBuilder(args);
+
+// Reads NEO4J_URI / NEO4J_USER / NEO4J_PASSWORD (falls back to local-dev defaults)
+builder.Services.AddNeo4jAgentMemory(options =>
+{
+    options.Uri = Environment.GetEnvironmentVariable("NEO4J_URI") ?? "bolt://localhost:7687";
+    options.Username = Environment.GetEnvironmentVariable("NEO4J_USER") ?? "neo4j";
+    options.Password = Environment.GetEnvironmentVariable("NEO4J_PASSWORD") ?? "password";
+});
+builder.Services.AddAgentMemoryCore(_ => { });
+builder.Services.AddSingleton<IClock, SystemClock>();
+builder.Services.AddSingleton<IIdGenerator, GuidIdGenerator>();
+
+// Any Microsoft.Extensions.AI-compatible chat + embedding client works
+var azureClient = new AzureOpenAIClient(
+    new Uri(Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT")!), new DefaultAzureCredential());
+builder.Services.AddSingleton(azureClient.GetChatClient("gpt-4o-mini").AsIChatClient());
+builder.Services.AddSingleton(azureClient.GetEmbeddingClient("text-embedding-3-small").AsIEmbeddingGenerator());
+
+// AutoExtractOnPersist builds the knowledge graph from every conversation turn
+builder.Services.AddAgentMemoryFramework(options =>
+{
+    options.AutoExtractOnPersist = true;
+    options.ContextFormat.IncludeEntities = true;
+    options.ContextFormat.IncludeFacts = true;
+    options.ContextFormat.IncludePreferences = true;
+});
+
+using var host = builder.Build();
+await using var scope = host.Services.CreateAsyncScope();
+var services = scope.ServiceProvider;
+
+// Bootstraps Neo4j schema/indexes on first run (idempotent)
+await services.GetRequiredService<ISchemaBootstrapper>().BootstrapAsync();
+
+var memoryProvider = services.GetRequiredService<Neo4jMemoryContextProvider>();
+var memoryTools = services.GetRequiredService<MemoryToolFactory>().CreateAIFunctions();
+
+AIAgent agent = services.GetRequiredService<IChatClient>().AsAIAgent(new ChatClientAgentOptions
+{
+    ChatOptions = new ChatOptions
+    {
+        Instructions = "You are a helpful assistant with persistent memory.",
+        Tools = [.. memoryTools],
+    },
+    AIContextProviders = [memoryProvider],
+});
+
+var session = (await agent.CreateSessionAsync())
+    .WithMemoryIdentity(userId: "user-123", sessionId: "session-1", applicationId: "my-app");
+
+using (services.GetRequiredService<IWritableMemoryOwnerContext>().BeginOwnerScope("user-123"))
+{
+    var response = await agent.RunAsync("Remember that I prefer window seats on flights.", session);
+}
+```
+
+## Key features
+
+- **Bidirectional**: `Neo4jMemoryContextProvider` recalls relevant memory before each run and persists new memory after — no manual wiring needed
+- **Entity extraction**: builds a knowledge graph from conversations with a configurable extraction pipeline (`AutoExtractOnPersist`)
+- **Preference learning**: infers and stores user preferences, facts, and entities, recalled automatically by a brand-new `AgentSession` for the same user
+- **Memory tools**: `MemoryToolFactory` exposes `AIFunction`s so the model can explicitly search, remember, and recall
+- **Dependency-injection first**: registers via `AddNeo4jAgentMemory` / `AddAgentMemoryCore` / `AddAgentMemoryFramework`, fitting naturally into Generic Host and ASP.NET Core apps
+- **Beyond Agent Framework**: the same library also integrates with Semantic Kernel and MCP clients, and includes built-in OpenTelemetry observability
+
+## Resources
+
+- [AgentMemory (.NET) repository](https://github.com/joslat/agent-memory-dotnet)
+- [NuGet package page](https://www.nuget.org/packages/AgentMemory)
+- [Sample: Retail Assistant with AgentMemory](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/02-agents/AgentWithMemory/AgentWithMemory_Step06_MemoryUsingAgentMemory)
 
 ::: zone-end
 
