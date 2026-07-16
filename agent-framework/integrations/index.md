@@ -62,6 +62,7 @@ Here is a list of existing providers that can be used.
 | Memory AI Context Provider                                         | Release Status  |
 | ------------------------------------------------------------------ | --------------- |
 | [Chat History Memory Provider](./chat-history-memory-provider.md) | Released         |
+| [Neo4j Memory Provider](./neo4j-memory.md) | Preview         |
 
 ::: zone-end
 
