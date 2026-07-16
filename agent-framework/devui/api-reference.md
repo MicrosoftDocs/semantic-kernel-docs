@@ -166,22 +166,22 @@ DevUI maps Agent Framework events to OpenAI Responses API events. The table belo
 | `response.created` + `response.in_progress` | `AgentStartedEvent` |
 | `response.completed` | `AgentCompletedEvent` |
 | `response.failed` | `AgentFailedEvent` |
-| `response.created` + `response.in_progress` | `WorkflowStartedEvent` |
-| `response.completed` | `WorkflowCompletedEvent` |
-| `response.failed` | `WorkflowFailedEvent` |
+| `response.created` + `response.in_progress` | `WorkflowEvent` with `type="started"` |
+| `response.completed` | `WorkflowEvent` with `type="completed"` |
+| `response.failed` | `WorkflowEvent` with `type="failed"` |
 
 ### Content Types
 
 | OpenAI Event | Agent Framework Content |
 |--------------|------------------------|
-| `response.content_part.added` + `response.output_text.delta` | `TextContent` |
-| `response.reasoning_text.delta` | `TextReasoningContent` |
-| `response.output_item.added` | `FunctionCallContent` (initial) |
-| `response.function_call_arguments.delta` | `FunctionCallContent` (args) |
-| `response.function_result.complete` | `FunctionResultContent` |
-| `response.output_item.added` (image) | `DataContent` (images) |
-| `response.output_item.added` (file) | `DataContent` (files) |
-| `error` | `ErrorContent` |
+| `response.content_part.added` + `response.output_text.delta` | `Content(type="text")` |
+| `response.reasoning_text.delta` | `Content(type="text_reasoning")` |
+| `response.output_item.added` | `Content(type="function_call")` (initial) |
+| `response.function_call_arguments.delta` | `Content(type="function_call")` (args) |
+| `response.function_result.complete` | `Content(type="function_result")` |
+| `response.output_item.added` (image) | `Content(type="data")` (images) |
+| `response.output_item.added` (file) | `Content(type="data")` (files) |
+| `error` | `Content(type="error")` |
 
 ### Workflow Events
 
@@ -198,7 +198,7 @@ DevUI adds custom event types for Agent Framework-specific functionality:
 - `response.function_approval.requested` - Function approval requests
 - `response.function_approval.responded` - Function approval responses
 - `response.function_result.complete` - Server-side function execution results
-- `response.workflow_event.complete` - Workflow events
+- `response.workflow_event.completed` - Workflow events
 - `response.trace.complete` - Execution traces
 
 These custom extensions are namespaced and can be safely ignored by standard OpenAI clients.
@@ -218,6 +218,12 @@ curl -X POST http://localhost:8080/v1/responses \
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+> [!NOTE]
+> Go support for this feature is coming soon. See the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go) for the latest status.
+
+::: zone-end
 ## Next Steps
 
 - [Tracing & Observability](./tracing.md) - View traces for debugging

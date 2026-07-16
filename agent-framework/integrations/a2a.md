@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: dmkorolev
 ms.service: agent-framework
 ms.topic: tutorial
-ms.date: 02/11/2026
+ms.date: 07/01/2026
 ms.author: dmkorolev
 ---
 
@@ -238,7 +238,7 @@ app.MapA2A(scienceAgent, "/a2a/science");
 
 ::: zone pivot="programming-language-python"
 
-The `agent-framework-a2a` package lets you connect to and communicate with external A2A-compliant agents.
+The `agent-framework-a2a` package lets you both **connect to** external A2A-compliant agents and **expose** an Agent Framework agent over the A2A protocol.
 
 ```bash
 pip install agent-framework-a2a --pre
@@ -282,19 +282,19 @@ A2A naturally supports streaming via Server-Sent Events — updates arrive in re
 
 ```python
 async with A2AAgent(name="remote", url="https://a2a-agent.example.com") as agent:
-    async with agent.run("Tell me about yourself", stream=True) as stream:
-        async for update in stream:
-            for content in update.contents:
-                if content.text:
-                    print(content.text, end="", flush=True)
+    stream = agent.run("Tell me about yourself", stream=True)
+    async for update in stream:
+        for content in update.contents:
+            if content.text:
+                print(content.text, end="", flush=True)
 
-        final = await stream.get_final_response()
-        print(f"\n({len(final.messages)} message(s))")
+    final = await stream.get_final_response()
+    print(f"\n({len(final.messages)} message(s))")
 ```
 
 ### Long-Running Tasks
 
-By default, `A2AAgent` waits for the remote agent to finish before returning. For long-running tasks, set `background=True` to get a continuation token you can use to poll or resubscribe later:
+By default, `A2AAgent` waits for the remote agent to finish before returning. For long-running tasks, set `background=True` to get a continuation token you can use to poll or subscribe later:
 
 ```python
 async with A2AAgent(name="worker", url="https://a2a-agent.example.com") as agent:
@@ -306,6 +306,26 @@ async with A2AAgent(name="worker", url="https://a2a-agent.example.com") as agent
         result = await agent.poll_task(response.continuation_token)
         print(result)
 ```
+
+### Conversation Identity (context_id)
+
+When you call `A2AAgent.run()` with an `AgentSession`, the agent automatically derives the A2A `context_id` from `session.service_session_id` if the outgoing message does not already carry one. This lets you maintain conversation continuity across multiple A2A calls without manually setting `context_id` on every message:
+
+```python
+from agent_framework import AgentSession
+from agent_framework.a2a import A2AAgent
+
+async with A2AAgent(name="remote", url="https://a2a-agent.example.com") as agent:
+    session = AgentSession(service_session_id="my-conversation-1")
+
+    # context_id is automatically set to "my-conversation-1"
+    response = await agent.run("Hello!", session=session)
+
+    # Subsequent calls with the same session continue the conversation
+    response = await agent.run("Follow-up question", session=session)
+```
+
+If a message has an explicit `context_id` in its `additional_properties`, that value takes precedence over the session-derived fallback.
 
 ### Authentication
 
@@ -330,8 +350,260 @@ async with A2AAgent(
     response = await agent.run("Hello!")
 ```
 
+## Exposing an Agent Framework Agent over A2A
+
+The `A2AExecutor` adapts any Agent Framework `Agent` to the A2A server-side protocol. You can host it with the official [`a2a-sdk`](https://pypi.org/project/a2a-sdk/) Starlette/ASGI server so that other A2A clients can discover and call your agent.
+
+```python
+import uvicorn
+from a2a.server.request_handlers import DefaultRequestHandler
+from a2a.server.routes import create_agent_card_routes, create_jsonrpc_routes
+from a2a.server.tasks import InMemoryTaskStore
+from a2a.types import AgentCapabilities, AgentCard, AgentInterface, AgentSkill
+from agent_framework import Agent
+from agent_framework.a2a import A2AExecutor
+from agent_framework.openai import OpenAIChatClient
+from starlette.applications import Starlette
+
+flight_skill = AgentSkill(
+    id="Flight_Booking",
+    name="Flight Booking",
+    description="Search and book flights across Europe.",
+    tags=["flights", "travel", "europe"],
+    examples=[],
+)
+
+public_agent_card = AgentCard(
+    name="Europe Travel Agent",
+    description="Helps users search and book flights and hotels across Europe.",
+    version="1.0.0",
+    default_input_modes=["text"],
+    default_output_modes=["text"],
+    capabilities=AgentCapabilities(streaming=True),
+    supported_interfaces=[
+        AgentInterface(url="http://localhost:9999/", protocol_binding="JSONRPC"),
+    ],
+    skills=[flight_skill],
+)
+
+agent = Agent(
+    client=OpenAIChatClient(),
+    name="Europe Travel Agent",
+    instructions="You are a helpful Europe Travel Agent.",
+)
+
+request_handler = DefaultRequestHandler(
+    agent_executor=A2AExecutor(agent),
+    task_store=InMemoryTaskStore(),
+    agent_card=public_agent_card,
+)
+
+server = Starlette(
+    routes=[
+        *create_agent_card_routes(public_agent_card),
+        *create_jsonrpc_routes(request_handler, "/"),
+    ]
+)
+
+uvicorn.run(server, host="0.0.0.0", port=9999)
+```
+
+`A2AExecutor` streams agent updates as A2A artifacts when the underlying agent supports streaming and propagates the A2A `context_id` as the agent session's `session_id`. You can subclass `A2AExecutor` and override the `handle_events` method to implement custom transformations from your agent's output format to A2A protocol events.
+
+> [!TIP]
+> See the [`agent_framework_to_a2a.py` sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/04-hosting/a2a/agent_framework_to_a2a.py) for a complete runnable example.
+
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## A2A Protocol
+
+The Go Agent Framework supports the Agent-to-Agent (A2A) protocol for both hosting Agent Framework agents and consuming remote A2A agents. The Go integration uses the `provider/a2aprovider` package for both server-side hosting adapters and client-side access.
+
+Install the Agent Framework and A2A packages in your Go module:
+
+```bash
+go get github.com/microsoft/agent-framework-go
+go get github.com/a2aproject/a2a-go/v2
+```
+
+### Host an agent via A2A
+
+Create or reuse an Agent Framework agent, describe it with an A2A agent card, and expose it through one of the A2A transport bindings. In this example, `hostAgent` is any Agent Framework `*agent.Agent`; the server hosts a JSON-RPC endpoint at `/` and serves the agent card at the well-known A2A path.
+
+```go
+import (
+    "fmt"
+    "net/http"
+
+    "github.com/a2aproject/a2a-go/v2/a2a"
+    "github.com/a2aproject/a2a-go/v2/a2asrv"
+    "github.com/microsoft/agent-framework-go/provider/a2aprovider"
+)
+
+url := "http://localhost:5000"
+
+card := &a2a.AgentCard{
+    Name:               "InvoiceAgent",
+    Description:        "Handles requests relating to invoices.",
+    Version:            "1.0.0",
+    DefaultInputModes:  []string{"text"},
+    DefaultOutputModes: []string{"text"},
+    Capabilities: a2a.AgentCapabilities{
+        Streaming: false,
+    },
+    SupportedInterfaces: []*a2a.AgentInterface{
+        a2a.NewAgentInterface(url, a2a.TransportProtocolJSONRPC),
+    },
+}
+
+mux := http.NewServeMux()
+requestHandler := a2asrv.NewHandler(
+    a2aprovider.NewExecutor(hostAgent, a2aprovider.ExecutorConfig{}),
+    a2asrv.WithExtendedAgentCard(card),
+)
+mux.Handle("/", a2asrv.NewJSONRPCHandler(requestHandler))
+mux.Handle(a2asrv.WellKnownAgentCardPath, a2asrv.NewStaticAgentCardHandler(card))
+
+if err := http.ListenAndServe(":5000", mux); err != nil {
+    panic(fmt.Errorf("A2A server failed: %w", err))
+}
+```
+
+Wrap the same request handler with `a2asrv.NewRESTHandler` when you want to expose the HTTP+JSON transport binding. Set `ExecutorConfig.AllowBackgroundResponses` to `true` if the hosted agent should be allowed to return A2A tasks for long-running work.
+
+### Consume an A2A agent
+
+Resolve the remote agent card, create an A2A client from it, and wrap the client as a standard Agent Framework agent:
+
+```go
+import (
+    "context"
+
+    "github.com/a2aproject/a2a-go/v2/a2aclient"
+    "github.com/a2aproject/a2a-go/v2/a2aclient/agentcard"
+    "github.com/microsoft/agent-framework-go/agent"
+    "github.com/microsoft/agent-framework-go/provider/a2aprovider"
+)
+
+ctx := context.Background()
+
+card, err := agentcard.DefaultResolver.Resolve(ctx, "http://localhost:5000")
+if err != nil {
+    panic(err)
+}
+
+client, err := a2aclient.NewFromCard(ctx, card)
+if err != nil {
+    panic(err)
+}
+
+a := a2aprovider.NewAgent(
+    client,
+    a2aprovider.AgentConfig{
+        Config: agent.Config{
+            Name:        card.Name,
+            Description: card.Description,
+        },
+    },
+)
+
+resp, err := a.RunText(ctx, "Hello!").Collect()
+```
+
+The `a2aprovider` provider stores the A2A `context_id` and task IDs in the Agent Framework session so follow-up messages can preserve conversation continuity.
+
+### Protocol selection
+
+If a remote agent advertises multiple transport bindings, configure the preferred transport when creating the A2A client:
+
+```go
+client, err := a2aclient.NewFromCard(
+    ctx,
+    card,
+    a2aclient.WithConfig(a2aclient.Config{
+        PreferredTransports: []a2a.TransportProtocol{a2a.TransportProtocolHTTPJSON},
+    }),
+)
+```
+
+Use `a2a.TransportProtocolJSONRPC` when you want to prefer JSON-RPC instead.
+
+### Long-running tasks
+
+A2A tasks surface through Agent Framework continuation tokens. Start the run with an explicit session and `agent.AllowBackgroundResponses(true)`, then poll by calling `Run` with no new messages and the continuation token:
+
+```go
+session, err := a.CreateSession(ctx)
+if err != nil {
+    panic(err)
+}
+
+resp, err := a.RunText(
+    ctx,
+    "Process this large dataset.",
+    agent.WithSession(session),
+    agent.AllowBackgroundResponses(true),
+).Collect()
+if err != nil {
+    panic(err)
+}
+
+for resp.ContinuationToken != "" {
+    resp, err = a.Run(
+        ctx,
+        nil,
+        agent.WithSession(session),
+        agent.WithContinuationToken(resp.ContinuationToken),
+    ).Collect()
+    if err != nil {
+        panic(err)
+    }
+}
+```
+
+For interrupted streaming runs, capture `update.ContinuationToken` from the last received update and pass it to a later streaming run with `agent.WithContinuationToken(token)` and `agent.Stream(true)`.
+
+### Use remote A2A agents as tools
+
+You can also expose remote A2A agents to a host agent as function tools. Resolve each remote agent, wrap it with `a2aprovider.NewAgent`, and then convert it to a tool with `agenttool.New`. In this example, the host agent uses a Microsoft Foundry project-backed model deployment.
+
+```go
+tools := make([]tool.Tool, 0, len(agentURLs))
+
+for _, agentURL := range agentURLs {
+    card, err := agentcard.DefaultResolver.Resolve(ctx, agentURL)
+    if err != nil {
+        panic(err)
+    }
+
+    client, err := a2aclient.NewFromCard(ctx, card)
+    if err != nil {
+        panic(err)
+    }
+
+    remoteAgent := a2aprovider.NewAgent(client, a2aprovider.AgentConfig{
+        Config: agent.Config{
+            Name:        card.Name,
+            Description: card.Description,
+        },
+    })
+
+    tools = append(tools, agenttool.New(remoteAgent, agenttool.Config{}))
+}
+
+host := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Instructions: "Use your tools to delegate requests to specialized remote agents.",
+    Config: agent.Config{
+        Tools: tools,
+    },
+})
+```
+
+> [!TIP]
+> See the [A2A client-server sample](https://github.com/microsoft/agent-framework-go/tree/main/examples/05-end-to-end/a2a_client_server), [A2A provider sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/providers/a2a/main.go), and [A2A agents as tools sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/a2a/as_function_tools/main.go) for complete runnable examples.
+
+::: zone-end
 ## See Also
 
 - [Integrations Overview](./index.md)

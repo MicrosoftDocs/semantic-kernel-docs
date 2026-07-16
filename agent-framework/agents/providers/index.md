@@ -5,17 +5,17 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: reference
 ms.author: edvan
-ms.date: 03/25/2026
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
 # Providers Overview
 
-Microsoft Agent Framework supports several types of agents to accommodate different use cases and requirements. All agents are derived from a common base class (`AIAgent` in .NET, `BaseAgent` in Python), which provides a consistent interface for all agent types.
+Microsoft Agent Framework supports several types of agents to accommodate different use cases and requirements. Agents expose a consistent interface across languages (`AIAgent` in .NET, `BaseAgent` in Python, and `*agent.Agent` in Go).
 
 ## Provider Comparison
 
-| Provider | Function Tools | Structured Output | Code Interpreter | File Search | MCP Tools | Background Responses |
+| Provider | Function Tools | Structured Outputs | Code Interpreter | File Search | MCP Tools | Background Responses |
 |----------|:---:|:---:|:---:|:---:|:---:|:---:|
 | [Azure OpenAI](./azure-openai.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [OpenAI](./openai.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
@@ -24,7 +24,7 @@ Microsoft Agent Framework supports several types of agents to accommodate differ
 | [Ollama](./ollama.md) | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
 | [Foundry Local](./foundry-local.md) | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | [GitHub Copilot](./github-copilot.md) | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ |
-| [Copilot Studio](./copilot-studio.md) | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| [Copilot Studio](./copilot-studio.md) | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | [Custom](./custom.md) | Varies | Varies | Varies | Varies | Varies | Varies |
 
 > [!IMPORTANT]
@@ -49,6 +49,7 @@ The following providers are available for .NET:
 - **[Ollama](./ollama.md)** — Run open-source models locally.
 - **[GitHub Copilot](./github-copilot.md)** — GitHub Copilot SDK integration with shell and file access.
 - **[Copilot Studio](./copilot-studio.md)** — Integration with Microsoft Copilot Studio agents.
+- **[A2A](./agent-to-agent.md)** — Connect to remote agents via the Agent-to-Agent (A2A) protocol.
 - **[Custom](./custom.md)** — Build your own provider by implementing the `AIAgent` base class.
 
 :::zone-end
@@ -67,10 +68,39 @@ Agent Framework supports many different inference services through chat clients.
 - **[Ollama](./ollama.md)** — Run open-source models locally.
 - **[GitHub Copilot](./github-copilot.md)** — GitHub Copilot SDK integration.
 - **[Copilot Studio](./copilot-studio.md)** — Integration with Microsoft Copilot Studio agents.
+- **[A2A](./agent-to-agent.md)** — Connect to remote agents via the Agent-to-Agent (A2A) protocol.
 - **[Custom](./custom.md)** — Build your own provider by implementing the `BaseAgent` class.
 
 :::zone-end
 
+:::zone pivot="programming-language-go"
+## Providers overview
+
+The Go Agent Framework supports multiple LLM providers. Each provider package creates a standard `*agent.Agent` with a provider-specific constructor.
+
+| Provider | Package | Import Path |
+|---|---|---|
+| Microsoft Foundry | `foundryprovider` | `github.com/microsoft/agent-framework-go/provider/foundryprovider` |
+| OpenAI Chat Completions | `openaiprovider` | `github.com/microsoft/agent-framework-go/provider/openaiprovider` |
+| OpenAI Responses | `openaiprovider` | `github.com/microsoft/agent-framework-go/provider/openaiprovider` |
+| Anthropic | `anthropicprovider` | `github.com/microsoft/agent-framework-go/provider/anthropicprovider` |
+| Google Gemini | `geminiprovider` | `github.com/microsoft/agent-framework-go/provider/geminiprovider` |
+| GitHub Copilot | `copilotprovider` | `github.com/microsoft/agent-framework-go/provider/copilotprovider` |
+| A2A | `a2aprovider` | `github.com/microsoft/agent-framework-go/provider/a2aprovider` |
+| AG-UI | `aguiprovider` | `github.com/microsoft/agent-framework-go/provider/aguiprovider` |
+
+Provider constructors are package-specific. For example, the Foundry provider creates a project-backed agent from a Foundry project endpoint, credential, and model deployment:
+
+```go
+a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Instructions: "You are a helpful assistant.",
+    Config: agent.Config{
+        Name: "MyAgent",
+    },
+})
+```
+
+:::zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

@@ -16,23 +16,24 @@ agent-framework/
 ├── overview/
 │   ├── index.md               # "What is Agent Framework" landing
 │   └── index.md
-├── get-started/               # 6-step progressive tutorial
+├── get-started/               # 7-step progressive tutorial
 │   ├── index.md               # Tutorial landing page
 │   ├── your-first-agent.md    # Step 1
 │   ├── add-tools.md           # Step 2
 │   ├── multi-turn.md          # Step 3
 │   ├── memory.md              # Step 4
 │   ├── workflows.md           # Step 5
-│   └── hosting.md             # Step 6
+│   ├── harness.md             # Step 6
+│   └── hosting.md             # Step 7
 ├── agents/                    # Deep-dive reference
 │   ├── index.md               # Agents overview & landing
 │   ├── running-agents.md
-│   ├── structured-output.md
+│   ├── structured-outputs.md
 │   ├── declarative.md
 │   ├── observability.md
 │   ├── rag.md
 │   ├── multimodal.md
-│   ├── background-responses.md  # C# only (zone pivot)
+│   ├── background-responses.md
 │   ├── tools/                 # 1 page per tool type
 │   │   ├── index.md           # Tools overview & landing
 │   │   └── ...
@@ -69,7 +70,7 @@ agent-framework/
 │   ├── ag-ui/                 # AG-UI Protocol (multi-page)
 │   │   ├── index.md
 │   │   └── ...
-│   ├── azure-functions.md
+│   ├── durable-extension.md
 │   ├── openai-endpoints.md
 │   ├── m365.md
 │   └── purview.md
@@ -92,14 +93,16 @@ agent-framework/
 
 ## Design principles
 
-1. **Progressive then deep**: Get-started (01→06) is a linear tutorial that
+1. **Progressive then deep**: Get-started (01→07) is a linear tutorial that
    builds complexity step by step. Agents/workflows/integrations are reference
    docs organized by topic — users land here from "Go deeper" links.
 
 2. **Zone pivots for languages**: Every page that shows code uses
    `zone_pivot_groups: programming-languages` in its YAML frontmatter.
-   Code blocks are wrapped in `:::zone pivot="programming-language-csharp"`
-   and `:::zone pivot="programming-language-python"` sections.
+   Code blocks are wrapped in `:::zone pivot="programming-language-csharp"`,
+   `:::zone pivot="programming-language-python"`, and
+   `:::zone pivot="programming-language-go"` sections when the feature is
+   supported in those SDKs.
 
 3. **Code snippets as source of truth**: Prefer `:::code` directives that point
    to sample files in the code repo, so docs stay synced with runnable samples.
@@ -118,7 +121,7 @@ agent-framework/
 
 | Parameter | Description |
 |-----------|-------------|
-| `language` | `"python"` or `"csharp"` |
+| `language` | `"python"`, `"csharp"`, or `"go"` |
 | `source` | Snippet source path using docset-relative syntax (for example, `~/...` or `~/../<dependent-repo>/...`) |
 | `id` | Matches a snippet tag in the source file (`# <name>` / `# </name>` for Python, `// <name>` / `// </name>` for C#) |
 | `range` | Line range (e.g. `"2-24,26"`). **Cannot coexist with `id`** |
@@ -128,6 +131,7 @@ agent-framework/
 
 - Python samples: `~/../agent-framework-code/python/samples/<section>/<file>.py`
 - .NET samples: `~/../agent-framework-code/dotnet/samples/<section>/<project folder>/<file>.cs`
+- Go samples: `~/../agent-framework-go/examples/<section>/<file>.go`
 
 The dependent repository alias (`agent-framework-code`) is configured in
 `.openpublishing.publish.config.json` under `dependent_repositories`.
@@ -146,11 +150,18 @@ C# content here
 Python content here
 
 :::zone-end
+
+:::zone pivot="programming-language-go"
+
+Go content here
+
+:::zone-end
 ```
 
 Available pivots are defined in `zone-pivot-groups.yml`:
 - `programming-language-csharp`
 - `programming-language-python`
+- `programming-language-go`
 
 ## Frontmatter template
 
@@ -162,7 +173,7 @@ title: "Page Title"
 description: "One-line description for SEO"
 zone_pivot_groups: programming-languages
 author: eavanvalkenburg
-ms.topic: conceptual        # or "tutorial" for get-started
+ms.topic: article           # or "tutorial" for get-started
 ms.date: MM/DD/YYYY
 ms.service: agent-framework
 ---
@@ -195,7 +206,8 @@ Every docs page maps to sample files in both repos:
 | `get-started/add-tools.md` | `01-get-started/02_add_tools.py` | `01-get-started/02_AddTools.cs` |
 | `get-started/multi-turn.md` | `01-get-started/03_multi_turn.py` | `01-get-started/03_MultiTurn.cs` |
 | `get-started/memory.md` | `01-get-started/04_memory.py` | `01-get-started/04_Memory.cs` |
-| `get-started/workflows.md` | `01-get-started/05_first_workflow.py` | `01-get-started/05_FirstWorkflow.cs` |
+| `get-started/workflows.md` | `01-get-started/07_first_graph_workflow.py` | `01-get-started/05_FirstWorkflow.cs` |
+| `get-started/harness.md` | `02-agents/harness/` | `02-agents/Harness/` |
 | `get-started/hosting.md` | `04-hosting/azure_functions/01_single_agent/function_app.py` | `01-get-started/06_HostYourAgent.cs` |
 | `agents/tools/function-tools.md` | `02-agents/tools/function_tools.py` | `02-agents/tools/FunctionTools.cs` |
 | `agents/tools/web-search.md` | `02-agents/tools/web_search.py` | `02-agents/tools/WebSearch.cs` |
@@ -204,18 +216,21 @@ Every docs page maps to sample files in both repos:
 | `agents/tools/hosted-mcp-tools.md` | `02-agents/tools/hosted_mcp_tools.py` | `02-agents/tools/HostedMcpTools.cs` |
 | `agents/tools/local-mcp-tools.md` | `02-agents/tools/local_mcp_tools.py` | `02-agents/tools/LocalMcpTools.cs` |
 | `agents/tools/tool-approval.md` | `02-agents/tools/tool_approval.py` | `02-agents/tools/ToolApproval.cs` |
+| `agents/code_act.md` | `02-agents/context_providers/code_act/code_act.py` | `02-agents/AgentWithCodeAct/` |
+| `agents/harness.md` | `02-agents/harness/` | `02-agents/Harness/` |
 | `agents/middleware/*.md` | `02-agents/middleware/<matching>.py` | `02-agents/middleware/<matching>.cs` |
 | `agents/providers/foundry-local.md` | `02-agents/providers/foundry/foundry_local_agent.py` | N/A |
 | `agents/providers/*.md` | `02-agents/providers/<matching>.py` | `02-agents/providers/<matching>.cs` |
 | `agents/conversations/*.md` | `02-agents/conversations/<matching>.py` | `02-agents/conversations/<matching>.cs` |
 | `workflows/<pattern>.md` | `03-workflows/<pattern>/<matching>.py` | `03-workflows/<pattern>/<matching>.cs` |
+| `integrations/hyperlight.md` | `02-agents/context_providers/code_act/code_act.py` | `02-agents/AgentWithCodeAct/` |
 | `integrations/a2a.md` | `04-hosting/a2a/` | `04-hosting/a2a/` |
-| `integrations/azure-functions.md` | `04-hosting/azure-functions/` | `04-hosting/azure-functions/` |
+| `integrations/durable-extension.md` | `04-hosting/azure_functions/`, `04-hosting/durabletask/` | `04-hosting/DurableAgents/`, `04-hosting/DurableWorkflows/` |
 
 ## When adding a new docs page
 
 1. Create the `.md` file with proper frontmatter (see template above)
-2. Add zone pivots for both C# and Python
+2. Add zone pivots for C#, Python, and Go when the feature is supported in those SDKs
 3. Use `:::code` directives — never paste code inline
 4. Add the page to the root `TOC.yml` in the appropriate section
 5. Add a `## Next steps` section at the bottom with a `> [!div class="nextstepaction"]` link
@@ -229,11 +244,10 @@ You must update:
 2. The mapping table in the sample repo's `AGENTS.md`
 3. The mapping table in this file (above)
 
-## Python-only and C#-only pages
+## Language-specific pages
 
 Some concepts exist in only one language:
-- `agents/background-responses.md` — C# only (wrap in `:::zone pivot="programming-language-csharp"`)
 - `response_stream.py`, `typed_options.py` — Python only samples (under `02-agents/`)
 
-Use zone pivots to show language-specific content. Add a note in the other
+Use zone pivots to show language-specific content. Add a note in another
 language's zone if the feature is not yet supported.

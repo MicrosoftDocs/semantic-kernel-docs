@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: reference
 ms.author: edvan
-ms.date: 03/31/2026
+ms.date: 05/27/2026
 ms.service: agent-framework
 ---
 
@@ -325,7 +325,7 @@ response = await agent.run(
 print(response.text)
 ```
 
-Use `ctx.kwargs` inside the tool instead of declaring blanket `**kwargs` on the tool callable. Legacy `**kwargs` tools still work for compatibility, but will be removed before GA.
+Use `ctx.kwargs` inside the tool instead of declaring blanket `**kwargs` on the tool callable. Unexpected runtime keyword arguments are rejected; new tools should consume runtime data through `FunctionInvocationContext`.
 
 Any parameter annotated as `FunctionInvocationContext` is treated as the injected runtime context parameter, regardless of its name, and it is not exposed in the JSON schema shown to the model. If you provide an explicit schema/input model, a plain unannotated parameter named `ctx` is also recognized as the injected context parameter.
 
@@ -455,6 +455,24 @@ Use `function_invocation_kwargs` for tool-invocation flows and `client_kwargs` f
 
 :::zone-end
 
+:::zone pivot="programming-language-go"
+
+Go passes runtime context through `context.Context` and typed `agent.Option` values. Middleware can inspect options with `agent.GetOption` and add per-run options before calling `next`.
+
+```go
+runtimeContext := agent.MiddlewareFunc(func(next agent.RunFunc, ctx context.Context, messages []*message.Message, options ...agent.Option) iter.Seq2[*agent.ResponseUpdate, error] {
+    session, _ := agent.GetOption(options, agent.WithSession)
+    if session != nil {
+        options = append(options, agent.WithInstructions("Use the active session context."))
+    }
+    return next(ctx, messages, options...)
+})
+
+session, err := a.CreateSession(ctx)
+resp, err := a.RunText(ctx, "Hello", agent.WithSession(session)).Collect()
+```
+
+:::zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

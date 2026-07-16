@@ -3,7 +3,7 @@ title: Realtime AI Integrations for Semantic Kernel
 description: Learn about realtime multi-modal AI integrations available in Semantic Kernel.
 zone_pivot_groups: programming-languages
 author: eavanvalkenburg
-ms.topic: conceptual
+ms.topic: article
 ms.author: edvan
 ms.date: 02/26/2025
 ms.service: semantic-kernel

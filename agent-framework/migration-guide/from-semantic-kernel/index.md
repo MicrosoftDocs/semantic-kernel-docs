@@ -410,14 +410,14 @@ The agent can be asked to create a new thread for you.
 
 ```python
 agent = ...
-thread = agent.get_new_thread()
+session = agent.create_session()
 ```
 
-A thread is then created in one of three ways:
+A session can be local or service-backed depending on the agent/client and run options:
 
-1. If the agent has a `thread_id` (or `conversation_id` or something similar) set, it will create a thread in the underlying service with that ID. Once a thread has a `service_thread_id`, you can no longer use it to store messages in memory. This only applies to agents that have a service-side thread concept. such as Foundry Agents and OpenAI Assistants.
-2. If the agent has a `chat_message_store_factory` set, it will use that factory to create a message store and use that to create an in-memory thread. It can then no longer be used with a agent with the `store` parameter set to `True`.
-3. If neither of the previous settings is set, it's considered `uninitialized` and depending on how it is used, it will either become a in-memory thread or a service thread.
+1. Use `agent.create_session()` for a new local session.
+2. Use `agent.get_session(service_session_id=...)` when continuing a service-managed conversation.
+3. Pass the session with `session=session` to `agent.run(...)`.
 
 ### Agent Framework
 
@@ -477,7 +477,7 @@ agent = chat_client.as_agent(tools=get_weather)
 ```
 
 > [!NOTE]
-> The `tools` parameter is present on both the agent creation and the `run` method (with or without `stream=True`), as well as the `get_response` and `get_streaming_response` methods, it allows you to supply tools both as a list or a single function.
+> The `tools` parameter is present on both the agent creation and the `run` method (with or without `stream=True`), as well as `get_response(..., options={"tools": [...]})`.
 
 The name of the function will then become the name of the tool, and the docstring will become the description of the tool, you can also add a description to the parameters:
 
@@ -496,7 +496,7 @@ from typing import Annotated
 from agent_framework import tool
 
 @tool(name="weather_tool", description="Retrieves weather information for any location")
-def get_weather(location: Annotated[str, "The location to get the weather for."])
+def get_weather(location: Annotated[str, "The location to get the weather for."]):
     """Get the weather for a given location."""
     return f"The weather in {location} is sunny."
 ```
@@ -715,7 +715,7 @@ This might include tool call messages, function results, reasoning updates and f
 ```python
 agent = ...
 
-response = await agent.run(user_input, thread)
+response = await agent.run(user_input, session=session)
 print("Agent response:", response.text)
 
 ```
@@ -745,11 +745,12 @@ All contents produced by any service underlying the Agent are returned. The fina
 from agent_framework import AgentResponse
 agent = ...
 updates = []
-async for update in agent.run(user_input, thread, stream=True):
+stream = agent.run(user_input, session=session, stream=True)
+async for update in stream:
     updates.append(update)
     print(update.text)
 
-full_response = AgentResponse.from_agent_response_updates(updates)
+full_response = AgentResponse.from_updates(updates)
 print("Full agent response:", full_response.text)
 ```
 
@@ -758,7 +759,7 @@ You can even do that directly:
 ```python
 from agent_framework import AgentResponse
 agent = ...
-full_response = AgentResponse.from_agent_response_generator(agent.run(user_input, thread, stream=True))
+full_response = await AgentResponse.from_update_generator(agent.run(user_input, session=session, stream=True))
 print("Full agent response:", full_response.text)
 ```
 
@@ -809,6 +810,12 @@ response = await agent.run(
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+> [!NOTE]
+> Go support for this feature is coming soon. See the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go) for the latest status.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

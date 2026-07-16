@@ -5,22 +5,23 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 03/12/2026
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
 <!--
   Language parity table – keep in sync when adding/removing sections.
 
-  | Section                                    | C# | Python | Notes           |
-  |--------------------------------------------|:--:|:------:|-----------------|
-  | Client Setup and Agent Definition          | ✅ |   ✅   |                 |
-  | Set Up the Concurrent Orchestration        | ✅ |   ✅   |                 |
-  | Run the Concurrent Workflow                | ✅ |   ✅   |                 |
-  | Sample Output                              | ✅ |   ✅   |                 |
-  | Advanced: Custom Agent Executors           | ❌ |   ✅   | Python-specific |
-  | Advanced: Custom Aggregator                | ❌ |   ✅   | Python-specific |
-  | Key Concepts                               | ✅ |   ✅   |                 |
+    | Section                                    | C# | Python | Go | Notes           |
+    |--------------------------------------------|:--:|:------:|:--:|-----------------|
+    | Client Setup and Agent Definition          | ✅ |   ✅   | ✅ |                 |
+    | Set Up the Concurrent Orchestration        | ✅ |   ✅   | ✅ |                 |
+    | Run the Concurrent Workflow                | ✅ |   ✅   | ✅ |                 |
+    | Sample Output                              | ✅ |   ✅   | ✅ |                 |
+    | Advanced: Custom Agent Executors           | ❌ |   ✅   | ✅ | Python/Go-specific |
+    | Advanced: Custom Aggregator                | ❌ |   ✅   | ✅ | Python/Go-specific |
+    | Intermediate Outputs                       | ❌ |   ✅   | ✅ | Python/Go-specific |
+    | Key Concepts                               | ✅ |   ✅   | ✅ |                 |
 -->
 
 # Microsoft Agent Framework Workflows Orchestrations - Concurrent
@@ -205,78 +206,52 @@ workflow = ConcurrentBuilder(participants=[researcher, marketer, legal]).build()
 
 ## Run the Concurrent Workflow and Collect the Results
 
+The default aggregator produces a single `AgentResponse` containing one assistant message per participant:
+
 ```python
-from typing import cast
+from agent_framework import AgentResponse
 
-from agent_framework import Message, WorkflowEvent
+# 3) Run with a single prompt and print the aggregated agent responses
+events = await workflow.run("We are launching a new budget-friendly electric bike for urban commuters.")
+outputs = events.get_outputs()
 
-# 3) Run with a single prompt, stream progress, and pretty-print the final combined messages
-output_data: list[Message] | None = None
-async for event in workflow.run("We are launching a new budget-friendly electric bike for urban commuters.", stream=True):
-    if event.type == "output":
-        output_data = event.data
-
-if output_data:
-    print("===== Final Aggregated Conversation (messages) =====")
-    messages: list[Message] = cast(list[Message], output_data)
-    for i, msg in enumerate(messages, start=1):
-        name = msg.author_name if msg.author_name else "user"
-        print(f"{'-' * 60}\n\n{i:02d} [{name}]:\n{msg.text}")
+if outputs:
+    print("===== Final Aggregated Results =====")
+    final: AgentResponse = outputs[0]
+    for msg in final.messages:
+        name = msg.author_name or "assistant"
+        print(f"{'-' * 60}\n\n[{name}]:\n{msg.text}")
 ```
 
 ## Sample Output
 
 ```plaintext
-Sample Output:
+===== Final Aggregated Results =====
+------------------------------------------------------------
 
-    ===== Final Aggregated Conversation (messages) =====
-    ------------------------------------------------------------
+[researcher]:
+**Insights:**
 
-    01 [user]:
-    We are launching a new budget-friendly electric bike for urban commuters.
-    ------------------------------------------------------------
+- **Target Demographic:** Urban commuters seeking affordable, eco-friendly transport;
+    likely to include students, young professionals, and price-sensitive urban residents.
+- **Market Trends:** E-bike sales are growing globally, with increasing urbanization,
+    higher fuel costs, and sustainability concerns driving adoption.
+...
+------------------------------------------------------------
 
-    02 [researcher]:
-    **Insights:**
+[marketer]:
+**Value Proposition:**
+"Empowering your city commute: Our new electric bike combines affordability, reliability, and
+    sustainable design—helping you conquer urban journeys without breaking the bank."
+...
+------------------------------------------------------------
 
-    - **Target Demographic:** Urban commuters seeking affordable, eco-friendly transport;
-        likely to include students, young professionals, and price-sensitive urban residents.
-    - **Market Trends:** E-bike sales are growing globally, with increasing urbanization,
-        higher fuel costs, and sustainability concerns driving adoption.
-    - **Competitive Landscape:** Key competitors include brands like Rad Power Bikes, Aventon,
-        Lectric, and domestic budget-focused manufacturers in North America, Europe, and Asia.
-    - **Feature Expectations:** Customers expect reliability, ease-of-use, theft protection,
-        lightweight design, sufficient battery range for daily city commutes (typically 25-40 miles),
-        and low-maintenance components.
+[legal]:
+**Constraints, Disclaimers, & Policy Concerns for Launching a Budget-Friendly Electric Bike for Urban Commuters:**
 
-    **Opportunities:**
-
-    - **First-time Buyers:** Capture newcomers to e-biking by emphasizing affordability, ease of
-        operation, and cost savings vs. public transit/car ownership.
-    ...
-    ------------------------------------------------------------
-
-    03 [marketer]:
-    **Value Proposition:**
-    "Empowering your city commute: Our new electric bike combines affordability, reliability, and
-        sustainable design—helping you conquer urban journeys without breaking the bank."
-
-    **Target Messaging:**
-
-    *For Young Professionals:*
-    ...
-    ------------------------------------------------------------
-
-    04 [legal]:
-    **Constraints, Disclaimers, & Policy Concerns for Launching a Budget-Friendly Electric Bike for Urban Commuters:**
-
-    **1. Regulatory Compliance**
-    - Verify that the electric bike meets all applicable federal, state, and local regulations
-        regarding e-bike classification, speed limits, power output, and safety features.
-    - Ensure necessary certifications (for example, UL certification for batteries, CE markings if sold internationally) are obtained.
-
-    **2. Product Safety**
-    - Include consumer safety warnings regarding use, battery handling, charging protocols, and age restrictions.
+**1. Regulatory Compliance**
+- Verify that the electric bike meets all applicable federal, state, and local regulations
+    regarding e-bike classification, speed limits, power output, and safety features.
 ```
 
 ## Advanced: Custom Agent Executors
@@ -348,7 +323,7 @@ workflow = ConcurrentBuilder(participants=[researcher, marketer, legal]).build()
 
 ## Advanced: Custom Aggregator
 
-By default, concurrent orchestration aggregates all agent responses into a list of messages. You can override this behavior with a custom aggregator that processes the results in a specific way:
+By default, concurrent orchestration aggregates all agent responses into a single `AgentResponse` with one assistant message per participant. You can override this behavior with a custom aggregator that processes the results in a specific way:
 
 ### Define a Custom Aggregator
 
@@ -424,16 +399,236 @@ Affordable." Legal review in each target market, compliance vetting, and robust 
 critical before launch.
 ```
 
+## Intermediate Outputs
+
+By default, only the aggregator's output surfaces as a workflow `"output"` (terminal) event. Pass `intermediate_output_from` with the participants you want to designate as intermediate sources to also surface their individual outputs as `"intermediate"` events:
+
+```python
+workflow = ConcurrentBuilder(
+    participants=[researcher, marketer, legal],
+    intermediate_output_from=[researcher, marketer, legal],
+).build()
+```
+
+You can handle these events in real-time in streaming mode:
+
+```python
+from agent_framework import AgentResponseUpdate
+
+# Track the last author to format streaming output.
+last_author: str | None = None
+
+async for event in workflow.run("Analyze our new product launch strategy.", stream=True):
+    if event.type == "intermediate" and isinstance(event.data, AgentResponseUpdate):
+        update = event.data
+        author = update.author_name
+        if author != last_author:
+            if last_author is not None:
+                print()  # Newline between different authors
+            print(f"{author}: {update.text}", end="", flush=True)
+            last_author = author
+        else:
+            print(update.text, end="", flush=True)
+```
+
 ## Key Concepts
 
 - **Parallel Execution**: All agents work on the task simultaneously and independently
-- **Result Aggregation**: Results are collected and can be processed by either the default or custom aggregator
+- **AgentResponse Output**: The default aggregator yields a single `AgentResponse` with one assistant message per participant (no user prompt included)
 - **Diverse Perspectives**: Each agent brings its unique expertise to the same problem
 - **Flexible Participants**: You can use agents directly or wrap them in custom executors
 - **Custom Processing**: Override the default aggregator to synthesize results in domain-specific ways
+- **Intermediate Outputs**: Pass `intermediate_output_from=[participant, ...]` to surface each listed participant's output as `"intermediate"` events, in addition to the aggregator's terminal `"output"` event
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+Go supports concurrent agent workflows with `agentworkflow.NewConcurrentWorkflowBuilder`. You can also build the same pattern manually with fan-out and fan-in edges when you need custom executor behavior.
+
+## Set Up Foundry Configuration
+
+Configure the Foundry project endpoint, model deployment, and authentication:
+
+```go
+endpoint := os.Getenv("FOUNDRY_PROJECT_ENDPOINT")
+model := cmp.Or(os.Getenv("FOUNDRY_MODEL"), "gpt-4o-mini")
+
+token, err := azidentity.NewDefaultAzureCredential(nil)
+if err != nil {
+    return err
+}
+```
+
+> [!WARNING]
+> `azidentity.NewDefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential, such as `azidentity.NewManagedIdentityCredential`, to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
+
+## Define Your Agents
+
+Create multiple specialized agents that will work on the same task concurrently:
+
+```go
+newTranslationAgent := func(language string) *agent.Agent {
+    return foundryprovider.NewAgent(
+        endpoint,
+        token,
+        foundryprovider.ModelDeployment(model),
+        foundryprovider.AgentConfig{
+            Instructions: fmt.Sprintf(
+                "You are a translation assistant who only responds in %s. Respond to any input by outputting the name of the input language and then translating the input to %s.",
+                language,
+                language,
+            ),
+            Config: agent.Config{Name: language},
+        },
+    )
+}
+
+agents := []*agent.Agent{
+    newTranslationAgent("French"),
+    newTranslationAgent("Spanish"),
+    newTranslationAgent("English"),
+}
+```
+
+## Set Up the Concurrent Orchestration
+
+Build the workflow with `agentworkflow.NewConcurrentWorkflowBuilder`:
+
+```go
+wf, err := agentworkflow.NewConcurrentWorkflowBuilder(agents...).
+    WithName("translation-concurrent").
+    Build()
+if err != nil {
+    return err
+}
+```
+
+## Run the Concurrent Workflow and Collect Results
+
+Run the workflow with a user message and a turn token. When event emission is enabled, agent updates are surfaced as workflow output events before the final aggregated output.
+
+```go
+run, err := inproc.Default.RunStreaming(ctx, wf, []*message.Message{message.NewText("Hello, world!")})
+if err != nil {
+    return err
+}
+defer run.Close(ctx)
+
+emitEvents := true
+if err := run.SendMessage(ctx, workflow.TurnToken{EmitEvents: &emitEvents}); err != nil {
+    return err
+}
+
+for evt, err := range run.WatchStream(ctx) {
+    if err != nil {
+        return err
+    }
+    if output, ok := evt.(workflow.OutputEvent); ok {
+        switch value := output.Output.(type) {
+        case *agent.ResponseUpdate:
+            fmt.Printf("%s: %s\n", output.ExecutorID, value.String())
+        case []*message.Message:
+            fmt.Println("===== Final Aggregated Results =====")
+            for _, msg := range value {
+                fmt.Printf("%s: %s\n", msg.Role, msg.String())
+            }
+        }
+    }
+}
+```
+
+## Sample Output
+
+```plaintext
+French: English detected. Bonjour, le monde !
+Spanish: English detected. ¡Hola, mundo!
+English: English detected. Hello, world!
+
+===== Final Aggregated Results =====
+assistant: English detected. Bonjour, le monde !
+assistant: English detected. ¡Hola, mundo!
+assistant: English detected. Hello, world!
+```
+
+## Advanced: Custom Agent Executors
+
+Build concurrent workflows manually when you need custom executor behavior. A custom executor can call an agent and then participate in a fan-out/fan-in workflow.
+
+```go
+agentExecutor := func(id string, ag *agent.Agent) workflow.ExecutorBinding {
+    return workflow.BindNewExecutorFunc(id, func(_ string, executorID string) (*workflow.Executor, error) {
+        return workflow.NewExecutor(executorID, func(ctx *workflow.Context, prompt string) (string, error) {
+            response, err := ag.RunText(ctx, prompt).Collect()
+            if err != nil {
+                return "", err
+            }
+            return response.String(), nil
+        }), nil
+    })
+}
+
+researcher := agentExecutor("researcher", researcherAgent)
+marketer := agentExecutor("marketer", marketerAgent)
+aggregate := aggregateStrings("ConcurrentAggregationExecutor")
+
+wf, err := workflow.NewBuilder(start).
+    AddFanOutEdge(start, []workflow.ExecutorBinding{researcher, marketer}).
+    AddFanInBarrierEdge([]workflow.ExecutorBinding{researcher, marketer}, aggregate).
+    WithOutputFrom(aggregate).
+    Build()
+```
+
+## Advanced: Custom Aggregator
+
+Use `WithAggregator` to replace the default message aggregation behavior:
+
+```go
+wf, err := agentworkflow.NewConcurrentWorkflowBuilder(agents...).
+    WithName("translation-concurrent").
+    WithAggregator(func(_ context.Context, batches [][]*message.Message) []*message.Message {
+        results := make([]*message.Message, 0, len(batches))
+        for _, batch := range batches {
+            if len(batch) > 0 {
+                results = append(results, batch[len(batch)-1])
+            }
+        }
+        return results
+    }).
+    Build()
+if err != nil {
+    return err
+}
+```
+
+## Intermediate Outputs
+
+By default, `NewConcurrentWorkflowBuilder` emits participant and batching outputs as intermediate workflow outputs and emits the aggregated result as the terminal output. For custom executor workflows, mark branch executors as intermediate and the aggregator as terminal:
+
+```go
+wf, err := workflow.NewBuilder(start).
+    AddFanOutEdge(start, []workflow.ExecutorBinding{physics, chemistry}).
+    AddFanInBarrierEdge([]workflow.ExecutorBinding{physics, chemistry}, aggregate).
+    WithIntermediateOutputFrom(physics, chemistry).
+    WithOutputFrom(aggregate).
+    Build()
+```
+
+Each `workflow.OutputEvent` includes the `ExecutorID` that produced the output. Use `OutputEvent.IsIntermediate()` to distinguish intermediate branch outputs from the final aggregate.
+
+## Key Concepts
+
+- **Parallel Execution**: All agents or executors process the input independently.
+- **agentworkflow.NewConcurrentWorkflowBuilder()**: Creates a concurrent workflow from a collection of agents.
+- **Fan-out/Fan-in Edges**: Custom concurrent workflows use `AddFanOutEdge` and `AddFanInBarrierEdge`.
+- **Message Aggregation**: The default aggregator returns the last message from each participant; custom aggregators can replace that behavior.
+- **Event Streaming**: Output events can surface individual agent updates and final aggregated results.
+- **Intermediate Outputs**: `WithIntermediateOutputFrom` marks selected outputs with `workflow.OutputTagIntermediate`.
+
+> [!TIP]
+> See the [concurrent workflow sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/03-workflows/concurrent/concurrent/main.go) and [agent workflow patterns sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/03-workflows/01-start-here/03_agent_workflow_patterns/main.go) for complete runnable examples.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: reference
 ms.author: edvan
-ms.date: 04/01/2026
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
@@ -734,6 +734,26 @@ if __name__ == "__main__":
 
 :::zone-end
 
+:::zone pivot="programming-language-go"
+
+Go middleware is registered on `agent.Config.Middlewares`, so it is agent-scoped by default. For per-run behavior, pass typed `agent.Option` values such as `agent.WithInstructions`, `agent.WithTool`, or `agent.WithSession`, or add values to `context.Context` before calling the agent.
+
+```go
+logging := agent.MiddlewareFunc(func(next agent.RunFunc, ctx context.Context, messages []*message.Message, options ...agent.Option) iter.Seq2[*agent.ResponseUpdate, error] {
+    log.Println("agent run", len(messages))
+    return next(ctx, messages, options...)
+})
+
+a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Config: agent.Config{
+        Middlewares: []agent.Middleware{logging},
+    },
+})
+
+resp, err := a.RunText(ctx, "Hello", agent.WithInstructions("Answer briefly.")).Collect()
+```
+
+:::zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

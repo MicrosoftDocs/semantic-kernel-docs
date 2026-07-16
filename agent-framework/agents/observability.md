@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: reference
 ms.author: edvan
-ms.date: 04/01/2026
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
@@ -195,6 +195,12 @@ Some common exporters you may want to install based on your needs:
 Use the [OpenTelemetry Registry](https://opentelemetry.io/ecosystem/registry/?language=python&component=instrumentation) to find more exporters and instrumentation packages.
 
 ## Enable Observability (Python)
+
+### MCP trace propagation
+
+Whenever there is an active OpenTelemetry span context, Agent Framework automatically propagates trace context to MCP servers via the `params._meta` field of `tools/call` requests. It uses the globally-configured OpenTelemetry propagator(s) (W3C Trace Context by default, producing `traceparent` and `tracestate`), so custom propagators (B3, Jaeger, etc.) are also supported. This enables distributed tracing across agent-to-MCP-server boundaries, compliant with the [MCP `_meta` specification](https://modelcontextprotocol.io/specification/2025-11-25/basic#_meta).
+
+**Scope:** automatic `_meta` injection applies only to MCP sessions that the agent process itself opens — `MCPStreamableHTTPTool`, `MCPStdioTool`, and `MCPWebsocketTool` (or any other client-opened `MCPTool` subclass). It does **not** apply to hosted/provider-managed MCP tool configurations such as `FoundryChatClient.get_mcp_tool(...)`, `OpenAIChatClient.get_mcp_tool(...)`, `AnthropicClient.get_mcp_tool(...)`, `GeminiChatClient.get_mcp_tool(...)`, or Foundry hosted-agent toolboxes, because in those cases the `tools/call` message is issued by the provider service runtime rather than by the agent process. As a result, the framework has no opportunity to inject trace context into those requests, and propagating `traceparent`/`tracestate` across that hosted-service boundary is the responsibility of the service runtime, not Agent Framework. If end-to-end distributed tracing to the downstream MCP server is required, use a client-opened MCP transport instead of a hosted connector.
 
 ### Five patterns for configuring observability
 
@@ -580,6 +586,53 @@ if __name__ == "__main__":
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Observability with OpenTelemetry
+
+The Go Agent Framework includes an OpenTelemetry middleware that automatically traces agent invocations.
+
+### Setup
+
+```go
+import (
+    "github.com/microsoft/agent-framework-go/provider/otelprovider"
+
+    "go.opentelemetry.io/otel/exporters/stdout/stdouttrace"
+    sdktrace "go.opentelemetry.io/otel/sdk/trace"
+    otellib "go.opentelemetry.io/otel"
+)
+
+// Create a tracer provider with a console exporter
+exporter, _ := stdouttrace.New(stdouttrace.WithPrettyPrint())
+tp := sdktrace.NewTracerProvider(sdktrace.WithBatcher(exporter))
+defer tp.Shutdown(context.Background())
+otellib.SetTracerProvider(tp)
+```
+
+### Add the middleware to your agent
+
+```go
+a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Instructions: "You are a helpful assistant.",
+    Config: agent.Config{
+        Middlewares: []agent.Middleware{
+            otelprovider.NewMiddleware(otelprovider.MiddlewareConfig{}), // OpenTelemetry tracing
+        },
+    },
+})
+```
+
+The middleware emits spans with attributes including:
+
+- `gen_ai.provider.name` — The provider name (e.g., "openai")
+- `gen_ai.agent.id` — The agent's unique ID
+- `gen_ai.agent.name` — The agent's display name
+- `gen_ai.agent.description` — The agent's description
+
+> [!TIP]
+> See the [full sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/agents/step08_observability/main.go) for a complete runnable example.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

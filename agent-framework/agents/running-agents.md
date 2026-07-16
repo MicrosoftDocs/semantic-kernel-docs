@@ -2,10 +2,10 @@
 title: Running Agents
 description: Learn how to run agents with Agent Framework
 zone_pivot_groups: programming-languages
-author: markwallace
+author: moonbox3
 ms.topic: reference
-ms.author: markwallace
-ms.date: 03/31/2026
+ms.author: evmattso
+ms.date: 05/27/2026
 ms.service: agent-framework
 ---
 
@@ -91,6 +91,27 @@ print(f"Messages: {len(final.messages)}")
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+In Go, `RunText` returns a `ResponseStream` - an iterator of `(ResponseUpdate, error)` pairs.
+
+For non-streaming, call `Collect()` on the stream to gather all updates into a single response:
+
+```go
+resp, err := a.RunText(ctx, "What is the weather like in Amsterdam?").Collect()
+fmt.Println(resp, err)
+```
+
+For streaming, iterate over the stream directly using a `range` loop:
+
+```go
+for update, err := range a.RunText(ctx, "What is the weather like in Amsterdam?", agent.Stream(true)) {
+    fmt.Print(update, err)
+}
+```
+
+::: zone-end
+
 ## Agent run options
 
 ::: zone pivot="programming-language-csharp"
@@ -120,7 +141,7 @@ Common options include:
 - `temperature`: Controls randomness in response generation
 - `model`: Override the model for this specific run
 - `top_p`: Nucleus sampling parameter
-- `response_format`: Specify the response format (e.g., structured output)
+- `response_format`: Specify the response format (e.g., structured outputs)
 
 > [!NOTE]
 > The `tools` and `instructions` parameters remain as direct keyword arguments and are not passed via the `options` dictionary.
@@ -166,6 +187,26 @@ async for update in agent.run(
 Each provider has its own TypedDict class (e.g., `OpenAIChatOptions`, `AnthropicChatOptions`, `OllamaChatOptions`) that exposes the full set of options supported by that provider.
 
 When both `default_options` and per-run `options` are provided, the per-run options take precedence and are merged with the defaults.
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+Options are passed as variadic `agent.Option` arguments. Available options include:
+
+- `agent.Stream(true)` - Enable streaming
+- `agent.WithSession(session)` - Attach a session for multi-turn conversations
+- `agent.WithStructuredOutput(&v)` - Request structured output into a typed value
+- `agent.WithResponseFormat(format)` - Specify the response format
+- `agent.WithTool(tool)` - Add a tool for this run
+- `agent.AllowBackgroundResponses(true)` - Enable background responses
+
+```go
+resp, err := a.RunText(ctx, "Tell me a joke.",
+    agent.Stream(true),
+    agent.WithSession(session),
+).Collect()
+```
 
 ::: zone-end
 
@@ -242,6 +283,23 @@ async for update in response_stream:
 # Get the aggregated final response after streaming
 final = await response_stream.get_final_response()
 print(f"Complete text: {final.text}")
+```
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+`ResponseStream` yields `*agent.ResponseUpdate` values. Each update contains:
+
+- `Contents` - Slice of `message.Content` values, such as text, function calls, and usage
+- `Role` - The message role, such as assistant or system
+- `MessageID` / `ResponseID` - Identifiers for the message and response
+
+To get the full text result from a non-streaming response, use `Collect()`:
+
+```go
+resp, err := a.RunText(ctx, "What is the weather like in Amsterdam?").Collect()
+fmt.Println(resp, err)
 ```
 
 ::: zone-end
@@ -334,6 +392,27 @@ for message in response.messages:
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+The Go Agent Framework uses message and content types from the `message` package. Response updates can contain multiple content items; inspect each item for the content type you need.
+
+For streaming, process updates individually as they arrive:
+
+```go
+for update, err := range a.RunText(ctx, "Tell me a story.", agent.Stream(true)) {
+    fmt.Print(err)
+    for _, c := range update.Contents {
+        if text, ok := c.(*message.TextContent); ok {
+            fmt.Print(text.Text)
+        }
+    }
+}
+```
+
+> [!TIP]
+> See the [full sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/agents/step01_running/main.go) for a complete runnable example.
+
+::: zone-end
 
 ## Next steps
 

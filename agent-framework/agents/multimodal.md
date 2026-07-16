@@ -5,9 +5,20 @@ zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
 ms.author: westey
-ms.date: 09/24/2025
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
+
+<!--
+  Language parity table – keep in sync when adding/removing sections.
+
+  | Section                    | C# | Python | Go | Notes |
+  |----------------------------|:--:|:------:|:--:|-------|
+  | Create agent               | ✅ |   ✅   | ✅ |       |
+  | Message with image URL     | ✅ |   ✅   | ✅ |       |
+  | Load image from file       | ❌ |   ✅   | ✅ |       |
+  | Run agent                  | ✅ |   ✅   | ✅ |       |
+-->
 
 # Using images with an agent
 
@@ -129,7 +140,91 @@ This will print the agent's analysis of the image to the console.
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+## Passing images to the agent
+
+You can send images to an agent by creating a `message` that includes both text and image content. The agent can then analyze the image and respond accordingly.
+
+First, create an agent that is able to analyze images.
+
+```go
+import (
+    "context"
+    "fmt"
+    "os"
+
+    "github.com/microsoft/agent-framework-go/agent"
+    "github.com/microsoft/agent-framework-go/provider/foundryprovider"
+    "github.com/microsoft/agent-framework-go/message"
+
+    "github.com/Azure/azure-sdk-for-go/sdk/azidentity"
+)
+
+token, err := azidentity.NewDefaultAzureCredential(nil)
+if err != nil {
+    panic(err)
+}
+
+a := foundryprovider.NewAgent(
+    os.Getenv("FOUNDRY_PROJECT_ENDPOINT"),
+    token,
+    foundryprovider.ModelDeployment(os.Getenv("FOUNDRY_MODEL")),
+    foundryprovider.AgentConfig{
+        Instructions: "You are a helpful agent that can analyze images",
+        Config: agent.Config{
+            Name: "VisionAgent",
+        },
+    },
+)
+```
+
+> [!WARNING]
+> `azidentity.NewDefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential, such as `azidentity.NewManagedIdentityCredential`, to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
+
+Next, create a message that contains both a text prompt and an image URL. Use `message.TextContent` for the text and `message.URIContent` for the image.
+
+```go
+msg := message.New(
+    &message.TextContent{Text: "What do you see in this image?"},
+    &message.URIContent{
+        URI:       "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg",
+        MediaType: "image/jpeg",
+    },
+)
+```
+
+You can also load an image from your local file system using `message.DataContent`:
+
+```go
+import "encoding/base64"
+
+imageBytes, err := os.ReadFile("path/to/your/image.jpg")
+if err != nil {
+    panic(err)
+}
+
+msg := message.New(
+    &message.TextContent{Text: "What do you see in this image?"},
+    &message.DataContent{
+        Data:      base64.StdEncoding.EncodeToString(imageBytes),
+        MediaType: "image/jpeg",
+    },
+)
+```
+
+Run the agent with the message. You can use streaming to receive the response as it is generated.
+
+```go
+ctx := context.Background()
+resp, err := a.RunMessage(ctx, msg).Collect()
+fmt.Println(resp.Text(), err)
+```
+
+This will print the agent's analysis of the image to the console.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Structured Output](structured-output.md)
+> [Structured Outputs](structured-outputs.md)

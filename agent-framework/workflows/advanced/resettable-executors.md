@@ -3,9 +3,9 @@ title: Resettable Executors
 description: How to implement IResettableExecutor to safely reuse stateful executors across workflow runs.
 zone_pivot_groups: programming-languages
 author: peibekwe
-ms.topic: conceptual
+ms.topic: article
 ms.author: peibekwe
-ms.date: 03/25/2026
+ms.date: 05/27/2026
 ms.service: agent-framework
 ---
 
@@ -124,6 +124,25 @@ This concept does not apply to Python. For full state isolation, build fresh wor
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+Go executors can reset shared local state by providing `ResetFunc` on `workflow.Executor`. Bindings created with `workflow.BindNewExecutorFunc` create a fresh executor per workflow session and usually don't need reset hooks.
+
+```go
+var count int
+
+counter := workflow.NewExecutor("Counter", func(input string) int {
+    count++
+    return count
+}).Extend(&workflow.Executor{
+    ResetFunc: func() error {
+        count = 0
+        return nil
+    },
+}).Bind()
+```
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

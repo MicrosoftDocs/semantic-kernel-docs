@@ -80,7 +80,7 @@ Console.WriteLine(response);
 ```python
 import asyncio
 import os
-from agent_framework import Agent, Message, Role
+from agent_framework import Agent, Message
 from agent_framework.openai import OpenAIChatCompletionClient
 from agent_framework.microsoft import PurviewPolicyMiddleware, PurviewSettings
 from azure.identity import AzureCliCredential, InteractiveBrowserCredential
@@ -110,7 +110,7 @@ async def main():
     response = await agent.run(Message(role='user', contents=["Summarize zero trust in one sentence."]))
     print(response)
 
-  if __name__ == "__main__":
+if __name__ == "__main__":
     asyncio.run(main())
 ```
 
@@ -139,5 +139,12 @@ Now that you added the above code to your agent, perform the following steps to 
 - [PyPI Package: Microsoft Agent Framework - Purview Integration (Python)](https://pypi.org/project/agent-framework-purview/).
 - [GitHub: Microsoft Agent Framework – Purview Integration (Python) source code](https://github.com/microsoft/agent-framework/tree/main/python/packages/purview).
 - [Code Sample: Purview Policy Enforcement Sample (Python)](https://github.com/microsoft/agent-framework/tree/main/python/samples/05-end-to-end/purview_agent).
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+> [!NOTE]
+> Go support for this feature is coming soon. See the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go) for the latest status.
 
 ::: zone-end

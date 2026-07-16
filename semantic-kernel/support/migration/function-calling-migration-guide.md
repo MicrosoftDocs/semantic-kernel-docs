@@ -3,7 +3,7 @@ title: Migrating to the new Function Calling capabilities
 description: Describes the steps for SK caller code to migrate from the current function calling capabilities, represented by the `ToolCallBehavior` class, to the new one represented by the `FunctionChoiceBehavior` class.
 zone_pivot_groups: programming-languages
 author: SergeyMenshykh
-ms.topic: conceptual
+ms.topic: article
 ms.author: semenshi
 ms.service: semantic-kernel
 ---

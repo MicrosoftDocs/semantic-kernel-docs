@@ -65,14 +65,34 @@ async def main():
 asyncio.run(main())
 ```
 
+## Tools
+
+`FoundryLocalClient` is a local chat client paired with a standard `Agent`, so the supported tools are the ones the chosen local model can actually call — they are not provided by a hosted runtime. Hosted Foundry tool types (`get_code_interpreter_tool`, `get_web_search_tool`, etc.) are not available on `FoundryLocalClient`.
+
+| Tool | Status | Notes |
+|---|---|---|
+| [Function Tools](../tools/function-tools.md) | ⚠️ | Supported only if the selected local model supports function calling. Use `FoundryLocalClient.manager` to inspect model capabilities. |
+| [Tool Approval](../tools/tool-approval.md) | ✅ | Provided by the framework's function-invoking chat client; works with any function-tool call. |
+| [Code Interpreter](../tools/code-interpreter.md) | ❌ | No hosted runtime. |
+| [File Search](../tools/file-search.md) | ❌ | No hosted runtime. |
+| [Web Search](../tools/web-search.md) | ❌ | No hosted runtime. |
+| [Hosted MCP Tools](../tools/hosted-mcp-tools.md) | ❌ | Not exposed by the local runtime. |
+| [Local MCP Tools](../tools/local-mcp-tools.md) | ✅ | Runs in your process and works with any chat client. |
+
 ## Model capabilities
 
-Not every local model supports the same features. Function calling and structured output depend on the selected model. The `FoundryLocalClient.manager` helper can be used to inspect the local catalog and supported capabilities before you run an agent.
+Not every local model supports the same features. Function calling and structured outputs depend on the selected model. The `FoundryLocalClient.manager` helper can be used to inspect the local catalog and supported capabilities before you run an agent.
 
 For additional runtime controls, `FoundryLocalClient` also supports options such as `device`, `bootstrap`, and `prepare_model`.
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+> [!NOTE]
+> Go support for this feature is coming soon. See the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go) for the latest status.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

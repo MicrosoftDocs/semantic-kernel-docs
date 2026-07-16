@@ -5,23 +5,23 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 03/11/2026
+ms.date: 05/27/2026
 ms.service: agent-framework
 ---
 
 <!--
   Language parity table – keep in sync when adding/removing sections.
 
-  | Section                      | C# | Python | Notes                                          |
-  |------------------------------|:--:|:------:|-------------------------------------------------|
-  | Enable Observability         | ✅ |   ✅   |                                                 |
-  | Workflow Spans               | ✅ |   ✅   | C# has session/invoke split; Python has run     |
-  | Span Attributes              | ✅ |   ✅   |                                                 |
-  | Span Events                  | ✅ |   ✅   | C# has session events; Python does not          |
-  | Links between Spans          | ✅ |   ✅   |                                                 |
-  | Edge Group Delivery Status   | ✅ |   ✅   |                                                 |
-  | Telemetry Configuration      | ✅ |   ✅   | Different configuration mechanisms              |
-  | Next Steps                   | ✅ |   ✅   |                                                 |
+    | Section                      | C# | Python | Go | Notes                                          |
+    |------------------------------|:--:|:------:|:--:|-------------------------------------------------|
+    | Enable Observability         | ✅ |   ✅   | ✅ |                                                 |
+    | Workflow Spans               | ✅ |   ✅   | ✅ | C#/Go have session/invoke split; Python has run |
+    | Span Attributes              | ✅ |   ✅   | ✅ |                                                 |
+    | Span Events                  | ✅ |   ✅   | ✅ | C#/Go have session events; Python does not      |
+    | Links between Spans          | ✅ |   ✅   | ✅ |                                                 |
+    | Edge Group Delivery Status   | ✅ |   ✅   | ✅ |                                                 |
+    | Telemetry Configuration      | ✅ |   ✅   | ✅ | Different configuration mechanisms              |
+    | Next Steps                   | ✅ |   ✅   | ✅ |                                                 |
 -->
 
 # Microsoft Agent Framework Workflows - Observability
@@ -78,6 +78,21 @@ The following spans are emitted during workflow execution:
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+The following spans are emitted during workflow execution:
+
+| Span Name | Description |
+|-----------|-------------|
+| `workflow.build` | Emitted for each workflow build. |
+| `workflow.session` | Outer span representing the lifetime of a workflow execution session. |
+| `workflow_invoke` | Emitted for each input-to-halt cycle within a workflow session. |
+| `executor.process {executor_id}` | Emitted for each executor processing a message. The executor ID is appended to the span name. |
+| `edge_group.process` | Emitted for each edge group processing a message. |
+| `message.send` | Emitted for each message sent from one executor to another. |
+
+::: zone-end
+
 ## Span Attributes
 
 Spans carry attributes that provide additional context about the operation. The following attributes are set on workflow spans:
@@ -130,6 +145,31 @@ Spans carry attributes that provide additional context about the operation. The 
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+| Attribute | Span(s) | Description |
+|-----------|---------|-------------|
+| `workflow.id` | `workflow.build`, `workflow.session`, `workflow_invoke` | The workflow start executor ID. |
+| `workflow.name` | `workflow.session`, `workflow_invoke` | The workflow name, when set. |
+| `workflow.description` | `workflow.session`, `workflow_invoke` | The workflow description, when set. |
+| `workflow.definition` | `workflow.build` | The JSON definition of the workflow graph. |
+| `session.id` | `workflow.session`, `workflow_invoke` | The workflow session identifier. |
+| `executor.id` | `executor.process` | The executor ID. |
+| `executor.implementation.id` | `executor.process` | The executor implementation ID. |
+| `executor.input` | `executor.process` | The input message. Only set when sensitive data is enabled. |
+| `executor.output` | `executor.process` | The executor output. Only set when sensitive data is enabled. |
+| `message.type` | `executor.process` | The type name of the processed message. |
+| `message.content` | `message.send` | The message content. Only set when sensitive data is enabled. |
+| `message.source_id` | `edge_group.process`, `message.send` | The ID of the executor that sent the message. |
+| `message.target_id` | `edge_group.process`, `message.send` | The target executor ID, when specified. |
+| `edge_group.type` | `edge_group.process` | The type of edge group being processed. |
+| `edge_group.delivered` | `edge_group.process` | Whether the message was delivered. |
+| `edge_group.delivery_status` | `edge_group.process` | The delivery outcome (see [Edge Group Delivery Status](#edge-group-delivery-status)). |
+| `error.type` | Any span on error | The exception type name. |
+| `error.message` | Any span on error | The exception message. |
+
+::: zone-end
+
 ## Span Events
 
 Span events are structured log entries attached to spans, providing a timeline of key moments within each span.
@@ -162,6 +202,23 @@ Span events are structured log entries attached to spans, providing a timeline o
 | `workflow.started`            | `workflow.run`   | Emitted when a workflow run begins.                |
 | `workflow.completed`          | `workflow.run`   | Emitted when a workflow run completes.             |
 | `workflow.error`              | `workflow.run`   | Emitted when a workflow run encounters an error.   |
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+| Event Name | Span(s) | Description |
+|------------|---------|-------------|
+| `build.started` | `workflow.build` | Emitted when the build process begins. |
+| `build.validation_completed` | `workflow.build` | Emitted when build validation passes. |
+| `build.completed` | `workflow.build` | Emitted when the build completes successfully. |
+| `build.error` | `workflow.build` | Emitted when the build fails. |
+| `session.started` | `workflow.session` | Emitted when a workflow session begins. |
+| `session.completed` | `workflow.session` | Emitted when a workflow session completes. |
+| `session.error` | `workflow.session` | Emitted when a workflow session encounters an error. |
+| `workflow.started` | `workflow_invoke` | Emitted when a workflow invocation begins. |
+| `workflow.completed` | `workflow_invoke` | Emitted when a workflow invocation completes. |
+| `workflow.error` | `workflow_invoke` | Emitted when a workflow invocation encounters an error. |
 
 ::: zone-end
 
@@ -215,6 +272,41 @@ Workflow telemetry is enabled through the global `enable_instrumentation()` func
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Workflow observability
+
+Workflow telemetry can be enabled with `WithTelemetry` on the workflow builder. Use the workflow OpenTelemetry tracer package to connect spans to your OpenTelemetry provider.
+
+### Enable workflow tracing
+
+```go
+import workflowotel "github.com/microsoft/agent-framework-go/workflow/observability/opentelemetry"
+
+wf, err := workflow.NewBuilder(startExecutor).
+    AddEdge(startExecutor, nextExecutor).
+    WithTelemetry(
+        workflowotel.New(workflowotel.Config{}),
+        workflow.TelemetryOptions{EnableSensitiveData: true},
+    ).
+    Build()
+```
+
+`TelemetryOptions` can disable workflow build/run, executor process, edge group, or message send spans, and can include serialized inputs and outputs when `EnableSensitiveData` is set.
+
+### Observe workflow events
+
+Monitor workflow execution through event streams:
+
+```go
+for evt := range run.NewEvents() {
+    switch e := evt.(type) {
+    case workflow.ExecutorCompletedEvent:
+        log.Printf("Executor %s completed", e.ExecutorID)
+    }
+}
+```
+
+::: zone-end
 ## Next Steps
 
 - [Learn about state isolation in workflows](./state.md).

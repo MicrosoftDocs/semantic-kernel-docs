@@ -5,25 +5,26 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 03/11/2026
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
 <!--
   Language parity table – keep in sync when adding/removing sections.
 
-  | Section                            | C# | Python | Notes                                     |
-  |------------------------------------|:--:|:------:|-------------------------------------------|
-  | Requirements                       | ✅ |   ✅   |                                           |
-  | Creating a Workflow Agent           | ✅ |   ✅   |                                           |
-  | AsAIAgent / as_agent Parameters     | ✅ |   ✅   |                                           |
-  | Creating a Session                  | ✅ |   ✅   |                                           |
-  | Non-Streaming Execution             | ✅ |   ✅   |                                           |
-  | Streaming Execution                 | ✅ |   ✅   |                                           |
-  | Handling External Input Requests    | ✅ |   ✅   |                                           |
-  | Providing Responses to Requests     | ❌ |   ✅   | Python-specific, uses Content helpers     |
-  | Complete Example                    | ❌ |   ✅   | Python-specific                           |
-  | Event Conversion                    | ❌ |   ✅   | Python-specific                           |
+    | Section                            | C# | Python | Go | Notes                                     |
+    |------------------------------------|:--:|:------:|:--:|-------------------------------------------|
+    | Requirements                       | ✅ |   ✅   | ✅ |                                           |
+    | Create a Workflow Agent             | ✅ |   ✅   | ✅ |                                           |
+    | AsAIAgent / as_agent Parameters     | ✅ |   ✅   | ✅ | Go uses agentworkflow.AgentConfig           |
+    | Creating a Session                  | ✅ |   ✅   | ✅ |                                           |
+    | Non-Streaming Execution             | ✅ |   ✅   | ✅ |                                           |
+    | Streaming Execution                 | ✅ |   ✅   | ✅ |                                           |
+    | Handling External Input Requests    | ✅ |   ✅   | ✅ |                                           |
+    | Providing Responses to Requests     | ❌ |   ✅   | ✅ | Python/Go use content helpers             |
+    | Session Serialization and Resumption | ✅ |   ❌   | ✅ |                                           |
+    | Complete Example                    | ❌ |   ✅   | ✅ | Go includes complete sample               |
+    | Event Conversion                    | ❌ |   ✅   | ❌ | Python-specific                           |
 -->
 
 # Microsoft Agent Framework Workflows - Using Workflows as Agents
@@ -196,7 +197,7 @@ await foreach (var update in workflowAgent.RunStreamingAsync(newMessages, resume
 
 To use a workflow as an agent, the workflow's start executor must be able to handle message input. This is automatically satisfied when using `Agent` or agent-based executors.
 
-## Creating a Workflow Agent
+## Create a Workflow Agent
 
 Call `as_agent()` on any compatible workflow to convert it into an agent:
 
@@ -394,18 +395,240 @@ When a workflow runs as an agent, workflow events are converted to agent respons
 - `run()`: Returns an `AgentResponse` containing the complete result after the workflow finishes
 - `run(..., stream=True)`: Returns an async iterable of `AgentResponseUpdate` objects as the workflow executes, providing real-time updates
 
+`as_agent()` forwards both `"output"` (terminal) and `"intermediate"` events to the caller. The set of forwarded event types is `AGENT_FORWARDED_EVENT_TYPES = {"output", "intermediate"}`. All other workflow-internal events are dropped.
+
 During execution, internal workflow events are mapped to agent responses as follows:
 
 | Workflow Event | Agent Response |
 |----------------|----------------|
-| `event.type == "output"` | Passed through as `AgentResponseUpdate` (streaming) or aggregated into `AgentResponse` (non-streaming) |
+| `event.type == "output"` | Terminal answer — passed through as `AgentResponseUpdate` (streaming) or aggregated into `AgentResponse` (non-streaming). `response.text` returns only these terminal outputs. |
+| `event.type == "intermediate"` | Observational progress — rendered as `text_reasoning` content in `AgentResponseUpdate`. Not included in `response.text`. |
 | `event.type == "request_info"` | Converted to function call content using `WorkflowAgent.REQUEST_INFO_FUNCTION_NAME` |
 | Other events | Ignored (workflow-internal only) |
 
-This conversion allows you to use the standard agent interface while still having access to detailed workflow information when needed.
+This conversion allows you to use the standard agent interface while still having access to detailed workflow information when needed. The `.text` property on both `AgentResponse` and `AgentResponseUpdate` returns only the terminal (`"output"`) answer; inspect `text_reasoning` content items to access intermediate progress.
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+Go wraps workflows as agents with `workflow/agentworkflow`. This lets callers use the normal agent run APIs while the provider executes the workflow behind the scenes.
+
+## Requirements
+
+The workflow's start executor must accept `[]*message.Message`. Hosted agent executors and executors configured with `messageworkflow.Configure` satisfy this requirement.
+
+## Create a Workflow Agent
+
+Use `agentworkflow.New` to wrap any compatible workflow as an agent:
+
+```go
+wfAgent, err := agentworkflow.New(wf, agentworkflow.AgentConfig{
+    IncludeOutputsInResponse: true,
+    Config: agent.Config{
+        Name: "WorkflowAgent",
+    },
+})
+if err != nil {
+    return err
+}
+```
+
+### agentworkflow.AgentConfig Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `Config` | `agent.Config` | Embedded agent configuration, including name, description, middleware, tools, and run options. |
+| `Environment` | `*inproc.ExecutionEnvironment` | Optional execution environment. Defaults to `inproc.OffThread`, or to `inproc.Concurrent` when the workflow allows concurrent execution. |
+| `IncludeErrorDetails` | `bool` | If `true`, includes detailed workflow error messages in agent responses. Defaults to `false`. |
+| `IncludeOutputsInResponse` | `bool` | If `true`, transforms outgoing workflow message outputs into content in agent responses. Defaults to `false`. |
+
+## Using Workflow Agents
+
+### Creating a Session
+
+Create an agent session when you want workflow state to persist across turns:
+
+```go
+session, err := wfAgent.CreateSession(ctx)
+if err != nil {
+    return err
+}
+```
+
+### Non-Streaming Execution
+
+Use `RunText` or `Run` and collect the response for non-streaming execution:
+
+```go
+response, err := wfAgent.RunText(ctx, "Analyze this", agent.WithSession(session)).Collect()
+if err != nil {
+    return err
+}
+fmt.Println(response.String())
+```
+
+### Streaming Execution
+
+For real-time updates as the workflow executes:
+
+```go
+for update, err := range wfAgent.RunText(ctx, "Analyze this", agent.WithSession(session), agent.Stream(true)) {
+    if err != nil {
+        return err
+    }
+    fmt.Print(update.String())
+}
+```
+
+## Handling External Input Requests
+
+External requests from the workflow are surfaced as function call content in the agent response. Inspect response messages for request content and send the matching response in a later run.
+
+```go
+var requestCall *message.FunctionCallContent
+for content := range response.Contents() {
+    if call, ok := content.(*message.FunctionCallContent); ok {
+        requestCall = call
+        break
+    }
+}
+```
+
+### Providing Responses to Pending Requests
+
+To continue workflow execution, return the matching response content to the workflow agent:
+
+```go
+result := &message.FunctionResultContent{
+    CallID: requestCall.CallID,
+    Result: "approved",
+}
+
+response, err = wfAgent.Run(
+    ctx,
+    []*message.Message{{
+        Role:     message.RoleTool,
+        Contents: []message.Content{result},
+    }},
+    agent.WithSession(session),
+).Collect()
+if err != nil {
+    return err
+}
+```
+
+## Session Serialization and Resumption
+
+Workflow agent sessions can be serialized for persistence and resumed later:
+
+```go
+// Serialize the session state.
+serializedSession, err := json.Marshal(session)
+if err != nil {
+    return err
+}
+
+// Store serializedSession to your persistence layer...
+
+// Later, resume the session.
+var resumedSession agent.Session
+if err := json.Unmarshal(serializedSession, &resumedSession); err != nil {
+    return err
+}
+
+for update, err := range wfAgent.RunText(ctx, "Continue the article", agent.WithSession(&resumedSession), agent.Stream(true)) {
+    if err != nil {
+        return err
+    }
+    fmt.Print(update.String())
+}
+```
+
+## Complete Example
+
+The following example builds a content pipeline workflow, wraps it as an agent, and streams responses through the normal agent API:
+
+```go
+package main
+
+import (
+    "cmp"
+    "context"
+    "fmt"
+    "log"
+    "os"
+
+    "github.com/microsoft/agent-framework-go/agent"
+    "github.com/microsoft/agent-framework-go/provider/foundryprovider"
+    "github.com/microsoft/agent-framework-go/workflow/agentworkflow"
+
+    "github.com/Azure/azure-sdk-for-go/sdk/azidentity"
+)
+
+func main() {
+    ctx := context.Background()
+    endpoint := os.Getenv("FOUNDRY_PROJECT_ENDPOINT")
+    model := cmp.Or(os.Getenv("FOUNDRY_MODEL"), "gpt-4o-mini")
+
+    credential, err := azidentity.NewDefaultAzureCredential(nil)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    researcher := foundryprovider.NewAgent(endpoint, credential, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+        Instructions: "Research and gather information on the given topic.",
+        Config:      agent.Config{Name: "Researcher"},
+    })
+    writer := foundryprovider.NewAgent(endpoint, credential, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+        Instructions: "Write clear, engaging content based on research.",
+        Config:      agent.Config{Name: "Writer"},
+    })
+    reviewer := foundryprovider.NewAgent(endpoint, credential, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+        Instructions: "Review the content and provide a final polished version.",
+        Config:      agent.Config{Name: "Reviewer"},
+    })
+
+    wf, err := agentworkflow.NewSequentialWorkflowBuilder(researcher, writer, reviewer).
+        WithName("content-pipeline").
+        Build()
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    wfAgent, err := agentworkflow.New(wf, agentworkflow.AgentConfig{
+        IncludeOutputsInResponse: true,
+        Config: agent.Config{
+            Name: "Content Pipeline Agent",
+        },
+    })
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    session, err := wfAgent.CreateSession(ctx)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    for update, err := range wfAgent.RunText(ctx, "Write about quantum computing", agent.WithSession(session), agent.Stream(true)) {
+        if err != nil {
+            log.Fatal(err)
+        }
+        if text := update.String(); text != "" {
+            fmt.Print(text)
+        }
+    }
+}
+```
+
+> [!WARNING]
+> `azidentity.NewDefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential, such as `azidentity.NewManagedIdentityCredential`, to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
+
+> [!TIP]
+> See the [workflow as an agent sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/03-workflows/agents/workflow_as_an_agent/main.go) for a complete runnable example.
+
+::: zone-end
 ## Use Cases
 
 ### 1. Complex Agent Pipelines

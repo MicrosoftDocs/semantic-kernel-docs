@@ -2,7 +2,7 @@
 title: Prompt engineering with Semantic Kernel
 description: Understanding the importance of prompts in directing the behavior of AIs
 author: johnmaeda
-ms.topic: conceptual
+ms.topic: article
 ms.author: johnmaeda
 ms.date: 09/27/2024
 ms.service: semantic-kernel

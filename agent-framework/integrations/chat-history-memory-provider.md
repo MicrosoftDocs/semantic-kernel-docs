@@ -3,7 +3,7 @@ title: Chat History Memory Provider for Agent Framework
 description: Learn how to use the Chat History Memory Provider to add semantic memory capabilities to your Agent Framework agents by storing and retrieving chat history from a vector store.
 zone_pivot_groups: programming-languages
 author: westey-m
-ms.topic: conceptual
+ms.topic: article
 ms.author: westey
 ms.date: 04/03/2026
 ms.service: agent-framework
@@ -27,10 +27,13 @@ Stored messages are scoped using configurable identifiers (application, agent, u
 
 ## Prerequisites
 
-- A vector store implementation from [Microsoft.Extensions.VectorData](https://www.nuget.org/packages/Microsoft.Extensions.VectorData.Abstractions) (for example, [`InMemoryVectorStore`](https://www.nuget.org/packages/Microsoft.SemanticKernel.Connectors.InMemory), [Azure AI Search](https://www.nuget.org/packages/Microsoft.SemanticKernel.Connectors.AzureAISearch), or [other supported stores](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors))
+- A vector store implementation from 📦 [Microsoft.Extensions.VectorData.Abstractions](https://www.nuget.org/packages/Microsoft.Extensions.VectorData.Abstractions) (for example, 📦 [`InMemoryVectorStore`](https://www.nuget.org/packages/Microsoft.SemanticKernel.Connectors.InMemory), 📦 [Azure AI Search](https://www.nuget.org/packages/Microsoft.SemanticKernel.Connectors.AzureAISearch), or [other supported stores](./index.md#vector-store-abstraction-implementations))
 - An embedding model configured on your vector store
 - Azure OpenAI or OpenAI deployment for the chat model
 - .NET 8.0 or later
+
+> [!TIP]
+> See the [Vector Stores integration](./index.md#vector-stores) documentation for more information on the VectorData abstraction and available implementations.
 
 ## Usage
 
@@ -192,6 +195,12 @@ This provider is not yet available for Python. See the C# tab for usage examples
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+> [!NOTE]
+> Go support for this feature is coming soon. See the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go) for the latest status.
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

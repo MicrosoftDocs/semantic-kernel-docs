@@ -1,15 +1,15 @@
 ---
-title: "Step 6: Host Your Agent"
+title: "Step 7: Host Your Agent"
 description: "Deploy your agent so users and other agents can interact with it."
 zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: tutorial
 ms.author: edvan
-ms.date: 02/09/2026
+ms.date: 07/08/2026
 ms.service: agent-framework
 ---
 
-# Step 6: Host Your Agent
+# Step 7: Host Your Agent
 
 Once you've built your agent, you need to host it so users and other agents can interact with it.
 
@@ -19,7 +19,7 @@ Once you've built your agent, you need to host it so users and other agents can 
 |--------|-------------|----------|
 | [A2A Protocol](../integrations/a2a.md) | Expose agents via the Agent-to-Agent protocol | Multi-agent systems |
 | [OpenAI-Compatible Endpoints](../integrations/openai-endpoints.md) | Expose agents via Chat Completions or Responses APIs | OpenAI-compatible clients |
-| [Azure Functions (Durable)](../integrations/azure-functions.md) | Run agents as durable Azure Functions | Serverless, long-running tasks |
+| [Durable Extension](../integrations/durable-extension.md) | Make C# and Python agents and workflows durable on Azure Functions or self-hosted compute | Long-running, reliable workloads |
 | [AG-UI Protocol](../integrations/ag-ui/index.md) | Build web-based AI agent applications | Web frontends |
 
 :::zone pivot="programming-language-csharp"
@@ -126,29 +126,32 @@ app.Run();
 ```
 
 > [!TIP]
-> See the [Durable Azure Functions samples](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/04-hosting/DurableAgents/AzureFunctions) for serverless hosting examples.
+> See the [Durable Agents samples](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/04-hosting/DurableAgents) for Azure Functions and self-hosted examples.
 
 :::zone-end
 
 :::zone pivot="programming-language-python"
 
-Install the Azure Functions hosting package:
+Install the Azure Functions hosting package, Foundry client, and Azure authentication package:
 
 ```bash
-pip install agent-framework-azurefunctions --pre
+pip install agent-framework-azurefunctions agent-framework-foundry azure-identity
 ```
 
 Create an agent:
 
-:::code language="python" source="~/../agent-framework-code/python/samples/04-hosting/azure_functions/01_single_agent/function_app.py" range="13-27" highlight="12-15":::
+:::code language="python" source="~/../agent-framework-code/python/samples/04-hosting/azure_functions/01_single_agent/function_app.py" range="24-35" highlight="4-9":::
 
 Register the agent with `AgentFunctionApp`:
 
-:::code language="python" source="~/../agent-framework-code/python/samples/04-hosting/azure_functions/01_single_agent/function_app.py" range="30-31" highlight="2":::
+:::code language="python" source="~/../agent-framework-code/python/samples/04-hosting/azure_functions/01_single_agent/function_app.py" range="38-39" highlight="2":::
 
 Run locally with [Azure Functions Core Tools](/azure/azure-functions/functions-run-local):
 
 ```bash
+az login
+pip install -r requirements.txt
+# Start Azurite and copy local.settings.json.template to local.settings.json first.
 func start
 ```
 
@@ -165,6 +168,67 @@ curl -X POST http://localhost:7071/api/agents/Joker/run \
 
 :::zone-end
 
+:::zone pivot="programming-language-go"
+
+## Hosting with A2A Protocol
+
+The Go port provides A2A hosting through `a2aprovider`, which wraps an agent in an HTTP handler compatible with the Agent-to-Agent protocol.
+
+> [!NOTE]
+> Durable Extension hosting isn't currently available for Go. For the latest Go SDK status, see the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go).
+
+Create an agent:
+
+```go
+import (
+    "github.com/microsoft/agent-framework-go/agent"
+    "github.com/microsoft/agent-framework-go/provider/a2aprovider"
+    "github.com/microsoft/agent-framework-go/provider/foundryprovider"
+
+    "github.com/a2aproject/a2a-go/v2/a2a"
+    "github.com/a2aproject/a2a-go/v2/a2asrv"
+)
+
+a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Instructions: "You are a helpful assistant.",
+    Config: agent.Config{
+    },
+})
+```
+
+Expose the agent via A2A:
+
+```go
+url := "http://localhost:5000"
+card := &a2a.AgentCard{
+    Name:               "MyAgent",
+    Description:        "A helpful assistant.",
+    Version:            "1.0.0",
+    DefaultInputModes:  []string{"text"},
+    DefaultOutputModes: []string{"text"},
+    Capabilities:       a2a.AgentCapabilities{Streaming: false},
+    SupportedInterfaces: []*a2a.AgentInterface{
+        a2a.NewAgentInterface(url, a2a.TransportProtocolJSONRPC),
+    },
+}
+
+mux := http.NewServeMux()
+requestHandler := a2asrv.NewHandler(
+    a2aprovider.NewExecutor(a, a2aprovider.ExecutorConfig{}),
+    a2asrv.WithExtendedAgentCard(card),
+)
+mux.Handle("/", a2asrv.NewJSONRPCHandler(requestHandler))
+mux.Handle(a2asrv.WellKnownAgentCardPath, a2asrv.NewStaticAgentCardHandler(card))
+
+log.Println("A2A server listening on :5000")
+http.ListenAndServe(":5000", mux)
+```
+
+> [!TIP]
+> See the [full A2A client-server sample](https://github.com/microsoft/agent-framework-go/tree/main/examples/05-end-to-end/a2a_client_server) for a complete runnable example.
+
+:::zone-end
+
 ## Next steps
 
 > [!div class="nextstepaction"]
@@ -173,7 +237,7 @@ curl -X POST http://localhost:7071/api/agents/Joker/run \
 **Go deeper:**
 
 - [A2A Protocol](../integrations/a2a.md) — expose and consume agents via A2A
-- [Azure Functions](../integrations/azure-functions.md) — serverless agent hosting
+- [Durable Extension](../integrations/durable-extension.md) — durable C# and Python agent and workflow hosting
 - [AG-UI Protocol](../integrations/ag-ui/index.md) — web-based agent UIs
 - [Foundry Hosted Agents docs](/azure/ai-foundry/agents/concepts/hosted-agents) — understand hosted agents in Microsoft Foundry
 - [Foundry Hosted Agents sample (Python)](https://github.com/microsoft-foundry/foundry-samples/tree/main/samples/python/hosted-agents/agent-framework) — run an end-to-end Agent Framework hosted-agent sample

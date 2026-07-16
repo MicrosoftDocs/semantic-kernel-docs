@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: tutorial
 ms.author: westey
-ms.date: 09/25/2025
+ms.date: 06/01/2026
 ms.service: agent-framework
 ---
 
@@ -168,6 +168,10 @@ If you don't do this, the user won't be able to have a multi-turn conversation w
 
 > [!TIP]
 > See the [.NET samples](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples) for complete runnable examples.
+
+## Tools
+
+A custom `AIAgent` has whatever tool surface you decide to give it. If you wrap an existing `IChatClient` and pass `tools` through, you inherit that client's tool support — see, for example, the [OpenAI](./openai.md#tools), [Azure OpenAI](./azure-openai.md#tools), or [Microsoft Foundry](./microsoft-foundry.md#tools) provider pages for what the underlying clients support. If your custom agent does not call a chat client (for example, the echo agent above), there are no tools to invoke.
 
 ## Using the Agent
 
@@ -396,6 +400,10 @@ class EchoAgent(BaseAgent):
             stored.append(complete_response)
 ```
 
+## Tools
+
+A custom `BaseAgent` has whatever tool surface you decide to give it. If you wrap an existing chat client and pass `tools` through, you inherit that client's tool support — see, for example, the [OpenAI](./openai.md#tools), [Microsoft Foundry](./microsoft-foundry.md#tools), or [Anthropic](./anthropic.md#tools) provider pages for what the underlying clients support. If your custom agent does not call a chat client (for example, the echo agent above), there are no tools to invoke.
+
 ## Using the Agent
 
 If agent methods are all implemented correctly, the agent supports standard operations, including streaming via `ResponseStream`:
@@ -411,6 +419,50 @@ For more information on how to run and interact with agents, see the [Agent gett
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+## Custom providers
+
+You can create a custom provider by implementing `agent.ProviderConfig` and passing it to `agent.New`:
+
+```go
+import (
+    "context"
+    "iter"
+
+    "github.com/microsoft/agent-framework-go/agent"
+    "github.com/microsoft/agent-framework-go/message"
+)
+
+a := agent.New(agent.ProviderConfig{
+    ProviderName: "my-custom-provider",
+    Run: func(ctx context.Context, messages []*message.Message,
+        options ...agent.Option) iter.Seq2[*agent.ResponseUpdate, error] {
+        // Your custom LLM logic here
+        return func(yield func(*agent.ResponseUpdate, error) bool) {
+            yield(&agent.ResponseUpdate{
+                Role: message.RoleAssistant,
+                Contents: []message.Content{
+                    &message.TextContent{Text: "Hello from custom provider!"},
+                },
+            }, nil)
+        }
+    },
+}, agent.Config{
+    Name: "CustomAgent",
+})
+```
+
+### ProviderConfig fields
+
+| Field | Purpose |
+|---|---|
+| `CreateSession` | Create a new session for the provider |
+| `Run` | Execute a request and stream response updates |
+| `Middlewares` | Add provider-scoped middleware that runs after history and context providers |
+| `Format` | Generate a response format descriptor for structured output |
+| `Unmarshal` | Decode structured output into a target type |
+
+::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

@@ -3,9 +3,9 @@ title: Context Providers
 description: Learn built-in and custom context provider patterns, including history provider guidance.
 zone_pivot_groups: programming-languages
 author: eavanvalkenburg
-ms.topic: conceptual
+ms.topic: article
 ms.author: edvan
-ms.date: 02/13/2026
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
@@ -62,7 +62,21 @@ session = agent.create_session()
 await agent.run("Remember that I prefer vegetarian food.", session=session)
 ```
 
-`RawAgent` may auto-add `InMemoryHistoryProvider("memory")` in specific cases, but add it explicitly when you want deterministic local memory behavior.
+`RawAgent` may auto-add `InMemoryHistoryProvider()` with the default source id `"in_memory"` in specific cases, but add it explicitly when you want deterministic local memory behavior.
+
+:::zone-end
+
+:::zone pivot="programming-language-go"
+
+Configure providers through `agent.Config.ContextProviders` when creating an agent. Context providers inject additional context before each agent run and can persist state after each run.
+
+```go
+a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Config: agent.Config{
+        ContextProviders: []agent.ContextProvider{provider},
+    },
+})
+```
 
 :::zone-end
 
@@ -318,11 +332,15 @@ class UserPreferenceProvider(ContextProvider):
 ```
 
 > [!NOTE]
-> `ContextProvider` and `HistoryProvider` are the canonical Python base classes. `BaseContextProvider` and `BaseHistoryProvider` still exist as deprecated aliases for compatibility, but new providers should inherit from the new names.
+> `ContextProvider` and `HistoryProvider` are the canonical Python base classes.
 >
 > Context providers can also add chat or function middleware for the current invocation by calling `context.extend_middleware(self.source_id, middleware)`. The agent flattens those additions with `context.get_middleware()` and applies them in provider order before invoking the chat client.
 
-:::zone-end
+### Dynamic tool selection
+
+Context providers can add tools for the current invocation with `context.extend_tools(self.source_id, tools)`. For progressive tool loading during a function-calling loop, see the [dynamic_tool_exposure sample](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/tools/dynamic_tool_exposure.py). For more on toolboxes, see [Foundry Toolboxes](../providers/microsoft-foundry.md#toolboxes).
+
+::: zone-end
 
 :::zone pivot="programming-language-python"
 
@@ -349,7 +367,7 @@ class DatabaseHistoryProvider(HistoryProvider):
         state: dict[str, Any] | None = None,
         **kwargs: Any,
     ) -> list[Message]:
-        key = (state or {}).get(self.source_id, {}).get("history_key", session_id or "default")
+        key = (state or {}).get("history_key", session_id or "default")
         rows = await self._db.load_messages(key)
         return [Message.from_dict(row) for row in rows]
 
@@ -364,7 +382,7 @@ class DatabaseHistoryProvider(HistoryProvider):
         if not messages:
             return
         if state is not None:
-            key = state.setdefault(self.source_id, {}).setdefault("history_key", session_id or "default")
+            key = state.setdefault("history_key", session_id or "default")
         else:
             key = session_id or "default"
         await self._db.save_messages(key, [m.to_dict() for m in messages])
@@ -382,6 +400,44 @@ class DatabaseHistoryProvider(HistoryProvider):
 > audit = InMemoryHistoryProvider("audit", load_messages=False, store_context_messages=True)
 > agent = OpenAIChatClient().as_agent(context_providers=[primary, audit])
 > ```
+
+:::zone-end
+
+:::zone pivot="programming-language-go"
+
+Define a custom context provider with a `Provide` callback:
+
+```go
+import (
+    "context"
+
+    "github.com/microsoft/agent-framework-go/agent"
+    "github.com/microsoft/agent-framework-go/message"
+)
+
+provider := agent.NewContextProvider(agent.ContextProviderConfig{
+    SourceID: "user_memory",
+    Provide: func(ctx context.Context, invoking agent.InvokingContext) ([]*message.Message, []agent.Option, error) {
+        return nil, []agent.Option{agent.WithInstructions("User prefers short answers.")}, nil
+    },
+})
+```
+
+Context providers can read and write session state:
+
+```go
+Provide: func(ctx context.Context, invoking agent.InvokingContext) ([]*message.Message, []agent.Option, error) {
+    session, _ := agent.GetOption(invoking.Options, agent.WithSession)
+    var state MyState
+    _, _ = session.Get("my_key", &state)
+    return nil, nil, nil
+},
+Store: func(ctx context.Context, invoked agent.InvokedContext) error {
+    session, _ := agent.GetOption(invoked.Options, agent.WithSession)
+    session.Set("my_key", updatedState)
+    return nil
+},
+```
 
 :::zone-end
 

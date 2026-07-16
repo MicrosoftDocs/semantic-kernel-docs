@@ -3,21 +3,21 @@ title: Microsoft Agent Framework Workflows - Workflow Builder & Execution
 description: Building and executing workflows with the WorkflowBuilder.
 zone_pivot_groups: programming-languages
 author: TaoChenOSU
-ms.topic: conceptual
+ms.topic: article
 ms.author: taochen
-ms.date: 03/05/2026
+ms.date: 05/27/2026
 ms.service: agent-framework
 ---
 
 <!--
   Language parity table – keep in sync when adding/removing sections.
 
-  | Section              | C# | Python | Notes |
-  |----------------------|:--:|:------:|-------|
-  | Building Workflows   | ✅ |   ✅   |       |
-  | Workflow Execution   | ✅ |   ✅   |       |
-  | Workflow Validation  | ✅ |   ✅   | Shared prose, no zone pivot |
-  | Execution Model      | ✅ |   ✅   | Shared prose, no zone pivot |
+    | Section              | C# | Python | Go | Notes |
+    |----------------------|:--:|:------:|:--:|-------|
+    | Building Workflows   | ✅ |   ✅   | ✅ |       |
+    | Workflow Execution   | ✅ |   ✅   | ✅ |       |
+    | Workflow Validation  | ✅ |   ✅   | ✅ | Shared prose, no zone pivot |
+    | Execution Model      | ✅ |   ✅   | ✅ | Shared prose, no zone pivot |
 -->
 
 # Workflow Builder & Execution
@@ -62,6 +62,42 @@ builder = WorkflowBuilder(start_executor=processor)
 builder.add_edge(processor, validator)
 builder.add_edge(validator, formatter)
 workflow = builder.build()
+```
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+The `workflow` package provides a graph-based execution model where executors are connected by edges.
+
+- **Executor** - A processing unit that receives input and produces output
+- **Edge** - Connects the output of one executor to the input of another
+- **Builder** - Constructs workflows by defining executors and edges
+- **Run** - Executes a workflow with given input
+
+```go
+import (
+    "github.com/microsoft/agent-framework-go/workflow"
+    "github.com/microsoft/agent-framework-go/workflow/inproc"
+)
+
+uppercase := workflow.NewExecutor("UppercaseExecutor", func(input string) string {
+    return strings.ToUpper(input)
+}).Bind()
+
+reverse := workflow.NewExecutor("ReverseExecutor", func(input string) string {
+    runes := []rune(input)
+    slices.Reverse(runes)
+    return string(runes)
+}).Bind()
+
+wf, err := workflow.NewBuilder(uppercase).
+    AddEdge(uppercase, reverse).
+    WithOutputFrom(reverse).
+    Build()
+if err != nil {
+    return err
+}
 ```
 
 ::: zone-end
@@ -118,6 +154,56 @@ print(f"Final result: {events.get_outputs()}")
 
 ::: zone-end
 
+::: zone pivot="programming-language-go"
+
+Use `RunStreaming` when you want events as they happen:
+
+```go
+stream, err := inproc.Default.RunStreaming(context.Background(), wf, "Hello, World!")
+if err != nil {
+    return err
+}
+defer stream.Close(context.Background())
+
+for evt, err := range stream.WatchStream(context.Background()) {
+    if err != nil {
+        return err
+    }
+    if output, ok := evt.(workflow.OutputEvent); ok {
+        fmt.Printf("Workflow completed: %v\n", output.Output)
+    }
+}
+```
+
+Use `Run` when you want to wait for workflow completion and then inspect the collected events:
+
+```go
+run, err := inproc.Default.Run(context.Background(), wf, "Hello, World!")
+if err != nil {
+    return err
+}
+
+for evt := range run.NewEvents() {
+    if output, ok := evt.(workflow.OutputEvent); ok {
+        fmt.Printf("Final result: %v\n", output.Output)
+    }
+}
+```
+
+You can also inspect executor events collected by a non-streaming run:
+
+```go
+for evt := range run.NewEvents() {
+    if evt, ok := evt.(workflow.ExecutorCompletedEvent); ok {
+        fmt.Printf("%s: %v\n", evt.ExecutorID, evt.Result)
+    }
+}
+```
+
+> [!TIP]
+> See the [workflow examples](https://github.com/microsoft/agent-framework-go/tree/main/examples/03-workflows) for complete runnable samples.
+
+::: zone-end
 ## Workflow Validation
 
 The framework performs comprehensive validation when building workflows:

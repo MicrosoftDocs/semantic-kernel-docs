@@ -2,27 +2,27 @@
 title: Compaction
 description: Learn how to manage conversation history size with compaction strategies that keep context within token limits.
 zone_pivot_groups: programming-languages
-author: crickman
-ms.topic: conceptual
-ms.author: crickman
-ms.date: 03/18/2026
+author: eavanvalkenburg
+ms.topic: article
+ms.author: edvan
+ms.date: 07/01/2026
 ms.service: agent-framework
 ---
 
 <!--
-  Feature parity table – highlight impactful SDK differences between C# and Python.
+    Feature parity table – highlight impactful SDK differences between C#, Python, and Go.
   Keep in sync when features are added or removed.
 
-  | Feature                                      | C# | Python | Notes                                                                                                       |
-  |----------------------------------------------|:--:|:------:|-------------------------------------------------------------------------------------------------------------|
-  | Truncation strategy                          | ✅ |   ✅   |                                                                                                             |
-  | Sliding window strategy                      | ✅ |   ✅   |                                                                                                             |
-  | Tool-result collapse strategy                | ✅ |   ✅   |                                                                                                             |
-  | Summarization strategy                       | ✅ |   ✅   |                                                                                                             |
-  | Selective tool-call exclusion strategy       | ❌ |   ✅   | Python-only: fully drops older tool-call groups; C# ToolResultCompactionStrategy collapses them instead     |
-  | Trigger / target predicate system            | ✅ |   ❌   | C#-only: CompactionTrigger delegates control when each strategy fires and stops; Python strategies use internal parameters |
-  | Composed pipeline strategy                   | ✅ |   ✅   | C#: PipelineCompactionStrategy (trigger-driven, runs all children); Python: TokenBudgetComposedStrategy (token-budget-driven, early-stop) |
-  | Post-run compaction of persisted history     | ❌ |   ✅   | Python-only: CompactionProvider.after_strategy compacts stored history after each run; C# compacts in-flight context only |
+    | Feature                                  | C# | Python | Go | Notes |
+    |------------------------------------------|:--:|:------:|:--:|-------|
+    | Truncation strategy                      | ✅ |   ✅   | ❌ | Not shown for Go |
+    | Sliding window strategy                  | ✅ |   ✅   | ✅ |       |
+    | Tool-result collapse strategy            | ✅ |   ✅   | ✅ |       |
+    | Summarization strategy                   | ✅ |   ✅   | ❌ | Not shown for Go |
+    | Selective tool-call exclusion strategy   | ❌ |   ✅   | ❌ | Python-only: fully drops older tool-call groups; C# and Go tool-result strategies collapse instead |
+    | Trigger / predicate system               | ✅ |   ❌   | ✅ | C# and Go expose trigger predicates; Python strategies use internal parameters |
+    | Composed pipeline strategy               | ✅ |   ✅   | ✅ | C#: PipelineCompactionStrategy; Python: TokenBudgetComposedStrategy; Go: PipelineStrategy |
+    | Post-run compaction of persisted history | ❌ |   ✅   | ❌ | Python-only: CompactionProvider.after_strategy compacts stored history after each run |
 -->
 
 # Compaction
@@ -39,7 +39,13 @@ As conversations grow, the token count of the chat history can exceed model cont
 :::zone pivot="programming-language-python"
 
 > [!IMPORTANT]
-> The compaction framework is currently experimental in Python. Import strategies from `agent_framework._compaction`.
+> The compaction framework is currently experimental in Python. Import compaction types from `agent_framework`.
+
+:::zone-end
+
+:::zone pivot="programming-language-go"
+
+Go supports compaction through the `agent/compaction` package. Register a compaction strategy as an `agent.ContextProvider` so it can compact session history before each run.
 
 :::zone-end
 
@@ -152,12 +158,20 @@ class CompactionStrategy(Protocol):
 Token-aware strategies accept a `TokenizerProtocol` implementation. The built-in `CharacterEstimatorTokenizer` uses a 4-character-per-token heuristic:
 
 ```python
-from agent_framework._compaction import CharacterEstimatorTokenizer
+from agent_framework import CharacterEstimatorTokenizer
 
 tokenizer = CharacterEstimatorTokenizer()
 ```
 
 Pass a custom tokenizer when you need accurate token counts for a specific model's encoding.
+
+:::zone-end
+
+:::zone pivot="programming-language-go"
+
+Compaction runs as a context provider. Strategies can inspect session history before each run and reduce older message groups while preserving the newest context.
+
+The Go package includes strategy types such as `ToolResultStrategy`, `SlidingWindowStrategy`, and `PipelineStrategy`, plus trigger helpers such as `MessagesExceed` and `TurnsExceed`.
 
 :::zone-end
 
@@ -171,7 +185,13 @@ All strategies inherit from the abstract `CompactionStrategy` base class. Each s
 
 :::zone pivot="programming-language-python"
 
-Compaction strategies are imported from `agent_framework._compaction`.
+Compaction strategies are imported from `agent_framework`.
+
+:::zone-end
+
+:::zone pivot="programming-language-go"
+
+Compaction strategies are imported from `github.com/microsoft/agent-framework-go/agent/compaction`.
 
 :::zone-end
 
@@ -207,7 +227,7 @@ TruncationCompactionStrategy truncation = new(
 - `preserve_system` defaults to `True`.
 
 ```python
-from agent_framework._compaction import CharacterEstimatorTokenizer, TruncationStrategy
+from agent_framework import CharacterEstimatorTokenizer, TruncationStrategy
 
 # Exclude oldest groups when tokens exceed 32 000, trimming to 16 000
 truncation = TruncationStrategy(
@@ -253,7 +273,7 @@ Keeps only the most recent `keep_last_groups` non-system groups, excluding every
 - `preserve_system` defaults to `True`.
 
 ```python
-from agent_framework._compaction import SlidingWindowStrategy
+from agent_framework import SlidingWindowStrategy
 
 # Keep only the last 20 non-system groups
 sliding_window = SlidingWindowStrategy(keep_last_groups=20)
@@ -287,7 +307,7 @@ ToolResultCompactionStrategy toolCompaction = new(
 - The most recent `keep_last_tool_call_groups` tool-call groups are left untouched.
 
 ```python
-from agent_framework._compaction import ToolResultCompactionStrategy
+from agent_framework import ToolResultCompactionStrategy
 
 # Collapse all but the newest tool-call group
 tool_result = ToolResultCompactionStrategy(keep_last_tool_call_groups=1)
@@ -337,11 +357,11 @@ SummarizationCompactionStrategy summarization = new(
 :::zone pivot="programming-language-python"
 
 - Triggers when included non-system message count exceeds `target_count + threshold`.
-- Retains the newest `target_count` messages; summarizes everything older.
+- Retains recent messages near `target_count`, subject to message-group boundaries; summarizes everything older.
 - Requires a `SupportsChatGetResponse` client.
 
 ```python
-from agent_framework._compaction import SummarizationStrategy
+from agent_framework import SummarizationStrategy
 
 # Summarize when non-system message count exceeds 6, retaining the 4 newest
 summarization = SummarizationStrategy(
@@ -399,7 +419,7 @@ Fully excludes older tool-call groups, keeping only the last `keep_last_tool_cal
 - Best when tool chatter dominates token usage and the full tool history is not needed.
 
 ```python
-from agent_framework._compaction import SelectiveToolCallCompactionStrategy
+from agent_framework import SelectiveToolCallCompactionStrategy
 
 # Keep only the most recent tool-call group
 selective_tool = SelectiveToolCallCompactionStrategy(keep_last_tool_call_groups=1)
@@ -413,7 +433,7 @@ Composes multiple strategies into a sequential pipeline driven by a token budget
 - `early_stop=True` (the default) stops as soon as the token budget is satisfied.
 
 ```python
-from agent_framework._compaction import (
+from agent_framework import (
     CharacterEstimatorTokenizer,
     SelectiveToolCallCompactionStrategy,
     SlidingWindowStrategy,
@@ -537,7 +557,7 @@ IEnumerable<ChatMessage> compacted = await CompactionProvider.CompactAsync(
 
 ```python
 from agent_framework import Agent, CompactionProvider, InMemoryHistoryProvider
-from agent_framework._compaction import (
+from agent_framework import (
     CharacterEstimatorTokenizer,
     SlidingWindowStrategy,
     SummarizationStrategy,
@@ -588,7 +608,7 @@ compaction = CompactionProvider(
 
 ### Compacting persisted history after each run
 
-Use `after_strategy` to compact the messages stored by the history provider so that future turns begin with a reduced context:
+Use `after_strategy` to compact the messages stored by the history provider. Set `skip_excluded=True` on the history provider so future turns do not reload the excluded originals:
 
 ```python
 compaction = CompactionProvider(
@@ -603,7 +623,7 @@ compaction = CompactionProvider(
 `apply_compaction` applies a strategy to an arbitrary message list outside an active agent session:
 
 ```python
-from agent_framework._compaction import apply_compaction, TruncationStrategy, CharacterEstimatorTokenizer
+from agent_framework import apply_compaction, TruncationStrategy, CharacterEstimatorTokenizer
 
 tokenizer = CharacterEstimatorTokenizer()
 
@@ -617,6 +637,44 @@ compacted = await apply_compaction(
     tokenizer=tokenizer,
 )
 ```
+
+:::zone-end
+
+:::zone pivot="programming-language-go"
+
+Create a compaction context provider and add it to the agent's context providers:
+
+```go
+import (
+    "github.com/microsoft/agent-framework-go/agent"
+    "github.com/microsoft/agent-framework-go/agent/compaction"
+    "github.com/microsoft/agent-framework-go/provider/foundryprovider"
+)
+
+compactionProvider := compaction.NewContextProvider(compaction.ContextProviderConfig{
+    Strategy: &compaction.PipelineStrategy{
+        Strategies: []compaction.Strategy{
+            &compaction.ToolResultStrategy{
+                Trigger:                compaction.MessagesExceed(7),
+                MinimumPreservedGroups: 4,
+            },
+            &compaction.SlidingWindowStrategy{
+                Trigger:               compaction.TurnsExceed(4),
+                MinimumPreservedTurns: 4,
+            },
+        },
+    },
+})
+
+a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
+    Config: agent.Config{
+        ContextProviders: []agent.ContextProvider{compactionProvider},
+    },
+})
+```
+
+> [!TIP]
+> See the [compaction pipeline sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/agents/step18_compaction_pipeline/main.go) for a complete runnable example.
 
 :::zone-end
 
@@ -647,6 +705,15 @@ compacted = await apply_compaction(
 
 :::zone-end
 
+:::zone pivot="programming-language-go"
+
+| Strategy | Aggressiveness | Preserves context | Requires LLM | Best for |
+|---|---|---|---|---|
+| `ToolResultStrategy` | Low | High - collapses verbose tool results | No | Reclaiming space from verbose tool output |
+| `SlidingWindowStrategy` | High | Low - keeps the most recent turns | No | Hard turn-count limits |
+| `PipelineStrategy` | Configurable | Depends on child strategies | Depends | Layered compaction with multiple fallbacks |
+
+:::zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]

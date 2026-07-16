@@ -3,7 +3,7 @@ title: The Semantic Kernel Common Agent API surface
 description: An overview of the Semantic Kernel Agent API surface and how to use it.
 zone_pivot_groups: programming-languages
 author: westey-m
-ms.topic: conceptual
+ms.topic: article
 ms.author: westey
 ms.date: 04/03/2025
 ms.service: semantic-kernel

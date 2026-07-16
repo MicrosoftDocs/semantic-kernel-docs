@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 975 285" style="max-width: 975px; background-color: white;">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+    </marker>
+  </defs>
+
+  <!-- User node -->
+  <rect x="20" y="120" width="70" height="45" rx="22" ry="22" fill="#e1f5fe" stroke="#01579b" stroke-width="2"/>
+  <text x="55" y="147" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="13" font-weight="500">User</text>
+
+  <!-- Agent lifecycle -->
+  <rect x="120" y="40" width="465" height="205" rx="8" ry="8" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="2"/>
+  <text x="352" y="66" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="14" font-weight="600" fill="#7b1fa2">agent.Agent</text>
+
+  <!-- Agent middleware -->
+  <rect x="140" y="95" width="125" height="80" rx="5" ry="5" fill="#ede7f6" stroke="#5e35b1" stroke-width="1.5"/>
+  <text x="202" y="119" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" font-weight="600" fill="#5e35b1">Agent</text>
+  <text x="202" y="134" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" font-weight="600" fill="#5e35b1">Middleware</text>
+  <text x="202" y="154" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="8" fill="#666">agent.Config</text>
+  <text x="202" y="166" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="8" fill="#666">Middlewares</text>
+
+  <!-- History provider -->
+  <rect x="285" y="95" width="125" height="80" rx="5" ry="5" fill="#fff3e0" stroke="#e65100" stroke-width="1.5"/>
+  <text x="347" y="119" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" font-weight="600" fill="#e65100">History</text>
+  <text x="347" y="134" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" font-weight="600" fill="#e65100">Provider</text>
+  <text x="347" y="154" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="8" fill="#666">load before run</text>
+  <text x="347" y="166" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="8" fill="#666">store after run</text>
+
+  <!-- Context providers -->
+  <rect x="430" y="95" width="135" height="80" rx="5" ry="5" fill="#fff3e0" stroke="#e65100" stroke-width="1.5"/>
+  <text x="497" y="119" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" font-weight="600" fill="#e65100">Context</text>
+  <text x="497" y="134" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" font-weight="600" fill="#e65100">Providers</text>
+  <text x="497" y="154" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="8" fill="#666">messages, options</text>
+  <text x="497" y="166" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="8" fill="#666">and state</text>
+
+  <text x="352" y="220" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="8" fill="#666" font-style="italic">Custom middleware wraps history, context, provider middleware, and provider calls</text>
+
+  <!-- Provider pipeline -->
+  <rect x="620" y="40" width="210" height="205" rx="8" ry="8" fill="#e0f2f1" stroke="#00695c" stroke-width="2"/>
+  <text x="725" y="66" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="14" font-weight="600" fill="#00695c">Provider Pipeline</text>
+
+  <rect x="640" y="90" width="170" height="60" rx="5" ry="5" fill="white" stroke="#00695c" stroke-width="1.5"/>
+  <text x="725" y="113" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" font-weight="600" fill="#00695c">Provider Middleware</text>
+  <text x="725" y="130" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="8" fill="#666">tool auto-call</text>
+  <text x="725" y="142" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="8" fill="#666">structured outputs</text>
+
+  <rect x="640" y="170" width="170" height="55" rx="5" ry="5" fill="#b2dfdb" stroke="#00695c" stroke-width="1.5"/>
+  <text x="725" y="191" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" font-weight="600" fill="#00695c">Provider Run</text>
+  <text x="725" y="207" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="8" fill="#555">OpenAI, Anthropic,</text>
+  <text x="725" y="219" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="8" fill="#555">Gemini, A2A, custom</text>
+
+  <!-- Service node -->
+  <rect x="875" y="120" width="80" height="45" rx="22" ry="22" fill="#fce4ec" stroke="#c2185b" stroke-width="2"/>
+  <text x="915" y="138" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="12">LLM or</text>
+  <text x="915" y="153" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="12">service</text>
+
+  <!-- Flow arrows -->
+  <line x1="90" y1="142" x2="115" y2="142" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="265" y1="135" x2="280" y2="135" stroke="#333" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <line x1="410" y1="135" x2="425" y2="135" stroke="#333" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <line x1="585" y1="135" x2="615" y2="135" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="725" y1="150" x2="725" y2="165" stroke="#333" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <line x1="830" y1="142" x2="870" y2="142" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+</svg>
