@@ -6,7 +6,7 @@ metadata:
   title: Agent Framework documentation
   description: Agent Framework documentation.
   ms.topic: hub-page
-  ms.date: 09/05/2025
+  ms.date: 07/14/2026
   ms.service: agent-framework
   searchScope: []
   titleSuffix: ""
@@ -32,17 +32,17 @@ productDirectory:
       imageSrc: /agent-framework/media/getstarted.svg
       links:
         - url: /agent-framework/get-started/your-first-agent
-          text: "Step 1: Your First Agent"
-        - url: /agent-framework/get-started/add-tools
-          text: "Step 2: Add Tools"
+          text: "Steps 1-2: Your First Agent and Tools"
         - url: /agent-framework/get-started/multi-turn
           text: "Step 3: Multi-Turn Conversations"
         - url: /agent-framework/get-started/memory
           text: "Step 4: Memory & Persistence"
         - url: /agent-framework/get-started/workflows
           text: "Step 5: Workflows"
+        - url: /agent-framework/get-started/harness
+          text: "Step 6: Agent Harness"
         - url: /agent-framework/get-started/hosting
-          text: "Step 6: Host Your Agent"
+          text: "Step 7: Host Your Agent"
     - title: Agents
       imageSrc: /agent-framework/media/concept.svg
       links:
@@ -50,6 +50,8 @@ productDirectory:
           text: Agents overview
         - url: /agent-framework/agents/tools/index
           text: Tools
+        - url: /agent-framework/agents/harness
+          text: Agent Harness
         - url: /agent-framework/agents/skills
           text: Agent Skills
         - url: /agent-framework/agents/conversations/index
@@ -67,17 +69,21 @@ productDirectory:
           text: Edges
         - url: /agent-framework/workflows/workflows
           text: Workflow Builder & Execution
-    - title: Integrations
+    - title: Integrations & Hosting
       imageSrc: /agent-framework/media/minihub.svg
       links:
         - url: /agent-framework/integrations/index
           text: Integrations overview
+        - url: /agent-framework/hosting/
+          text: Hosting overview
+        - url: /agent-framework/hosting/foundry-hosted-agent
+          text: Foundry Hosted Agents
+        - url: /agent-framework/hosting/self-hosting
+          text: Self-hosting
         - url: /agent-framework/integrations/durable-extension
-          text: Durable Extension
+          text: Azure Functions and durable hosting
         - url: /agent-framework/integrations/a2a
           text: A2A Protocol
-        - url: /agent-framework/devui/index
-          text: DevUI
     - title: Support
       imageSrc: /agent-framework/media/howtoguide.svg
       links:

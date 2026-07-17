@@ -232,10 +232,20 @@ items:
       href: integrations/ag-ui/testing-with-dojo.md
 - name: Hosting
   items:
+  - name: Overview
+    href: hosting/index.md
   - name: Foundry Hosted Agents
     href: hosting/foundry-hosted-agent.md
-  - name: A2A
-    href: hosting/agent-to-agent.md
+  - name: Self-hosting
+    items:
+    - name: Overview
+      href: hosting/self-hosting/index.md
+    - name: OpenAI Responses
+      href: hosting/self-hosting/responses.md
+    - name: Telegram
+      href: hosting/self-hosting/telegram.md
+    - name: A2A
+      href: hosting/self-hosting/a2a.md
 - name: The Agent Development Journey
   items:
   - name: Overview
