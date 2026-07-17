@@ -304,6 +304,9 @@ The `RequestPort` pattern described above works with custom executors and `Workf
 
 Agents can use tools that require human approval before execution. When the agent attempts to call an approval-required tool, the workflow pauses and emits a `RequestInfoEvent` just like the `RequestPort` pattern, but the event payload contains a `ToolApprovalRequestContent` (C# and Go) or a `Content` with `type == "function_approval_request"` (Python) instead of a custom request type.
 
+> [!IMPORTANT]
+> Treat approval as scoped to the exact tool call in the request. Before sending an approval response, validate the requested function name and arguments against the application's allowlist and current authorization policy. If the call changes, require a new approval.
+
 > [!TIP]
 > For complete examples with code, see:
 > - [Sequential orchestration with HITL](./orchestrations/sequential.md#sequential-orchestration-with-human-in-the-loop)
