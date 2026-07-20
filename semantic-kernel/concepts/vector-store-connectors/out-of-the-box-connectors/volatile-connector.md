@@ -53,10 +53,10 @@ The connector has the following characteristics.
 
 ## Getting started
 
-Add the Semantic Kernel Core nuget package to your project.
+Add the NuGet package to your project.
 
 ```dotnetcli
-dotnet add package Microsoft.SemanticKernel.Core
+dotnet add package CommunityToolkit.VectorData.InMemory
 ```
 
 You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by the connector package.
@@ -71,25 +71,27 @@ var kernelBuilder = Kernel
 ```
 
 ```csharp
+using Microsoft.Extensions.DependencyInjection;
+
 // Using IServiceCollection with ASP.NET Core.
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddVolatileVectorStore();
+builder.Services.AddInMemoryVectorStore();
 ```
 
 You can construct a Volatile Vector Store instance directly.
 
 ```csharp
-using Microsoft.SemanticKernel.Data;
+using CommunityToolkit.VectorData.InMemory;
 
-var vectorStore = new VolatileVectorStore();
+var vectorStore = new InMemoryVectorStore();
 ```
 
 It is possible to construct a direct reference to a named collection.
 
 ```csharp
-using Microsoft.SemanticKernel.Data;
+using CommunityToolkit.VectorData.InMemory;
 
-var collection = new VolatileVectorStoreRecordCollection<string, Hotel>("skhotels");
+var collection = new VectorStoreCollection<string, Hotel>("skhotels");
 ```
 
 ::: zone-end

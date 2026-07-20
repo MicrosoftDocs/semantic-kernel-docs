@@ -61,6 +61,7 @@ var kernelBuilder = Kernel
 ```
 
 ```csharp
+using Microsoft.SemanticKernel;
 using Elastic.Clients.Elasticsearch;
 
 // Using IServiceCollection with ASP.NET Core.
@@ -84,6 +85,7 @@ kernelBuilder.AddElasticsearchVectorStore();
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.SemanticKernel;
 using Elastic.Clients.Elasticsearch;
 
 // Using IServiceCollection with ASP.NET Core.

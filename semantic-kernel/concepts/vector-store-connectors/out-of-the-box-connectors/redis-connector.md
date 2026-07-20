@@ -74,6 +74,8 @@ kernelBuilder.Services
 ```
 
 ```csharp
+using Microsoft.Extensions.DependencyInjection;
+
 // Using IServiceCollection with ASP.NET Core.
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRedisVectorStore("localhost:6379");

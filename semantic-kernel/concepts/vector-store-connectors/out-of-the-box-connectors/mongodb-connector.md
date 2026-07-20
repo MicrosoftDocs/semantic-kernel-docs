@@ -79,7 +79,7 @@ More info coming soon.
 Add the MongoDB Vector Store connector NuGet package to your project.
 
 ```dotnetcli
-dotnet add package CommunityToolkit.VectorData.MongoDB --prerelease
+dotnet add package MongoDB.VectorData
 ```
 
 You can add the vector store to the `IServiceCollection` dependency injection container using extension methods provided by the connector package.
@@ -112,7 +112,7 @@ builder.Services.AddMongoVectorStore();
 You can construct a MongoDB Vector Store instance directly.
 
 ```csharp
-using CommunityToolkit.VectorData.MongoDB;
+using MongoDB.VectorData;
 using MongoDB.Driver;
 
 var mongoClient = new MongoClient(connectionString);
@@ -123,7 +123,7 @@ var vectorStore = new MongoVectorStore(database);
 It is possible to construct a direct reference to a named collection.
 
 ```csharp
-using CommunityToolkit.VectorData.MongoDB;
+using MongoDB.VectorData;
 using MongoDB.Driver;
 
 var mongoClient = new MongoClient(connectionString);
