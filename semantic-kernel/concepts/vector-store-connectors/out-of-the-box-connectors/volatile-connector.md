@@ -91,7 +91,7 @@ It is possible to construct a direct reference to a named collection.
 ```csharp
 using CommunityToolkit.VectorData.InMemory;
 
-var collection = new VectorStoreCollection<string, Hotel>("skhotels");
+var collection = new InMemoryCollection<string, Hotel>("skhotels");
 ```
 
 ::: zone-end
