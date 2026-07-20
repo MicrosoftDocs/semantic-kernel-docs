@@ -56,10 +56,10 @@ The Pinecone Vector Store connector can be used to access and manage data in Pin
 Add the Pinecone Vector Store connector NuGet package to your project.
 
 ```dotnetcli
-dotnet add package Microsoft.SemanticKernel.Connectors.Pinecone --prerelease
+dotnet add package CommunityToolkit.VectorData.Pinecone --prerelease
 ```
 
-You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by Semantic Kernel.
+You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by the connector package.
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
@@ -96,7 +96,6 @@ kernelBuilder.Services.AddPineconeVectorStore();
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.SemanticKernel;
 using PineconeClient = Pinecone.PineconeClient;
 
 // Using IServiceCollection with ASP.NET Core.
@@ -109,7 +108,7 @@ builder.Services.AddPineconeVectorStore();
 You can construct a Pinecone Vector Store instance directly.
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.Pinecone;
+using CommunityToolkit.VectorData.Pinecone;
 using PineconeClient = Pinecone.PineconeClient;
 
 var vectorStore = new PineconeVectorStore(
@@ -119,7 +118,7 @@ var vectorStore = new PineconeVectorStore(
 It is possible to construct a direct reference to a named collection.
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.Pinecone;
+using CommunityToolkit.VectorData.Pinecone;
 using PineconeClient = Pinecone.PineconeClient;
 
 var collection = new PineconeCollection<string, Hotel>(
@@ -136,7 +135,7 @@ By default the Pinecone connector will pass null as the namespace for all operat
 Pinecone collection when constructing it and use this instead for all operations.
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.Pinecone;
+using CommunityToolkit.VectorData.Pinecone;
 using PineconeClient = Pinecone.PineconeClient;
 
 var collection = new PineconeCollection<string, Hotel>(

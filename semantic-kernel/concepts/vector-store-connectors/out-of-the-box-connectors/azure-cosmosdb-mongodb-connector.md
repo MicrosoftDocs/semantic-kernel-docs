@@ -82,10 +82,10 @@ This connector is compatible with Azure Cosmos DB MongoDB (vCore) and is *not* d
 Add the Azure CosmosDB MongoDB Vector Store connector NuGet package to your project.
 
 ```dotnetcli
-dotnet add package Microsoft.SemanticKernel.Connectors.CosmosMongoDB --prerelease
+dotnet add package CommunityToolkit.VectorData.CosmosMongoDB --prerelease
 ```
 
-You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by Semantic Kernel.
+You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by the connector package.
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
@@ -100,7 +100,6 @@ kernelBuilder.Services
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.SemanticKernel;
 
 // Using IServiceCollection with ASP.NET Core.
 var builder = WebApplication.CreateBuilder(args);
@@ -127,7 +126,6 @@ kernelBuilder.Services.AddCosmosMongoVectorStore();
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.SemanticKernel;
 using MongoDB.Driver;
 
 // Using IServiceCollection with ASP.NET Core.
@@ -144,7 +142,7 @@ builder.Services.AddCosmosMongoVectorStore();
 You can construct an Azure CosmosDB MongoDB Vector Store instance directly.
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.CosmosMongoDB;
+using CommunityToolkit.VectorData.CosmosMongoDB;
 using MongoDB.Driver;
 
 var mongoClient = new MongoClient(connectionString);
@@ -155,7 +153,7 @@ var vectorStore = new CosmosMongoVectorStore(database);
 It is possible to construct a direct reference to a named collection.
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.CosmosMongoDB;
+using CommunityToolkit.VectorData.CosmosMongoDB;
 using MongoDB.Driver;
 
 var mongoClient = new MongoClient(connectionString);

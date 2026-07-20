@@ -55,10 +55,10 @@ The SQLite Vector Store connector can be used to access and manage data in SQLit
 Add the SQLite Vector Store connector NuGet package to your project.
 
 ```dotnetcli
-dotnet add package Microsoft.SemanticKernel.Connectors.SqliteVec --prerelease
+dotnet add package CommunityToolkit.VectorData.SqliteVec --prerelease
 ```
 
-You can add the vector store to the `IServiceCollection` dependency injection container using extension methods provided by Semantic Kernel.
+You can add the vector store to the `IServiceCollection` dependency injection container using extension methods provided by the connector package.
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
@@ -70,7 +70,6 @@ builder.Services.AddSqliteVectorStore(_ => "Data Source=:memory:");
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.SemanticKernel;
 
 // Using IServiceCollection with ASP.NET Core.
 var builder = WebApplication.CreateBuilder(args);
@@ -80,7 +79,7 @@ builder.Services.AddSqliteVectorStore(_ => "Data Source=:memory:")
 You can construct a SQLite Vector Store instance directly.
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.SqliteVec;
+using CommunityToolkit.VectorData.SqliteVec;
 
 var vectorStore = new SqliteVectorStore("Data Source=:memory:");
 ```
@@ -88,7 +87,7 @@ var vectorStore = new SqliteVectorStore("Data Source=:memory:");
 It is possible to construct a direct reference to a named collection.
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.SqliteVec;
+using CommunityToolkit.VectorData.SqliteVec;
 
 var collection = new SqliteCollection<string, Hotel>("Data Source=:memory:", "skhotels");
 ```

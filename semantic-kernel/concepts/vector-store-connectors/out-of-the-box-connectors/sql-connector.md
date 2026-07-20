@@ -53,10 +53,10 @@ The SQL Server Vector Store connector can be used to access and manage data in S
 Add the SQL Sever Vector Store connector NuGet package to your project.
 
 ```dotnetcli
-dotnet add package Microsoft.SemanticKernel.Connectors.SqlServer --prerelease
+dotnet add package CommunityToolkit.VectorData.SqlServer --prerelease
 ```
 
-You can add the vector store to the `IServiceCollection` dependency injection container using extension methods provided by Semantic Kernel.
+You can add the vector store to the `IServiceCollection` dependency injection container using extension methods provided by the connector package.
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
@@ -68,7 +68,6 @@ builder.Services.AddSqlServerVectorStore(_ => "<connectionstring>");
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.SemanticKernel;
 
 // Using IServiceCollection with ASP.NET Core.
 var builder = WebApplication.CreateBuilder(args);
@@ -78,7 +77,7 @@ builder.Services.AddSqlServerVectorStore(_ => "<connectionstring>")
 You can construct a Sql Server Vector Store instance directly.
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.SqlServer;
+using CommunityToolkit.VectorData.SqlServer;
 
 var vectorStore = new SqlServerVectorStore("<connectionstring>");
 ```
@@ -86,7 +85,7 @@ var vectorStore = new SqlServerVectorStore("<connectionstring>");
 It is possible to construct a direct reference to a named collection.
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.SqlServer;
+using CommunityToolkit.VectorData.SqlServer;
 
 var collection = new SqlServerCollection<string, Hotel>("<connectionstring>", "skhotels");
 ```

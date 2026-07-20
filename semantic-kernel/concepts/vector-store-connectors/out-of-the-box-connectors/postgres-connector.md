@@ -72,10 +72,10 @@ When using the `AddPostgresVectorStore` dependency injection registration method
 Add the Postgres Vector Store connector NuGet package to your project.
 
 ```dotnetcli
-dotnet add package Microsoft.SemanticKernel.Connectors.PgVector --prerelease
+dotnet add package CommunityToolkit.VectorData.PgVector --prerelease
 ```
 
-You can add the vector store to the `IServiceCollection` dependency injection container using extension methods provided by Semantic Kernel.
+You can add the vector store to the `IServiceCollection` dependency injection container using extension methods provided by the connector package.
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
@@ -90,7 +90,6 @@ Extension methods that take no parameters are also provided. These require an in
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.SemanticKernel;
 
 // Using IServiceCollection with ASP.NET Core.
 var builder = WebApplication.CreateBuilder(args);
@@ -99,7 +98,6 @@ builder.Services.AddPostgresVectorStore("<Connection String>");
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.SemanticKernel;
 using Npgsql;
 
 // Using IServiceCollection with ASP.NET Core.
@@ -116,7 +114,7 @@ builder.Services.AddPostgresVectorStore();
 You can construct a Postgres Vector Store instance directly with a custom data source or with a connection string.
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.PgVector;
+using CommunityToolkit.VectorData.PgVector;
 using Npgsql;
 
 NpgsqlDataSourceBuilder dataSourceBuilder = new("<Connection String>");
@@ -126,7 +124,7 @@ var vectorStore = new PostgresVectorStore(dataSource, ownsDataSource: true);
 ```
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.PgVector;
+using CommunityToolkit.VectorData.PgVector;
 
 var connection = new PostgresVectorStore("<Connection String>");
 ```
@@ -134,7 +132,7 @@ var connection = new PostgresVectorStore("<Connection String>");
 It is possible to construct a direct reference to a named collection with a custom data source or with a connection string.
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.PgVector;
+using CommunityToolkit.VectorData.PgVector;
 using Npgsql;
 
 NpgsqlDataSourceBuilder dataSourceBuilder = new("<Connection String>");
@@ -145,7 +143,7 @@ var collection = new PostgresCollection<string, Hotel>(dataSource, "skhotels", o
 ```
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.PgVector;
+using CommunityToolkit.VectorData.PgVector;
 
 var collection = new PostgresCollection<string, Hotel>("<Connection String>", "skhotels");
 ```
@@ -335,7 +333,7 @@ public static class NpgsqlDataSourceBuilderExtensions
 Now you can use the `UseEntraAuthentication` method to set up the connection string for the Postgres connector:
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.Postgres;
+using CommunityToolkit.VectorData.PgVector;
 
 var connectionString = "Host=mydb.postgres.database.azure.com;Port=5432;Database=postgres;SSL Mode=Require;";  // No Username or Password
 var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);

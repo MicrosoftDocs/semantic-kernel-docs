@@ -40,15 +40,15 @@ In C#, there are several packages to help ensure that you only need to import th
 | `Microsoft.SemanticKernel.Connectors.Ollama` | The AI connector for Ollama |
 | `Microsoft.SemanticKernel.Connectors.Onnx` | The AI connector for Onnx |
 | `Microsoft.SemanticKernel.Connectors.OpenAI` | The AI connector for OpenAI |
-| `Microsoft.SemanticKernel.Connectors.AzureAISearch` | The vector store connector for Azure AI Search |
-| `Microsoft.SemanticKernel.Connectors.CosmosMongoDB` | The vector store connector for Azure CosmosDB MongoDB |
-| `Microsoft.SemanticKernel.Connectors.CosmosNoSql` | The vector store connector for Azure CosmosDB NoSQL |
-| `Microsoft.SemanticKernel.Connectors.MongoDB` | The vector store connector for MongoDB |
-| `Microsoft.SemanticKernel.Connectors.Pinecone` | The vector store connector for Pinecone |
-| `Microsoft.SemanticKernel.Connectors.Qdrant` | The vector store connector for Qdrant |
-| `Microsoft.SemanticKernel.Connectors.Redis` | The vector store connector for Redis |
-| `Microsoft.SemanticKernel.Connectors.SqliteVec` | The vector store connector for Sqlite |
-| `Microsoft.SemanticKernel.Connectors.Weaviate` | The vector store connector for Weaviate |
+| `CommunityToolkit.VectorData.AzureAISearch` | The vector store connector for Azure AI Search |
+| `CommunityToolkit.VectorData.CosmosMongoDB` | The vector store connector for Azure CosmosDB MongoDB |
+| `CommunityToolkit.VectorData.CosmosNoSql` | The vector store connector for Azure CosmosDB NoSQL |
+| `CommunityToolkit.VectorData.MongoDB` | The vector store connector for MongoDB |
+| `CommunityToolkit.VectorData.Pinecone` | The vector store connector for Pinecone |
+| `CommunityToolkit.VectorData.Qdrant` | The vector store connector for Qdrant |
+| `CommunityToolkit.VectorData.Redis` | The vector store connector for Redis |
+| `CommunityToolkit.VectorData.SqliteVec` | The vector store connector for Sqlite |
+| `CommunityToolkit.VectorData.Weaviate` | The vector store connector for Weaviate |
 | `Microsoft.SemanticKernel.Plugins.OpenApi` (Experimental) | Enables loading plugins from OpenAPI specifications |
 | `Microsoft.SemanticKernel.PromptTemplates.Handlebars` | Enables the use of Handlebars templates for prompts |
 | `Microsoft.SemanticKernel.Yaml` | Provides support for serializing prompts using YAML files |

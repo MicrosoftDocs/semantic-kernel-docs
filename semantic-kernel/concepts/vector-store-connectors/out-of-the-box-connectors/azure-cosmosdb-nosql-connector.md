@@ -66,10 +66,10 @@ var cosmosClient = new CosmosClient(connectionString, new CosmosClientOptions()
 Add the Azure CosmosDB NoSQL Vector Store connector NuGet package to your project.
 
 ```dotnetcli
-dotnet add package Microsoft.SemanticKernel.Connectors.CosmosNoSql --prerelease
+dotnet add package CommunityToolkit.VectorData.CosmosNoSql --prerelease
 ```
 
-You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by Semantic Kernel.
+You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by the connector package.
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
@@ -84,7 +84,6 @@ kernelBuilder.Services
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.SemanticKernel;
 
 // Using IServiceCollection with ASP.NET Core.
 var builder = WebApplication.CreateBuilder(args);
@@ -120,7 +119,6 @@ kernelBuilder.Services.AddCosmosNoSqlVectorStore();
 using System.Text.Json;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.SemanticKernel;
 
 // Using IServiceCollection with ASP.NET Core.
 var builder = WebApplication.CreateBuilder(args);
@@ -144,7 +142,7 @@ You can construct an Azure CosmosDB NoSQL Vector Store instance directly.
 ```csharp
 using System.Text.Json;
 using Microsoft.Azure.Cosmos;
-using Microsoft.SemanticKernel.Connectors.CosmosNoSql;
+using CommunityToolkit.VectorData.CosmosNoSql;
 
 var cosmosClient = new CosmosClient(connectionString, new CosmosClientOptions()
 {
@@ -162,7 +160,7 @@ It is possible to construct a direct reference to a named collection.
 ```csharp
 using System.Text.Json;
 using Microsoft.Azure.Cosmos;
-using Microsoft.SemanticKernel.Connectors.CosmosNoSql;
+using CommunityToolkit.VectorData.CosmosNoSql;
 
 var cosmosClient = new CosmosClient(connectionString, new CosmosClientOptions()
 {
@@ -192,7 +190,7 @@ must be passed to the `CosmosNoSqlCollection` on construction.
 ```csharp
 using System.Text.Json;
 using Microsoft.Azure.Cosmos;
-using Microsoft.SemanticKernel.Connectors.CosmosNoSql;
+using CommunityToolkit.VectorData.CosmosNoSql;
 
 var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseUpper };
 
