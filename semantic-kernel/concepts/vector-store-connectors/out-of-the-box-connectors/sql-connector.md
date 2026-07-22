@@ -53,7 +53,7 @@ The SQL Server Vector Store connector can be used to access and manage data in S
 Add the SQL Sever Vector Store connector NuGet package to your project.
 
 ```dotnetcli
-dotnet add package CommunityToolkit.VectorData.SqlServer --prerelease
+dotnet add package CommunityToolkit.VectorData.SqlServer
 ```
 
 You can add the vector store to the `IServiceCollection` dependency injection container using extension methods provided by the connector package.

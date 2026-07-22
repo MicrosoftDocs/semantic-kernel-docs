@@ -64,7 +64,7 @@ document with and the OpenAI connector from Semantic Kernel for generating embed
 dotnet new console --framework net8.0 --name SKVectorIngest
 cd SKVectorIngest
 dotnet add package Microsoft.SemanticKernel.Connectors.AzureOpenAI
-dotnet add package CommunityToolkit.VectorData.Redis --prerelease
+dotnet add package CommunityToolkit.VectorData.Redis
 dotnet add package DocumentFormat.OpenXml
 ```
 

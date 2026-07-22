@@ -72,7 +72,7 @@ When using the `AddPostgresVectorStore` dependency injection registration method
 Add the Postgres Vector Store connector NuGet package to your project.
 
 ```dotnetcli
-dotnet add package CommunityToolkit.VectorData.PgVector --prerelease
+dotnet add package CommunityToolkit.VectorData.PgVector
 ```
 
 You can add the vector store to the `IServiceCollection` dependency injection container using extension methods provided by the connector package.

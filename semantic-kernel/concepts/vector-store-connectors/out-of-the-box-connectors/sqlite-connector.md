@@ -55,7 +55,7 @@ The SQLite Vector Store connector can be used to access and manage data in SQLit
 Add the SQLite Vector Store connector NuGet package to your project.
 
 ```dotnetcli
-dotnet add package CommunityToolkit.VectorData.SqliteVec --prerelease
+dotnet add package CommunityToolkit.VectorData.SqliteVec
 ```
 
 You can add the vector store to the `IServiceCollection` dependency injection container using extension methods provided by the connector package.

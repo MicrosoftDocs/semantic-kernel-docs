@@ -57,7 +57,7 @@ The connector has the following characteristics.
 Add the Redis Vector Store connector nuget package to your project.
 
 ```dotnetcli
-dotnet add package CommunityToolkit.VectorData.Redis --prerelease
+dotnet add package CommunityToolkit.VectorData.Redis
 ```
 
 You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by the connector package.

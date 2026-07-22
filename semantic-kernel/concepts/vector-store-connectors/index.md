@@ -258,7 +258,7 @@ Once you have defined your data model, the next step is to create a VectorStore 
 In this example, we'll use Qdrant. You will therefore need to import the Qdrant nuget package.
 
 ```dotnetcli
-dotnet add package CommunityToolkit.VectorData.Qdrant --prerelease
+dotnet add package CommunityToolkit.VectorData.Qdrant
 ```
 
 If you want to run Qdrant locally using Docker, use the following command to start the Qdrant container

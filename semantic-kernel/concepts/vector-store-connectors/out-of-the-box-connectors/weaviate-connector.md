@@ -89,7 +89,7 @@ Notable Weaviate connector functionality limitations.
 Add the Weaviate Vector Store connector NuGet package to your project.
 
 ```dotnetcli
-dotnet add package CommunityToolkit.VectorData.Weaviate --prerelease
+dotnet add package CommunityToolkit.VectorData.Weaviate
 ```
 
 You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by the connector package.

@@ -100,7 +100,7 @@ Notable Azure AI Search connector functionality limitations.
 Add the Azure AI Search Vector Store connector NuGet package to your project.
 
 ```dotnetcli
-dotnet add package CommunityToolkit.VectorData.AzureAISearch --prerelease
+dotnet add package CommunityToolkit.VectorData.AzureAISearch
 ```
 
 You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by the connector package.

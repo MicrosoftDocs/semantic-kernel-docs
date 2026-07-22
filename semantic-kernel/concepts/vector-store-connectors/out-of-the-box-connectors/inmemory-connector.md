@@ -58,7 +58,7 @@ The connector has the following characteristics.
 Add the Semantic Kernel Core nuget package to your project.
 
 ```dotnetcli
-dotnet add package CommunityToolkit.VectorData.InMemory --prerelease
+dotnet add package CommunityToolkit.VectorData.InMemory
 ```
 
 You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by the connector package.

@@ -44,7 +44,6 @@ In C#, there are several packages to help ensure that you only need to import th
 | `CommunityToolkit.VectorData.CosmosMongoDB` | The vector store connector for Azure CosmosDB MongoDB |
 | `CommunityToolkit.VectorData.CosmosNoSql` | The vector store connector for Azure CosmosDB NoSQL |
 | `MongoDB.VectorData` | The vector store connector for MongoDB |
-| `CommunityToolkit.VectorData.Pinecone` | The vector store connector for Pinecone |
 | `CommunityToolkit.VectorData.Qdrant` | The vector store connector for Qdrant |
 | `CommunityToolkit.VectorData.Redis` | The vector store connector for Redis |
 | `CommunityToolkit.VectorData.SqliteVec` | The vector store connector for Sqlite |
