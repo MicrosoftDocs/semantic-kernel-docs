@@ -74,6 +74,14 @@ agent-framework/
 │   ├── openai-endpoints.md
 │   ├── m365.md
 │   └── purview.md
+├── hosting/                   # Hosting model selection and guides
+│   ├── index.md               # Managed vs self-hosted overview
+│   ├── foundry-hosted-agent.md
+│   └── self-hosting/
+│       ├── index.md           # Shared self-hosting state and protocol choices
+│       ├── responses.md
+│       ├── telegram.md
+│       └── a2a.md
 ├── devui/                     # DevUI reference (top-level)
 │   ├── index.md
 │   └── ...
@@ -97,12 +105,14 @@ agent-framework/
    builds complexity step by step. Agents/workflows/integrations are reference
    docs organized by topic — users land here from "Go deeper" links.
 
-2. **Zone pivots for languages**: Every page that shows code uses
-   `zone_pivot_groups: programming-languages` in its YAML frontmatter.
-   Code blocks are wrapped in `:::zone pivot="programming-language-csharp"`,
-   `:::zone pivot="programming-language-python"`, and
-   `:::zone pivot="programming-language-go"` sections when the feature is
-   supported in those SDKs.
+2. **Zone pivots for languages**: Use
+   `zone_pivot_groups: programming-languages` and matching
+   `:::zone pivot="..."` sections only when a page presents code in multiple
+   supported SDKs. You can also use a non-empty "coming soon" zone for an SDK
+   that is planned but not yet supported. When you use a pivot group, include a
+   non-empty zone for every pivot ID it defines; otherwise the validator reports
+   blank language tabs. Do not declare a multi-language pivot group on a
+   language-specific page.
 
 3. **Code snippets as source of truth**: Prefer `:::code` directives that point
    to sample files in the code repo, so docs stay synced with runnable samples.
@@ -173,11 +183,16 @@ title: "Page Title"
 description: "One-line description for SEO"
 zone_pivot_groups: programming-languages
 author: eavanvalkenburg
-ms.topic: article           # or "tutorial" for get-started
+ms.topic: article           # Use overview, tutorial, how-to, reference, or upgrade-and-migration-article when appropriate
 ms.date: MM/DD/YYYY
 ms.service: agent-framework
 ---
 ```
+
+Use `article` by default. Do not use `conceptual`; it is not a supported
+topic value. Use `overview` for section landing pages and choose `tutorial`,
+`how-to`, `reference`, or `upgrade-and-migration-article` only when they
+match the page's purpose.
 
 ## TOC.yml conventions
 
@@ -185,7 +200,7 @@ ms.service: agent-framework
   files (`href: .../TOC.yml`). This avoids breadcrumb compatibility issues and
   keeps navigation in a single source of truth.
 - Top-level items: Agent Framework, Get Started, Agents, Workflows, Integrations,
-  DevUI, Migration Guide, API Reference, Support
+  Hosting, DevUI, Migration Guide, API Reference, Support
 - Each section uses `items:` for child pages
 - `expanded: true` only on Get Started (first section users see)
 
@@ -226,6 +241,11 @@ Every docs page maps to sample files in both repos:
 | `integrations/hyperlight.md` | `02-agents/context_providers/code_act/code_act.py` | `02-agents/AgentWithCodeAct/` |
 | `integrations/a2a.md` | `04-hosting/a2a/` | `04-hosting/a2a/` |
 | `integrations/durable-extension.md` | `04-hosting/azure_functions/`, `04-hosting/durabletask/` | `04-hosting/DurableAgents/`, `04-hosting/DurableWorkflows/` |
+| `hosting/self-hosting/index.md` | `04-hosting/af-hosting/` | N/A |
+| `hosting/self-hosting/responses.md` | `04-hosting/af-hosting/local_responses/`, `04-hosting/af-hosting/local_responses_workflow/` | N/A |
+| `hosting/self-hosting/telegram.md` | `04-hosting/af-hosting/local_telegram/` | N/A |
+| `hosting/self-hosting/a2a.md` | `04-hosting/a2a/` | N/A |
+| `hosting/self-hosting/mcp.md` | `04-hosting/mcp/` | N/A |
 
 ## When adding a new docs page
 

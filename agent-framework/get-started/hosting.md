@@ -132,6 +132,8 @@ app.Run();
 
 :::zone pivot="programming-language-python"
 
+Azure Functions is one self-managed hosting option. For a comparison of Microsoft-managed Foundry Hosted Agents, self-hosting, and durable Azure Functions workloads, see [Hosting Agent Framework applications](../hosting/index.md).
+
 Install the Azure Functions hosting package, Foundry client, and Azure authentication package:
 
 ```bash
@@ -239,6 +241,7 @@ http.ListenAndServe(":5000", mux)
 - [A2A Protocol](../integrations/a2a.md) — expose and consume agents via A2A
 - [Durable Extension](../integrations/durable-extension.md) — durable C# and Python agent and workflow hosting
 - [AG-UI Protocol](../integrations/ag-ui/index.md) — web-based agent UIs
+- [Hosting overview](../hosting/index.md) — choose Foundry Hosted Agents, self-hosting, or durable hosting
 - [Foundry Hosted Agents docs](/azure/ai-foundry/agents/concepts/hosted-agents) — understand hosted agents in Microsoft Foundry
 - [Foundry Hosted Agents sample (Python)](https://github.com/microsoft-foundry/foundry-samples/tree/main/samples/python/hosted-agents/agent-framework) — run an end-to-end Agent Framework hosted-agent sample
 
