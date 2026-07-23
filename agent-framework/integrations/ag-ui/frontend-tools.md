@@ -20,7 +20,7 @@ This tutorial shows you how to add frontend function tools to your AG-UI clients
 Before you begin, ensure you have completed the [Getting Started](getting-started.md) tutorial and have:
 
 - .NET 8.0 or later
-- `Microsoft.Agents.AI.AGUI` package installed
+- `AGUI.Client` package installed (the AG-UI C# SDK client)
 - `Microsoft.Agents.AI` package installed
 - Basic understanding of AG-UI client setup
 

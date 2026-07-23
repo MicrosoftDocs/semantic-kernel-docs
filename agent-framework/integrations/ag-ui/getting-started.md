@@ -76,7 +76,7 @@ using Microsoft.Agents.AI.Hosting.AGUI.AspNetCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpClient().AddLogging();
-builder.Services.AddAGUI();
+builder.Services.AddAGUIServer();
 
 WebApplication app = builder.Build();
 
@@ -95,7 +95,7 @@ AIAgent agent = new AIProjectClient(
         instructions: "You are a helpful assistant.");
 
 // Map the AG-UI agent endpoint
-app.MapAGUI("/", agent);
+app.MapAGUIServer("/", agent);
 
 await app.RunAsync();
 ```
@@ -105,8 +105,8 @@ await app.RunAsync();
 
 ### Key Concepts
 
-- **`AddAGUI`**: Registers AG-UI services with the dependency injection container
-- **`MapAGUI`**: Extension method that registers the AG-UI endpoint with automatic request/response handling and SSE streaming
+- **`AddAGUIServer`**: Registers AG-UI services with the dependency injection container
+- **`MapAGUIServer`**: Extension method that registers the AG-UI endpoint with automatic request/response handling and SSE streaming
 - **`AsAIAgent`**: Creates an Agent Framework agent from an `AIProjectClient` with a specified model and instructions
 - **ASP.NET Core Integration**: Uses ASP.NET Core's native async support for streaming responses
 - **Instructions**: The agent is created with default instructions, which can be overridden by client messages
@@ -144,12 +144,14 @@ The AG-UI client connects to the remote server and displays streaming responses.
 Install the AG-UI client library:
 
 ```bash
-dotnet add package Microsoft.Agents.AI.AGUI --prerelease
+dotnet add package AGUI.Client --prerelease
 dotnet add package Microsoft.Agents.AI --prerelease
 ```
 
 > [!NOTE]
-> The `Microsoft.Agents.AI` package provides the `AsAIAgent()` extension method.
+> The `Microsoft.Agents.AI` package provides the `AsAIAgent()` extension method. The AG-UI client
+> type (`AGUIChatClient`) now ships in the AG-UI C# SDK package `AGUI.Client` (previously it was part
+> of the removed `Microsoft.Agents.AI.AGUI` package).
 
 ### Client Code
 
@@ -159,7 +161,7 @@ Create a file named `Program.cs`:
 // Copyright (c) Microsoft. All rights reserved.
 
 using Microsoft.Agents.AI;
-using Microsoft.Agents.AI.AGUI;
+using AGUI.Client;
 using Microsoft.Extensions.AI;
 
 string serverUrl = Environment.GetEnvironmentVariable("AGUI_SERVER_URL") ?? "http://localhost:8888";
@@ -172,7 +174,7 @@ using HttpClient httpClient = new()
     Timeout = TimeSpan.FromSeconds(60)
 };
 
-AGUIChatClient chatClient = new(httpClient, serverUrl);
+AGUIChatClient chatClient = new(new AGUIChatClientOptions(httpClient, serverUrl));
 
 AIAgent agent = chatClient.AsAIAgent(
     name: "agui-client",
@@ -317,7 +319,7 @@ The client displays different content types with distinct colors:
 ### Server-Side Flow
 
 1. Client sends HTTP POST request with messages
-2. ASP.NET Core endpoint receives the request via `MapAGUI`
+2. ASP.NET Core endpoint receives the request via `MapAGUIServer`
 3. Agent processes the messages using Agent Framework
 4. Responses are converted to AG-UI events
 5. Events are streamed back as Server-Sent Events (SSE)

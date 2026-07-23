@@ -288,13 +288,13 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpClient().AddLogging();
 builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.TypeInfoResolverChain.Add(RecipeSerializerContext.Default));
-builder.Services.AddAGUI();
+builder.Services.AddAGUIServer();
 
 WebApplication app = builder.Build();
 
 var jsonOptions = app.Services.GetRequiredService<IOptions<Microsoft.AspNetCore.Http.Json.JsonOptions>>().Value;
 AIAgent recipeAgent = CreateRecipeAgent(jsonOptions.SerializerOptions);
-app.MapAGUI("/", recipeAgent);
+app.MapAGUIServer("/", recipeAgent);
 
 await app.RunAsync();
 ```

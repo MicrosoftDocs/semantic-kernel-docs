@@ -317,7 +317,7 @@ The client requires **bidirectional middleware** that handles both:
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using Microsoft.Agents.AI;
-using Microsoft.Agents.AI.AGUI;
+using AGUI.Client;
 using Microsoft.Extensions.AI;
 
 // Get JsonSerializerOptions from the client
@@ -478,7 +478,7 @@ The consuming code processes approval requests. When receiving a `FunctionApprov
 
 ```csharp
 using Microsoft.Agents.AI;
-using Microsoft.Agents.AI.AGUI;
+using AGUI.Client;
 using Microsoft.Extensions.AI;
 
 #pragma warning disable MEAI001 // Type is for evaluation purposes only
