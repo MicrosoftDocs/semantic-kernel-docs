@@ -63,33 +63,6 @@ string endpoint = builder.Configuration["AZURE_OPENAI_ENDPOINT"]
 string deploymentName = builder.Configuration["AZURE_OPENAI_DEPLOYMENT_NAME"]
     ?? throw new InvalidOperationException("AZURE_OPENAI_DEPLOYMENT_NAME is not set.");
 
-// Define request/response types for the tool
-internal sealed class RestaurantSearchRequest
-{
-    public string Location { get; set; } = string.Empty;
-    public string Cuisine { get; set; } = "any";
-}
-
-internal sealed class RestaurantSearchResponse
-{
-    public string Location { get; set; } = string.Empty;
-    public string Cuisine { get; set; } = string.Empty;
-    public RestaurantInfo[] Results { get; set; } = [];
-}
-
-internal sealed class RestaurantInfo
-{
-    public string Name { get; set; } = string.Empty;
-    public string Cuisine { get; set; } = string.Empty;
-    public double Rating { get; set; }
-    public string Address { get; set; } = string.Empty;
-}
-
-// JSON serialization context for source generation
-[JsonSerializable(typeof(RestaurantSearchRequest))]
-[JsonSerializable(typeof(RestaurantSearchResponse))]
-internal sealed partial class SampleJsonSerializerContext : JsonSerializerContext;
-
 // Define the function tool
 [Description("Search for restaurants in a location.")]
 static RestaurantSearchResponse SearchRestaurants(
@@ -154,6 +127,33 @@ AIAgent agent = new AIProjectClient(
 app.MapAGUIServer("/", agent);
 
 await app.RunAsync();
+
+// Define request/response types for the tool
+internal sealed class RestaurantSearchRequest
+{
+    public string Location { get; set; } = string.Empty;
+    public string Cuisine { get; set; } = "any";
+}
+
+internal sealed class RestaurantSearchResponse
+{
+    public string Location { get; set; } = string.Empty;
+    public string Cuisine { get; set; } = string.Empty;
+    public RestaurantInfo[] Results { get; set; } = [];
+}
+
+internal sealed class RestaurantInfo
+{
+    public string Name { get; set; } = string.Empty;
+    public string Cuisine { get; set; } = string.Empty;
+    public double Rating { get; set; }
+    public string Address { get; set; } = string.Empty;
+}
+
+// JSON serialization context for source generation
+[JsonSerializable(typeof(RestaurantSearchRequest))]
+[JsonSerializable(typeof(RestaurantSearchResponse))]
+internal sealed partial class SampleJsonSerializerContext : JsonSerializerContext;
 ```
 
 > [!WARNING]

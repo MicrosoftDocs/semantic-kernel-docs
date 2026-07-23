@@ -52,8 +52,6 @@ First, define classes for your state structure:
 ```csharp
 using System.Text.Json.Serialization;
 
-namespace RecipeAssistant;
-
 // State response wrapper
 internal sealed class RecipeResponse
 {
