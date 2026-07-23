@@ -210,29 +210,29 @@ Workflows can pause execution to collect human input or tool approvals. The AG-U
 2. The AG-UI bridge emits a `CUSTOM` event with `name="request_info"` containing the request data.
 3. The run finishes with a `RUN_FINISHED` event whose `outcome.interrupts` field contains the pending requests:
 
-    ```json
-    {
-      "type": "RUN_FINISHED",
-      "threadId": "abc123",
-      "runId": "run_xyz",
-      "outcome": {
-        "type": "interrupt",
-        "interrupts": [
-          {
-            "id": "request-id-1",
-            "reason": "input_required",
-            "message": "Provide the requested information.",
-            "responseSchema": { "type": "string" },
-            "metadata": {
-              "agent_framework": {
-                "request_type": "HandoffAgentUserRequest"
-              }
-            }
+```json
+{
+  "type": "RUN_FINISHED",
+  "threadId": "abc123",
+  "runId": "run_xyz",
+  "outcome": {
+    "type": "interrupt",
+    "interrupts": [
+      {
+        "id": "request-id-1",
+        "reason": "input_required",
+        "message": "Provide the requested information.",
+        "responseSchema": { "type": "string" },
+        "metadata": {
+          "agent_framework": {
+            "request_type": "HandoffAgentUserRequest"
           }
-        ]
+        }
       }
-    }
-    ```
+    ]
+  }
+}
+```
 
 4. The client renders UI for the user to respond (a text input, an approval button, etc.).
 

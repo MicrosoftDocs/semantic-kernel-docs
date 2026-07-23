@@ -45,7 +45,7 @@ State management is valuable for:
 
 ## Creating State-Aware Agents in C#
 
-State management in the .NET AG-UI integration is **declarative**: your agent exposes ordinary tools that return your state objects, and you tell the hosting layer which tool results become AG-UI state events by configuring an <xref:AGUI.Server.AGUIStreamOptions>. You don't write a custom agent or emit protocol content by hand.
+State management in the .NET AG-UI integration is **declarative**: your agent exposes ordinary tools that return your state objects, and you tell the hosting layer which tool results become AG-UI state events by configuring an `AGUIStreamOptions`. You don't write a custom agent or emit protocol content by hand.
 
 ### Define Your State Model
 
@@ -172,7 +172,7 @@ AIAgent recipeAgent = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureC
 
 ### Map the Tool Result to a State Event
 
-Create an <xref:AGUI.Server.AGUIStreamOptions>, register the tool name as a state snapshot, and attach it to the endpoint metadata. `MapAGUIServer` reads the stream options from the endpoint (or from `IOptions<AGUIStreamOptions>` in DI) and emits the state events for you:
+Create an `AGUIStreamOptions`, register the tool name as a state snapshot, and attach it to the endpoint metadata. `MapAGUIServer` reads the stream options from the endpoint (or from `IOptions<AGUIStreamOptions>` in DI) and emits the state events for you:
 
 ```csharp
 using AGUI.Server;

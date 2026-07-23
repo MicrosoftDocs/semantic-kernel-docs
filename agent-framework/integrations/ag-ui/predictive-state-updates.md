@@ -32,7 +32,7 @@ You need:
 Unlike the [shared-state](state-management.md) scenario — where a tool *runs* and its result becomes a snapshot — the predictive scenario intercepts the tool **call** before it executes and streams the argument into state:
 
 1. The agent declares a `write_document_local` tool. The model calls it with the full document text as its `document` argument.
-2. The tool is **not** executed server-side. Instead, an <xref:AGUI.Server.AGUIStreamOptions> `MapCall` mapping intercepts the call.
+2. The tool is **not** executed server-side. Instead, an `AGUIStreamOptions` `MapCall` mapping intercepts the call.
 3. The mapping emits a series of `STATE_SNAPSHOT` events, each carrying a progressively longer prefix of the document, so the client sees the text stream in.
 4. It then completes the tool call with a `TOOL_CALL_RESULT` event and injects a client-side `confirm_changes` tool call so the client can prompt the user to approve.
 5. The client renders each snapshot and shows the confirm/reject prompt.
@@ -244,5 +244,11 @@ A UI toolkit such as [CopilotKit](https://copilotkit.ai/) subscribes to the stat
 ::: zone pivot="programming-language-python"
 
 Predictive state updates for Python are covered in the [State Management](state-management.md) tutorial, which shows how to configure predicted state with `predict_state_config` and stream tool arguments as optimistic state updates.
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+Predictive state updates are not currently provided as a dedicated helper in the Go AG-UI integration. See [State Management](state-management.md) for the supported Go state patterns.
 
 ::: zone-end
