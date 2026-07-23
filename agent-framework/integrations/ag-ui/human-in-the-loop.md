@@ -19,11 +19,12 @@ This tutorial demonstrates how to implement human-in-the-loop approval workflows
 
 The C# AG-UI approval pattern works as follows:
 
-1. **Server**: Wraps functions with `ApprovalRequiredAIFunction` to mark them as requiring approval
-2. **Middleware**: Intercepts `FunctionApprovalRequestContent` from the agent and converts it to a client tool call
-3. **Client**: Receives the tool call, displays approval UI, and sends the approval response as a tool result
-4. **Middleware**: Unwraps the approval response and converts it to `FunctionApprovalResponseContent`
-5. **Agent**: Continues execution with the user's approval decision
+1. **Server**: Wraps a function with `ApprovalRequiredAIFunction` to mark it as requiring approval, and maps the agent with `MapAGUIServer`.
+2. **Interrupt**: When the model calls the tool, the run ends with an interrupt instead of executing it. The AG-UI client surfaces this as a `ToolApprovalRequestContent`.
+3. **Client**: Presents the request to the user, then creates a decision with `CreateResponse(approved)` and sends it back.
+4. **Resume**: `AGUIChatClient` transports the decision over the AG-UI resume mechanism; the agent continues and runs (or skips) the tool.
+
+No custom approval-protocol code is required on either side — the AG-UI client and server handle the round-trip natively.
 
 ## Prerequisites
 
