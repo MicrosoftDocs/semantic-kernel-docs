@@ -31,7 +31,7 @@ Before you begin, ensure you have:
 First, clone the AG-UI repository which contains the Dojo application and Microsoft Agent Framework integration examples:
 
 ```bash
-git clone https://github.com/ag-oss/ag-ui.git
+git clone https://github.com/ag-ui-protocol/ag-ui.git
 cd ag-ui
 ```
 

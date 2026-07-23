@@ -314,6 +314,44 @@ The client displays different content types with distinct colors:
 - **Green**: Run completion notifications
 - **Red**: Error messages
 
+## Testing with curl (Optional)
+
+You can exercise the server directly with curl before running the client. The AG-UI endpoint accepts a
+`RunAgentInput` JSON body; the only required field is `messages`. If you omit `threadId`, the server
+generates one for you:
+
+```bash
+curl -N http://localhost:8888/ \
+  -H "Content-Type: application/json" \
+  -H "Accept: text/event-stream" \
+  -d '{
+    "messages": [
+      {"role": "user", "content": "What is 2 + 2?"}
+    ]
+  }'
+```
+
+You should see Server-Sent Events streaming back:
+
+```
+data: {"type":"RUN_STARTED","threadId":"b60869bc...","runId":""}
+
+data: {"type":"TEXT_MESSAGE_START","messageId":"...","role":"assistant","name":"AGUIAssistant"}
+
+data: {"type":"TEXT_MESSAGE_CONTENT","messageId":"...","delta":"Two"}
+
+data: {"type":"TEXT_MESSAGE_CONTENT","messageId":"...","delta":" plus"}
+
+...
+
+data: {"type":"TEXT_MESSAGE_END","messageId":"..."}
+
+data: {"type":"RUN_FINISHED","threadId":"b60869bc...","runId":""}
+```
+
+Use the route you mapped with `MapAGUIServer` (here `/`) and the port your server listens on
+(`dotnet run --urls http://localhost:8888`).
+
 ## How It Works
 
 ### Server-Side Flow

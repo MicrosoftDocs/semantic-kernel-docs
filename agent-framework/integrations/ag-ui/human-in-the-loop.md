@@ -629,6 +629,92 @@ The server middleware must remove approval protocol messages after processing:
 - **Solution**: After converting approval responses, remove both the `request_approval` tool call and its result message
 - **Reason**: Prevents "tool_calls must be followed by tool messages" errors
 
+## Approval Requirements
+
+In .NET, whether a tool requires approval is expressed by how you register it — there is no per-tool
+"approval mode":
+
+- **Always require approval**: wrap the function in `ApprovalRequiredAIFunction`.
+- **Never require approval**: register the function normally (do not wrap it).
+
+```csharp
+// Requires approval before it runs.
+AITool transfer = new ApprovalRequiredAIFunction(
+    AIFunctionFactory.Create(TransferFunds, name: "transfer_funds", description: "Transfer money to another account."));
+
+// Runs without approval.
+AITool balance = AIFunctionFactory.Create(
+    GetAccountBalance, name: "get_account_balance", description: "Get the current account balance.");
+```
+
+When the model calls an approval-required tool, the run ends with an `interrupt` outcome that carries an
+approval request — the tool call plus a response schema of `{ "approved": boolean }`. The run resumes
+once the client sends the approval decision back.
+
+## Selective Approval
+
+Mix approval-required and unrestricted tools on the same agent by wrapping only the sensitive ones:
+
+```csharp
+AIAgent agent = chatClient.AsAIAgent(new ChatClientAgentOptions
+{
+    Name = "BankingAgent",
+    ChatOptions = new ChatOptions
+    {
+        Instructions = "You are a banking assistant. Check balances and transfer funds when asked.",
+        Tools =
+        [
+            AIFunctionFactory.Create(GetAccountBalance, name: "get_account_balance",
+                description: "Get the current account balance."),
+            new ApprovalRequiredAIFunction(AIFunctionFactory.Create(TransferFunds, name: "transfer_funds",
+                description: "Transfer money to another account.")),
+        ]
+    }
+});
+```
+
+If the model calls both tools in a single turn, the unrestricted tool (`get_account_balance`) executes
+and streams its `TOOL_CALL_RESULT`, while the approval-required tool (`transfer_funds`) raises an
+approval interrupt and waits for the user's decision before running.
+
+## Best Practices
+
+### Clear Tool Descriptions
+
+Provide detailed descriptions so users understand what they are approving:
+
+```csharp
+using System.ComponentModel;
+
+[Description("Permanently delete a database and all its contents. This action cannot be undone.")]
+static string DeleteDatabase(
+    [Description("Name of the database to permanently delete.")] string databaseName)
+{
+    // Implementation
+    return $"Database '{databaseName}' deleted.";
+}
+
+AITool deleteTool = new ApprovalRequiredAIFunction(
+    AIFunctionFactory.Create(DeleteDatabase, name: "delete_database"));
+```
+
+### Informative Arguments
+
+Use descriptive parameter names and `[Description]` attributes. The approval request surfaces the tool
+name and its arguments to the client, so meaningful names and descriptions help users make an informed
+decision:
+
+```csharp
+[Description("Purchase items from the store.")]
+static string PurchaseItem(
+    [Description("Name of the item to purchase.")] string itemName,
+    [Description("Number of items to purchase.")] int quantity,
+    [Description("Total cost in USD, including tax and shipping.")] double totalCost)
+{
+    return $"Purchased {quantity} x {itemName} for {totalCost:C}.";
+}
+```
+
 ## Next steps
 
 > [!div class="nextstepaction"]
