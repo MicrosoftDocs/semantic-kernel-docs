@@ -188,15 +188,9 @@ while (true)
     Console.Write("\nUser (:q or quit to exit): ");
     string? message = Console.ReadLine();
 
-    if (string.IsNullOrWhiteSpace(message))
-    {
-        continue;
-    }
+    if (string.IsNullOrWhiteSpace(message)) continue;
 
-    if (message is ":q" or "quit")
-    {
-        break;
-    }
+    if (message is ":q" or "quit") break;
 
     // Pass only the new message; the session supplies the prior turns.
     Console.Write("Assistant: ");
