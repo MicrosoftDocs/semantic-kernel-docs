@@ -365,20 +365,21 @@ To test your own agents with Dojo:
 Create a new agent following the [Getting Started](getting-started.md) guide:
 
 ```csharp
-using Azure.AI.Projects;
+using Azure.AI.OpenAI;
 using Azure.Identity;
 using Microsoft.Agents.AI;
+using OpenAI.Chat;
 
 string endpoint = builder.Configuration["AZURE_OPENAI_ENDPOINT"]
     ?? throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
 string deploymentName = builder.Configuration["AZURE_OPENAI_DEPLOYMENT_NAME"]
     ?? throw new InvalidOperationException("AZURE_OPENAI_DEPLOYMENT_NAME is not set.");
 
-AIAgent agent = new AIProjectClient(
+AIAgent agent = new AzureOpenAIClient(
         new Uri(endpoint),
         new DefaultAzureCredential())
+    .GetChatClient(deploymentName)
     .AsAIAgent(
-        model: deploymentName,
         name: "my_test_agent",
         instructions: "You are a helpful assistant.");
 ```

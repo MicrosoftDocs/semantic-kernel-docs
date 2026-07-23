@@ -43,11 +43,12 @@ code on the server.
 
 ```csharp
 using System.ComponentModel;
-using Azure.AI.Projects;
+using Azure.AI.OpenAI;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Hosting.AGUI.AspNetCore;
 using Microsoft.Extensions.AI;
+using OpenAI.Chat;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpClient().AddLogging();
@@ -72,9 +73,9 @@ static string SendEmail(
 AITool sendEmail = new ApprovalRequiredAIFunction(AIFunctionFactory.Create(SendEmail));
 #pragma warning restore MEAI001
 
-AIAgent agent = new AIProjectClient(new Uri(endpoint), new DefaultAzureCredential())
+AIAgent agent = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredential())
+    .GetChatClient(deploymentName)
     .AsAIAgent(
-        model: deploymentName,
         name: "AGUIAssistant",
         instructions: "You are a helpful assistant. Use the send_email tool when asked to send email.",
         tools: [sendEmail]);

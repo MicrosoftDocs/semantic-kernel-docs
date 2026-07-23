@@ -43,12 +43,13 @@ Here's a complete server implementation demonstrating how to register tools with
 
 using System.ComponentModel;
 using System.Text.Json.Serialization;
-using Azure.AI.Projects;
+using Azure.AI.OpenAI;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Hosting.AGUI.AspNetCore;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Options;
+using OpenAI.Chat;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpClient().AddLogging();
@@ -114,11 +115,11 @@ AITool[] tools =
 ];
 
 // Create the AI agent with tools
-AIAgent agent = new AIProjectClient(
+AIAgent agent = new AzureOpenAIClient(
         new Uri(endpoint),
         new DefaultAzureCredential())
+    .GetChatClient(deploymentName)
     .AsAIAgent(
-        model: deploymentName,
         name: "AGUIAssistant",
         instructions: "You are a helpful assistant with access to restaurant information.",
         tools: tools);

@@ -133,6 +133,7 @@ using Microsoft.Agents.AI;
 using Azure.AI.OpenAI;
 using Azure.Identity;
 using Microsoft.Extensions.AI;
+using OpenAI.Chat;
 
 const string SharedStateSystemPrompt =
     """
