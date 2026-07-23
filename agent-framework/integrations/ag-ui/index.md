@@ -81,22 +81,22 @@ The AG-UI integration uses ASP.NET Core and follows a clean middleware-based arc
 └────────┬────────┘
          │ HTTP POST + SSE
          ▼
-┌─────────────────────────┐
-│  ASP.NET Core           │
+┌────────────────────────────┐
+│  ASP.NET Core              │
 │  MapAGUIServer("/", agent) │
-└────────┬────────────────┘
+└────────┬───────────────────┘
          │
          ▼
-┌─────────────────────────┐
-│  AIAgent                │
-│  (with Middleware)      │
-└────────┬────────────────┘
+┌────────────────────────────┐
+│  AIAgent                   │
+│  (with Middleware)         │
+└────────┬───────────────────┘
          │
          ▼
-┌─────────────────────────┐
-│  IChatClient            │
-│  (Azure OpenAI, etc.)   │
-└─────────────────────────┘
+┌────────────────────────────┐
+│  IChatClient               │
+│  (Azure OpenAI, etc.)      │
+└────────────────────────────┘
 ```
 
 ### Key Components
