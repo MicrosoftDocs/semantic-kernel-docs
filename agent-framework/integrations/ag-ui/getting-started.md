@@ -72,7 +72,6 @@ Create a file named `Program.cs`:
 using Azure.AI.OpenAI;
 using Azure.Identity;
 using Microsoft.Agents.AI;
-using Microsoft.Agents.AI.Hosting;
 using Microsoft.Agents.AI.Hosting.AGUI.AspNetCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -83,27 +82,19 @@ string endpoint = builder.Configuration["AZURE_OPENAI_ENDPOINT"]
 string deploymentName = builder.Configuration["AZURE_OPENAI_DEPLOYMENT_NAME"]
     ?? throw new InvalidOperationException("AZURE_OPENAI_DEPLOYMENT_NAME is not set.");
 
-const string AgentName = "AGUIAssistant";
-
 // Build an agent directly from the Azure OpenAI chat client.
 AIAgent agent = new AzureOpenAIClient(
         new Uri(endpoint),
         new DefaultAzureCredential())
     .GetChatClient(deploymentName)
     .AsAIAgent(
-        name: AgentName,
+        name: "AGUIAssistant",
         instructions: "You are a helpful assistant.");
-
-// Register the agent with the host and keep conversation state across requests using an in-memory
-// session store (keyed by AG-UI thread ID). `withIsolation: false` is appropriate for a single-user
-// local server; in multi-user deployments keep isolation enabled (the default) and register a
-// SessionIsolationKeyProvider to scope sessions per principal.
-builder.AddAIAgent(AgentName, (_, _) => agent).WithInMemorySessionStore(withIsolation: false);
 
 WebApplication app = builder.Build();
 
-// Map the AG-UI agent endpoint by name.
-app.MapAGUIServer(AgentName, "/");
+// Map the agent to an AG-UI endpoint (HTTP POST + SSE streaming).
+app.MapAGUIServer("/", agent);
 
 await app.RunAsync();
 ```
@@ -111,11 +102,20 @@ await app.RunAsync();
 > [!WARNING]
 > `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
+> [!NOTE]
+> Sessions are **ephemeral** here: AG-UI clients resend the conversation each turn, so no server-side
+> state is required. To persist sessions server-side (keyed by the AG-UI thread ID), register the agent
+> with a session store — `builder.AddAIAgent("AGUIAssistant", (_, _) => agent).WithInMemorySessionStore(withIsolation: false);`
+> — and map it by name with `app.MapAGUIServer("AGUIAssistant", "/");`. The `withIsolation: false` form
+> suits a single-user or local server. A thread ID is **not** an authorization token, so multi-user hosts
+> must scope sessions per principal: keep isolation enabled (the default) and register a
+> `SessionIsolationKeyProvider` (for example via `UseClaimsBasedSessionIsolation(...)`). See
+> [Security Considerations](security-considerations.md).
+
 ### Key Concepts
 
 - **`AddAGUIServer`**: Registers AG-UI server services with the dependency injection container
-- **`AddAIAgent` / `WithInMemorySessionStore`**: Registers the agent with the host and persists conversation sessions (keyed by AG-UI thread ID) across requests
-- **`MapAGUIServer`**: Extension method that maps the named agent to an AG-UI endpoint with automatic request/response handling and SSE streaming
+- **`MapAGUIServer`**: Extension method that maps an agent to an AG-UI endpoint with automatic request/response handling and SSE streaming
 - **`AsAIAgent`**: Creates an Agent Framework agent directly from the Azure OpenAI chat client with a name and instructions
 - **ASP.NET Core Integration**: Uses ASP.NET Core's native async support for streaming responses
 - **Instructions**: The agent is created with default instructions, which can be overridden by client messages

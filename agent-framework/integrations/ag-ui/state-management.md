@@ -175,7 +175,6 @@ Create an <xref:AGUI.Server.AGUIStreamOptions>, register the tool name as a stat
 
 ```csharp
 using AGUI.Server;
-using Microsoft.Agents.AI.Hosting;
 using Microsoft.Agents.AI.Hosting.AGUI.AspNetCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -187,11 +186,10 @@ builder.Services.AddAGUIServer();
 AGUIStreamOptions streamOptions = new AGUIStreamOptions()
     .MapResultAsStateSnapshot("generate_recipe");
 
-builder.AddAIAgent("RecipeAgent", (_, _) => recipeAgent).WithInMemorySessionStore(withIsolation: false);
-
 WebApplication app = builder.Build();
 
-app.MapAGUIServer("RecipeAgent", "/").WithMetadata(streamOptions);
+// Attach the stream options to the endpoint; MapAGUIServer emits the state events for you.
+app.MapAGUIServer("/", recipeAgent).WithMetadata(streamOptions);
 
 await app.RunAsync();
 ```
@@ -334,8 +332,7 @@ AGUIStreamOptions planStreamOptions = new AGUIStreamOptions()
     .MapResultAsStateSnapshot("create_plan")   // full plan -> STATE_SNAPSHOT
     .MapResultAsStateDelta("update_plan_step"); // JSON Patch -> STATE_DELTA
 
-builder.AddAIAgent("AgenticUIAgent", (_, _) => planAgent).WithInMemorySessionStore(withIsolation: false);
-app.MapAGUIServer("AgenticUIAgent", "/agentic_generative_ui").WithMetadata(planStreamOptions);
+app.MapAGUIServer("/agentic_generative_ui", planAgent).WithMetadata(planStreamOptions);
 ```
 
 > [!NOTE]
