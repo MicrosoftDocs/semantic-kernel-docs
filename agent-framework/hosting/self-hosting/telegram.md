@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: article
 ms.author: edvan
-ms.date: 07/14/2026
+ms.date: 07/22/2026
 ms.service: agent-framework
 ---
 
@@ -39,7 +39,7 @@ Use any Telegram client library that can supply an update payload and execute th
 
 The `aiogram` webhook sample verifies Telegram's secret header, dispatches the update, and uses a bot-scoped session ID to preserve an agent session for each private chat or shared group chat.
 
-:::code language="python" source="~/../agent-framework-code/python/samples/04-hosting/af-hosting/local_telegram/app.py" range="207-245":::
+:::code language="python" source="~/../agent-framework-code/python/samples/04-hosting/af-hosting/local_telegram/app.py" range="176-243":::
 
 For polling and webhook setup, command handling, inbound media policy, streaming edits, and production deployment guidance, see the [local Telegram sample](https://github.com/microsoft/agent-framework/tree/main/python/samples/04-hosting/af-hosting/local_telegram).
 
@@ -55,6 +55,7 @@ For polling and webhook setup, command handling, inbound media policy, streaming
 
 - [Self-hosting overview](index.md)
 - [OpenAI Responses](responses.md)
+- [MCP](mcp.md)
 - [Foundry Hosted Agents](../foundry-hosted-agent.md)
 
 :::zone-end

@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: article
 ms.author: edvan
-ms.date: 07/14/2026
+ms.date: 07/21/2026
 ms.service: agent-framework
 ---
 
@@ -67,6 +67,7 @@ For the broader wire format, see [OpenAI-compatible endpoints](../../integration
 
 - [Self-hosting overview](index.md)
 - [A2A](a2a.md)
+- [MCP](mcp.md)
 - [Foundry Hosted Agents](../foundry-hosted-agent.md)
 
 :::zone-end

@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: dmkorolev
 ms.service: agent-framework
 ms.topic: tutorial
-ms.date: 07/01/2026
+ms.date: 07/22/2026
 ms.author: dmkorolev
 ---
 
@@ -350,9 +350,11 @@ async with A2AAgent(
     response = await agent.run("Hello!")
 ```
 
-## Exposing an Agent Framework Agent over A2A
+## Exposing an Agent Framework agent over A2A
 
-The `A2AExecutor` adapts any Agent Framework `Agent` to the A2A server-side protocol. You can host it with the official [`a2a-sdk`](https://pypi.org/project/a2a-sdk/) Starlette/ASGI server so that other A2A clients can discover and call your agent.
+The `agent-framework-a2a` package provides an opinionated `A2AExecutor` that adapts any Agent Framework agent to the A2A server-side protocol. It runs the agent, maps supported output content to A2A events and artifacts, and manages task status updates through the official [`a2a-sdk`](https://pypi.org/project/a2a-sdk/).
+
+Your application assembles the surrounding A2A SDK server: the agent card, `DefaultRequestHandler`, task store, routes or application builder, authentication, and deployment. For a comparison with the lower-level `agent-framework-hosting-a2a` conversion helpers, see [Self-host A2A agents](../hosting/self-hosting/a2a.md).
 
 ```python
 import uvicorn
@@ -393,7 +395,7 @@ agent = Agent(
 )
 
 request_handler = DefaultRequestHandler(
-    agent_executor=A2AExecutor(agent),
+    agent_executor=A2AExecutor(agent, stream=True),
     task_store=InMemoryTaskStore(),
     agent_card=public_agent_card,
 )
@@ -409,9 +411,6 @@ uvicorn.run(server, host="0.0.0.0", port=9999)
 ```
 
 `A2AExecutor` streams agent updates as A2A artifacts when the underlying agent supports streaming and propagates the A2A `context_id` as the agent session's `session_id`. You can subclass `A2AExecutor` and override the `handle_events` method to implement custom transformations from your agent's output format to A2A protocol events.
-
-> [!TIP]
-> See the [`agent_framework_to_a2a.py` sample](https://github.com/microsoft/agent-framework/blob/main/python/samples/04-hosting/a2a/agent_framework_to_a2a.py) for a complete runnable example.
 
 ::: zone-end
 

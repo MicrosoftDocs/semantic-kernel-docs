@@ -245,6 +245,7 @@ Every docs page maps to sample files in both repos:
 | `hosting/self-hosting/responses.md` | `04-hosting/af-hosting/local_responses/`, `04-hosting/af-hosting/local_responses_workflow/` | N/A |
 | `hosting/self-hosting/telegram.md` | `04-hosting/af-hosting/local_telegram/` | N/A |
 | `hosting/self-hosting/a2a.md` | `04-hosting/a2a/` | N/A |
+| `hosting/self-hosting/mcp.md` | `04-hosting/mcp/` | N/A |
 
 ## When adding a new docs page
 

@@ -1,11 +1,11 @@
 ---
 title: Self-host A2A agents
-description: Expose Agent Framework agents from an application-owned A2A server.
+description: Choose an opinionated A2A server adapter or app-owned conversion helpers for Agent Framework agents.
 zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: article
 ms.author: edvan
-ms.date: 07/14/2026
+ms.date: 07/22/2026
 ms.service: agent-framework
 ---
 
@@ -13,38 +13,76 @@ ms.service: agent-framework
 
 :::zone pivot="programming-language-csharp"
 
-> [!NOTE]
-> Self-hosting A2A support in .NET is coming soon.
+Use the .NET A2A hosting packages to expose an Agent Framework agent through ASP.NET Core. See [A2A integration](../../integrations/a2a.md) for package setup and a complete server example.
 
 :::zone-end
 
 :::zone pivot="programming-language-go"
 
-> [!NOTE]
-> Self-hosting A2A support is not currently available for Go.
+Use the Go `provider/a2aprovider` package with the official A2A Go server handlers. See [A2A integration](../../integrations/a2a.md) for a complete server example.
 
 :::zone-end
 
 :::zone pivot="programming-language-python"
 
-Use `agent-framework-a2a` to expose an Agent Framework agent through the Agent-to-Agent (A2A) protocol. The package's `A2AExecutor` adapts the agent to the A2A server SDK; your application still owns the server, routes, agent card, task storage, authentication, and deployment.
+Agent Framework provides two Python integrations for hosting an agent through the official [A2A SDK](https://pypi.org/project/a2a-sdk/):
+
+| Package | Integration level | Use it when |
+|---|---|---|
+| `agent-framework-a2a` | An opinionated `A2AExecutor` that converts requests, runs the agent, and publishes A2A task events and artifacts. | You want the standard Agent Framework-to-A2A behavior and only need to assemble the A2A SDK server. |
+| `agent-framework-hosting-a2a` | Framework-neutral `a2a_to_run` and `a2a_from_run` conversion helpers. | Your application needs to own session mapping, task transitions, event delivery, artifact boundaries, output conversion, or a multi-protocol host. |
+
+Both approaches use native A2A SDK types and server components. Your application supplies the agent card, request handler, task store, routes or SDK application builder, authentication, and deployment.
+
+## Use the opinionated A2A executor
+
+Install `agent-framework-a2a` when the built-in server adapter matches your lifecycle:
 
 ```bash
-pip install --pre agent-framework-a2a
+pip install --pre agent-framework-a2a starlette uvicorn
 ```
 
-## Build an A2A server
+`A2AExecutor` implements the A2A SDK's `AgentExecutor`. It reads the user input from the A2A request context, creates an Agent Framework session from the A2A context ID, runs the agent in streaming or non-streaming mode, converts supported output content, and publishes task status and artifact events through the SDK's `TaskUpdater`.
 
-The A2A SDK request handler hosts an `A2AExecutor` and serves both the agent card and A2A routes. The Starlette server in this sample is one implementation; you can host the A2A SDK integration in another compatible application server.
+Compose it with the A2A SDK's `DefaultRequestHandler`, task store, agent card, and Starlette application or another supported server integration. Configure streaming with `A2AExecutor(agent, stream=True)`, pass stable agent run options through `run_kwargs`, or subclass `A2AExecutor` and override `handle_events` when you need a different output mapping.
 
-:::code language="python" source="~/../agent-framework-code/python/samples/04-hosting/a2a/agent_framework_to_a2a.py" range="39-72":::
+`A2AExecutor` is scoped to an A2A endpoint and manages its A2A execution and session mapping directly. Use the hosting packages when the same agent must be available through several protocols in one application.
 
-`A2AExecutor` maps the A2A `context_id` to the Agent Framework session. Unlike the Responses and Telegram helpers, it manages this protocol-specific session mapping directly rather than through `AgentState`.
+For the complete server setup, see [Expose an Agent Framework agent over A2A](../../integrations/a2a.md#exposing-an-agent-framework-agent-over-a2a).
 
-For a complete runnable server and multi-agent examples, see the [A2A hosting samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/04-hosting/a2a). For A2A clients and protocol capabilities, see [A2A integration](../../integrations/a2a.md).
+## Build an app-owned A2A executor
+
+Install the hosting helpers when your application needs direct control over the A2A lifecycle:
+
+```bash
+pip install --pre agent-framework-hosting-a2a starlette uvicorn
+```
+
+The helpers are framework-neutral:
+
+- `a2a_to_run` converts an A2A `Message` to Agent Framework run arguments.
+- `a2a_from_run` converts Agent Framework responses and streaming updates to A2A `Part` values.
+
+Your executor selects session keys and owns task transitions, event queues, artifact IDs, message boundaries, and outbound delivery. `a2a_from_run` returns a flat part list so the application can group those parts into A2A messages or artifacts and apply message-level metadata.
+
+The hosting setup also supports multi-protocol applications. Share the same agent target and `AgentState` infrastructure across A2A, OpenAI Responses, Telegram, and MCP routes, while each protocol endpoint keeps its own conversion, authorization, and session-key policy. This lets clients reach one agent through different protocols at the same time without creating a separate agent deployment for each endpoint.
+
+Compose the helpers in a native A2A SDK executor. This sample creates and updates A2A tasks, converts the inbound message into an Agent Framework run, persists the updated `AgentState` session after the stream finishes, and publishes returned parts as artifacts.
+
+:::code language="python" source="~/../agent-framework-code/python/samples/04-hosting/a2a/a2a_server.py" range="57-124":::
+
+The sample uses Starlette and Uvicorn, but the helpers are not tied to either. Use your application framework or an A2A SDK application builder to serve the A2A agent card and JSON-RPC routes:
+
+:::code language="python" source="~/../agent-framework-code/python/samples/04-hosting/a2a/a2a_server.py" range="171-192":::
+
+## Secure sessions and task state
+
+`A2AExecutor` uses the A2A context ID as the Agent Framework session ID. The helper-based sample combines the A2A tenant and context ID to demonstrate an application-selected mapping. In either approach, a production host must authenticate the caller before it reaches the A2A request handler, derive the tenant and subject from that trusted identity, and authorize all task, context, continuation, and cancellation IDs.
 
 > [!IMPORTANT]
-> The A2A SDK's default task store is in-memory. Replace it with a durable, tenant-aware store in production, and derive ownership from your host's authenticated identity rather than an untrusted protocol value.
+> The A2A SDK's default task and push-configuration stores are in-memory and scope ownership by user name. For a multi-tenant service, use an `owner_resolver` that derives ownership from the same trusted tenant and subject, and use durable task and session stores when replicas can restart or scale out.
+
+For a complete helper-based server and multi-agent examples, see the [A2A hosting samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/04-hosting/a2a). For A2A clients and protocol capabilities, see [A2A integration](../../integrations/a2a.md).
 
 ## Next steps
 

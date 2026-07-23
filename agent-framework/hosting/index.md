@@ -4,7 +4,7 @@ description: Choose between Microsoft-managed Foundry Hosted Agents and self-hos
 author: eavanvalkenburg
 ms.topic: overview
 ms.author: edvan
-ms.date: 07/17/2026
+ms.date: 07/21/2026
 ms.service: agent-framework
 ---
 
@@ -38,6 +38,7 @@ After choosing a host, select the client integration that fits your scenario:
 - [Agent-to-Agent (A2A)](../integrations/a2a.md) for agent interoperability.
 - [AG-UI](../integrations/ag-ui/index.md) for web-based agent applications.
 - [Telegram bots](self-hosting/telegram.md) for a self-hosted native Telegram Bot API integration.
+- [MCP tools](self-hosting/mcp.md) for exposing an agent or workflow as a native MCP tool.
 
 ## Next steps
 

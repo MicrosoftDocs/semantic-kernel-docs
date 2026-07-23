@@ -246,6 +246,8 @@ items:
       href: hosting/self-hosting/telegram.md
     - name: A2A
       href: hosting/self-hosting/a2a.md
+    - name: MCP
+      href: hosting/self-hosting/mcp.md
 - name: The Agent Development Journey
   items:
   - name: Overview
