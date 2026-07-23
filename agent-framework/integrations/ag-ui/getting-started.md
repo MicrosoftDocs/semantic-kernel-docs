@@ -54,13 +54,13 @@ Install the necessary packages for the server:
 
 ```bash
 dotnet add package Microsoft.Agents.AI.Hosting.AGUI.AspNetCore --prerelease
-dotnet add package Azure.AI.Projects --prerelease
+dotnet add package Microsoft.Agents.AI.OpenAI --prerelease
+dotnet add package Azure.AI.OpenAI
 dotnet add package Azure.Identity
-dotnet add package Microsoft.Agents.AI.Foundry --prerelease
 ```
 
 > [!NOTE]
-> The `Microsoft.Agents.AI.Foundry` package is required for the `AsAIAgent()` extension method that creates an Agent Framework agent from an `AIProjectClient`.
+> The `Microsoft.Agents.AI.OpenAI` package provides the `AsAIAgent()` extension method that turns an Azure OpenAI (or OpenAI) chat client into an Agent Framework agent.
 
 ### Server Code
 
@@ -69,33 +69,41 @@ Create a file named `Program.cs`:
 ```csharp
 // Copyright (c) Microsoft. All rights reserved.
 
-using Azure.AI.Projects;
+using Azure.AI.OpenAI;
 using Azure.Identity;
 using Microsoft.Agents.AI;
+using Microsoft.Agents.AI.Hosting;
 using Microsoft.Agents.AI.Hosting.AGUI.AspNetCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-builder.Services.AddHttpClient().AddLogging();
 builder.Services.AddAGUIServer();
-
-WebApplication app = builder.Build();
 
 string endpoint = builder.Configuration["AZURE_OPENAI_ENDPOINT"]
     ?? throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
 string deploymentName = builder.Configuration["AZURE_OPENAI_DEPLOYMENT_NAME"]
     ?? throw new InvalidOperationException("AZURE_OPENAI_DEPLOYMENT_NAME is not set.");
 
-// Create the AI agent
-AIAgent agent = new AIProjectClient(
+const string AgentName = "AGUIAssistant";
+
+// Build an agent directly from the Azure OpenAI chat client.
+AIAgent agent = new AzureOpenAIClient(
         new Uri(endpoint),
         new DefaultAzureCredential())
+    .GetChatClient(deploymentName)
     .AsAIAgent(
-        model: deploymentName,
-        name: "AGUIAssistant",
+        name: AgentName,
         instructions: "You are a helpful assistant.");
 
-// Map the AG-UI agent endpoint
-app.MapAGUIServer("/", agent);
+// Register the agent with the host and keep conversation state across requests using an in-memory
+// session store (keyed by AG-UI thread ID). `withIsolation: false` is appropriate for a single-user
+// local server; in multi-user deployments keep isolation enabled (the default) and register a
+// SessionIsolationKeyProvider to scope sessions per principal.
+builder.AddAIAgent(AgentName, (_, _) => agent).WithInMemorySessionStore(withIsolation: false);
+
+WebApplication app = builder.Build();
+
+// Map the AG-UI agent endpoint by name.
+app.MapAGUIServer(AgentName, "/");
 
 await app.RunAsync();
 ```
@@ -105,12 +113,13 @@ await app.RunAsync();
 
 ### Key Concepts
 
-- **`AddAGUIServer`**: Registers AG-UI services with the dependency injection container
-- **`MapAGUIServer`**: Extension method that registers the AG-UI endpoint with automatic request/response handling and SSE streaming
-- **`AsAIAgent`**: Creates an Agent Framework agent from an `AIProjectClient` with a specified model and instructions
+- **`AddAGUIServer`**: Registers AG-UI server services with the dependency injection container
+- **`AddAIAgent` / `WithInMemorySessionStore`**: Registers the agent with the host and persists conversation sessions (keyed by AG-UI thread ID) across requests
+- **`MapAGUIServer`**: Extension method that maps the named agent to an AG-UI endpoint with automatic request/response handling and SSE streaming
+- **`AsAIAgent`**: Creates an Agent Framework agent directly from the Azure OpenAI chat client with a name and instructions
 - **ASP.NET Core Integration**: Uses ASP.NET Core's native async support for streaming responses
 - **Instructions**: The agent is created with default instructions, which can be overridden by client messages
-- **Configuration**: `AIProjectClient` with `DefaultAzureCredential` provides secure authentication
+- **Configuration**: `AzureOpenAIClient` with `DefaultAzureCredential` provides secure authentication
 
 ### Configure and Run the Server
 

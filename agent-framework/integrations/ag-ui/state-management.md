@@ -187,7 +187,7 @@ builder.Services.AddAGUIServer();
 AGUIStreamOptions streamOptions = new AGUIStreamOptions()
     .MapResultAsStateSnapshot("generate_recipe");
 
-builder.AddAIAgent("RecipeAgent", (_, _) => recipeAgent).WithInMemorySessionStore();
+builder.AddAIAgent("RecipeAgent", (_, _) => recipeAgent).WithInMemorySessionStore(withIsolation: false);
 
 WebApplication app = builder.Build();
 
@@ -334,7 +334,7 @@ AGUIStreamOptions planStreamOptions = new AGUIStreamOptions()
     .MapResultAsStateSnapshot("create_plan")   // full plan -> STATE_SNAPSHOT
     .MapResultAsStateDelta("update_plan_step"); // JSON Patch -> STATE_DELTA
 
-builder.AddAIAgent("AgenticUIAgent", (_, _) => planAgent).WithInMemorySessionStore();
+builder.AddAIAgent("AgenticUIAgent", (_, _) => planAgent).WithInMemorySessionStore(withIsolation: false);
 app.MapAGUIServer("AgenticUIAgent", "/agentic_generative_ui").WithMetadata(planStreamOptions);
 ```
 
