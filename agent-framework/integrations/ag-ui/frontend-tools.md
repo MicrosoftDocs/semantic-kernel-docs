@@ -176,6 +176,138 @@ The server doesn't need special configuration to support frontend tools. Use the
 - Waits for results from the client
 - Incorporates results into the agent's decision-making
 
+## Best Practices
+
+### Security
+
+Frontend tools can access local resources, so validate and limit what they can do. Treat all model-generated tool-call arguments as untrusted input:
+
+```csharp
+[Description("Read an allowed user preference.")]
+static string ReadUserPreference(
+    [Description("The preference name to read.")] string preferenceName)
+{
+    string[] allowedPreferences = ["theme", "locale", "timezone"];
+
+    if (!allowedPreferences.Contains(preferenceName, StringComparer.OrdinalIgnoreCase))
+    {
+        return $"Error: Preference '{preferenceName}' is not allowed.";
+    }
+
+    return preferenceName.ToLowerInvariant() switch
+    {
+        "theme" => "dark",
+        "locale" => "en-US",
+        "timezone" => "Pacific Standard Time",
+        _ => "Error: Preference not found."
+    };
+}
+
+AITool preferenceTool = AIFunctionFactory.Create(
+    ReadUserPreference,
+    name: "read_user_preference",
+    description: "Read a permitted user preference from the client.");
+```
+
+### Error Handling
+
+Return user-friendly errors from the tool delegate rather than throwing exceptions:
+
+```csharp
+[Description("Show a local notification to the user.")]
+static string ShowNotification(
+    [Description("The notification title.")] string title,
+    [Description("The notification message.")] string message)
+{
+    try
+    {
+        if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(message))
+        {
+            return "Error: Title and message are required.";
+        }
+
+        // Display the notification in the client application.
+        return $"Notification shown: {title}";
+    }
+    catch (Exception ex)
+    {
+        return $"Error showing notification: {ex.Message}";
+    }
+}
+```
+
+### Keep Tools Focused
+
+Prefer small, purpose-built tools with clear names and descriptions over broad tools that can perform many unrelated actions:
+
+```csharp
+AITool[] frontendTools =
+[
+    AIFunctionFactory.Create(
+        GetUserLocation,
+        name: "get_user_location",
+        description: "Get the user's current city and coordinates."),
+    AIFunctionFactory.Create(
+        GetPreferredUnits,
+        name: "get_preferred_units",
+        description: "Get the user's preferred measurement units.")
+];
+```
+
+Focused tools are easier for the model to choose correctly and easier for your client code to validate.
+
+## Troubleshooting
+
+### Tools Not Being Called
+
+If frontend tools aren't being called:
+
+1. Ensure the tool has a clear name and description
+2. Verify the tool is passed to `AsAIAgent(tools: ...)`
+3. Check server logs for tool declaration or tool-call errors
+
+```csharp
+AITool locationTool = AIFunctionFactory.Create(
+    GetUserLocation,
+    name: "get_user_location",
+    description: "Get the user's current location from the client.");
+
+AIAgent agent = chatClient.AsAIAgent(
+    name: "agui-client",
+    description: "AG-UI Client Agent",
+    tools: [locationTool]);
+```
+
+### Execution Errors
+
+If a frontend tool fails during execution:
+
+1. Validate arguments before processing them
+2. Catch exceptions inside the tool delegate
+3. Return user-friendly error messages as the tool result
+4. Log details on the client for debugging
+
+```csharp
+[Description("Set the client's theme.")]
+static string SetTheme([Description("Theme name: light or dark.")] string theme)
+{
+    if (theme is not ("light" or "dark"))
+    {
+        return $"Error: Unsupported theme '{theme}'. Use 'light' or 'dark'.";
+    }
+
+    try
+    {
+        // Apply the theme in the client application.
+        return $"Theme changed to {theme}.";
+    }
+    catch (Exception ex)
+    {
+        return $"Error changing theme: {ex.Message}";
+    }
+}
+```
+
 ## Next Steps
 
 Now that you understand frontend tools, you can:

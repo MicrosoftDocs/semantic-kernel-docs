@@ -344,6 +344,115 @@ The AG-UI protocol uses:
 - Thread IDs (as `ConversationId`) for maintaining conversation context
 - Run IDs (as `ResponseId`) for tracking individual executions
 
+## Common Patterns
+
+### Custom Server Configuration
+
+Customize the ASP.NET Core server port, AG-UI endpoint route, and JSON options before mapping the agent:
+
+```csharp
+using System.Text.Json.Serialization;
+using Microsoft.Agents.AI;
+using Microsoft.Agents.AI.Hosting.AGUI.AspNetCore;
+
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+// Listen on a custom port
+builder.WebHost.UseUrls("http://localhost:8888");
+
+builder.Services.AddHttpClient().AddLogging();
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.WriteIndented = false;
+    options.SerializerOptions.TypeInfoResolverChain.Add(AppJsonSerializerContext.Default);
+});
+builder.Services.AddAGUIServer();
+
+WebApplication app = builder.Build();
+AIAgent agent = CreateAgent();
+
+// Expose the agent on a custom route
+app.MapAGUIServer("/agent", agent);
+
+await app.RunAsync();
+
+[JsonSerializable(typeof(ChatRequestMetadata))]
+internal sealed partial class AppJsonSerializerContext : JsonSerializerContext;
+
+internal sealed class ChatRequestMetadata
+{
+    public string UserId { get; set; } = string.Empty;
+}
+```
+
+The AG-UI endpoint handles HTTP POST requests and streams AG-UI events as SSE. Configure JSON serialization once with ASP.NET Core's HTTP JSON options so the AG-UI endpoint and your tools use consistent settings.
+
+### Multiple Agents
+
+Map each agent to a different route:
+
+```csharp
+using Microsoft.Agents.AI;
+using Microsoft.Agents.AI.Hosting.AGUI.AspNetCore;
+
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+builder.Services.AddHttpClient().AddLogging();
+builder.Services.AddAGUIServer();
+
+WebApplication app = builder.Build();
+
+AIAgent weatherAgent = CreateWeatherAgent();
+AIAgent financeAgent = CreateFinanceAgent();
+
+app.MapAGUIServer("/weather", weatherAgent);
+app.MapAGUIServer("/finance", financeAgent);
+
+await app.RunAsync();
+```
+
+Clients connect to the route for the agent they want to use, such as `http://localhost:8888/weather` or `http://localhost:8888/finance`.
+
+## Troubleshooting
+
+### Connection Refused
+
+Ensure the server is running before starting the client:
+
+```bash
+# Terminal 1
+dotnet run --urls http://localhost:8888
+
+# Terminal 2 (after server starts)
+dotnet run
+```
+
+Verify that `AGUI_SERVER_URL` matches the server address and route your app exposes.
+
+### Authentication Errors
+
+Make sure you're authenticated with Azure:
+
+```bash
+az login
+```
+
+Verify that your Azure OpenAI endpoint and deployment name are set correctly and that your account has the required role assignment on the Azure OpenAI resource.
+
+### Streaming Not Working
+
+Check that your client timeout is sufficient:
+
+```csharp
+using HttpClient httpClient = new()
+{
+    Timeout = TimeSpan.FromSeconds(60)
+};
+
+AGUIChatClient chatClient = new(new AGUIChatClientOptions(httpClient, serverUrl));
+```
+
+For long-running agents, increase the timeout accordingly. Also confirm the client uses `RunStreamingAsync`, the server endpoint is mapped with `MapAGUIServer`, and any proxy between the client and server allows Server-Sent Events.
+
 ## Next Steps
 
 Now that you understand the basics of AG-UI, you can:

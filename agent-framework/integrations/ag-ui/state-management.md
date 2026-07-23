@@ -98,8 +98,11 @@ internal sealed partial class RecipeSerializerContext : JsonSerializerContext;
 Create middleware that handles state management by detecting when the client sends state and coordinating the agent's responses:
 
 ```csharp
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
+using AGUI.Abstractions;
+using AGUI.Server;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
 
@@ -129,31 +132,15 @@ internal sealed class SharedStateAgent : DelegatingAIAgent
         AgentRunOptions? options = null,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        // Check if the client sent state in the request
-        if (options is not ChatClientAgentRunOptions { ChatOptions.AdditionalProperties: { } properties } chatRunOptions ||
-            !properties.TryGetValue("ag_ui_state", out object? stateObj) ||
-            stateObj is not JsonElement state ||
-            state.ValueKind != JsonValueKind.Object)
+        // Read the client-supplied state from the originating AG-UI RunAgentInput. The AG-UI hosting
+        // layer stashes the input on ChatOptions; TryGetRunAgentInput (from AGUI.Server) retrieves it,
+        // and RunAgentInput.State carries the client's current state as a JsonElement.
+        if (options is not ChatClientAgentRunOptions { ChatOptions: { } chatOptions } chatRunOptions ||
+            !chatOptions.TryGetRunAgentInput(out RunAgentInput? agentInput) ||
+            agentInput.State is not { ValueKind: JsonValueKind.Object } state ||
+            !state.EnumerateObject().Any())
         {
-            // No state management requested, pass through to inner agent
-            await foreach (var update in this.InnerAgent.RunStreamingAsync(messages, session, options, cancellationToken).ConfigureAwait(false))
-            {
-                yield return update;
-            }
-            yield break;
-        }
-
-        // Check if state has properties (not empty {})
-        bool hasProperties = false;
-        foreach (JsonProperty _ in state.EnumerateObject())
-        {
-            hasProperties = true;
-            break;
-        }
-
-        if (!hasProperties)
-        {
-            // Empty state - treat as no state
+            // No (or empty) client state: pass through to the inner agent unchanged.
             await foreach (var update in this.InnerAgent.RunStreamingAsync(messages, session, options, cancellationToken).ConfigureAwait(false))
             {
                 yield return update;
@@ -213,13 +200,17 @@ internal sealed class SharedStateAgent : DelegatingAIAgent
             yield break;
         }
 
-        // Serialize and emit as STATE_SNAPSHOT via DataContent
-        byte[] stateBytes = JsonSerializer.SerializeToUtf8Bytes(
-            stateSnapshot,
-            this._jsonSerializerOptions.GetTypeInfo(typeof(JsonElement)));
+        // Emit the updated state as an AG-UI STATE_SNAPSHOT event. An AIAgent surfaces raw AG-UI events
+        // by wrapping a ChatResponseUpdate whose RawRepresentation is the event, so the
+        // AgentResponseUpdate -> ChatResponseUpdate bridge forwards it to the server's event stream.
         yield return new AgentResponseUpdate
         {
-            Contents = [new DataContent(stateBytes, "application/json")]
+            Role = ChatRole.Assistant,
+            RawRepresentation = new ChatResponseUpdate
+            {
+                Role = ChatRole.Assistant,
+                RawRepresentation = new StateSnapshotEvent { Snapshot = stateSnapshot }
+            }
         };
 
         // Second run: Generate user-friendly summary
@@ -301,20 +292,20 @@ await app.RunAsync();
 
 ### Key Concepts
 
-- **State Detection**: Middleware checks for `ag_ui_state` in `ChatOptions.AdditionalProperties` to detect when the client is requesting state management
+- **State Detection**: Middleware calls `chatOptions.TryGetRunAgentInput(out var input)` (from `AGUI.Server`) and reads the client-supplied `input.State` (the AG-UI `RunAgentInput.State`) to detect when the client is sharing state
 - **Two-Phase Response**: First generates structured state (JSON schema), then generates a user-friendly summary
 - **Structured State Models**: Define C# classes for your state structure with JSON property names
 - **JSON Schema Response Format**: Use `ChatResponseFormat.ForJsonSchema<T>()` to ensure structured output
-- **STATE_SNAPSHOT Events**: Emitted as `DataContent` with `application/json` media type, which the AG-UI framework automatically converts to STATE_SNAPSHOT events
+- **STATE_SNAPSHOT Events**: Emitted by setting `ChatResponseUpdate.RawRepresentation` to a `StateSnapshotEvent` (from `AGUI.Abstractions`). The AG-UI server forwards raw AG-UI events straight to the SSE stream
 - **State Context**: Current state is injected as a system message to provide context to the agent
 
 ### How It Works
 
-1. Client sends request with state in `ChatOptions.AdditionalProperties["ag_ui_state"]`
+1. Client sends request; the AG-UI hosting layer exposes the originating `RunAgentInput` (including its `State`) on `ChatOptions`, which the middleware reads with `chatOptions.TryGetRunAgentInput(out var input)`
 2. Middleware detects state and performs first run with JSON schema response format
 3. Middleware adds current state as context in a system message
 4. Agent generates structured state update matching your state model
-5. Middleware serializes state and emits as `DataContent` (becomes STATE_SNAPSHOT event)
+5. Middleware emits the state as a `StateSnapshotEvent` via `ChatResponseUpdate.RawRepresentation` (becomes a STATE_SNAPSHOT event)
 6. Middleware performs second run to generate user-friendly summary
 7. Client receives both the state snapshot and the natural language summary
 
@@ -323,15 +314,167 @@ await app.RunAsync();
 
 ### Client Implementation (C#)
 
-> [!IMPORTANT]
-> The C# client implementation is not included in this tutorial. The server-side state management is complete, but clients need to:
-> 1. Initialize state with an empty object (not null): `RecipeState? currentState = new RecipeState();`
-> 2. Send state as `DataContent` in a `ChatRole.System` message
-> 3. Receive state snapshots as `DataContent` with `mediaType = "application/json"`
->
-> The AG-UI hosting layer automatically extracts state from `DataContent` and places it in `ChatOptions.AdditionalProperties["ag_ui_state"]` as a `JsonElement`.
+An AG-UI client shares state by setting `RunAgentInput.State` on the outgoing request and reading the
+server's `StateSnapshotEvent`s back. The stateless `AGUIChatClient` lets you populate the outgoing
+`RunAgentInput` through `ChatOptions.RawRepresentationFactory`, and surfaces incoming AG-UI events on
+`ChatResponseUpdate.RawRepresentation`:
 
-For a complete client implementation example, see the Python client pattern below which demonstrates the full bidirectional state flow.
+```csharp
+using System.Text.Json;
+using AGUI.Abstractions;
+using AGUI.Client;
+using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
+
+string serverUrl = Environment.GetEnvironmentVariable("AGUI_SERVER_URL") ?? "http://localhost:8888";
+using HttpClient httpClient = new() { Timeout = TimeSpan.FromSeconds(60) };
+
+AGUIChatClient chatClient = new(new AGUIChatClientOptions(httpClient, serverUrl));
+AIAgent agent = chatClient.AsAIAgent(name: "recipe-client", description: "Recipe state client");
+AgentSession session = await agent.CreateSessionAsync();
+
+// Initialize the shared state with an empty object (not null) so the server treats the first
+// turn as a state-sharing request.
+RecipeState currentState = new();
+string? threadId = null;
+string? previousRunId = null;
+
+List<ChatMessage> messages = [new(ChatRole.User, "Create a vegetarian pasta recipe.")];
+
+// Send the current state on the wire via RunAgentInput.State, and carry the AG-UI thread/run ids
+// for continuation (the AGUIChatClient is stateless and never surfaces a ConversationId).
+var runOptions = new ChatClientAgentRunOptions
+{
+    ChatOptions = new ChatOptions
+    {
+        RawRepresentationFactory = _ => new RunAgentInput
+        {
+            ThreadId = threadId ?? string.Empty,
+            ParentRunId = previousRunId,
+            State = JsonSerializer.SerializeToElement(new { recipe = currentState }),
+        },
+    },
+};
+
+await foreach (AgentResponseUpdate update in agent.RunStreamingAsync(messages, session, runOptions))
+{
+    ChatResponseUpdate chatUpdate = update.AsChatResponseUpdate();
+
+    switch (chatUpdate.RawRepresentation)
+    {
+        case RunStartedEvent runStarted:
+            threadId = runStarted.ThreadId;
+            previousRunId = runStarted.RunId;
+            break;
+
+        case StateSnapshotEvent snapshot:
+            // Apply the new shared state pushed by the agent.
+            RecipeResponse? updated = snapshot.Snapshot.Deserialize<RecipeResponse>();
+            if (updated is not null)
+            {
+                currentState = updated.Recipe;
+                Console.WriteLine($"State updated: {currentState.Title}");
+            }
+            break;
+    }
+
+    // Assistant summary text streams as normal TextContent.
+    foreach (AIContent content in update.Contents)
+    {
+        if (content is TextContent text)
+        {
+            Console.Write(text.Text);
+        }
+    }
+}
+```
+
+> [!NOTE]
+> State travels on the AG-UI wire, not through `ConversationId`. Outbound, the client sets
+> `RunAgentInput.State`; inbound, `STATE_SNAPSHOT` / `STATE_DELTA` events arrive as
+> `ChatResponseUpdate.RawRepresentation` (a `StateSnapshotEvent` / `StateDeltaEvent`). This keeps the
+> client stateless while the agent remains the source of truth for shared state.
+
+## Predictive State Updates
+
+Predictive state updates let a client render an in-progress result *before* the agent finishes — for
+example, showing a document as it is being written. Instead of emitting one `STATE_SNAPSHOT` at the
+end, the agent streams a series of progressively larger snapshots as it produces content.
+
+The pattern is a `DelegatingAIAgent` that watches for a document-writing tool call and re-emits the
+growing document as successive `StateSnapshotEvent`s:
+
+```csharp
+using System.Runtime.CompilerServices;
+using System.Text.Json;
+using AGUI.Abstractions;
+using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
+
+internal sealed class PredictiveStateUpdatesAgent(AIAgent innerAgent) : DelegatingAIAgent(innerAgent)
+{
+    private const int ChunkSize = 20; // characters per streamed chunk
+
+    protected override Task<AgentResponse> RunCoreAsync(
+        IEnumerable<ChatMessage> messages, AgentSession? session = null,
+        AgentRunOptions? options = null, CancellationToken cancellationToken = default)
+        => this.RunCoreStreamingAsync(messages, session, options, cancellationToken)
+               .ToAgentResponseAsync(cancellationToken);
+
+    protected override async IAsyncEnumerable<AgentResponseUpdate> RunCoreStreamingAsync(
+        IEnumerable<ChatMessage> messages, AgentSession? session = null, AgentRunOptions? options = null,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        string? lastEmitted = null;
+
+        await foreach (var update in this.InnerAgent.RunStreamingAsync(messages, session, options, cancellationToken).ConfigureAwait(false))
+        {
+            yield return update;
+
+            // When the model calls write_document, progressively emit the document as it grows.
+            foreach (var content in update.Contents)
+            {
+                if (content is FunctionCallContent { Name: "write_document" } call &&
+                    call.Arguments?.TryGetValue("document", out var doc) == true &&
+                    doc?.ToString() is { Length: > 0 } document &&
+                    document != lastEmitted)
+                {
+                    for (int i = ChunkSize; i < document.Length + ChunkSize; i += ChunkSize)
+                    {
+                        string chunk = document[..Math.Min(i, document.Length)];
+                        JsonElement snapshot = JsonSerializer.SerializeToElement(new { document = chunk });
+                        yield return new AgentResponseUpdate
+                        {
+                            Role = ChatRole.Assistant,
+                            RawRepresentation = new ChatResponseUpdate
+                            {
+                                Role = ChatRole.Assistant,
+                                RawRepresentation = new StateSnapshotEvent { Snapshot = snapshot }
+                            }
+                        };
+                        await Task.Delay(50, cancellationToken).ConfigureAwait(false);
+                    }
+
+                    lastEmitted = document;
+                }
+            }
+        }
+    }
+}
+```
+
+Register it the same way as any other agent — wrap your document-writing agent and map it:
+
+```csharp
+AIAgent documentAgent = CreateDocumentAgent(); // an agent with a write_document tool
+app.MapAGUIServer("/predictive", new PredictiveStateUpdatesAgent(documentAgent));
+```
+
+> [!TIP]
+> For incremental edits rather than full snapshots, emit a `StateDeltaEvent` whose `Delta` is an
+> RFC 6902 JSON Patch (for example, `[ { "op": "replace", "path": "/steps/0/status", "value": "completed" } ]`).
+> The client applies the patch to its current state. Snapshots are simplest for append-style content
+> like a streamed document; deltas are efficient for small updates to a large object such as a plan.
 
 ::: zone-end
 

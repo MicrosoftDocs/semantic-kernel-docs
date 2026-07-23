@@ -13,8 +13,80 @@ ms.service: agent-framework
 
 ::: zone pivot="programming-language-csharp"
 
+## When to Use Workflows with AG-UI
+
+[Workflows](../../workflows/index.md) orchestrate multiple agents and tools in a defined
+execution graph. In .NET you can expose a workflow through an AG-UI endpoint today by converting it to
+an `AIAgent` and mapping it like any other agent. The constituent agents' responses stream to the web
+client as AG-UI text and tool-call events.
+
 > [!NOTE]
-> Workflow support for the .NET AG-UI integration is coming soon.
+> The .NET AG-UI integration currently streams a workflow's **agent output** (text and tool calls) as
+> AG-UI events. The richer workflow-specific AG-UI events described in the Python guide — step tracking,
+> activity snapshots, and workflow-level interrupts — are still evolving for .NET. For those scenarios,
+> see the Python pivot of this article.
+
+## Exposing a Workflow over AG-UI
+
+Build a workflow from your agents, convert it to an `AIAgent` with `AsAIAgent()`, and map it with
+`MapAGUIServer`:
+
+```csharp
+using Azure.AI.Projects;
+using Azure.Identity;
+using Microsoft.Agents.AI;
+using Microsoft.Agents.AI.Hosting.AGUI.AspNetCore;
+using Microsoft.Agents.AI.Workflows;
+
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+builder.Services.AddHttpClient().AddLogging();
+builder.Services.AddAGUIServer();
+
+WebApplication app = builder.Build();
+
+string endpoint = builder.Configuration["AZURE_OPENAI_ENDPOINT"]
+    ?? throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
+string deploymentName = builder.Configuration["AZURE_OPENAI_DEPLOYMENT_NAME"]
+    ?? throw new InvalidOperationException("AZURE_OPENAI_DEPLOYMENT_NAME is not set.");
+
+var projectClient = new AIProjectClient(new Uri(endpoint), new DefaultAzureCredential());
+
+// Define the agents that make up the workflow.
+AIAgent researcher = projectClient.AsAIAgent(
+    model: deploymentName,
+    name: "researcher",
+    instructions: "Research the user's topic and write a short, factual brief.");
+
+AIAgent reporter = projectClient.AsAIAgent(
+    model: deploymentName,
+    name: "reporter",
+    instructions: "Summarize the researcher's brief into a single clear paragraph.");
+
+// Build a sequential workflow (researcher -> reporter) and expose it as an agent.
+AIAgent workflowAgent = AgentWorkflowBuilder.BuildSequential(researcher, reporter).AsAIAgent();
+
+// Map the workflow agent to an AG-UI endpoint.
+app.MapAGUIServer("/", workflowAgent);
+
+await app.RunAsync();
+```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
+
+On the client side there is nothing workflow-specific to do: connect with `AGUIChatClient` exactly as in
+the [Getting Started](getting-started.md) tutorial. Each agent's output streams as normal AG-UI text
+events, and the `AuthorName` on each update identifies which agent in the workflow produced it.
+
+## Next steps
+
+- [State Management](state-management.md)
+- [Human-in-the-Loop](human-in-the-loop.md)
+- [Workflows user guide](../../workflows/index.md)
+
+## Additional Resources
+
+- [AG-UI Protocol Documentation](https://docs.ag-ui.com)
 
 ::: zone-end
 

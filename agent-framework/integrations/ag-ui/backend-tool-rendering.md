@@ -270,6 +270,183 @@ great restaurants in the area: The Golden Fork (Italian, 4.5 stars)...
 - **`FunctionCallContent`**: Represents a tool being called with its `Name` and `Arguments` (parameter key-value pairs)
 - **`FunctionResultContent`**: Contains the tool's `Result` or `Exception`, identified by `CallId`
 
+## Tool Implementation Best Practices
+
+### Error Handling
+
+Handle errors gracefully in your tools. Return failures as data so the model can explain the issue to the user instead of failing the entire run:
+
+```csharp
+internal sealed class WeatherResult
+{
+    public bool Success { get; set; }
+    public string Location { get; set; } = string.Empty;
+    public string? Forecast { get; set; }
+    public string? Error { get; set; }
+}
+
+[Description("Get the current weather for a location.")]
+static WeatherResult GetWeather(
+    [Description("The city, region, or address for the weather lookup.")] string location)
+{
+    try
+    {
+        return new WeatherResult
+        {
+            Success = true,
+            Location = location,
+            Forecast = "Sunny, 22°C"
+        };
+    }
+    catch (Exception ex)
+    {
+        return new WeatherResult
+        {
+            Success = false,
+            Location = location,
+            Error = $"Unable to retrieve weather for {location}: {ex.Message}"
+        };
+    }
+}
+
+AITool weatherTool = AIFunctionFactory.Create(
+    GetWeather,
+    serializerOptions: jsonOptions.SerializerOptions);
+```
+
+### Rich Return Types
+
+Return structured objects when appropriate. Typed return values are serialized with the JSON options you pass to `AIFunctionFactory.Create()`:
+
+```csharp
+internal sealed class SentimentResult
+{
+    public string Text { get; set; } = string.Empty;
+    public string Sentiment { get; set; } = string.Empty;
+    public double Confidence { get; set; }
+    public SentimentScores Scores { get; set; } = new();
+}
+
+internal sealed class SentimentScores
+{
+    public double Positive { get; set; }
+    public double Neutral { get; set; }
+    public double Negative { get; set; }
+}
+
+[JsonSerializable(typeof(SentimentResult))]
+internal sealed partial class SentimentJsonSerializerContext : JsonSerializerContext;
+
+builder.Services.ConfigureHttpJsonOptions(options =>
+    options.SerializerOptions.TypeInfoResolverChain.Add(SentimentJsonSerializerContext.Default));
+
+[Description("Analyze the sentiment of text.")]
+static SentimentResult AnalyzeSentiment(
+    [Description("The text to analyze.")] string text)
+{
+    return new SentimentResult
+    {
+        Text = text,
+        Sentiment = "positive",
+        Confidence = 0.87,
+        Scores = new SentimentScores
+        {
+            Positive = 0.87,
+            Neutral = 0.10,
+            Negative = 0.03
+        }
+    };
+}
+
+AITool sentimentTool = AIFunctionFactory.Create(
+    AnalyzeSentiment,
+    serializerOptions: jsonOptions.SerializerOptions);
+```
+
+### Descriptive Documentation
+
+Use `[Description]` on tool methods and parameters so the model understands when to call the tool and how to provide arguments:
+
+```csharp
+internal sealed class FlightBookingResult
+{
+    public string ConfirmationNumber { get; set; } = string.Empty;
+    public string Status { get; set; } = string.Empty;
+}
+
+[Description("Book a flight for specified passengers from origin to destination. Use this when the user wants to reserve airline tickets.")]
+static FlightBookingResult BookFlight(
+    [Description("Departure city and airport code, e.g., 'New York, JFK'.")] string origin,
+    [Description("Arrival city and airport code, e.g., 'London, LHR'.")] string destination,
+    [Description("Departure date in YYYY-MM-DD format.")] string date,
+    [Description("Number of passengers.")] int passengers = 1)
+{
+    return new FlightBookingResult
+    {
+        ConfirmationNumber = "ABC123",
+        Status = $"Booked {passengers} passenger(s) from {origin} to {destination} on {date}."
+    };
+}
+
+AITool bookingTool = AIFunctionFactory.Create(
+    BookFlight,
+    serializerOptions: jsonOptions.SerializerOptions);
+```
+
+## Tool Organization
+
+For related tools, group methods in a static class and register each method with `AIFunctionFactory.Create()`:
+
+```csharp
+internal static class WeatherTools
+{
+    [Description("Get current weather for a location.")]
+    public static WeatherReport GetCurrentWeather(
+        [Description("The city, region, or address.")] string location)
+    {
+        return new WeatherReport
+        {
+            Location = location,
+            Conditions = "Sunny",
+            TemperatureCelsius = 22
+        };
+    }
+
+    [Description("Get a multi-day weather forecast for a location.")]
+    public static ForecastReport GetForecast(
+        [Description("The city, region, or address.")] string location,
+        [Description("Number of days to forecast.")] int days = 3)
+    {
+        return new ForecastReport
+        {
+            Location = location,
+            Days = days,
+            Summary = "Sunny with light clouds."
+        };
+    }
+}
+
+internal sealed class WeatherReport
+{
+    public string Location { get; set; } = string.Empty;
+    public string Conditions { get; set; } = string.Empty;
+    public int TemperatureCelsius { get; set; }
+}
+
+internal sealed class ForecastReport
+{
+    public string Location { get; set; } = string.Empty;
+    public int Days { get; set; }
+    public string Summary { get; set; } = string.Empty;
+}
+
+AITool[] tools =
+[
+    AIFunctionFactory.Create(WeatherTools.GetCurrentWeather, serializerOptions: jsonOptions.SerializerOptions),
+    AIFunctionFactory.Create(WeatherTools.GetForecast, serializerOptions: jsonOptions.SerializerOptions)
+];
+```
+
 ## Next Steps
 
 Now that you can add function tools, you can:
