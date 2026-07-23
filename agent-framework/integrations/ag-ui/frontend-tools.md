@@ -103,7 +103,7 @@ static async IAsyncEnumerable<AgentResponseUpdate> InspectToolsMiddleware(
             {
                 if (tool is AIFunction function)
                 {
-                    Console.WriteLine($"  - {function.Metadata.Name}: {function.Metadata.Description}");
+                    Console.WriteLine($"  - {function.Name}: {function.Description}");
                 }
             }
         }
