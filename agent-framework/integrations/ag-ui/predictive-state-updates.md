@@ -23,7 +23,7 @@ Before you begin, ensure you have completed the [Getting Started](getting-starte
 
 You need:
 
-- .NET 10.0 or later
+- .NET 10.0 or later (this scenario maps the endpoint manually and uses the built-in `TypedResults.ServerSentEvents(...)`, which requires .NET 10)
 - `Microsoft.Agents.AI.Hosting.AGUI.AspNetCore` and `Microsoft.Agents.AI.OpenAI` packages
 - An Azure OpenAI endpoint and deployment
 

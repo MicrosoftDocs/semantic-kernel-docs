@@ -32,14 +32,14 @@ Build a workflow from your agents, convert it to an `AIAgent` with `AsAIAgent()`
 `MapAGUIServer`:
 
 ```csharp
-using Azure.AI.Projects;
+using Azure.AI.OpenAI;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Hosting.AGUI.AspNetCore;
 using Microsoft.Agents.AI.Workflows;
+using OpenAI.Chat;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-builder.Services.AddHttpClient().AddLogging();
 builder.Services.AddAGUIServer();
 
 WebApplication app = builder.Build();
@@ -49,16 +49,15 @@ string endpoint = builder.Configuration["AZURE_OPENAI_ENDPOINT"]
 string deploymentName = builder.Configuration["AZURE_OPENAI_DEPLOYMENT_NAME"]
     ?? throw new InvalidOperationException("AZURE_OPENAI_DEPLOYMENT_NAME is not set.");
 
-var projectClient = new AIProjectClient(new Uri(endpoint), new DefaultAzureCredential());
+ChatClient chatClient = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredential())
+    .GetChatClient(deploymentName);
 
 // Define the agents that make up the workflow.
-AIAgent researcher = projectClient.AsAIAgent(
-    model: deploymentName,
+AIAgent researcher = chatClient.AsAIAgent(
     name: "researcher",
     instructions: "Research the user's topic and write a short, factual brief.");
 
-AIAgent reporter = projectClient.AsAIAgent(
-    model: deploymentName,
+AIAgent reporter = chatClient.AsAIAgent(
     name: "reporter",
     instructions: "Summarize the researcher's brief into a single clear paragraph.");
 

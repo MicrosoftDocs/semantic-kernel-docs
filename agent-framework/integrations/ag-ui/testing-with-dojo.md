@@ -395,7 +395,6 @@ In your ASP.NET Core application, register the agent endpoint:
 using Microsoft.Agents.AI.Hosting.AGUI.AspNetCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-builder.Services.AddHttpClient().AddLogging();
 builder.Services.AddAGUIServer();
 
 WebApplication app = builder.Build();

@@ -51,7 +51,6 @@ using Microsoft.Extensions.AI;
 using OpenAI.Chat;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-builder.Services.AddHttpClient().AddLogging();
 builder.Services.AddAGUIServer();
 
 WebApplication app = builder.Build();
@@ -95,9 +94,10 @@ response schema of `{ "approved": boolean }`. The tool runs only after the clien
 ## Client Implementation
 
 A client handles the interrupt by reading the `ToolApprovalRequestContent`, creating a decision with
-`CreateResponse(approved)`, and sending it back on the next turn. `AGUIChatClient` transports the
-decision over the AG-UI resume mechanism for you — there is no approval protocol to implement on the
-client either.
+`CreateResponse(approved)`, and sending it back on the next turn. You don't hand-encode the AG-UI
+resume message — `AGUIChatClient` transports the decision for you — but because the client is
+stateless, carry the AG-UI `threadId` and `ParentRunId` across the two turns so the server resumes
+the same run, as shown below.
 
 ```csharp
 using AGUI.Abstractions;

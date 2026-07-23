@@ -308,15 +308,6 @@ days to orbit the Sun.
 User (:q or quit to exit): :q
 ```
 
-### Color-Coded Output
-
-The client displays different content types with distinct colors:
-
-- **Yellow**: Run started notifications
-- **Cyan**: Agent text responses (streamed in real-time)
-- **Green**: Run completion notifications
-- **Red**: Error messages
-
 ## Testing with curl (Optional)
 
 You can exercise the server directly with curl before running the client. The AG-UI endpoint accepts a
@@ -392,7 +383,6 @@ The AG-UI protocol uses:
 Customize the ASP.NET Core server port, AG-UI endpoint route, and JSON options before mapping the agent:
 
 ```csharp
-using System.Text.Json.Serialization;
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Hosting.AGUI.AspNetCore;
 
@@ -401,12 +391,8 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 // Listen on a custom port
 builder.WebHost.UseUrls("http://localhost:8888");
 
-builder.Services.AddHttpClient().AddLogging();
-builder.Services.ConfigureHttpJsonOptions(options =>
-{
-    options.SerializerOptions.WriteIndented = false;
-    options.SerializerOptions.TypeInfoResolverChain.Add(AppJsonSerializerContext.Default);
-});
+// Customize JSON serialization once so the AG-UI endpoint and your tools stay consistent.
+builder.Services.ConfigureHttpJsonOptions(options => options.SerializerOptions.WriteIndented = false);
 builder.Services.AddAGUIServer();
 
 WebApplication app = builder.Build();
@@ -416,14 +402,6 @@ AIAgent agent = CreateAgent();
 app.MapAGUIServer("/agent", agent);
 
 await app.RunAsync();
-
-[JsonSerializable(typeof(ChatRequestMetadata))]
-internal sealed partial class AppJsonSerializerContext : JsonSerializerContext;
-
-internal sealed class ChatRequestMetadata
-{
-    public string UserId { get; set; } = string.Empty;
-}
 ```
 
 The AG-UI endpoint handles HTTP POST requests and streams AG-UI events as SSE. Configure JSON serialization once with ASP.NET Core's HTTP JSON options so the AG-UI endpoint and your tools use consistent settings.
@@ -437,7 +415,6 @@ using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Hosting.AGUI.AspNetCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-builder.Services.AddHttpClient().AddLogging();
 builder.Services.AddAGUIServer();
 
 WebApplication app = builder.Build();
