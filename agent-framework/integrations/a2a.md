@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: dmkorolev
 ms.service: agent-framework
 ms.topic: tutorial
-ms.date: 07/22/2026
+ms.date: 07/23/2026
 ms.author: dmkorolev
 ---
 
@@ -354,7 +354,7 @@ async with A2AAgent(
 
 The `agent-framework-a2a` package provides an opinionated `A2AExecutor` that adapts any Agent Framework agent to the A2A server-side protocol. It runs the agent, maps supported output content to A2A events and artifacts, and manages task status updates through the official [`a2a-sdk`](https://pypi.org/project/a2a-sdk/).
 
-Your application assembles the surrounding A2A SDK server: the agent card, `DefaultRequestHandler`, task store, routes or application builder, authentication, and deployment. For a comparison with the lower-level `agent-framework-hosting-a2a` conversion helpers, see [Self-host A2A agents](../hosting/self-hosting/a2a.md).
+Your application assembles the surrounding A2A SDK server: the agent card, `DefaultRequestHandler`, task store, routes or application builder, authentication, and deployment. For a comparison with the app-owned adapters and standalone conversion helpers in `agent-framework-hosting-a2a`, see [Self-host A2A agents](../hosting/self-hosting/a2a.md).
 
 ```python
 import uvicorn
