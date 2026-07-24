@@ -10,6 +10,12 @@ ms.service: semantic-kernel
 ---
 # Using the Pinecone connector (Preview)
 
+::: zone pivot="programming-language-csharp"
+
+> [!WARNING]
+> Pinecone has dropped the .NET SDK support by archiving [their repository](https://github.com/pinecone-io/pinecone-dotnet-client).
+
+::: zone-end
 ::: zone pivot="programming-language-python"
 
 > [!WARNING]
@@ -20,13 +26,6 @@ ms.service: semantic-kernel
 
 > [!WARNING]
 > The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
-
-::: zone-end
-
-::: zone pivot="programming-language-csharp"
-
-> [!WARNING]
-> Pinecone has dropped the .NET SDK support by archiving [their repository](https://github.com/pinecone-io/pinecone-dotnet-client).
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
