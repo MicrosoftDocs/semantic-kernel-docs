@@ -46,7 +46,7 @@ Note that `VectorStoreCollection<TKey, TRecord>` implements from `IVectorSearcha
 Assuming you have a collection that already contains data, you can easily search it. Here is an example using Qdrant.
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.Qdrant;
+using CommunityToolkit.VectorData.Qdrant;
 using Microsoft.Extensions.VectorData;
 using Qdrant.Client;
 
@@ -100,7 +100,7 @@ If the data model contains no vector or multiple vectors and `VectorProperty` is
 
 ```csharp
 using Microsoft.Extensions.VectorData;
-using Microsoft.SemanticKernel.Connectors.InMemory;
+using CommunityToolkit.VectorData.InMemory;
 
 var vectorStore = new InMemoryVectorStore();
 var collection = vectorStore.GetCollection<int, Product>("skproducts");

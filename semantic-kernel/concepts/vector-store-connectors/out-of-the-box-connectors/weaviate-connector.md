@@ -89,10 +89,10 @@ Notable Weaviate connector functionality limitations.
 Add the Weaviate Vector Store connector NuGet package to your project.
 
 ```dotnetcli
-dotnet add package Microsoft.SemanticKernel.Connectors.Weaviate --prerelease
+dotnet add package CommunityToolkit.VectorData.Weaviate
 ```
 
-You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by Semantic Kernel.
+You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by the connector package.
 The Weaviate vector store uses an `HttpClient` to communicate with the Weaviate service. There are two options for providing the URL/endpoint for the Weaviate service.
 It can be provided via options or by setting the base address of the `HttpClient`.
 
@@ -146,7 +146,7 @@ You can construct a Weaviate Vector Store instance directly as well.
 
 ```csharp
 using System.Net.Http;
-using Microsoft.SemanticKernel.Connectors.Weaviate;
+using CommunityToolkit.VectorData.Weaviate;
 
 var vectorStore = new WeaviateVectorStore(
     new HttpClient { BaseAddress = new Uri("http://localhost:8080/v1/") });
@@ -156,7 +156,7 @@ It is possible to construct a direct reference to a named collection.
 
 ```csharp
 using System.Net.Http;
-using Microsoft.SemanticKernel.Connectors.Weaviate;
+using CommunityToolkit.VectorData.Weaviate;
 
 var collection = new WeaviateCollection<Guid, Hotel>(
     new HttpClient { BaseAddress = new Uri("http://localhost:8080/v1/") },

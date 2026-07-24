@@ -57,14 +57,14 @@ The rest of these instructions will assume that you are using this container usi
 
 ## Create your project
 
-Create a new project and add nuget package references for the Redis connector from Semantic Kernel, the open xml package to read the word
+Create a new project and add NuGet package references for the Redis connector, the open xml package to read the word
 document with and the OpenAI connector from Semantic Kernel for generating embeddings.
 
 ```dotnetcli
 dotnet new console --framework net8.0 --name SKVectorIngest
 cd SKVectorIngest
 dotnet add package Microsoft.SemanticKernel.Connectors.AzureOpenAI
-dotnet add package Microsoft.SemanticKernel.Connectors.Redis --prerelease
+dotnet add package CommunityToolkit.VectorData.Redis
 dotnet add package DocumentFormat.OpenXml
 ```
 

@@ -93,7 +93,7 @@ Only connectors for databases that currently support vector plus keyword hybrid 
 Assuming you have a collection that already contains data, you can easily do a hybrid search on it. Here is an example using Qdrant.
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.Qdrant;
+using CommunityToolkit.VectorData.Qdrant;
 using Microsoft.Extensions.VectorData;
 using Qdrant.Client;
 
@@ -150,7 +150,7 @@ If no `AdditionalProperty` is provided and the data model contains only one full
 If the data model contains no full text search property or multiple full text search properties and `AdditionalProperty` is not provided, the search method will throw.
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.Qdrant;
+using CommunityToolkit.VectorData.Qdrant;
 using Microsoft.Extensions.VectorData;
 using Qdrant.Client;
 

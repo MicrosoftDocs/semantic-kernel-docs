@@ -56,7 +56,7 @@ Embedding generators implementing the `Microsoft.Extensions.AI` abstractions are
 
     ```csharp
     using Microsoft.Extensions.AI;
-    using Microsoft.SemanticKernel.Connectors.Qdrant;
+    using CommunityToolkit.VectorData.Qdrant;
     using OpenAI;
     using Qdrant.Client;
     
@@ -78,7 +78,7 @@ Embedding generators implementing the `Microsoft.Extensions.AI` abstractions are
 
     ```csharp
     using Microsoft.Extensions.AI;
-    using Microsoft.SemanticKernel.Connectors.Qdrant;
+    using CommunityToolkit.VectorData.Qdrant;
     using OpenAI;
     using Qdrant.Client;
     
@@ -103,7 +103,7 @@ Embedding generators implementing the `Microsoft.Extensions.AI` abstractions are
     ```csharp
     using Microsoft.Extensions.AI;
     using Microsoft.Extensions.VectorData;
-    using Microsoft.SemanticKernel.Connectors.Qdrant;
+    using CommunityToolkit.VectorData.Qdrant;
     using OpenAI;
     using Qdrant.Client;
     
@@ -155,7 +155,6 @@ Embedding generators implementing the `Microsoft.Extensions.AI` abstractions are
 The following example demonstrates how to use the embedding generator to automatically generate vectors during both upsert and search operations. This approach simplifies workflows by eliminating the need to precompute embeddings manually.
 
 ```csharp
-
 // The data model
 internal class FinanceInfo
 {

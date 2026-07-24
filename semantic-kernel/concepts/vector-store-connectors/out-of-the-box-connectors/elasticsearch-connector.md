@@ -48,7 +48,7 @@ Add the Elasticsearch Vector Store connector NuGet package to your project.
 dotnet add package Elastic.SemanticKernel.Connectors.Elasticsearch --prerelease
 ```
 
-You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by Semantic Kernel.
+You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by the connector package.
 
 ```csharp
 using Microsoft.SemanticKernel;

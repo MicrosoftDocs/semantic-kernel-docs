@@ -57,10 +57,10 @@ The connector has the following characteristics.
 Add the Redis Vector Store connector nuget package to your project.
 
 ```dotnetcli
-dotnet add package Microsoft.SemanticKernel.Connectors.Redis --prerelease
+dotnet add package CommunityToolkit.VectorData.Redis
 ```
 
-You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by Semantic Kernel.
+You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by the connector package.
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
@@ -74,7 +74,7 @@ kernelBuilder.Services
 ```
 
 ```csharp
-using Microsoft.SemanticKernel;
+using Microsoft.Extensions.DependencyInjection;
 
 // Using IServiceCollection with ASP.NET Core.
 var builder = WebApplication.CreateBuilder(args);
@@ -96,7 +96,6 @@ kernelBuilder.Services.AddRedisVectorStore();
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.SemanticKernel;
 using StackExchange.Redis;
 
 // Using IServiceCollection with ASP.NET Core.
@@ -108,7 +107,7 @@ builder.Services.AddRedisVectorStore();
 You can construct a Redis Vector Store instance directly.
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.Redis;
+using CommunityToolkit.VectorData.Redis;
 using StackExchange.Redis;
 
 var vectorStore = new RedisVectorStore(ConnectionMultiplexer.Connect("localhost:6379").GetDatabase());
@@ -118,7 +117,7 @@ It is possible to construct a direct reference to a named collection.
 When doing so, you have to choose between the JSON or Hashes instance depending on how you wish to store data in Redis.
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.Redis;
+using CommunityToolkit.VectorData.Redis;
 using StackExchange.Redis;
 
 // Using Hashes.
@@ -128,7 +127,7 @@ var hashesCollection = new RedisHashSetCollection<string, Hotel>(
 ```
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.Redis;
+using CommunityToolkit.VectorData.Redis;
 using StackExchange.Redis;
 
 // Using JSON.
@@ -141,7 +140,7 @@ When constructing a `RedisVectorStore` or registering it with the dependency inj
 that configures the preferred storage type / mode used: Hashes or JSON. If not specified, the default is JSON.
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.Redis;
+using CommunityToolkit.VectorData.Redis;
 using StackExchange.Redis;
 
 var vectorStore = new RedisVectorStore(
@@ -282,7 +281,7 @@ off the prefixing behavior and pass in the fully prefixed key to the record oper
 ::: zone pivot="programming-language-csharp"
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.Redis;
+using CommunityToolkit.VectorData.Redis;
 using StackExchange.Redis;
 
 var collection = new RedisJsonCollection<string, Hotel>(
