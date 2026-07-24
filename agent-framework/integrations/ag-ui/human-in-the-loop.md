@@ -188,11 +188,14 @@ running the tool.
 
 ## Approval Requirements
 
-In .NET, whether a tool requires approval is expressed by how you register it — there is no per-tool
-"approval mode":
+In .NET, whether a tool requires approval is expressed by how you register it:
 
 - **Always require approval**: wrap the function in `ApprovalRequiredAIFunction`.
 - **Never require approval**: register the function normally (do not wrap it).
+
+For approval that depends on the tool's *arguments* — for example, approve small transfers automatically
+but prompt for large ones — keep the tool wrapped in `ApprovalRequiredAIFunction` and add an auto-approval
+rule, as shown in [Conditional Approval](#conditional-approval).
 
 ```csharp
 // Requires approval before it runs.
@@ -233,6 +236,69 @@ AIAgent agent = chatClient.AsAIAgent(new ChatClientAgentOptions
 If the model calls both tools in a single turn, the unrestricted tool (`get_account_balance`) executes
 and streams its `TOOL_CALL_RESULT`, while the approval-required tool (`transfer_funds`) raises an
 approval interrupt and waits for the user's decision before running.
+
+## Conditional Approval
+
+Selective approval is *per tool* — a tool either always requires approval or never does. To approve some
+calls to the *same* tool automatically based on their **arguments** (for example, auto-approve transfers
+under $1,000 but prompt for anything larger), layer the `UseToolApproval` middleware over the agent and
+supply one or more auto-approval rules.
+
+Each rule receives a `ToolAutoApprovalRuleContext` — which exposes the pending `FunctionCallContent`
+(tool name and arguments) — and returns `true` to auto-approve the call or `false` to keep evaluating.
+Rules run after any standing "always approve" decisions but before the user is prompted; the first rule
+that returns `true` approves the call. A call that no rule approves raises the usual approval interrupt.
+
+```csharp
+using System.Text.Json;
+using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
+
+AITool transfer = new ApprovalRequiredAIFunction(AIFunctionFactory.Create(
+    TransferFunds, name: "transfer_funds", description: "Transfer money to another account."));
+
+AIAgent baseAgent = chatClient.AsAIAgent(new ChatClientAgentOptions
+{
+    Name = "BankingAgent",
+    ChatOptions = new ChatOptions
+    {
+        Instructions = "You are a banking assistant. Use transfer_funds to move money.",
+        Tools = [transfer]
+    }
+});
+
+// Auto-approve transfers under $1,000 based on the tool call's arguments; larger
+// transfers fall through to a human approval interrupt.
+static ValueTask<bool> AutoApproveSmallTransfers(ToolAutoApprovalRuleContext context)
+{
+    if (context.FunctionCallContent.Name == "transfer_funds" &&
+        context.FunctionCallContent.Arguments is { } arguments &&
+        arguments.TryGetValue("amount", out object? value) && value is not null)
+    {
+        decimal amount = value is JsonElement json ? json.GetDecimal() : Convert.ToDecimal(value);
+        return ValueTask.FromResult(amount < 1000m);
+    }
+
+    return ValueTask.FromResult(false);
+}
+
+// Layer the approval middleware over the agent, then map it as usual.
+AIAgent agent = new AIAgentBuilder(baseAgent)
+    .UseToolApproval(new ToolApprovalAgentOptions { AutoApprovalRules = [AutoApproveSmallTransfers] })
+    .Build();
+
+app.MapAGUIServer("/", agent);
+```
+
+Now a `transfer_funds` call for `$500` is approved by the rule and runs to completion (streaming its
+`TOOL_CALL_RESULT`) without ever reaching the client, while a `$5,000` call raises an approval interrupt
+for the user to confirm — all from a single tool registration.
+
+> [!WARNING]
+> Auto-approval rules can match a tool call by name alone. A rule written for one tool will auto-approve
+> **any** registered tool whose name satisfies its condition, silently bypassing the approval prompt.
+> Scope each rule tightly — check the tool name *and* the specific arguments — and make sure no unrelated
+> tool shares a name your rules approve.
 
 ## Best Practices
 
