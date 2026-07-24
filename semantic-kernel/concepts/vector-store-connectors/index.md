@@ -258,7 +258,7 @@ Once you have defined your data model, the next step is to create a VectorStore 
 In this example, we'll use Qdrant. You will therefore need to import the Qdrant nuget package.
 
 ```dotnetcli
-dotnet add package Microsoft.SemanticKernel.Connectors.Qdrant --prerelease
+dotnet add package CommunityToolkit.VectorData.Qdrant
 ```
 
 If you want to run Qdrant locally using Docker, use the following command to start the Qdrant container
@@ -275,7 +275,7 @@ Since databases support many different types of keys and records, we allow you t
 In our case, the type of record will be the `Hotel` class we already defined, and the type of key will be `ulong`, since the `HotelId` property is a `ulong` and Qdrant only supports `Guid` or `ulong` keys.
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.Qdrant;
+using CommunityToolkit.VectorData.Qdrant;
 using Qdrant.Client;
 
 // Create a Qdrant VectorStore object

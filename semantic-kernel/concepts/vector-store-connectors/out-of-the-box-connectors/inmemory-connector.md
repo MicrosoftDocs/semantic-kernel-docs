@@ -58,10 +58,10 @@ The connector has the following characteristics.
 Add the Semantic Kernel Core nuget package to your project.
 
 ```dotnetcli
-dotnet add package Microsoft.SemanticKernel.Connectors.InMemory --prerelease
+dotnet add package CommunityToolkit.VectorData.InMemory
 ```
 
-You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by Semantic Kernel.
+You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by the connector package.
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
@@ -76,7 +76,6 @@ kernelBuilder.Services
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.SemanticKernel;
 
 // Using IServiceCollection with ASP.NET Core.
 var builder = WebApplication.CreateBuilder(args);
@@ -86,7 +85,7 @@ builder.Services.AddInMemoryVectorStore();
 You can construct an InMemory Vector Store instance directly.
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.InMemory;
+using CommunityToolkit.VectorData.InMemory;
 
 var vectorStore = new InMemoryVectorStore();
 ```
@@ -94,7 +93,7 @@ var vectorStore = new InMemoryVectorStore();
 It is possible to construct a direct reference to a named collection.
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.InMemory;
+using CommunityToolkit.VectorData.InMemory;
 
 var collection = new InMemoryCollection<string, Hotel>("skhotels");
 ```
