@@ -25,7 +25,8 @@ ms.service: semantic-kernel
 
 ::: zone pivot="programming-language-csharp"
 
-The .NET SDK for Pinecone has been archived and is no longer supported. The Pinecone connector is not available for C#.
+> [!WARNING]
+> Pinecone has dropped the .NET SDK support by archiving [their repository](https://github.com/pinecone-io/pinecone-dotnet-client).
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
