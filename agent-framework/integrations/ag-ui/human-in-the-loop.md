@@ -88,12 +88,10 @@ response schema of `{ "approved": boolean }`. The tool runs only after the clien
 
 A client handles the interrupt by reading the `ToolApprovalRequestContent`, creating a decision with
 `CreateResponse(approved)`, and sending it back on the next turn. You don't hand-encode the AG-UI
-resume message — `AGUIChatClient` transports the decision for you — but because the client is
-stateless, carry the AG-UI `threadId` and `ParentRunId` across the two turns so the server resumes
-the same run, as shown below.
+resume message — `AGUIChatClient` converts the decision into the AG-UI resume for you, and reusing the
+same `AgentSession` resumes the run.
 
 ```csharp
-using AGUI.Abstractions;
 using AGUI.Client;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
@@ -109,19 +107,8 @@ List<ChatMessage> messages = [new(ChatRole.User, "Email alice@example.com to say
 
 // First turn: run until the agent requests approval.
 ToolApprovalRequestContent? approvalRequest = null;
-string? threadId = null;
-string? runId = null;
 await foreach (AgentResponseUpdate update in agent.RunStreamingAsync(messages, session))
 {
-    ChatResponseUpdate chatUpdate = update.AsChatResponseUpdate();
-
-    // The AGUIChatClient is stateless; the AG-UI thread/run ids arrive on the RUN_STARTED event.
-    if (chatUpdate.RawRepresentation is RunStartedEvent runStarted)
-    {
-        threadId = runStarted.ThreadId;
-        runId = runStarted.RunId;
-    }
-
     foreach (AIContent content in update.Contents)
     {
         if (content is ToolApprovalRequestContent request)
@@ -141,22 +128,10 @@ await foreach (AgentResponseUpdate update in agent.RunStreamingAsync(messages, s
 if (approvalRequest is not null)
 {
     ToolApprovalResponseContent decision = approvalRequest.CreateResponse(approved: true);
-
     List<ChatMessage> resume = [new(ChatRole.User, [decision])];
-    ChatClientAgentRunOptions options = new()
-    {
-        // Carry the AG-UI thread and previous run id so the server resumes the same conversation.
-        ChatOptions = new ChatOptions
-        {
-            RawRepresentationFactory = _ => new RunAgentInput
-            {
-                ThreadId = threadId ?? string.Empty,
-                ParentRunId = runId,
-            }
-        }
-    };
 
-    await foreach (AgentResponseUpdate update in agent.RunStreamingAsync(resume, session, options))
+    // Reusing the same session resumes the run; no thread/run id plumbing is needed.
+    await foreach (AgentResponseUpdate update in agent.RunStreamingAsync(resume, session))
     {
         foreach (AIContent content in update.Contents)
         {
