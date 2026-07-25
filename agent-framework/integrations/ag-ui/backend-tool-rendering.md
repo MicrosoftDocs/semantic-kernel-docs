@@ -270,12 +270,6 @@ great restaurants in the area: The Golden Fork (Italian, 4.5 stars)...
 - **`FunctionCallContent`**: Represents a tool being called with its `Name` and `Arguments` (parameter key-value pairs)
 - **`FunctionResultContent`**: Contains the tool's `Result` or `Exception`, identified by `CallId`
 
-## Tool Implementation Best Practices
-
-- **Return failures as data.** Have a tool return a structured result with an error field instead of throwing, so the model can explain the problem to the user rather than failing the run.
-- **Use rich return types.** Return structured objects; they are serialized with the JSON options you pass to `AIFunctionFactory.Create()`. When using source-generated serialization, register the types on a `JsonSerializerContext`.
-- **Write clear descriptions.** Put `[Description]` on the tool method and every parameter so the model knows when to call the tool and how to supply arguments.
-
 ## Next Steps
 
 Now that you can add function tools, you can:
