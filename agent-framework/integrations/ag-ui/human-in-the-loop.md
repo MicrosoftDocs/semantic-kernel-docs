@@ -171,11 +171,6 @@ if (approvalRequest is not null)
 
 To reject instead, call `approvalRequest.CreateResponse(approved: false)`; the agent continues without running the tool.
 
-> [!TIP]
-> A UI framework can handle this round-trip for you. The Blazor AI components render an approval prompt
-> and resume the run automatically when the user approves or rejects — on the server you only wrap the
-> tool in `ApprovalRequiredAIFunction`.
-
 ## Approval modes
 
 Marking a tool for approval — and deciding *when* a call needs it — is a general Agent Framework
