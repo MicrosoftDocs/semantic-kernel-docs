@@ -24,8 +24,6 @@ The C# AG-UI approval pattern works as follows:
 3. **Client**: Presents the request to the user, then creates a decision with `CreateResponse(approved)` and sends it back.
 4. **Resume**: `AGUIChatClient` transports the decision over the AG-UI resume mechanism; the agent continues and runs (or skips) the tool.
 
-No custom approval-protocol code is required on either side — the AG-UI client and server handle the round-trip natively.
-
 ## Prerequisites
 
 - Azure OpenAI resource with a deployed model
@@ -36,10 +34,7 @@ No custom approval-protocol code is required on either side — the AG-UI client
 
 ## Server Implementation
 
-To require human approval before a tool runs, wrap the tool's `AIFunction` in
-`ApprovalRequiredAIFunction` and map the agent with `MapAGUIServer`. The AG-UI hosting layer raises an
-approval interrupt automatically when the model calls the tool — you don't write any approval protocol
-code on the server.
+To require human approval before a tool runs, wrap the tool's `AIFunction` in `ApprovalRequiredAIFunction` and map the agent with `MapAGUIServer`. The AG-UI hosting layer raises an approval interrupt automatically when the model calls the tool.
 
 ```csharp
 using System.ComponentModel;
@@ -68,9 +63,7 @@ static string SendEmail(
     [Description("The email body.")] string body)
     => $"Email sent to {to} with subject '{subject}'.";
 
-#pragma warning disable MEAI001 // ApprovalRequiredAIFunction is an evaluation-only API.
 AITool sendEmail = new ApprovalRequiredAIFunction(AIFunctionFactory.Create(SendEmail));
-#pragma warning restore MEAI001
 
 AIAgent agent = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredential())
     .GetChatClient(deploymentName)
@@ -114,7 +107,6 @@ AgentSession session = await agent.CreateSessionAsync();
 
 List<ChatMessage> messages = [new(ChatRole.User, "Email alice@example.com to say the report is ready.")];
 
-#pragma warning disable MEAI001 // Tool-approval content is an evaluation-only API.
 // First turn: run until the agent requests approval.
 ToolApprovalRequestContent? approvalRequest = null;
 string? threadId = null;
@@ -175,11 +167,9 @@ if (approvalRequest is not null)
         }
     }
 }
-#pragma warning restore MEAI001
 ```
 
-To reject instead, call `approvalRequest.CreateResponse(approved: false)`; the agent continues without
-running the tool.
+To reject instead, call `approvalRequest.CreateResponse(approved: false)`; the agent continues without running the tool.
 
 > [!TIP]
 > A UI framework can handle this round-trip for you. The Blazor AI components render an approval prompt
@@ -204,44 +194,6 @@ What AG-UI adds is the transport. A call that needs a human ends the run with a 
 AG-UI client approves and resumes — the [Server](#server-implementation) and [Client](#client-implementation)
 implementations above show this end to end. Calls that run directly — or that a conditional rule
 auto-approves — stream their `TOOL_CALL_RESULT` normally and never interrupt.
-
-## Best Practices
-
-### Clear Tool Descriptions
-
-Provide detailed descriptions so users understand what they are approving:
-
-```csharp
-using System.ComponentModel;
-
-[Description("Permanently delete a database and all its contents. This action cannot be undone.")]
-static string DeleteDatabase(
-    [Description("Name of the database to permanently delete.")] string databaseName)
-{
-    // Implementation
-    return $"Database '{databaseName}' deleted.";
-}
-
-AITool deleteTool = new ApprovalRequiredAIFunction(
-    AIFunctionFactory.Create(DeleteDatabase, name: "delete_database"));
-```
-
-### Informative Arguments
-
-Use descriptive parameter names and `[Description]` attributes. The approval request surfaces the tool
-name and its arguments to the client, so meaningful names and descriptions help users make an informed
-decision:
-
-```csharp
-[Description("Purchase items from the store.")]
-static string PurchaseItem(
-    [Description("Name of the item to purchase.")] string itemName,
-    [Description("Number of items to purchase.")] int quantity,
-    [Description("Total cost in USD, including tax and shipping.")] double totalCost)
-{
-    return $"Purchased {quantity} x {itemName} for {totalCost:C}.";
-}
-```
 
 ## Next steps
 

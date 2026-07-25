@@ -275,7 +275,6 @@ great restaurants in the area: The Golden Fork (Italian, 4.5 stars)...
 - **Return failures as data.** Have a tool return a structured result with an error field instead of throwing, so the model can explain the problem to the user rather than failing the run.
 - **Use rich return types.** Return structured objects; they are serialized with the JSON options you pass to `AIFunctionFactory.Create()`. When using source-generated serialization, register the types on a `JsonSerializerContext`.
 - **Write clear descriptions.** Put `[Description]` on the tool method and every parameter so the model knows when to call the tool and how to supply arguments.
-- **Group related tools.** Put related methods on a static class and register each one with `AIFunctionFactory.Create()`.
 
 ## Next Steps
 

@@ -150,8 +150,7 @@ dotnet add package Microsoft.Agents.AI --prerelease
 
 > [!NOTE]
 > The `Microsoft.Agents.AI` package provides the `AsAIAgent()` extension method. The AG-UI client
-> type (`AGUIChatClient`) now ships in the AG-UI C# SDK package `AGUI.Client` (previously it was part
-> of the removed `Microsoft.Agents.AI.AGUI` package).
+> type (`AGUIChatClient`) ships in the AG-UI C# SDK package `AGUI.Client`.
 
 ### Client Code
 
@@ -303,9 +302,6 @@ universe than grains of sand on all the beaches on Earth.
 User (:q or quit to exit): :q
 ```
 
-> [!NOTE]
-> The run ID and the assistant's exact wording vary from run to run.
-
 ## Testing with curl (Optional)
 
 You can exercise the server directly with curl before running the client. The AG-UI endpoint accepts a
@@ -402,8 +398,6 @@ app.MapAGUIServer("/agent", agent);
 await app.RunAsync();
 ```
 
-The AG-UI endpoint handles HTTP POST requests and streams AG-UI events as SSE. Configure JSON serialization once with ASP.NET Core's HTTP JSON options so the AG-UI endpoint and your tools use consistent settings.
-
 ### Multiple Agents
 
 Map each agent to a different route:
@@ -425,49 +419,6 @@ app.MapAGUIServer("/finance", financeAgent);
 
 await app.RunAsync();
 ```
-
-Clients connect to the route for the agent they want to use, such as `http://localhost:8888/weather` or `http://localhost:8888/finance`.
-
-## Troubleshooting
-
-### Connection Refused
-
-Ensure the server is running before starting the client:
-
-```bash
-# Terminal 1
-dotnet run --urls http://localhost:8888
-
-# Terminal 2 (after server starts)
-dotnet run
-```
-
-Verify that `AGUI_SERVER_URL` matches the server address and route your app exposes.
-
-### Authentication Errors
-
-Make sure you're authenticated with Azure:
-
-```bash
-az login
-```
-
-Verify that your Azure OpenAI endpoint and deployment name are set correctly and that your account has the required role assignment on the Azure OpenAI resource.
-
-### Streaming Not Working
-
-Check that your client timeout is sufficient:
-
-```csharp
-using HttpClient httpClient = new()
-{
-    Timeout = TimeSpan.FromSeconds(60)
-};
-
-AGUIChatClient chatClient = new(new AGUIChatClientOptions(httpClient, serverUrl));
-```
-
-For long-running agents, increase the timeout accordingly. Also confirm the client uses `RunStreamingAsync`, the server endpoint is mapped with `MapAGUIServer`, and any proxy between the client and server allows Server-Sent Events.
 
 ## Next Steps
 
