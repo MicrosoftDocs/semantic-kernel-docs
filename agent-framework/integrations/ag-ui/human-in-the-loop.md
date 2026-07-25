@@ -22,7 +22,7 @@ The C# AG-UI approval pattern works as follows:
 1. **Server**: Wraps a function with `ApprovalRequiredAIFunction` to mark it as requiring approval, and maps the agent with `MapAGUIServer`.
 2. **Interrupt**: When the model calls the tool, the run ends with an interrupt instead of executing it. The AG-UI client surfaces this as a `ToolApprovalRequestContent`.
 3. **Client**: Presents the request to the user, then creates a decision with `CreateResponse(approved)` and sends it back.
-4. **Resume**: `AGUIChatClient` transports the decision over the AG-UI resume mechanism; the agent continues and runs (or skips) the tool.
+4. **Resume**: `AGUIChatClient` transports the decision over the AG-UI resume mechanism. The agent continues and runs (or skips) the tool.
 
 ## Prerequisites
 
@@ -88,7 +88,7 @@ response schema of `{ "approved": boolean }`. The tool runs only after the clien
 
 A client handles the interrupt by reading the `ToolApprovalRequestContent`, creating a decision with
 `CreateResponse(approved)`, and sending it back on the next turn. You don't hand-encode the AG-UI
-resume message — `AGUIChatClient` converts the decision into the AG-UI resume for you, and reusing the
+resume message. `AGUIChatClient` converts the decision into the AG-UI resume for you, and reusing the
 same `AgentSession` resumes the run.
 
 ```csharp
@@ -130,7 +130,7 @@ if (approvalRequest is not null)
     ToolApprovalResponseContent decision = approvalRequest.CreateResponse(approved: true);
     List<ChatMessage> resume = [new(ChatRole.User, [decision])];
 
-    // Reusing the same session resumes the run; no thread/run id plumbing is needed.
+    // Reusing the same session resumes the run. No thread/run id plumbing is needed.
     await foreach (AgentResponseUpdate update in agent.RunStreamingAsync(resume, session))
     {
         foreach (AIContent content in update.Contents)
@@ -148,22 +148,22 @@ To reject instead, call `approvalRequest.CreateResponse(approved: false)`; the a
 
 ## Approval modes
 
-Marking a tool for approval — and deciding *when* a call needs it — is a general Agent Framework
+Marking a tool for approval, and deciding *when* a call needs it, is a general Agent Framework
 capability, not something AG-UI defines. It works the same for an agent exposed over AG-UI:
 
 - **Always require / never require** approval by wrapping (or not wrapping) the function in
   `ApprovalRequiredAIFunction`.
-- **Selective approval** — wrap only the sensitive tools so the rest run unattended.
-- **Conditional approval** — auto-approve some calls to an approval-required tool based on their
+- **Selective approval**: wrap only the sensitive tools so the rest run unattended.
+- **Conditional approval**: auto-approve some calls to an approval-required tool based on their
   **arguments** using `AIAgentBuilder.UseToolApproval` with `AutoApprovalRules`.
 
 For the APIs, examples, and guidance, see [Using function tools with human-in-the-loop approvals](../../agents/tools/tool-approval.md).
 
 What AG-UI adds is the transport. A call that needs a human ends the run with a `RUN_FINISHED`
 **interrupt** that carries the tool call and a `{ "approved": boolean }` response schema, which the
-AG-UI client approves and resumes — the [Server](#server-implementation) and [Client](#client-implementation)
-implementations above show this end to end. Calls that run directly — or that a conditional rule
-auto-approves — stream their `TOOL_CALL_RESULT` normally and never interrupt.
+AG-UI client approves and resumes. The [Server](#server-implementation) and [Client](#client-implementation)
+implementations above show this end to end. Calls that run directly, or that a conditional rule
+auto-approves, stream their `TOOL_CALL_RESULT` normally and never interrupt.
 
 ## Next steps
 

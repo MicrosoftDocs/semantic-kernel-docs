@@ -305,7 +305,7 @@ User (:q or quit to exit): :q
 ## Testing with curl (Optional)
 
 You can exercise the server directly with curl before running the client. The AG-UI endpoint accepts a
-`RunAgentInput` JSON body; the only required field is `messages`. If you omit `threadId`, the server
+`RunAgentInput` JSON body. The only required field is `messages`. If you omit `threadId`, the server
 generates one for you:
 
 ```bash

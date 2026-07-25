@@ -41,7 +41,7 @@ AIAgent researcher = chatClient.AsAIAgent(
 AIAgent reporter = chatClient.AsAIAgent(
     name: "reporter", instructions: "Summarize the researcher's brief into a single clear paragraph.");
 
-// A workflow-as-agent is just an AIAgent — map it like any other agent.
+// A workflow-as-agent is just an AIAgent. Map it like any other agent.
 AIAgent workflowAgent = AgentWorkflowBuilder.BuildSequential(researcher, reporter).AsAIAgent();
 
 WebApplication app = builder.Build();
@@ -53,15 +53,15 @@ await app.RunAsync();
 > [!WARNING]
 > `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
-The client side is unchanged — connect with `AGUIChatClient` as in [Getting Started](getting-started.md).
+The client side is unchanged. Connect with `AGUIChatClient` as in [Getting Started](getting-started.md).
 Each agent's output streams as normal AG-UI text and tool-call events, and the `AuthorName` on each update
 identifies which agent in the workflow produced it.
 
 > [!NOTE]
 > The .NET integration streams a workflow's **agent output** (text and tool calls) over AG-UI, but not the
-> workflow-specific AG-UI events — step tracking (`STEP_STARTED` / `STEP_FINISHED`), activity snapshots,
-> and workflow-level interrupts — shown in the Python version of this article. Those events are still
-> evolving for .NET (tracked by [agent-framework#2494](https://github.com/microsoft/agent-framework/issues/2494)).
+> workflow-specific AG-UI events shown in the Python version of this article: step tracking
+> (`STEP_STARTED` / `STEP_FINISHED`), activity snapshots, and workflow-level interrupts. Those events are
+> still evolving for .NET (tracked by [agent-framework#2494](https://github.com/microsoft/agent-framework/issues/2494)).
 
 ## Next steps
 

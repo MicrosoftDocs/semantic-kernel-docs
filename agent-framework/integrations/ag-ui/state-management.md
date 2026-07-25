@@ -107,7 +107,7 @@ internal sealed partial class RecipeSerializerContext : JsonSerializerContext;
 
 ### Emit a State Snapshot from a Tool
 
-Expose a tool that returns the complete state. The agent calls it whenever the recipe should change; the hosting layer turns the tool result into a `STATE_SNAPSHOT` event when you map it:
+Expose a tool that returns the complete state. The agent calls it whenever the recipe should change. The hosting layer turns the tool result into a `STATE_SNAPSHOT` event when you map it:
 
 ```csharp
 using System.ComponentModel;
@@ -189,7 +189,7 @@ AGUIStreamOptions streamOptions = new AGUIStreamOptions()
 
 WebApplication app = builder.Build();
 
-// Attach the stream options to the endpoint; MapAGUIServer emits the state events for you.
+// Attach the stream options to the endpoint. MapAGUIServer emits the state events for you.
 app.MapAGUIServer("/", recipeAgent).WithMetadata(streamOptions);
 
 await app.RunAsync();
@@ -221,7 +221,7 @@ static bool TryGetClientState(ChatOptions chatOptions, out JsonElement state)
 }
 ```
 
-`TryGetRunAgentInput` reads the input that the hosting layer stashed on `ChatOptions.AdditionalProperties` — you never touch that dictionary directly. Give the model the current recipe by prepending it as a system message before the agent runs (for example, from a lightweight <xref:Microsoft.Agents.AI.DelegatingAIAgent> that only injects context and delegates the run), so edits build on the existing state instead of starting from scratch.
+`TryGetRunAgentInput` reads the input that the hosting layer stashed on `ChatOptions.AdditionalProperties`. You never touch that dictionary directly. Give the model the current recipe by prepending it as a system message before the agent runs (for example, from a lightweight <xref:Microsoft.Agents.AI.DelegatingAIAgent> that only injects context and delegates the run), so edits build on the existing state instead of starting from scratch.
 
 ### Key Concepts
 
@@ -343,14 +343,14 @@ For a related pattern that streams a tool's arguments into state as the model ge
 
 ## Predictive State Updates
 
-Predictive state updates let the UI react to a tool call *while its arguments are still being generated*, instead of waiting for the tool to finish. As the model streams the arguments for a tool, the server converts those partial arguments into state snapshots and sends them to the client. The client renders each snapshot immediately, giving the user an optimistic, live preview — for example, a document editor that shows the text appearing in real time, then asks the user to confirm the change once the model is done.
+Predictive state updates let the UI react to a tool call *while its arguments are still being generated*, instead of waiting for the tool to finish. As the model streams the arguments for a tool, the server converts those partial arguments into state snapshots and sends them to the client. The client renders each snapshot immediately, giving the user an optimistic, live preview. For example, a document editor shows the text appearing in real time, then asks the user to confirm the change once the model is done.
 
 > [!NOTE]
 > This scenario maps the endpoint manually and uses the built-in `TypedResults.ServerSentEvents(...)`, which requires **.NET 10.0 or later**.
 
 ### How It Works
 
-Unlike the [shared-state](#emit-a-state-snapshot-from-a-tool) scenario — where a tool *runs* and its result becomes a snapshot — the predictive scenario intercepts the tool **call** before it executes and streams the argument into state:
+Unlike the [shared-state](#emit-a-state-snapshot-from-a-tool) scenario, where a tool *runs* and its result becomes a snapshot, the predictive scenario intercepts the tool **call** before it executes and streams the argument into state:
 
 1. The agent declares a `write_document_local` tool. The model calls it with the full document text as its `document` argument.
 2. The tool is **not** executed server-side. Instead, an `AGUIStreamOptions` `MapCall` mapping intercepts the call.
@@ -358,7 +358,7 @@ Unlike the [shared-state](#emit-a-state-snapshot-from-a-tool) scenario — where
 4. It then completes the tool call with a `TOOL_CALL_RESULT` event and injects a client-side `confirm_changes` tool call so the client can prompt the user to approve.
 5. The client renders each snapshot and shows the confirm/reject prompt.
 
-Because the mapping produces the tool's result itself, the document tool is declared but never invoked — the chat client is built **without** function invocation.
+Because the mapping produces the tool's result itself, the document tool is declared but never invoked. The chat client is built **without** function invocation.
 
 ### Define the State Model
 
@@ -539,7 +539,7 @@ await app.RunAsync();
 ### Predictive Key Concepts
 
 - **`AGUIStreamOptions.MapCall`**: Intercepts a tool *call* (before execution) and returns the AG-UI events to emit for it.
-- **`FunctionCallContent.Arguments`**: The streamed tool arguments; read `Arguments["document"]` to get the text as the model produces it.
+- **`FunctionCallContent.Arguments`**: The streamed tool arguments. Read `Arguments["document"]` to get the text as the model produces it.
 - **`StateSnapshotEvent`**: Each snapshot holds the full document prefix so far, producing the optimistic streaming effect.
 - **`ToChatRequestContext` / `AsAGUIEventStreamAsync`**: The AG-UI streaming pipeline that adapts a `RunAgentInput` to a chat request and converts the response updates back into AG-UI events.
 - **`confirm_changes`**: A client-side tool call injected after the document is written, so the user can approve the result.
