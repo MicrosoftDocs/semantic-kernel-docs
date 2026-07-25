@@ -209,7 +209,6 @@ try
 
         // Stream the response
         bool isFirstUpdate = true;
-        string? threadId = null;
 
         await foreach (AgentResponseUpdate update in agent.RunStreamingAsync(messages, session))
         {
@@ -218,9 +217,8 @@ try
             // First update indicates run started
             if (isFirstUpdate)
             {
-                threadId = chatUpdate.ConversationId;
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine($"\n[Run Started - Thread: {chatUpdate.ConversationId}, Run: {chatUpdate.ResponseId}]");
+                Console.WriteLine($"\n[Run Started - Run: {chatUpdate.ResponseId}]");
                 Console.ResetColor();
                 isFirstUpdate = false;
             }
@@ -244,7 +242,7 @@ try
         }
 
         Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine($"\n[Run Finished - Thread: {threadId}]");
+        Console.WriteLine("\n[Run Finished]");
         Console.ResetColor();
     }
 }
@@ -260,7 +258,7 @@ catch (Exception ex)
 - **AGUIChatClient**: Client class that connects to AG-UI servers and implements `IChatClient`
 - **AsAIAgent**: Extension method on `AGUIChatClient` to create an agent from the client
 - **RunStreamingAsync**: Streams responses as `AgentResponseUpdate` objects
-- **AsChatResponseUpdate**: Extension method to access chat-specific properties like `ConversationId` and `ResponseId`
+- **AsChatResponseUpdate**: Extension method to access chat-specific properties like `ResponseId`
 - **Session Management**: The `AgentSession` maintains conversation context across requests
 - **Content Types**: Responses include `TextContent` for messages and `ErrorContent` for errors
 
@@ -291,24 +289,22 @@ Connecting to AG-UI server at: http://localhost:8888
 
 User (:q or quit to exit): What is 2 + 2?
 
-[Run Started - Thread: , Run: run_OXhljyhFd6LNjtYlQGHaYknF]
+[Run Started - Run: run_OXhljyhFd6LNjtYlQGHaYknF]
 2 + 2 equals 4.
-[Run Finished - Thread: ]
+[Run Finished]
 
 User (:q or quit to exit): Tell me a fun fact about space
 
-[Run Started - Thread: , Run: run_9fTgYc51ITc5xsGetz1zTKnh]
+[Run Started - Run: run_9fTgYc51ITc5xsGetz1zTKnh]
 A fun fact about space is that there are more stars in the observable
 universe than grains of sand on all the beaches on Earth.
-[Run Finished - Thread: ]
+[Run Finished]
 
 User (:q or quit to exit): :q
 ```
 
 > [!NOTE]
-> The `Thread` value is blank because a stateless AG-UI server does not return a
-> conversation ID (`ConversationId`); only the run ID (`ResponseId`) is populated. The assistant's
-> wording will vary from run to run.
+> The run ID and the assistant's exact wording vary from run to run.
 
 ## Testing with curl (Optional)
 
