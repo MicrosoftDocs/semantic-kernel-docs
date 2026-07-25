@@ -103,9 +103,6 @@ await app.RunAsync();
 > [!WARNING]
 > `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
-> [!NOTE]
-> Sessions are **ephemeral** here: AG-UI clients resend the conversation each turn, so no server-side state is required. To persist conversation state server-side (and the principal-isolation it requires in multi-user hosts), see [Persisting Sessions](#persisting-sessions).
-
 ### Key Concepts
 
 - **`AddAGUIServer`**: Registers AG-UI server services with the dependency injection container
@@ -373,31 +370,6 @@ await app.RunAsync();
 ```
 
 Clients connect to the route for the agent they want to use, such as `http://localhost:8888/weather` or `http://localhost:8888/finance`.
-
-### Persisting Sessions
-
-By default the AG-UI endpoint is **stateless**: the client sends the full conversation in each request, so `MapAGUIServer` runs the agent, streams the response, and keeps nothing between requests. This is the natural fit for AG-UI — the frontend owns the transcript — and is a perfectly valid production model.
-
-Register a server-side session store when the **server** needs to own conversation state independently of the request. Common cases:
-
-- **Stateful backends** that keep history server-side (for example provider-managed threads), so you don't re-send the whole transcript each turn.
-- **Durable or background runs** that outlive the HTTP request — here a persisted session is required, not optional.
-- **Thin clients** that send only the new message plus a thread ID rather than the full history.
-- **Cross-device resume**, or keeping a server-authoritative record for audit/compliance.
-
-To persist sessions, register the agent with a store and map it by name. The store is keyed by the AG-UI thread ID:
-
-```csharp
-// Single-user or local server.
-builder.AddAIAgent("AGUIAssistant", (_, _) => agent).WithInMemorySessionStore(withIsolation: false);
-
-WebApplication app = builder.Build();
-
-app.MapAGUIServer("AGUIAssistant", "/");
-```
-
-> [!WARNING]
-> An AG-UI **thread ID is not an authorization token** — it arrives from the wire and can be guessed. With a persistent store, any caller who knows another user's thread ID can resume that thread. So multi-user hosts must scope sessions per principal: keep isolation **enabled** (the default) and register a `SessionIsolationKeyProvider` — typically via `UseClaimsBasedSessionIsolation(...)` from `Microsoft.Agents.AI.Hosting.AspNetCore`. Use `withIsolation: false` only for single-user or local development. See [Security Considerations](security-considerations.md).
 
 ## Troubleshooting
 
