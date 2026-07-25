@@ -228,8 +228,6 @@ items:
       href: integrations/ag-ui/mcp-apps.md
     - name: State Management
       href: integrations/ag-ui/state-management.md
-    - name: Predictive State Updates
-      href: integrations/ag-ui/predictive-state-updates.md
     - name: Testing with Dojo
       href: integrations/ag-ui/testing-with-dojo.md
 - name: Hosting
