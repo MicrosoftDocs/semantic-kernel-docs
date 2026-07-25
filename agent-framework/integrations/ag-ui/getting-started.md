@@ -160,43 +160,97 @@ Create a file named `Program.cs`:
 ```csharp
 // Copyright (c) Microsoft. All rights reserved.
 
-using AGUI.Client;
 using Microsoft.Agents.AI;
+using AGUI.Client;
 using Microsoft.Extensions.AI;
 
 string serverUrl = Environment.GetEnvironmentVariable("AGUI_SERVER_URL") ?? "http://localhost:8888";
 
-Console.WriteLine($"Connecting to AG-UI server at: {serverUrl}");
+Console.WriteLine($"Connecting to AG-UI server at: {serverUrl}\n");
 
-// The AG-UI client agent talks to the server over HTTP. AsAIAgent turns the
-// AGUIChatClient into an agent; the AgentSession tracks the conversation history.
-using HttpClient httpClient = new();
+// Create the AG-UI client agent
+using HttpClient httpClient = new()
+{
+    Timeout = TimeSpan.FromSeconds(60)
+};
+
 AGUIChatClient chatClient = new(new AGUIChatClientOptions(httpClient, serverUrl));
 
 AIAgent agent = chatClient.AsAIAgent(
-    instructions: "You are a helpful assistant.",
     name: "agui-client",
     description: "AG-UI Client Agent");
 
 AgentSession session = await agent.CreateSessionAsync();
+List<ChatMessage> messages =
+[
+    new(ChatRole.System, "You are a helpful assistant.")
+];
 
-while (true)
+try
 {
-    Console.Write("\nUser (:q or quit to exit): ");
-    string? message = Console.ReadLine();
-
-    if (string.IsNullOrWhiteSpace(message)) continue;
-
-    if (message is ":q" or "quit") break;
-
-    // Pass only the new message; the session supplies the prior turns.
-    Console.Write("Assistant: ");
-    await foreach (AgentResponseUpdate update in agent.RunStreamingAsync(message, session))
+    while (true)
     {
-        Console.Write(update.Text);
-    }
+        // Get user input
+        Console.Write("\nUser (:q or quit to exit): ");
+        string? message = Console.ReadLine();
 
-    Console.WriteLine();
+        if (string.IsNullOrWhiteSpace(message))
+        {
+            Console.WriteLine("Request cannot be empty.");
+            continue;
+        }
+
+        if (message is ":q" or "quit")
+        {
+            break;
+        }
+
+        messages.Add(new ChatMessage(ChatRole.User, message));
+
+        // Stream the response
+        bool isFirstUpdate = true;
+        string? threadId = null;
+
+        await foreach (AgentResponseUpdate update in agent.RunStreamingAsync(messages, session))
+        {
+            ChatResponseUpdate chatUpdate = update.AsChatResponseUpdate();
+
+            // First update indicates run started
+            if (isFirstUpdate)
+            {
+                threadId = chatUpdate.ConversationId;
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($"\n[Run Started - Thread: {chatUpdate.ConversationId}, Run: {chatUpdate.ResponseId}]");
+                Console.ResetColor();
+                isFirstUpdate = false;
+            }
+
+            // Display streaming text content
+            foreach (AIContent content in update.Contents)
+            {
+                if (content is TextContent textContent)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.Write(textContent.Text);
+                    Console.ResetColor();
+                }
+                else if (content is ErrorContent errorContent)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"\n[Error: {errorContent.Message}]");
+                    Console.ResetColor();
+                }
+            }
+        }
+
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine($"\n[Run Finished - Thread: {threadId}]");
+        Console.ResetColor();
+    }
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"\nAn error occurred: {ex.Message}");
 }
 ```
 
@@ -204,9 +258,11 @@ while (true)
 
 - **Server-Sent Events (SSE)**: The protocol uses SSE for streaming responses
 - **AGUIChatClient**: Client class that connects to AG-UI servers and implements `IChatClient`
-- **AsAIAgent**: Extension method that creates an `AIAgent` from the client; `instructions` sets the system prompt
-- **RunStreamingAsync**: Streams the response as `AgentResponseUpdate` objects; `update.Text` yields the streamed text
-- **AgentSession**: Maintains conversation history across turns — pass the session and only the new message each turn
+- **AsAIAgent**: Extension method on `AGUIChatClient` to create an agent from the client
+- **RunStreamingAsync**: Streams responses as `AgentResponseUpdate` objects
+- **AsChatResponseUpdate**: Extension method to access chat-specific properties like `ConversationId` and `ResponseId`
+- **Session Management**: The `AgentSession` maintains conversation context across requests
+- **Content Types**: Responses include `TextContent` for messages and `ErrorContent` for errors
 
 ### Configure and Run the Client
 
@@ -232,22 +288,27 @@ With both the server and client running, you can now test the complete system.
 $ dotnet run
 Connecting to AG-UI server at: http://localhost:8888
 
+
 User (:q or quit to exit): What is 2 + 2?
 
-[Run Started - Thread: thread_abc123, Run: run_xyz789]
+[Run Started - Thread: , Run: run_OXhljyhFd6LNjtYlQGHaYknF]
 2 + 2 equals 4.
-[Run Finished - Thread: thread_abc123]
+[Run Finished - Thread: ]
 
 User (:q or quit to exit): Tell me a fun fact about space
 
-[Run Started - Thread: thread_abc123, Run: run_def456]
-Here's a fun fact: A day on Venus is longer than its year! Venus takes
-about 243 Earth days to rotate once on its axis, but only about 225 Earth
-days to orbit the Sun.
-[Run Finished - Thread: thread_abc123]
+[Run Started - Thread: , Run: run_9fTgYc51ITc5xsGetz1zTKnh]
+A fun fact about space is that there are more stars in the observable
+universe than grains of sand on all the beaches on Earth.
+[Run Finished - Thread: ]
 
 User (:q or quit to exit): :q
 ```
+
+> [!NOTE]
+> The `Thread` value is blank because a stateless AG-UI server does not return a
+> conversation ID (`ConversationId`); only the run ID (`ResponseId`) is populated. The assistant's
+> wording will vary from run to run.
 
 ## Testing with curl (Optional)
 
