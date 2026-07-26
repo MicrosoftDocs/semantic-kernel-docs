@@ -110,6 +110,7 @@ AITool[] tools =
 [
     AIFunctionFactory.Create(
         SearchRestaurants,
+        name: "search_restaurants",
         serializerOptions: jsonOptions.SerializerOptions)
 ];
 
@@ -251,9 +252,9 @@ When the agent calls backend tools, you'll see:
 ```
 User (:q or quit to exit): What's the weather like in Amsterdam?
 
-[Run Started - Thread: thread_abc123, Run: run_xyz789]
+[Run Started - Run: run_xyz789]
 
-[Function Call - Name: SearchRestaurants]
+[Function Call - Name: search_restaurants]
   Parameter: Location = Amsterdam
   Parameter: Cuisine = any
 
@@ -262,7 +263,7 @@ User (:q or quit to exit): What's the weather like in Amsterdam?
 
 The weather in Amsterdam is sunny with a temperature of 22°C. Here are some 
 great restaurants in the area: The Golden Fork (Italian, 4.5 stars)...
-[Run Finished - Thread: thread_abc123]
+[Run Finished]
 ```
 
 ### Key Concepts

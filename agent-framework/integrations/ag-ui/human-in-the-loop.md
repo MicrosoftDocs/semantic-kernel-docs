@@ -63,7 +63,7 @@ static string SendEmail(
     [Description("The email body.")] string body)
     => $"Email sent to {to} with subject '{subject}'.";
 
-AITool sendEmail = new ApprovalRequiredAIFunction(AIFunctionFactory.Create(SendEmail));
+AITool sendEmail = new ApprovalRequiredAIFunction(AIFunctionFactory.Create(SendEmail, name: "send_email"));
 
 AIAgent agent = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredential())
     .GetChatClient(deploymentName)
