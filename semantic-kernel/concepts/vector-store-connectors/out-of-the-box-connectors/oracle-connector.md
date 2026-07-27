@@ -104,7 +104,7 @@ Add the Oracle Database Vector Store connector NuGet package to your project.
 dotnet add package Oracle.VectorData --prerelease
 ```
 
-You can add the vector store to the `IServiceCollection` dependency injection container using extension methods provided by Semantic Kernel. In this case, an instance of the `Oracle.VectorData.OracleVectorStore` class also gets registered with the container.
+You can add the vector store to the `IServiceCollection` dependency injection container using extension methods provided by the connector package. In this case, an instance of the `Oracle.VectorData.OracleVectorStore` class also gets registered with the container.
 
 ```csharp
 using Microsoft.SemanticKernel;

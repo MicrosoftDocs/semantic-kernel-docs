@@ -83,10 +83,10 @@ Not currently supported.
 Add the Qdrant Vector Store connector NuGet package to your project.
 
 ```dotnetcli
-dotnet add package Microsoft.SemanticKernel.Connectors.Qdrant --prerelease
+dotnet add package CommunityToolkit.VectorData.Qdrant
 ```
 
-You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by Semantic Kernel.
+You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by the connector package.
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
@@ -122,7 +122,6 @@ kernelBuilder.Services.AddQdrantVectorStore();
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.SemanticKernel;
 using Qdrant.Client;
 
 // Using IServiceCollection with ASP.NET Core.
@@ -134,7 +133,7 @@ builder.Services.AddQdrantVectorStore();
 You can construct a Qdrant Vector Store instance directly.
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.Qdrant;
+using CommunityToolkit.VectorData.Qdrant;
 using Qdrant.Client;
 
 var vectorStore = new QdrantVectorStore(new QdrantClient("localhost"), ownsClient: true);
@@ -143,7 +142,7 @@ var vectorStore = new QdrantVectorStore(new QdrantClient("localhost"), ownsClien
 It is possible to construct a direct reference to a named collection.
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.Qdrant;
+using CommunityToolkit.VectorData.Qdrant;
 using Qdrant.Client;
 
 var collection = new QdrantCollection<ulong, Hotel>(
@@ -387,7 +386,7 @@ To enable named vectors mode, pass this as an option when constructing a Vector 
 The same options can also be passed to any of the provided dependency injection container extension methods.
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.Qdrant;
+using CommunityToolkit.VectorData.Qdrant;
 using Qdrant.Client;
 
 var vectorStore = new QdrantVectorStore(

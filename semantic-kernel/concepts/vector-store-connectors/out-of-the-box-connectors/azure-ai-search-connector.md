@@ -100,10 +100,10 @@ Notable Azure AI Search connector functionality limitations.
 Add the Azure AI Search Vector Store connector NuGet package to your project.
 
 ```dotnetcli
-dotnet add package Microsoft.SemanticKernel.Connectors.AzureAISearch --prerelease
+dotnet add package CommunityToolkit.VectorData.AzureAISearch
 ```
 
-You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by Semantic Kernel.
+You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by the connector package.
 
 ```csharp
 using Azure;
@@ -120,7 +120,6 @@ kernelBuilder.Services
 ```csharp
 using Azure;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.SemanticKernel;
 
 // Using IServiceCollection with ASP.NET Core.
 var builder = WebApplication.CreateBuilder(args);
@@ -148,7 +147,6 @@ kernelBuilder.Services.AddAzureAISearchVectorStore();
 using Azure;
 using Azure.Search.Documents.Indexes;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.SemanticKernel;
 
 // Using IServiceCollection with ASP.NET Core.
 var builder = WebApplication.CreateBuilder(args);
@@ -164,7 +162,7 @@ You can construct an Azure AI Search Vector Store instance directly.
 ```csharp
 using Azure;
 using Azure.Search.Documents.Indexes;
-using Microsoft.SemanticKernel.Connectors.AzureAISearch;
+using CommunityToolkit.VectorData.AzureAISearch;
 
 var vectorStore = new AzureAISearchVectorStore(
     new SearchIndexClient(
@@ -177,7 +175,7 @@ It is possible to construct a direct reference to a named collection.
 ```csharp
 using Azure;
 using Azure.Search.Documents.Indexes;
-using Microsoft.SemanticKernel.Connectors.AzureAISearch;
+using CommunityToolkit.VectorData.AzureAISearch;
 
 var collection = new AzureAISearchCollection<string, Hotel>(
     new SearchIndexClient(new Uri(azureAISearchUri), new AzureKeyCredential(secret)),
