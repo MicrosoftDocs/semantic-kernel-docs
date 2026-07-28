@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: dmytrostruk
 ms.topic: tutorial
 ms.author: dmytrostruk
-ms.date: 07/01/2026
+ms.date: 07/23/2026
 ms.service: agent-framework
 ---
 
@@ -22,6 +22,7 @@ ms.service: agent-framework
     | Streaming Responses           | ✅ |   ✅   | ✅ |                                            |
     | Session Management            | ✅ |   ✅   | ✅ |                                            |
     | Permissions                   | ✅ |   ✅   | ✅ |                                            |
+    | Tool Approval                 | ✅ |   ✅   | ❌ | Go uses standard tool approval (see Tools).|
     | MCP Servers                   | ✅ |   ✅   | ✅ |                                            |
     | Observability                 | ❌ |   ✅   | ❌ | Python-specific content in this page.      |
     | Tools                         | ✅ |   ✅   | ✅ |                                            |
@@ -56,7 +57,7 @@ using Microsoft.Agents.AI;
 await using CopilotClient copilotClient = new();
 await copilotClient.StartAsync();
 
-AIAgent agent = copilotClient.AsAIAgent();
+AIAgent agent = copilotClient.AsAIAgent(sessionConfig: null);
 
 Console.WriteLine(await agent.RunAsync("What is Microsoft Agent Framework?"));
 ```
@@ -95,7 +96,7 @@ Get responses as they are generated:
 await using CopilotClient copilotClient = new();
 await copilotClient.StartAsync();
 
-AIAgent agent = copilotClient.AsAIAgent();
+AIAgent agent = copilotClient.AsAIAgent(sessionConfig: null);
 
 await foreach (AgentResponseUpdate update in agent.RunStreamingAsync("Tell me a short story."))
 {
@@ -159,6 +160,40 @@ AIAgent agent = copilotClient.AsAIAgent(sessionConfig);
 Console.WriteLine(await agent.RunAsync("List all files in the current directory"));
 ```
 
+### Tool Approval
+
+Because the GitHub Copilot SDK owns the tool-calling loop, approval for custom function tools is enforced through the SDK's native pre-execution hook rather than the standard Agent Framework approval round-trip. When you register a tool wrapped in `ApprovalRequiredAIFunction`, the agent installs a default `OnPreToolUse` hook that returns `"ask"` for that tool and routes the decision to your `OnPermissionRequest` handler:
+
+```csharp
+using GitHub.Copilot;
+using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
+
+AIFunction deleteFile = AIFunctionFactory.Create(
+    (string path) => $"Deleted {path}.",
+    "DeleteFile",
+    "Deletes a file.");
+
+await using CopilotClient copilotClient = new();
+await copilotClient.StartAsync();
+
+SessionConfig sessionConfig = new()
+{
+    // Wrapping the tool marks it approval-required; the agent turns this into an "ask" at OnPreToolUse.
+    Tools = [new ApprovalRequiredAIFunction(deleteFile)],
+
+    // OnPermissionRequest decides the "asked" tools (and Copilot's built-in shell/file/URL prompts).
+    OnPermissionRequest = PromptPermission,
+};
+
+AIAgent agent = copilotClient.AsAIAgent(sessionConfig);
+
+Console.WriteLine(await agent.RunAsync("Delete the file temp.txt"));
+```
+
+> [!WARNING]
+> If you provide your own `OnPreToolUse` hook via `SessionConfig.Hooks`, it takes precedence and the agent does **not** install its default approval hook. You are then fully responsible for enforcing approval for any `ApprovalRequiredAIFunction` you register (for example, by returning a `"deny"` or `"ask"` decision). The agent logs a warning naming any approval-required tool your hook must handle.
+
 ### MCP Servers
 
 Connect to local (stdio) or remote (HTTP) MCP servers for extended capabilities:
@@ -170,20 +205,18 @@ await copilotClient.StartAsync();
 SessionConfig sessionConfig = new()
 {
     OnPermissionRequest = PromptPermission,
-    McpServers = new Dictionary<string, object>
+    McpServers = new Dictionary<string, McpServerConfig>
     {
         // Local stdio server
-        ["filesystem"] = new McpLocalServerConfig
+        ["filesystem"] = new McpStdioServerConfig
         {
-            Type = "stdio",
             Command = "npx",
             Args = ["-y", "@modelcontextprotocol/server-filesystem", "."],
             Tools = ["*"],
         },
         // Remote HTTP server
-        ["microsoft-learn"] = new McpRemoteServerConfig
+        ["microsoft-learn"] = new McpHttpServerConfig
         {
-            Type = "http",
             Url = "https://learn.microsoft.com/api/mcp",
             Tools = ["*"],
         },
@@ -225,7 +258,7 @@ For more information on how to run and interact with agents, see the [Agent gett
 Install the Microsoft Agent Framework GitHub Copilot package.
 
 ```bash
-pip install agent-framework-github-copilot --pre
+pip install agent-framework-github-copilot
 ```
 
 ## Configuration
@@ -284,6 +317,9 @@ async def explicit_config_example():
         result = await agent.run("What can you do?")
         print(result)
 ```
+
+> [!TIP]
+> `default_options` (and per-run `options`) forwards any parameter accepted by the Copilot SDK's `create_session` — for example `reasoning_effort`, `context_tier`, `enable_citations`, `provider` (bring-your-own-key), or `skill_directories` — not just the keys shown here. Unknown parameter names raise a `TypeError`, so typos are caught rather than silently ignored.
 
 ## Agent Features
 
@@ -414,6 +450,32 @@ agent = GitHubCopilotAgent(
 ```
 
 Permission handlers support both sync and async callbacks. Use `asyncio.to_thread` for interactive prompts in async handlers to avoid blocking the event loop.
+
+### Tool Approval
+
+Because the GitHub Copilot SDK owns the tool-calling loop, approval for custom function tools is enforced through the SDK's native pre-execution hook rather than the standard Agent Framework approval round-trip. When you register a tool declared with `approval_mode="always_require"` and do not supply your own `on_pre_tool_use` hook, the agent installs a default hook that returns `"ask"` for that tool and routes the decision to your `on_permission_request` handler:
+
+```python
+from agent_framework import tool
+from agent_framework.github import GitHubCopilotAgent, GitHubCopilotOptions
+from copilot.session import PermissionHandler
+
+
+@tool(approval_mode="always_require")
+def delete_file(path: str) -> str:
+    """Delete a file."""
+    return f"Deleted {path}."
+
+
+agent = GitHubCopilotAgent(
+    tools=[delete_file],
+    # The "ask" decision is routed here; approve or deny the call.
+    default_options=GitHubCopilotOptions(on_permission_request=PermissionHandler.approve_all),
+)
+```
+
+> [!WARNING]
+> If you provide your own `on_pre_tool_use` hook, it takes precedence and the agent does **not** install its default approval hook. You are then fully responsible for enforcing approval for any `approval_mode="always_require"` tool (for example, by returning a `"deny"` or `"ask"` decision). The agent logs a warning naming any approval-required tool your hook must handle. With the default deny-all permission handler, an `always_require` tool is denied unless you wire an approving `on_permission_request`.
 
 ### MCP Servers
 
