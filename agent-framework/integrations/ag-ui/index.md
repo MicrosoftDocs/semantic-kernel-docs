@@ -81,27 +81,27 @@ The AG-UI integration uses ASP.NET Core and follows a clean middleware-based arc
 └────────┬────────┘
          │ HTTP POST + SSE
          ▼
-┌─────────────────────────┐
-│  ASP.NET Core           │
-│  MapAGUI("/", agent)    │
-└────────┬────────────────┘
+┌────────────────────────────┐
+│  ASP.NET Core              │
+│  MapAGUIServer("/", agent) │
+└────────┬───────────────────┘
          │
          ▼
-┌─────────────────────────┐
-│  AIAgent                │
-│  (with Middleware)      │
-└────────┬────────────────┘
+┌────────────────────────────┐
+│  AIAgent                   │
+│  (with Middleware)         │
+└────────┬───────────────────┘
          │
          ▼
-┌─────────────────────────┐
-│  IChatClient            │
-│  (Azure OpenAI, etc.)   │
-└─────────────────────────┘
+┌────────────────────────────┐
+│  IChatClient               │
+│  (Azure OpenAI, etc.)      │
+└────────────────────────────┘
 ```
 
 ### Key Components
 
-- **ASP.NET Core Endpoint**: `MapAGUI` extension method handles HTTP requests and SSE streaming
+- **ASP.NET Core Endpoint**: `MapAGUIServer` extension method handles HTTP requests and SSE streaming
 - **AIAgent**: Agent Framework agent created from `IChatClient` or custom implementation
 - **Middleware Pipeline**: Optional middleware for approvals, state management, and custom logic
 - **Protocol Adapter**: Converts between Agent Framework types and AG-UI protocol events

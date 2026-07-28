@@ -20,7 +20,7 @@ This tutorial shows you how to add frontend function tools to your AG-UI clients
 Before you begin, ensure you have completed the [Getting Started](getting-started.md) tutorial and have:
 
 - .NET 8.0 or later
-- `Microsoft.Agents.AI.AGUI` package installed
+- `AGUI.Client` package installed (the AG-UI C# SDK client)
 - `Microsoft.Agents.AI` package installed
 - Basic understanding of AG-UI client setup
 
@@ -70,61 +70,16 @@ The rest of your client code remains the same as shown in the Getting Started tu
 When you register tools with `AsAIAgent()`, the `AGUIChatClient` automatically:
 
 1. Captures the tool definitions (names, descriptions, parameter schemas)
-3. Sends the tools with each request to the server agent which maps them to `ChatAgentRunOptions.ChatOptions.Tools`
+2. Sends the tools with each request to the server agent, which maps them to `ChatClientAgentRunOptions.ChatOptions.Tools`
 
 The server receives the client tool declarations and the AI model can decide when to call them.
-
-### Inspecting and Modifying Tools with Middleware
-
-You can use agent middleware to inspect or modify the agent run, including accessing the tools:
-
-```csharp
-// Create agent with middleware that inspects tools
-AIAgent inspectableAgent = baseAgent
-    .AsBuilder()
-    .Use(runFunc: null, runStreamingFunc: InspectToolsMiddleware)
-    .Build();
-
-static async IAsyncEnumerable<AgentResponseUpdate> InspectToolsMiddleware(
-    IEnumerable<ChatMessage> messages,
-    AgentSession? session,
-    AgentRunOptions? options,
-    AIAgent innerAgent,
-    CancellationToken cancellationToken)
-{
-    // Access the tools from ChatClientAgentRunOptions
-    if (options is ChatClientAgentRunOptions chatOptions)
-    {
-        IList<AITool>? tools = chatOptions.ChatOptions?.Tools;
-        if (tools != null)
-        {
-            Console.WriteLine($"Tools available for this run: {tools.Count}");
-            foreach (AITool tool in tools)
-            {
-                if (tool is AIFunction function)
-                {
-                    Console.WriteLine($"  - {function.Metadata.Name}: {function.Metadata.Description}");
-                }
-            }
-        }
-    }
-
-    await foreach (AgentResponseUpdate update in innerAgent.RunStreamingAsync(messages, session, options, cancellationToken))
-    {
-        yield return update;
-    }
-}
-```
-
-This middleware pattern allows you to:
-- Validate tool definitions before execution
 
 ### Key Concepts
 
 The following are new concepts for frontend tools:
 
 - **Client-side registration**: Tools are registered on the client using `AIFunctionFactory.Create()` and passed to `AsAIAgent()`
-- **Automatic capture**: Tools are automatically captured and sent via `ChatAgentRunOptions.ChatOptions.Tools`
+- **Automatic capture**: Tools are automatically captured and sent via `ChatClientAgentRunOptions.ChatOptions.Tools`
 
 ## How Frontend Tools Work
 

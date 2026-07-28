@@ -13,8 +13,61 @@ ms.service: agent-framework
 
 ::: zone pivot="programming-language-csharp"
 
+[Workflows](../../workflows/index.md) orchestrate multiple agents in a defined execution graph. In .NET
+you expose a workflow over AG-UI exactly the way you expose any agent: convert it to an `AIAgent` with
+`AsAIAgent()` and map it with `MapAGUIServer`. There is no workflow-specific server API to learn.
+
+```csharp
+using Azure.AI.OpenAI;
+using Azure.Identity;
+using Microsoft.Agents.AI;
+using Microsoft.Agents.AI.Hosting.AGUI.AspNetCore;
+using Microsoft.Agents.AI.Workflows;
+using OpenAI.Chat;
+
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+builder.Services.AddAGUIServer();
+
+string endpoint = builder.Configuration["AZURE_OPENAI_ENDPOINT"]
+    ?? throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
+string deploymentName = builder.Configuration["AZURE_OPENAI_DEPLOYMENT_NAME"]
+    ?? throw new InvalidOperationException("AZURE_OPENAI_DEPLOYMENT_NAME is not set.");
+
+ChatClient chatClient = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredential())
+    .GetChatClient(deploymentName);
+
+AIAgent researcher = chatClient.AsAIAgent(
+    name: "researcher", instructions: "Research the user's topic and write a short, factual brief.");
+AIAgent reporter = chatClient.AsAIAgent(
+    name: "reporter", instructions: "Summarize the researcher's brief into a single clear paragraph.");
+
+// A workflow-as-agent is just an AIAgent. Map it like any other agent.
+AIAgent workflowAgent = AgentWorkflowBuilder.BuildSequential(researcher, reporter).AsAIAgent();
+
+WebApplication app = builder.Build();
+app.MapAGUIServer("/", workflowAgent);
+
+await app.RunAsync();
+```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
+
+The client side is unchanged. Connect with `AGUIChatClient` as in [Getting Started](getting-started.md).
+Each agent's output streams as normal AG-UI text and tool-call events, and the `AuthorName` on each update
+identifies which agent in the workflow produced it.
+
 > [!NOTE]
-> Workflow support for the .NET AG-UI integration is coming soon.
+> The .NET integration streams a workflow's **agent output** (text and tool calls) over AG-UI, but not the
+> workflow-specific AG-UI events shown in the Python version of this article: step tracking
+> (`STEP_STARTED` / `STEP_FINISHED`), activity snapshots, and workflow-level interrupts. Those events are
+> still evolving for .NET (tracked by [agent-framework#2494](https://github.com/microsoft/agent-framework/issues/2494)).
+
+## Next steps
+
+- [State Management](state-management.md)
+- [Human-in-the-Loop](human-in-the-loop.md)
+- [Workflows user guide](../../workflows/index.md)
 
 ::: zone-end
 

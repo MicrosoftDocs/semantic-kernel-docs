@@ -45,6 +45,8 @@ State management is valuable for:
 
 ## Creating State-Aware Agents in C#
 
+State management in the .NET AG-UI integration is **declarative**: your agent exposes ordinary tools that return your state objects, and you tell the hosting layer which tool results become AG-UI state events by configuring an `AGUIStreamOptions`. You don't write a custom agent or emit protocol content by hand.
+
 ### Define Your State Model
 
 First, define classes for your state structure:
@@ -54,284 +56,497 @@ using System.Text.Json.Serialization;
 
 namespace RecipeAssistant;
 
-// State response wrapper
+// State response wrapper returned by the tool. Its shape is what the client renders as state.
 internal sealed class RecipeResponse
 {
     [JsonPropertyName("recipe")]
-    public RecipeState Recipe { get; set; } = new();
+    public Recipe Recipe { get; set; } = new();
 }
 
-// Recipe state model
-internal sealed class RecipeState
+// Recipe state model.
+internal sealed class Recipe
 {
     [JsonPropertyName("title")]
     public string Title { get; set; } = string.Empty;
 
-    [JsonPropertyName("cuisine")]
-    public string Cuisine { get; set; } = string.Empty;
-
-    [JsonPropertyName("ingredients")]
-    public List<string> Ingredients { get; set; } = [];
-
-    [JsonPropertyName("steps")]
-    public List<string> Steps { get; set; } = [];
-
-    [JsonPropertyName("prep_time_minutes")]
-    public int PrepTimeMinutes { get; set; }
-
-    [JsonPropertyName("cook_time_minutes")]
-    public int CookTimeMinutes { get; set; }
-
     [JsonPropertyName("skill_level")]
     public string SkillLevel { get; set; } = string.Empty;
+
+    [JsonPropertyName("cooking_time")]
+    public string CookingTime { get; set; } = string.Empty;
+
+    [JsonPropertyName("special_preferences")]
+    public List<string> SpecialPreferences { get; set; } = [];
+
+    [JsonPropertyName("ingredients")]
+    public List<Ingredient> Ingredients { get; set; } = [];
+
+    [JsonPropertyName("instructions")]
+    public List<string> Instructions { get; set; } = [];
 }
 
-// JSON serialization context
+// A single ingredient.
+internal sealed class Ingredient
+{
+    [JsonPropertyName("icon")]
+    public string Icon { get; set; } = string.Empty;
+
+    [JsonPropertyName("name")]
+    public string Name { get; set; } = string.Empty;
+
+    [JsonPropertyName("amount")]
+    public string Amount { get; set; } = string.Empty;
+}
+
+// JSON serialization context for the tool payloads.
 [JsonSerializable(typeof(RecipeResponse))]
-[JsonSerializable(typeof(RecipeState))]
-[JsonSerializable(typeof(System.Text.Json.JsonElement))]
+[JsonSerializable(typeof(Recipe))]
+[JsonSerializable(typeof(Ingredient))]
 internal sealed partial class RecipeSerializerContext : JsonSerializerContext;
 ```
 
-### Implement State Management Middleware
+### Emit a State Snapshot from a Tool
 
-Create middleware that handles state management by detecting when the client sends state and coordinating the agent's responses:
+Expose a tool that returns the complete state. The agent calls it whenever the recipe should change. The hosting layer turns the tool result into a `STATE_SNAPSHOT` event when you map it:
 
 ```csharp
-using System.Runtime.CompilerServices;
-using System.Text.Json;
-using Microsoft.Agents.AI;
+using System.ComponentModel;
 using Microsoft.Extensions.AI;
 
-internal sealed class SharedStateAgent : DelegatingAIAgent
-{
-    private readonly JsonSerializerOptions _jsonSerializerOptions;
+[Description("Generate or update the shared recipe and display it to the user.")]
+static RecipeResponse GenerateRecipe(
+    [Description("The complete recipe to display.")] Recipe recipe) => new() { Recipe = recipe };
 
-    public SharedStateAgent(AIAgent innerAgent, JsonSerializerOptions jsonSerializerOptions)
-        : base(innerAgent)
-    {
-        this._jsonSerializerOptions = jsonSerializerOptions;
-    }
-
-    protected override Task<AgentResponse> RunCoreAsync(
-        IEnumerable<ChatMessage> messages,
-        AgentSession? session = null,
-        AgentRunOptions? options = null,
-        CancellationToken cancellationToken = default)
-    {
-        return this.RunStreamingAsync(messages, session, options, cancellationToken)
-            .ToAgentResponseAsync(cancellationToken);
-    }
-
-    protected override async IAsyncEnumerable<AgentResponseUpdate> RunCoreStreamingAsync(
-        IEnumerable<ChatMessage> messages,
-        AgentSession? session = null,
-        AgentRunOptions? options = null,
-        [EnumeratorCancellation] CancellationToken cancellationToken = default)
-    {
-        // Check if the client sent state in the request
-        if (options is not ChatClientAgentRunOptions { ChatOptions.AdditionalProperties: { } properties } chatRunOptions ||
-            !properties.TryGetValue("ag_ui_state", out object? stateObj) ||
-            stateObj is not JsonElement state ||
-            state.ValueKind != JsonValueKind.Object)
-        {
-            // No state management requested, pass through to inner agent
-            await foreach (var update in this.InnerAgent.RunStreamingAsync(messages, session, options, cancellationToken).ConfigureAwait(false))
-            {
-                yield return update;
-            }
-            yield break;
-        }
-
-        // Check if state has properties (not empty {})
-        bool hasProperties = false;
-        foreach (JsonProperty _ in state.EnumerateObject())
-        {
-            hasProperties = true;
-            break;
-        }
-
-        if (!hasProperties)
-        {
-            // Empty state - treat as no state
-            await foreach (var update in this.InnerAgent.RunStreamingAsync(messages, session, options, cancellationToken).ConfigureAwait(false))
-            {
-                yield return update;
-            }
-            yield break;
-        }
-
-        // First run: Generate structured state update
-        var firstRunOptions = new ChatClientAgentRunOptions
-        {
-            ChatOptions = chatRunOptions.ChatOptions.Clone(),
-            AllowBackgroundResponses = chatRunOptions.AllowBackgroundResponses,
-            ContinuationToken = chatRunOptions.ContinuationToken,
-            ChatClientFactory = chatRunOptions.ChatClientFactory,
-        };
-
-        // Configure JSON schema response format for structured state output
-        firstRunOptions.ChatOptions.ResponseFormat = ChatResponseFormat.ForJsonSchema<RecipeResponse>(
-            schemaName: "RecipeResponse",
-            schemaDescription: "A response containing a recipe with title, skill level, cooking time, preferences, ingredients, and instructions");
-
-        // Add current state to the conversation - state is already a JsonElement
-        ChatMessage stateUpdateMessage = new(
-            ChatRole.System,
-            [
-                new TextContent("Here is the current state in JSON format:"),
-                new TextContent(JsonSerializer.Serialize(state, this._jsonSerializerOptions.GetTypeInfo(typeof(JsonElement)))),
-                new TextContent("The new state is:")
-            ]);
-
-        var firstRunMessages = messages.Append(stateUpdateMessage);
-
-        // Collect all updates from first run
-        var allUpdates = new List<AgentResponseUpdate>();
-        await foreach (var update in this.InnerAgent.RunStreamingAsync(firstRunMessages, session, firstRunOptions, cancellationToken).ConfigureAwait(false))
-        {
-            allUpdates.Add(update);
-
-            // Yield all non-text updates (tool calls, etc.)
-            bool hasNonTextContent = update.Contents.Any(c => c is not TextContent);
-            if (hasNonTextContent)
-            {
-                yield return update;
-            }
-        }
-
-        var response = allUpdates.ToAgentResponse();
-
-        // Try to deserialize the structured state response
-        JsonElement stateSnapshot;
-        try
-        {
-            stateSnapshot = JsonSerializer.Deserialize<JsonElement>(response.Text, this._jsonSerializerOptions);
-        }
-        catch (JsonException)
-        {
-            yield break;
-        }
-
-        // Serialize and emit as STATE_SNAPSHOT via DataContent
-        byte[] stateBytes = JsonSerializer.SerializeToUtf8Bytes(
-            stateSnapshot,
-            this._jsonSerializerOptions.GetTypeInfo(typeof(JsonElement)));
-        yield return new AgentResponseUpdate
-        {
-            Contents = [new DataContent(stateBytes, "application/json")]
-        };
-
-        // Second run: Generate user-friendly summary
-        var secondRunMessages = messages.Concat(response.Messages).Append(
-            new ChatMessage(
-                ChatRole.System,
-                [new TextContent("Please provide a concise summary of the state changes in at most two sentences.")]));
-
-        await foreach (var update in this.InnerAgent.RunStreamingAsync(secondRunMessages, session, options, cancellationToken).ConfigureAwait(false))
-        {
-            yield return update;
-        }
-    }
-}
+AITool generateRecipe = AIFunctionFactory.Create(
+    GenerateRecipe,
+    name: "generate_recipe",
+    description: "Generate or update the shared recipe and display it to the user.",
+    RecipeSerializerContext.Default.Options);
 ```
 
-### Configure the Agent with State Management
+### Create the Agent
+
+Build the agent directly from your chat client with <xref:Microsoft.Agents.AI.ChatClientAgentOptions>. Put the system prompt and tools on <xref:Microsoft.Extensions.AI.ChatOptions>:
 
 ```csharp
 using Microsoft.Agents.AI;
-using Azure.AI.Projects;
+using Azure.AI.OpenAI;
 using Azure.Identity;
+using Microsoft.Extensions.AI;
+using OpenAI.Chat;
 
-AIAgent CreateRecipeAgent(JsonSerializerOptions jsonSerializerOptions)
-{
-    string endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT")
-        ?? throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
-    string deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME")
-        ?? throw new InvalidOperationException("AZURE_OPENAI_DEPLOYMENT_NAME is not set.");
+const string SharedStateSystemPrompt =
+    """
+    You are a helpful recipe assistant that maintains a shared recipe state with the user.
 
-    // Create base agent
-    AIAgent baseAgent = new AIProjectClient(
-        new Uri(endpoint),
-        new DefaultAzureCredential())
-        .AsAIAgent(
-            model: deploymentName,
-            name: "RecipeAgent",
-        instructions: """
-            You are a helpful recipe assistant. When users ask you to create or suggest a recipe,
-            respond with a complete RecipeResponse JSON object that includes:
-            - recipe.title: The recipe name
-            - recipe.cuisine: Type of cuisine (e.g., Italian, Mexican, Japanese)
-            - recipe.ingredients: Array of ingredient strings with quantities
-            - recipe.steps: Array of cooking instruction strings
-            - recipe.prep_time_minutes: Preparation time in minutes
-            - recipe.cook_time_minutes: Cooking time in minutes
-            - recipe.skill_level: One of "beginner", "intermediate", or "advanced"
+    IMPORTANT:
+    - When the user asks you to create, change, or improve a recipe, call the `generate_recipe`
+      tool with a COMPLETE recipe: a title, skill_level, cooking_time, special_preferences, the
+      full list of ingredients (each with an icon, name and amount) and the step-by-step
+      instructions.
+    - Always include every ingredient the recipe needs, keeping any the user already added.
+    - When the user only asks a question about the recipe, answer in plain text and do NOT call the tool.
+    """;
 
-            Always include all fields in the response. Be creative and helpful.
-            """);
+string endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT")
+    ?? throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
+string deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME")
+    ?? throw new InvalidOperationException("AZURE_OPENAI_DEPLOYMENT_NAME is not set.");
 
-    // Wrap with state management middleware
-    return new SharedStateAgent(baseAgent, jsonSerializerOptions);
-}
+AIAgent recipeAgent = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredential())
+    .GetChatClient(deploymentName)
+    .AsAIAgent(new ChatClientAgentOptions
+    {
+        Name = "RecipeAgent",
+        Description = "An agent that maintains a shared recipe state with the user.",
+        ChatOptions = new ChatOptions
+        {
+            Instructions = SharedStateSystemPrompt,
+            Tools = [generateRecipe],
+        },
+    });
 ```
 
 > [!WARNING]
 > `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
-### Map the Agent Endpoint
+### Map the Tool Result to a State Event
+
+Create an `AGUIStreamOptions`, register the tool name as a state snapshot, and attach it to the endpoint metadata. `MapAGUIServer` reads the stream options from the endpoint (or from `IOptions<AGUIStreamOptions>` in DI) and emits the state events for you:
 
 ```csharp
+using AGUI.Server;
 using Microsoft.Agents.AI.Hosting.AGUI.AspNetCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-builder.Services.AddHttpClient().AddLogging();
 builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.TypeInfoResolverChain.Add(RecipeSerializerContext.Default));
-builder.Services.AddAGUI();
+builder.Services.AddAGUIServer();
+
+// A `generate_recipe` result becomes a STATE_SNAPSHOT event.
+AGUIStreamOptions streamOptions = new AGUIStreamOptions()
+    .MapResultAsStateSnapshot("generate_recipe");
 
 WebApplication app = builder.Build();
 
-var jsonOptions = app.Services.GetRequiredService<IOptions<Microsoft.AspNetCore.Http.Json.JsonOptions>>().Value;
-AIAgent recipeAgent = CreateRecipeAgent(jsonOptions.SerializerOptions);
-app.MapAGUI("/", recipeAgent);
+// Attach the stream options to the endpoint. MapAGUIServer emits the state events for you.
+app.MapAGUIServer("/", recipeAgent).WithMetadata(streamOptions);
 
 await app.RunAsync();
 ```
 
+That's the whole server. There is no custom `DelegatingAIAgent` and no protocol content to build: the tool returns your state object, `MapResultAsStateSnapshot` turns each result into a `STATE_SNAPSHOT`, and the framework streams it to the client.
+
+### Reading Client State
+
+The recipe lives on the client. When the client sends a turn, it includes its current state on the AG-UI `RunAgentInput`. Recover it from the request's <xref:Microsoft.Extensions.AI.ChatOptions> with `TryGetRunAgentInput` and read `RunAgentInput.State` (a `JsonElement`):
+
+```csharp
+using System.Text.Json;
+using AGUI.Abstractions;
+using AGUI.Server;
+using Microsoft.Extensions.AI;
+
+static bool TryGetClientState(ChatOptions chatOptions, out JsonElement state)
+{
+    if (chatOptions.TryGetRunAgentInput(out RunAgentInput? input) &&
+        input.State is { ValueKind: not JsonValueKind.Undefined } clientState)
+    {
+        state = clientState;
+        return true;
+    }
+
+    state = default;
+    return false;
+}
+```
+
+`TryGetRunAgentInput` reads the input that the hosting layer stashed on `ChatOptions.AdditionalProperties`. You never touch that dictionary directly. Give the model the current recipe by prepending it as a system message before the agent runs (for example, from a lightweight <xref:Microsoft.Agents.AI.DelegatingAIAgent> that only injects context and delegates the run), so edits build on the existing state instead of starting from scratch.
+
 ### Key Concepts
 
-- **State Detection**: Middleware checks for `ag_ui_state` in `ChatOptions.AdditionalProperties` to detect when the client is requesting state management
-- **Two-Phase Response**: First generates structured state (JSON schema), then generates a user-friendly summary
-- **Structured State Models**: Define C# classes for your state structure with JSON property names
-- **JSON Schema Response Format**: Use `ChatResponseFormat.ForJsonSchema<T>()` to ensure structured output
-- **STATE_SNAPSHOT Events**: Emitted as `DataContent` with `application/json` media type, which the AG-UI framework automatically converts to STATE_SNAPSHOT events
-- **State Context**: Current state is injected as a system message to provide context to the agent
+- **Tools return state**: A tool returns your state object; you never construct AG-UI events yourself.
+- **Declarative mapping**: `AGUIStreamOptions.MapResultAsStateSnapshot(toolName)` / `MapResultAsStateDelta(toolName)` map a tool result to a `STATE_SNAPSHOT` / `STATE_DELTA` event.
+- **Endpoint wiring**: Attach the stream options with `.WithMetadata(streamOptions)` on `MapAGUIServer`, or register `IOptions<AGUIStreamOptions>` in DI.
+- **Reading state**: `ChatOptions.TryGetRunAgentInput(out var input)` recovers the `RunAgentInput`; `input.State` is the client's current state as a `JsonElement`.
+
+## State Deltas with Agentic Generative UI
+
+`MapResultAsStateSnapshot` replaces the entire state on each turn. For incremental changes, map a tool result to a `STATE_DELTA` with `MapResultAsStateDelta`, returning a [JSON Patch](https://datatracker.ietf.org/doc/html/rfc6902) document.
+
+A common scenario is *agentic generative UI*: the agent builds a plan, then updates the status of individual steps as it works. `create_plan` sends the full plan as a snapshot; `update_plan_step` sends only the changed fields as a delta.
+
+Define the plan model and status enum:
+
+```csharp
+using System.Text.Json.Serialization;
+
+internal sealed class Plan
+{
+    [JsonPropertyName("steps")]
+    public List<Step> Steps { get; set; } = [];
+}
+
+internal sealed class Step
+{
+    [JsonPropertyName("description")]
+    public required string Description { get; set; }
+
+    [JsonPropertyName("status")]
+    public StepStatus Status { get; set; } = StepStatus.Pending;
+}
+
+[JsonConverter(typeof(JsonStringEnumConverter<StepStatus>))]
+internal enum StepStatus
+{
+    Pending,
+    Completed
+}
+
+internal sealed class JsonPatchOperation
+{
+    [JsonPropertyName("op")]
+    public required string Op { get; set; }
+
+    [JsonPropertyName("path")]
+    public required string Path { get; set; }
+
+    [JsonPropertyName("value")]
+    public object? Value { get; set; }
+}
+```
+
+The `create_plan` tool returns the full plan; `update_plan_step` returns a list of JSON Patch operations:
+
+```csharp
+using System.ComponentModel;
+
+[Description("Create a plan with multiple steps.")]
+public static Plan CreatePlan(
+    [Description("List of step descriptions to create the plan.")] List<string> steps)
+{
+    return new Plan
+    {
+        Steps = [.. steps.Select(s => new Step { Description = s, Status = StepStatus.Pending })]
+    };
+}
+
+[Description("Update a step in the plan with new description or status.")]
+public static List<JsonPatchOperation> UpdatePlanStep(
+    [Description("The index of the step to update.")] int index,
+    [Description("The new status for the step.")] StepStatus status)
+{
+    // Status must be lowercase to match AG-UI frontend expectations.
+    string statusValue = status == StepStatus.Pending ? "pending" : "completed";
+
+    return
+    [
+        new JsonPatchOperation { Op = "replace", Path = $"/steps/{index}/status", Value = statusValue }
+    ];
+}
+```
+
+Register both tools on the agent (with `AllowMultipleToolCalls = false` so the model updates one step at a time), and map each tool result to the matching state event: `create_plan` to a snapshot, `update_plan_step` to a delta.
+
+```csharp
+using AGUI.Server;
+using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
+
+AITool createPlan = AIFunctionFactory.Create(
+    CreatePlan, name: "create_plan", description: "Create a plan with multiple steps.");
+AITool updatePlanStep = AIFunctionFactory.Create(
+    UpdatePlanStep, name: "update_plan_step", description: "Update a step in the plan with new description or status.");
+
+AIAgent planAgent = chatClient.AsAIAgent(new ChatClientAgentOptions
+{
+    Name = "AgenticUIAgent",
+    ChatOptions = new ChatOptions
+    {
+        Instructions = "Use `create_plan` to set the initial steps, then call `update_plan_step` until every step is completed. Do not describe the plan in text.",
+        Tools = [createPlan, updatePlanStep],
+        AllowMultipleToolCalls = false,
+    },
+});
+
+AGUIStreamOptions planStreamOptions = new AGUIStreamOptions()
+    .MapResultAsStateSnapshot("create_plan")   // full plan -> STATE_SNAPSHOT
+    .MapResultAsStateDelta("update_plan_step"); // JSON Patch -> STATE_DELTA
+
+app.MapAGUIServer("/agentic_generative_ui", planAgent).WithMetadata(planStreamOptions);
+```
+
+> [!NOTE]
+> `STATE_SNAPSHOT` replaces the entire state; `STATE_DELTA` applies a JSON Patch to the existing state. Send a snapshot when you set up or reset state, and deltas for incremental changes.
+
+For a related pattern that streams a tool's arguments into state as the model generates them, continue with Predictive State Updates below.
+
+## Predictive State Updates
+
+Predictive state updates let the UI react to a tool call *while its arguments are still being generated*, instead of waiting for the tool to finish. As the model streams the arguments for a tool, the server converts those partial arguments into state snapshots and sends them to the client. The client renders each snapshot immediately, giving the user an optimistic, live preview. For example, a document editor shows the text appearing in real time, then asks the user to confirm the change once the model is done.
+
+> [!NOTE]
+> This scenario maps the endpoint manually and uses the built-in `TypedResults.ServerSentEvents(...)`, which requires **.NET 10.0 or later**.
 
 ### How It Works
 
-1. Client sends request with state in `ChatOptions.AdditionalProperties["ag_ui_state"]`
-2. Middleware detects state and performs first run with JSON schema response format
-3. Middleware adds current state as context in a system message
-4. Agent generates structured state update matching your state model
-5. Middleware serializes state and emits as `DataContent` (becomes STATE_SNAPSHOT event)
-6. Middleware performs second run to generate user-friendly summary
-7. Client receives both the state snapshot and the natural language summary
+Unlike the [shared-state](#emit-a-state-snapshot-from-a-tool) scenario, where a tool *runs* and its result becomes a snapshot, the predictive scenario intercepts the tool **call** before it executes and streams the argument into state:
 
-> [!TIP]
-> The two-phase approach separates state management from user communication. The first phase ensures structured, reliable state updates while the second phase provides natural language feedback to the user.
+1. The agent declares a `write_document_local` tool. The model calls it with the full document text as its `document` argument.
+2. The tool is **not** executed server-side. Instead, an `AGUIStreamOptions` `MapCall` mapping intercepts the call.
+3. The mapping emits a series of `STATE_SNAPSHOT` events, each carrying a progressively longer prefix of the document, so the client sees the text stream in.
+4. It then completes the tool call with a `TOOL_CALL_RESULT` event and injects a client-side `confirm_changes` tool call so the client can prompt the user to approve.
+5. The client renders each snapshot and shows the confirm/reject prompt.
 
-### Client Implementation (C#)
+Because the mapping produces the tool's result itself, the document tool is declared but never invoked. The chat client is built **without** function invocation.
 
-> [!IMPORTANT]
-> The C# client implementation is not included in this tutorial. The server-side state management is complete, but clients need to:
-> 1. Initialize state with an empty object (not null): `RecipeState? currentState = new RecipeState();`
-> 2. Send state as `DataContent` in a `ChatRole.System` message
-> 3. Receive state snapshots as `DataContent` with `mediaType = "application/json"`
->
-> The AG-UI hosting layer automatically extracts state from `DataContent` and places it in `ChatOptions.AdditionalProperties["ag_ui_state"]` as a `JsonElement`.
+### Define the State Model
 
-For a complete client implementation example, see the Python client pattern below which demonstrates the full bidirectional state flow.
+The state model describes the shape the client renders. Use `JsonPropertyName` so the property names match what the client expects:
+
+```csharp
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+internal sealed class DocumentState
+{
+    [JsonPropertyName("document")]
+    public string Document { get; set; } = string.Empty;
+}
+
+[JsonSerializable(typeof(DocumentState))]
+[JsonSerializable(typeof(JsonElement))]
+internal sealed partial class DocumentSerializerContext : JsonSerializerContext;
+```
+
+### Declare the Document Tool
+
+The tool signature is what the model fills in. It is declared so the model calls it, but its result is produced by the stream mapping, not by executing the method body:
+
+```csharp
+using System.ComponentModel;
+using Microsoft.Extensions.AI;
+
+[Description("Write a document in markdown format.")]
+static string WriteDocument(
+    [Description("The document content to write.")] string document) => "Document written successfully";
+
+AITool writeDocument = AIFunctionFactory.Create(
+    WriteDocument,
+    name: "write_document_local",
+    description: "Write a document. Use markdown formatting to format the document.");
+```
+
+### Configure the Predictive Stream Mapping
+
+Register a `MapCall` mapping for the tool. When the model calls `write_document_local`, the mapping reads the streamed `document` argument, emits progressive `StateSnapshotEvent` snapshots, completes the tool call, and injects a `confirm_changes` client-side tool call:
+
+```csharp
+using System.Text.Json;
+using AGUI.Abstractions;
+using AGUI.Server;
+using Microsoft.Extensions.AI;
+
+static AGUIStreamOptions CreatePredictiveStreamOptions(JsonSerializerOptions jsonSerializerOptions)
+{
+    string? lastEmittedDocument = null;
+
+    return new AGUIStreamOptions().MapCall("write_document_local", fcc =>
+    {
+        string? document = fcc.Arguments?.TryGetValue("document", out var value) == true
+            ? value?.ToString()
+            : null;
+
+        if (document is null || document == lastEmittedDocument)
+        {
+            return [];
+        }
+
+        var events = new List<BaseEvent>();
+
+        // Only stream the newly added portion if the document grew.
+        int startIndex = lastEmittedDocument is not null &&
+            document.StartsWith(lastEmittedDocument, StringComparison.Ordinal)
+                ? lastEmittedDocument.Length
+                : 0;
+
+        const int chunkSize = 10;
+        for (int i = startIndex; i < document.Length; i += chunkSize)
+        {
+            int length = Math.Min(chunkSize, document.Length - i);
+            var snapshot = new DocumentState { Document = document[..(i + length)] };
+            JsonElement snapshotJson = JsonSerializer.SerializeToElement(snapshot, jsonSerializerOptions);
+
+            events.Add(new StateSnapshotEvent { Snapshot = snapshotJson });
+        }
+
+        // Complete the write_document_local call (its document is now reflected in state) so the
+        // only tool call the client sees pending is confirm_changes.
+        events.Add(new ToolCallResultEvent
+        {
+            MessageId = Guid.NewGuid().ToString("N"),
+            ToolCallId = fcc.CallId,
+            Content = "Document written.",
+            Role = "tool",
+        });
+
+        // Inject a client-side confirm_changes tool call so the approval modal renders.
+        string confirmCallId = Guid.NewGuid().ToString("N");
+        string confirmMessageId = Guid.NewGuid().ToString("N");
+        events.Add(new ToolCallStartEvent { ToolCallId = confirmCallId, ToolCallName = "confirm_changes", ParentMessageId = confirmMessageId });
+        events.Add(new ToolCallArgsEvent { ToolCallId = confirmCallId, Delta = "{}" });
+        events.Add(new ToolCallEndEvent { ToolCallId = confirmCallId });
+
+        lastEmittedDocument = document;
+        return events;
+    });
+}
+```
+
+> [!NOTE]
+> Each snapshot contains the full document up to that point, so the client always renders a consistent view even if it misses an intermediate update.
+
+### Map the Endpoint
+
+Because the mapping produces the tool result itself, build the chat client **without** function invocation and stream through the AG-UI pipeline directly: adapt the incoming `RunAgentInput` with `ToChatRequestContext`, call `GetStreamingResponseAsync`, and convert the updates with `AsAGUIEventStreamAsync`.
+
+```csharp
+using AGUI.Abstractions;
+using AGUI.Server;
+using Azure.AI.OpenAI;
+using Azure.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.AI;
+using Microsoft.Extensions.Options;
+using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
+
+const string PredictiveSystemPrompt =
+    """
+    You are a document editor assistant. When asked to write or edit content:
+    - Use the `write_document_local` tool with the full document text in Markdown format.
+    - You MUST write the full document, even when changing only a few words.
+    - When making edits, keep them minimal. Do not change every word.
+    After writing the document, briefly summarize the changes you made in at most two sentences.
+    """;
+
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+builder.Services.ConfigureHttpJsonOptions(options =>
+    options.SerializerOptions.TypeInfoResolverChain.Add(DocumentSerializerContext.Default));
+builder.Services.AddAGUIServer();
+
+string endpoint = builder.Configuration["AZURE_OPENAI_ENDPOINT"]
+    ?? throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
+string deploymentName = builder.Configuration["AZURE_OPENAI_DEPLOYMENT_NAME"]
+    ?? throw new InvalidOperationException("AZURE_OPENAI_DEPLOYMENT_NAME is not set.");
+
+// No UseFunctionInvocation: the call is intercepted by the stream mapping, not executed.
+IChatClient chatClient = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredential())
+    .GetChatClient(deploymentName)
+    .AsIChatClient();
+
+WebApplication app = builder.Build();
+
+JsonSerializerOptions jsonSerializerOptions = app.Services
+    .GetRequiredService<IOptions<JsonOptions>>()
+    .Value.SerializerOptions;
+
+app.MapPost("/", (
+    [FromBody] RunAgentInput input,
+    HttpContext httpContext,
+    CancellationToken cancellationToken) =>
+{
+    AGUIStreamOptions streamOptions = CreatePredictiveStreamOptions(jsonSerializerOptions);
+
+    ChatRequestContext ctx = input.ToChatRequestContext(jsonSerializerOptions, streamOptions);
+    ctx.Messages.Insert(0, new ChatMessage(ChatRole.System, PredictiveSystemPrompt));
+    (ctx.ChatOptions.Tools ??= []).Add(writeDocument);
+
+    var updates = chatClient.GetStreamingResponseAsync(ctx.Messages, ctx.ChatOptions, cancellationToken);
+    IAsyncEnumerable<BaseEvent> events = updates.AsAGUIEventStreamAsync(ctx, cancellationToken);
+
+    return TypedResults.ServerSentEvents(events);
+});
+
+await app.RunAsync();
+```
+
+> [!WARNING]
+> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
+
+> [!NOTE]
+> `confirm_changes` is a *client-side* tool. The stream mapping requests it, and the client renders the approval prompt. See [Human-in-the-Loop](human-in-the-loop.md) for the client-side tool pattern.
+
+### Predictive Key Concepts
+
+- **`AGUIStreamOptions.MapCall`**: Intercepts a tool *call* (before execution) and returns the AG-UI events to emit for it.
+- **`FunctionCallContent.Arguments`**: The streamed tool arguments. Read `Arguments["document"]` to get the text as the model produces it.
+- **`StateSnapshotEvent`**: Each snapshot holds the full document prefix so far, producing the optimistic streaming effect.
+- **`ToChatRequestContext` / `AsAGUIEventStreamAsync`**: The AG-UI streaming pipeline that adapts a `RunAgentInput` to a chat request and converts the response updates back into AG-UI events.
+- **`confirm_changes`**: A client-side tool call injected after the document is written, so the user can approve the result.
+
+### Rendering on the Client
+
+A UI toolkit such as [CopilotKit](https://copilotkit.ai/) subscribes to the state snapshots and re-renders the document on each one, then shows the confirm or reject prompt when the `confirm_changes` tool call arrives. You can see this scenario running in the [AG-UI Dojo](https://dojo.ag-ui.com/microsoft-agent-framework-dotnet).
 
 ::: zone-end
 

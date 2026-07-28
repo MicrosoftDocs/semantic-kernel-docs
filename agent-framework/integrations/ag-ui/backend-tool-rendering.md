@@ -43,18 +43,18 @@ Here's a complete server implementation demonstrating how to register tools with
 
 using System.ComponentModel;
 using System.Text.Json.Serialization;
-using Azure.AI.Projects;
+using Azure.AI.OpenAI;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Hosting.AGUI.AspNetCore;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Options;
+using OpenAI.Chat;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-builder.Services.AddHttpClient().AddLogging();
 builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.TypeInfoResolverChain.Add(SampleJsonSerializerContext.Default));
-builder.Services.AddAGUI();
+builder.Services.AddAGUIServer();
 
 WebApplication app = builder.Build();
 
@@ -62,33 +62,6 @@ string endpoint = builder.Configuration["AZURE_OPENAI_ENDPOINT"]
     ?? throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
 string deploymentName = builder.Configuration["AZURE_OPENAI_DEPLOYMENT_NAME"]
     ?? throw new InvalidOperationException("AZURE_OPENAI_DEPLOYMENT_NAME is not set.");
-
-// Define request/response types for the tool
-internal sealed class RestaurantSearchRequest
-{
-    public string Location { get; set; } = string.Empty;
-    public string Cuisine { get; set; } = "any";
-}
-
-internal sealed class RestaurantSearchResponse
-{
-    public string Location { get; set; } = string.Empty;
-    public string Cuisine { get; set; } = string.Empty;
-    public RestaurantInfo[] Results { get; set; } = [];
-}
-
-internal sealed class RestaurantInfo
-{
-    public string Name { get; set; } = string.Empty;
-    public string Cuisine { get; set; } = string.Empty;
-    public double Rating { get; set; }
-    public string Address { get; set; } = string.Empty;
-}
-
-// JSON serialization context for source generation
-[JsonSerializable(typeof(RestaurantSearchRequest))]
-[JsonSerializable(typeof(RestaurantSearchResponse))]
-internal sealed partial class SampleJsonSerializerContext : JsonSerializerContext;
 
 // Define the function tool
 [Description("Search for restaurants in a location.")]
@@ -137,23 +110,51 @@ AITool[] tools =
 [
     AIFunctionFactory.Create(
         SearchRestaurants,
+        name: "search_restaurants",
         serializerOptions: jsonOptions.SerializerOptions)
 ];
 
 // Create the AI agent with tools
-AIAgent agent = new AIProjectClient(
+AIAgent agent = new AzureOpenAIClient(
         new Uri(endpoint),
         new DefaultAzureCredential())
+    .GetChatClient(deploymentName)
     .AsAIAgent(
-        model: deploymentName,
         name: "AGUIAssistant",
         instructions: "You are a helpful assistant with access to restaurant information.",
         tools: tools);
 
 // Map the AG-UI agent endpoint
-app.MapAGUI("/", agent);
+app.MapAGUIServer("/", agent);
 
 await app.RunAsync();
+
+// Define request/response types for the tool
+internal sealed class RestaurantSearchRequest
+{
+    public string Location { get; set; } = string.Empty;
+    public string Cuisine { get; set; } = "any";
+}
+
+internal sealed class RestaurantSearchResponse
+{
+    public string Location { get; set; } = string.Empty;
+    public string Cuisine { get; set; } = string.Empty;
+    public RestaurantInfo[] Results { get; set; } = [];
+}
+
+internal sealed class RestaurantInfo
+{
+    public string Name { get; set; } = string.Empty;
+    public string Cuisine { get; set; } = string.Empty;
+    public double Rating { get; set; }
+    public string Address { get; set; } = string.Empty;
+}
+
+// JSON serialization context for source generation
+[JsonSerializable(typeof(RestaurantSearchRequest))]
+[JsonSerializable(typeof(RestaurantSearchResponse))]
+internal sealed partial class SampleJsonSerializerContext : JsonSerializerContext;
 ```
 
 > [!WARNING]
@@ -251,9 +252,9 @@ When the agent calls backend tools, you'll see:
 ```
 User (:q or quit to exit): What's the weather like in Amsterdam?
 
-[Run Started - Thread: thread_abc123, Run: run_xyz789]
+[Run Started - Run: run_xyz789]
 
-[Function Call - Name: SearchRestaurants]
+[Function Call - Name: search_restaurants]
   Parameter: Location = Amsterdam
   Parameter: Cuisine = any
 
@@ -262,7 +263,7 @@ User (:q or quit to exit): What's the weather like in Amsterdam?
 
 The weather in Amsterdam is sunny with a temperature of 22°C. Here are some 
 great restaurants in the area: The Golden Fork (Italian, 4.5 stars)...
-[Run Finished - Thread: thread_abc123]
+[Run Finished]
 ```
 
 ### Key Concepts
