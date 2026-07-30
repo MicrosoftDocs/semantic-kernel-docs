@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 05/27/2026
+ms.date: 07/30/2026
 ms.service: agent-framework
 ---
 
@@ -39,7 +39,7 @@ Checkpoints allow you to save the state of a workflow at specific points during 
 
 ## When Are Checkpoints Created?
 
-Remember that workflows are executed in **supersteps**, as documented in the [core concepts](./index.md#core-concepts). Checkpoints are created at the end of each superstep, after all executors in that superstep have completed their execution. A checkpoint captures the entire state of the workflow, including:
+Remember that workflows are executed in **supersteps**, as documented in the [workflow execution model](../concepts/workflows/builder-and-execution.md#execution-model-supersteps). Checkpoints are created at the end of each superstep, after all executors in that superstep have completed their execution. A checkpoint captures the entire state of the workflow, including:
 
 - The current state of all executors
 - All pending messages in the workflow for the next superstep
@@ -517,7 +517,7 @@ Ensure that the storage location used for checkpoints is secured appropriately. 
 
 ### Pickle serialization
 
-Both `FileCheckpointStorage` and `CosmosCheckpointStorage` use Python's [`pickle`](https://docs.python.org/3/library/pickle.html) module to serialize non-JSON-native state such as dataclasses, datetimes, and custom objects. To mitigate the risks of arbitrary code execution during deserialization, both providers use a **restricted unpickler** by default. Only a built-in set of safe Python types (primitives, `datetime`, `uuid`, `Decimal`, common collections, etc.) and all `agent_framework` internal types are permitted during deserialization. Any other type encountered in a checkpoint causes deserialization to fail with a `WorkflowCheckpointException`.
+Both `FileCheckpointStorage` and `CosmosCheckpointStorage` use Python's [`pickle`](https://docs.python.org/3/library/pickle.html) module to serialize non-JSON-native state such as dataclasses, datetimes, and custom objects. To mitigate the risks of arbitrary code execution during deserialization, both providers use a **restricted unpickler** by default. Only a built-in set of safe Python types (primitives, `datetime`, `uuid`, `Decimal`, common collections, etc.) and supported Agent Framework or OpenAI SDK types are permitted during deserialization. Module-prefix allowlisting is type-only: helper functions and other non-type globals are rejected. Any unsupported type causes deserialization to fail with a `WorkflowCheckpointException`.
 
 To allow additional application-specific types, pass them via the `allowed_checkpoint_types` parameter using `"module:qualname"` format:
 
@@ -532,6 +532,8 @@ storage = FileCheckpointStorage(
     ],
 )
 ```
+
+Each `allowed_checkpoint_types` entry must resolve to a type. Adding a module-level function or another non-type global doesn't make that global deserializable.
 
 `CosmosCheckpointStorage` accepts the same parameter:
 
@@ -570,5 +572,5 @@ Go checkpoint managers serialize checkpoint state as JSON, but checkpoint storag
 ## Next Steps
 
 - [Learn how to monitor workflows](./observability.md).
-- [Learn about state isolation in workflows](./state.md).
+- [Learn about state isolation in workflows](../concepts/workflows/state.md).
 - [Learn how to visualize workflows](./visualization.md).

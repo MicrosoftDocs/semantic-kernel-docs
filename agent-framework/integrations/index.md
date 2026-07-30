@@ -4,102 +4,66 @@ description: Agent Framework Integrations
 author: westey-m
 ms.topic: article
 ms.author: westey
-ms.date: 01/27/2026
+ms.date: 07/28/2026
 ms.service: agent-framework
 zone_pivot_groups: programming-languages
 ---
+
+<!--
+  Language parity table - keep in sync when adding/removing sections.
+
+  | Section                     | C# | Python | Go | Notes                  |
+  |-----------------------------|:--:|:------:|:--:|------------------------|
+  | Provider/component navigation | ✅ |   ✅   | ✅ | Shared                 |
+  | Vector stores                | ✅ |   ✅   | ✅ | Go zone is status only |
+-->
 
 # Agent Framework Integrations
 
 Microsoft Agent Framework has integrations with many different services, tools and protocols.
 
-## Microsoft Foundry Hosted Agents
+## Browse by provider
 
-- [Hosted Agents docs](/azure/ai-foundry/agents/concepts/hosted-agents)
-- [Hosted Agents sample (Python, Agent Framework)](https://github.com/microsoft-foundry/foundry-samples/tree/main/samples/python/hosted-agents/agent-framework)
+| Provider | Integration areas |
+|---|---|
+| [Microsoft Foundry](./by-provider/microsoft-foundry.md) | Models, managed agents, tools, RAG, memory, evaluation, observability, local models, and hosted agents |
+| [Microsoft Azure](./by-provider/microsoft-azure.md) | Azure OpenAI, Azure AI Search, Azure Cosmos DB, Azure Content Understanding, Microsoft Purview, Azure Monitor, and Azure Functions |
+| [OpenAI](./by-provider/openai.md) | Model inference, hosted tools, ChatKit, and OpenAI-compatible endpoints |
+| [Anthropic](./by-provider/anthropic.md) | Claude models, the Claude Agent SDK, Foundry, Bedrock, and Vertex AI |
+| [Amazon Web Services](./by-provider/amazon-web-services.md) | Amazon Bedrock and Anthropic Claude on Bedrock |
+| [Google](./by-provider/google.md) | Google Gemini and Anthropic Claude on Vertex AI |
+| [Ollama](./by-provider/ollama.md) | Local model inference through native and OpenAI-compatible clients |
+| [Mistral](./by-provider/mistral.md) | Mistral text embeddings |
+
+See [all provider ecosystems](./by-provider/index.md).
+
+## Browse by component
+
+- [Model providers](./by-component/model-providers/index.md)
+- [Agent services](./by-component/agent-services/index.md)
+- [Tools](./by-component/tools/index.md)
+- [Context providers](./by-component/context-providers/index.md)
+- [Middleware](./by-component/middleware/purview.md)
+- [Evaluation](./by-component/evaluation/microsoft-foundry.md)
+- UI: [AG-UI](./by-component/ui/ag-ui/index.md), [ChatKit](./by-component/ui/chatkit.md), and [DevUI](./by-component/ui/devui/index.md)
+- [All component categories](./by-component/index.md)
+- [Context provider concepts](../concepts/agents/conversations/context-providers.md)
 
 ## UI Framework integrations
 
 | UI Framework                                                       | Release Status  |
 | ------------------------------------------------------------------ | --------------- |
-| [AG UI](./ag-ui/index.md)                                          | Preview         |
-| [Agent Framework Dev UI](../devui/index.md)             | Preview         |
-| [Purview](./purview.md) | Preview         |
+| [AG-UI](./by-component/ui/ag-ui/index.md)                                          | Preview         |
+| [ChatKit](./by-component/ui/chatkit.md) | Preview |
+| [DevUI](./by-component/ui/devui/index.md)             | Preview         |
 
-## Chat History Providers
+## Middleware integrations
 
-Microsoft Agent Framework supports many different agent types with different chat history storage capabilities.
-In some cases agents store chat history in the AI service, while in others Agent Framework manages the storage.
+- [Microsoft Purview](./by-component/middleware/purview.md)
 
-To allow chat history storage to be customized when managed by Agent Framework, custom Chat History Providers
-may be supplied. Here is a list of existing providers that can be used.
+## Evaluation integrations
 
-::: zone pivot="programming-language-csharp"
-
-| Chat History Provider                                              | Release Status  |
-| ------------------------------------------------------------------ | --------------- |
-| [In-Memory Chat History Provider](https://github.com/microsoft/agent-framework/blob/main/dotnet/src/Microsoft.Agents.AI.Abstractions/InMemoryChatHistoryProvider.cs) | Released         |
-| [Cosmos DB Chat History Provider](https://github.com/microsoft/agent-framework/blob/main/dotnet/src/Microsoft.Agents.AI.CosmosNoSql/CosmosChatHistoryProvider.cs)    | Preview         |
-
-::: zone-end
-
-::: zone pivot="programming-language-python"
-
-| Chat History Provider                                              | Release Status  |
-| ------------------------------------------------------------------ | --------------- |
-| [Redis History Provider](https://github.com/microsoft/agent-framework/blob/main/python/packages/redis/agent_framework_redis/_history_provider.py) | Preview         |
-
-::: zone-end
-
-## Memory AI Context Providers
-
-AI Context Providers are plugins for `ChatClientAgent` instances and can be used to add memory to an agent. This is done by extracting memories from new messages provided by the user or generated by the agent, and by searching for existing memories and providing them to the AI service with the user input.
-
-Here is a list of existing providers that can be used.
-
-::: zone pivot="programming-language-csharp"
-
-| Memory AI Context Provider                                         | Release Status  |
-| ------------------------------------------------------------------ | --------------- |
-| [Chat History Memory Provider](./chat-history-memory-provider.md) | Released         |
-| [Neo4j Memory Provider](./neo4j-memory.md) | Preview         |
-
-::: zone-end
-
-::: zone pivot="programming-language-python"
-
-| Memory AI Context Provider                                         | Release Status  |
-| ------------------------------------------------------------------ | --------------- |
-| [Mem0 Memory Provider](https://github.com/microsoft/agent-framework/blob/main/python/packages/mem0/agent_framework_mem0/_context_provider.py) | Preview         |
-| [Neo4j Memory Provider](./neo4j-memory.md) | Preview         |
-| [Purview Context Provider](./purview.md) | Preview         |
-| [Redis Provider](https://github.com/microsoft/agent-framework/blob/main/python/packages/redis/agent_framework_redis/_context_provider.py)     | Preview         |
-
-::: zone-end
-
-## Retrieval Augmented Generation (RAG) AI Context Providers
-
-AI Context Providers are plugins for `ChatClientAgent` instances and can be used to add RAG capabilities to an agent. This is done by searching for relevant data based on the user input, and passing this data to the AI service with the other inputs.
-
-Here is a list of existing providers that can be used.
-
-::: zone pivot="programming-language-csharp"
-
-| RAG AI Context Provider                                            | Release Status  |
-| ------------------------------------------------------------------ | --------------- |
-| [Neo4j GraphRAG Provider](./neo4j-graphrag.md) | Preview         |
-| [Text Search Provider](https://github.com/microsoft/agent-framework/blob/main/dotnet/src/Microsoft.Agents.AI/TextSearchProvider.cs) | Released         |
-
-::: zone-end
-
-::: zone pivot="programming-language-python"
-
-| RAG AI Context Provider                                            | Release Status  |
-| ------------------------------------------------------------------ | --------------- |
-| [Azure AI Search Provider](https://github.com/microsoft/agent-framework/blob/main/python/packages/azure-ai-search/agent_framework_azure_ai_search/_context_provider.py) | Preview         |
-| [Neo4j GraphRAG Provider](./neo4j-graphrag.md) | Preview         |
-
-::: zone-end
+- [Microsoft Foundry](./by-component/evaluation/microsoft-foundry.md)
 
 ## Vector Stores
 
@@ -161,4 +125,4 @@ See [Creating a search tool from a VectorStore](../agents/rag.md#creating-a-sear
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Durable Extension](durable-extension.md)
+> [Browse integrations by component](./by-component/index.md)

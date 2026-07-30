@@ -17,10 +17,10 @@ Once you've built your agent, you need to host it so users and other agents can 
 
 | Option | Description | Best For |
 |--------|-------------|----------|
-| [A2A Protocol](../integrations/a2a.md) | Expose agents via the Agent-to-Agent protocol | Multi-agent systems |
-| [OpenAI-Compatible Endpoints](../integrations/openai-endpoints.md) | Expose agents via Chat Completions or Responses APIs | OpenAI-compatible clients |
-| [Durable Extension](../integrations/durable-extension.md) | Make C# and Python agents and workflows durable on Azure Functions or self-hosted compute | Long-running, reliable workloads |
-| [AG-UI Protocol](../integrations/ag-ui/index.md) | Build web-based AI agent applications | Web frontends |
+| [A2A Protocol](../hosting/self-hosting/a2a/server.md) | Expose agents via the Agent-to-Agent protocol | Multi-agent systems |
+| [OpenAI-Compatible Endpoints](../hosting/self-hosting/openai-endpoints.md) | Expose agents via Chat Completions or Responses APIs | OpenAI-compatible clients |
+| [Durable Extension](../hosting/azure-functions.md) | Make C# and Python agents and workflows durable on Azure Functions or self-hosted compute | Long-running, reliable workloads |
+| [AG-UI Protocol](../integrations/by-component/ui/ag-ui/index.md) | Build web-based AI agent applications | Web frontends |
 
 :::zone pivot="programming-language-csharp"
 
@@ -28,7 +28,7 @@ Once you've built your agent, you need to host it so users and other agents can 
 
 The Agent Framework provides hosting libraries that enable you to integrate AI agents into ASP.NET Core applications. These libraries simplify registering, configuring, and exposing agents through various protocols.
 
-As described in the [Agents Overview](../agents/index.md), `AIAgent` is the fundamental concept of the Agent Framework. It defines an "LLM wrapper" that processes user inputs, makes decisions, calls tools, and performs additional work to execute actions and generate responses. Exposing AI agents from your ASP.NET Core application is not trivial. The hosting libraries solve this by registering AI agents in a dependency injection container, allowing you to resolve and use them in your application services. They also enable you to manage agent dependencies, such as tools and session storage, from the same container. Agents can be hosted alongside your application infrastructure, independent of the protocols they use. Similarly, workflows can be hosted and leverage your application's common infrastructure.
+As described in [Agents](../concepts/agents/index.md), `AIAgent` is the fundamental agent abstraction in Agent Framework. It defines an "LLM wrapper" that processes user inputs, makes decisions, calls tools, and performs additional work to execute actions and generate responses. Exposing AI agents from your ASP.NET Core application is not trivial. The hosting libraries solve this by registering AI agents in a dependency injection container, allowing you to resolve and use them in your application services. They also enable you to manage agent dependencies, such as tools and session storage, from the same container. Agents can be hosted alongside your application infrastructure, independent of the protocols they use. Similarly, workflows can be hosted and leverage your application's common infrastructure.
 
 ### Core Hosting Library
 
@@ -234,18 +234,19 @@ http.ListenAndServe(":5000", mux)
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Agents Overview](../agents/index.md)
+> [Agents](../concepts/agents/index.md)
 
 **Go deeper:**
 
-- [A2A Protocol](../integrations/a2a.md) — expose and consume agents via A2A
-- [Durable Extension](../integrations/durable-extension.md) — durable C# and Python agent and workflow hosting
-- [AG-UI Protocol](../integrations/ag-ui/index.md) — web-based agent UIs
+- [A2A agent service](../integrations/by-component/agent-services/a2a.md) — consume remote A2A agents
+- [A2A hosting](../hosting/self-hosting/a2a/server.md) — expose Agent Framework agents through A2A
+- [Durable Extension](../hosting/azure-functions.md) — durable C# and Python agent and workflow hosting
+- [AG-UI Protocol](../integrations/by-component/ui/ag-ui/index.md) — web-based agent UIs
 - [Hosting overview](../hosting/index.md) — choose Foundry Hosted Agents, self-hosting, or durable hosting
 - [Foundry Hosted Agents docs](/azure/ai-foundry/agents/concepts/hosted-agents) — understand hosted agents in Microsoft Foundry
 - [Foundry Hosted Agents sample (Python)](https://github.com/microsoft-foundry/foundry-samples/tree/main/samples/python/hosted-agents/agent-framework) — run an end-to-end Agent Framework hosted-agent sample
 
 ## See also
 
-- [Agents Overview](../agents/index.md)
-- [Workflows](../workflows/index.md)
+- [Agents](../concepts/agents/index.md)
+- [Workflows](../concepts/workflows/index.md)

@@ -12,7 +12,7 @@ ms.service: agent-framework
 
 The [previous page](agents-as-tools.md) showed how to compose agents within a single process — one agent calls another as a function tool, and the framework handles the rest. That pattern works well when all your agents live in the same application, share the same runtime, and are maintained by the same team.
 
-But real-world agent systems often need to communicate across boundaries. **Agent-to-Agent (A2A)** is an [open protocol](https://a2a-protocol.org/latest/) designed for exactly this. It defines a standard way for agents to discover each other, exchange messages, and coordinate on tasks — over HTTP, across any boundary, in any language or framework. Agent Framework provides [built-in A2A integration](../integrations/a2a.md) so you can host and call A2A-compliant agents with minimal setup.
+But real-world agent systems often need to communicate across boundaries. **Agent-to-Agent (A2A)** is an [open protocol](https://a2a-protocol.org/latest/) designed for exactly this. It defines a standard way for agents to discover each other, exchange messages, and coordinate on tasks — over HTTP, across any boundary, in any language or framework. Agent Framework provides an [A2A agent service](../integrations/by-component/agent-services/a2a.md) for calling remote agents and [A2A hosting](../hosting/self-hosting/a2a/server.md) for exposing agents.
 
 ## When to use this
 
@@ -45,5 +45,6 @@ Now that your agents can communicate across any boundary, the final step in the 
 
 **Go deeper:**
 
-- [A2A Integration](../integrations/a2a.md) — implementation guide for hosting and calling A2A agents
+- [A2A agent service](../integrations/by-component/agent-services/a2a.md) — discover and invoke remote A2A agents
+- [A2A hosting](../hosting/self-hosting/a2a/server.md) — expose Agent Framework agents through A2A
 - [Agents as Tools](agents-as-tools.md) — the simpler in-process composition pattern

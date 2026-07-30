@@ -49,8 +49,8 @@ You'll create a workflow that:
 ### Concepts Covered
 
 - [Agents in Workflows](./agents-in-workflows.md)
-- [Direct Edges](./edges.md#direct-edges)
-- [Workflow Builder](./index.md)
+- [Direct edges](../concepts/workflows/edges.md#direct-edges)
+- [Workflow Builder](../concepts/workflows/builder-and-execution.md)
 
 ## Prerequisites
 
@@ -219,8 +219,8 @@ You'll create a workflow that:
 ### Concepts Covered
 
 - [Agents in Workflows](./agents-in-workflows.md)
-- [Direct Edges](./edges.md#direct-edges)
-- [Workflow Builder](./index.md)
+- [Direct edges](../concepts/workflows/edges.md#direct-edges)
+- [Workflow Builder](../concepts/workflows/builder-and-execution.md)
 
 ## Prerequisites
 
@@ -353,8 +353,8 @@ You'll create a workflow that:
 ### Concepts Covered
 
 - [Agents in Workflows](./agents-in-workflows.md)
-- [Direct Edges](./edges.md#direct-edges)
-- [Workflow Builder](./index.md)
+- [Direct edges](../concepts/workflows/edges.md#direct-edges)
+- [Workflow Builder](../concepts/workflows/builder-and-execution.md)
 
 ## Prerequisites
 

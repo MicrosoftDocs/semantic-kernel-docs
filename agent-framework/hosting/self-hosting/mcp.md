@@ -73,7 +73,7 @@ For the complete set of runnable servers — including the FastMCP variant that 
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Learn about A2A hosting](a2a.md)
+> [Learn about A2A hosting](a2a/index.md)
 
 **Go deeper:**
 

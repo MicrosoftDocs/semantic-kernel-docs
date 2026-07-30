@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: reference
 ms.author: edvan
-ms.date: 07/01/2026
+ms.date: 07/30/2026
 ms.service: agent-framework
 ---
 
@@ -328,10 +328,15 @@ These are wrappers of the OpenTelemetry API that return a tracer or meter from t
 
 The following environment variables control Agent Framework observability:
 
-- `ENABLE_INSTRUMENTATION` - Default is `false`, set to `true` to enable OpenTelemetry instrumentation.
+- `ENABLE_INSTRUMENTATION` - Default is `true`; set to `false` to disable OpenTelemetry instrumentation.
 - `ENABLE_SENSITIVE_DATA` - Default is `false`, set to `true` to enable logging of sensitive data (prompts, responses, function call arguments, and results). Be careful with this setting as it might expose sensitive data.
 - `ENABLE_CONSOLE_EXPORTERS` - Default is `false`, set to `true` to enable console output for telemetry.
 - `VS_CODE_EXTENSION_PORT` - Port for AI Toolkit or Microsoft Foundry VS Code extension integration.
+
+Agent Framework also adds its package and version to the User-Agent of supported client requests. Approved Microsoft Foundry and Azure OpenAI request paths can include a process-wide feature-usage token that encodes framework feature categories, not prompt or response content. Set these variables before starting the process:
+
+- `AGENT_FRAMEWORK_FEATURE_MASK_DISABLED=true` - Disables only the feature-usage token and keeps the package/version User-Agent.
+- `AGENT_FRAMEWORK_USER_AGENT_DISABLED=true` - Disables the entire Agent Framework User-Agent contribution, including the feature token.
 
 > [!WARNING]
 > Sensitive information includes prompts, responses, and more, and should only be enabled in development or test environments. It is not recommended to enable this in production as it may expose sensitive data.
@@ -633,6 +638,73 @@ The middleware emits spans with attributes including:
 > See the [full sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/agents/step08_observability/main.go) for a complete runnable example.
 
 ::: zone-end
+
+<a id="use-observability-with-harnessed-agent"></a>
+
+## Use observability with Harnessed Agent
+
+::: zone pivot="programming-language-csharp"
+
+For a plain agent, add OpenTelemetry to the chat-client or agent pipeline with `UseOpenTelemetry` or `WithOpenTelemetry`, as shown earlier. A `HarnessAgent` adds both chat-client and agent OpenTelemetry instrumentation by default:
+
+```csharp
+using Microsoft.Agents.AI;
+using OpenTelemetry;
+using OpenTelemetry.Trace;
+
+const string SourceName = "MyApplication.Harness";
+
+using var tracerProvider = Sdk.CreateTracerProviderBuilder()
+    .AddSource(SourceName)
+    .AddOtlpExporter()
+    .Build();
+
+AIAgent agent = chatClient.AsHarnessAgent(new HarnessAgentOptions
+{
+    OpenTelemetrySourceName = SourceName,
+});
+```
+
+`OpenTelemetrySourceName` defaults to `Experimental.Microsoft.Agents.AI`. The name passed to `AddSource` must match it. Set `DisableOpenTelemetry = true` to omit both Harness-added instrumentation layers.
+
+The Harness configures instrumentation, but you still own the `TracerProvider`, exporters, credentials, flushing, and shutdown. Don't pre-instrument the same chat client and then leave Harness instrumentation enabled unless you intentionally want duplicate spans.
+
+Telemetry contains metadata by default. Setting `OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=true` also records prompts, responses, tool arguments, and tool results; only enable it when the exporter and retention policy are appropriate for that data.
+
+`HarnessAgent` is available from the `Microsoft.Agents.AI.Harness` package.
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+Plain `Agent` instances already include the telemetry layer; configure OpenTelemetry providers and exporters with `configure_otel_providers()` or your own OpenTelemetry SDK setup. `create_harness_agent` uses the same global configuration and assigns a Harness-specific provider name:
+
+```python
+from agent_framework import create_harness_agent
+from agent_framework.observability import configure_otel_providers
+
+configure_otel_providers()
+
+agent = create_harness_agent(
+    client=client,
+    otel_provider_name="my.application.harness",
+)
+```
+
+`otel_provider_name` controls the provider name recorded on Harness telemetry. It defaults to `microsoft.agent_framework.harness`; it doesn't configure an exporter or telemetry destination. Instrumentation is enabled by default, sensitive-data capture is disabled by default, and no exporter is installed or configured automatically.
+
+OpenTelemetry providers are process-wide resources. Configure them once, secure exporter credentials and endpoints, and flush or shut them down according to the OpenTelemetry SDK and exporter you selected. Set `ENABLE_INSTRUMENTATION=false` or call `disable_instrumentation()` when telemetry must be disabled. Enabling `ENABLE_SENSITIVE_DATA` adds raw messages, tool arguments, and tool results.
+
+`create_harness_agent` is released in `agent-framework-core`.
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+A packaged Go Harness isn't currently available. Configure the OpenTelemetry middleware directly on a plain Go agent as shown earlier.
+
+::: zone-end
+
 ## Next steps
 
 > [!div class="nextstepaction"]

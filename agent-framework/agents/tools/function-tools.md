@@ -20,7 +20,7 @@ This tutorial step shows you how to use function tools with an agent, where the 
 
 ## Prerequisites
 
-For prerequisites and installing NuGet packages, see the [Create and run a simple agent](../running-agents.md) step in this tutorial.
+For prerequisites and installing NuGet packages, see the [Create and run a simple agent](../../concepts/agents/running-agents.md) step in this tutorial.
 
 ## Create the agent with function tools
 
@@ -78,7 +78,7 @@ Console.WriteLine(await agent.RunAsync("What is the weather like in Amsterdam?")
 
 ## Prerequisites
 
-For prerequisites and installing Python packages, see the [Create and run a simple agent](../running-agents.md) step in this tutorial.
+For prerequisites and installing Python packages, see the [Create and run a simple agent](../../concepts/agents/running-agents.md) step in this tutorial.
 
 ## Create the agent with function tools
 
@@ -130,7 +130,7 @@ Use normal function parameters for values the model should supply. Use `Function
 
 :::code language="python" source="~/../agent-framework-code/python/samples/02-agents/tools/function_tool_with_kwargs.py" range="3-9,28-59":::
 
-For more detail on `ctx.kwargs`, `ctx.session`, and function middleware, see [Runtime Context](../middleware/runtime-context.md).
+For more detail on `ctx.kwargs`, `ctx.session`, and function middleware, see [Runtime Context](../../concepts/agents/middleware/runtime-context.md).
 
 ### Create declaration-only tools
 
@@ -290,6 +290,93 @@ Use `shelltool.ModeStateless` when each call should run in a fresh shell. Use `s
 > See the [function tools sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/agents/step03_using_function_tools/main.go), the [agent as tool sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/agents/step12_as_function_tool/main.go), and the [shell with environment sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/agents/step21_shell_with_environment/main.go) for complete examples.
 
 ::: zone-end
+
+<a id="use-function-tools-with-harnessed-agent"></a>
+
+## Use function tools with Harnessed Agent
+
+A plain agent uses the tools you pass during agent construction, and you compose
+any additional providers or middleware yourself. A harnessed agent uses the same
+function tools, but preconfigures the function-invocation pipeline,
+per-service-call history persistence, tool-approval support, and other harness
+capabilities.
+
+::: zone pivot="programming-language-csharp"
+
+Pass function tools through `HarnessAgentOptions.ChatOptions.Tools` when you
+create a `HarnessAgent` with `AsHarnessAgent`:
+
+```csharp
+using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
+
+AIAgent agent = chatClient.AsHarnessAgent(new HarnessAgentOptions
+{
+    ChatOptions = new ChatOptions
+    {
+        Instructions = "You are a helpful assistant.",
+        Tools = [AIFunctionFactory.Create(GetWeather)],
+    },
+});
+
+AgentSession session = await agent.CreateSessionAsync();
+AgentResponse response = await agent.RunAsync(
+    "What is the weather like in Amsterdam?",
+    session);
+```
+
+`HarnessAgent` configures `FunctionInvokingChatClient` automatically. Set
+`HarnessAgentOptions.MaximumIterationsPerRequest` to override its
+function-invocation limit; the default `null` uses the
+`FunctionInvokingChatClient` default. The harness also adds
+`HostedWebSearchTool` by default, so set `DisableWebSearch = true` if the agent
+should expose only the tools in `ChatOptions.Tools`.
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+Pass either one tool or a sequence of tools to the `tools` parameter of `create_harness_agent`:
+
+```python
+from agent_framework import create_harness_agent
+
+agent = create_harness_agent(
+    client=client,
+    agent_instructions="You are a helpful assistant.",
+    tools=get_weather,
+)
+
+session = agent.create_session()
+response = await agent.run(
+    "What is the weather like in Amsterdam?",
+    session=session,
+)
+print(response.text)
+```
+
+The factory configures automatic function invocation and per-service-call
+history persistence. Functions decorated with `@tool` use
+`approval_mode="never_require"` by default. `disable_web_search=False` also
+adds the client's web-search tool when the client supports it; set
+`disable_web_search=True` to omit it.
+
+The harness installs `ToolApprovalMiddleware` by default
+(`disable_tool_auto_approval=False`), and that middleware requires an
+`AgentSession` for each run. Pass `session=agent.create_session()` as shown, or
+explicitly set `disable_tool_auto_approval=True` if you don't need the harness
+approval middleware.
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+A packaged Go harness isn't currently available. Add function tools to
+`agent.Config.Tools` and compose the required middleware and context providers
+directly.
+
+::: zone-end
+
 ## Next steps
 
 > [!div class="nextstepaction"]

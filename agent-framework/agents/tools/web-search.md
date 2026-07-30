@@ -14,7 +14,7 @@ ms.service: agent-framework
 Web Search allows agents to search the web for up-to-date information. This tool enables agents to answer questions about current events, find documentation, and access information beyond their training data.
 
 > [!NOTE]
-> Web Search availability depends on the underlying agent provider. See [Providers Overview](../providers/index.md) for provider-specific support.
+> Web Search availability depends on the underlying agent provider. See [Providers Overview](../../integrations/by-component/model-providers/index.md) for provider-specific support.
 
 :::zone pivot="programming-language-csharp"
 
@@ -28,16 +28,16 @@ using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
 
 // Requires: dotnet add package Microsoft.Agents.AI.Foundry --prerelease
-var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT")
-    ?? throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
-var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
+var endpoint = Environment.GetEnvironmentVariable("FOUNDRY_PROJECT_ENDPOINT")
+    ?? throw new InvalidOperationException("FOUNDRY_PROJECT_ENDPOINT is not set.");
+var deploymentName = Environment.GetEnvironmentVariable("FOUNDRY_MODEL") ?? "gpt-5.4-mini";
 
-// Create an agent with the web search (Bing grounding) tool
+// Create an agent with hosted web search.
 AIAgent agent = new AIProjectClient(new Uri(endpoint), new DefaultAzureCredential())
     .AsAIAgent(
         model: deploymentName,
         instructions: "You are a helpful assistant that can search the web for current information.",
-        tools: [new WebSearchToolDefinition()]);
+        tools: [new HostedWebSearchTool()]);
 
 Console.WriteLine(await agent.RunAsync("What is the current weather in Seattle?"));
 ```
@@ -123,6 +123,76 @@ a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(m
 > Web search is a hosted tool — the search is performed by the AI service, not locally.
 
 :::zone-end
+
+<a id="use-web-search-with-harnessed-agent"></a>
+
+## Use web search with Harnessed Agent
+
+:::zone pivot="programming-language-csharp"
+
+For a plain agent, add `HostedWebSearchTool` to the agent's tools, as shown earlier. `HarnessAgent` adds one `HostedWebSearchTool` by default, so no tool registration is required:
+
+```csharp
+using Microsoft.Agents.AI;
+
+AIAgent agent = chatClient.AsHarnessAgent(new HarnessAgentOptions
+{
+    ChatOptions = new()
+    {
+        Instructions = "Use web search for current information and cite the sources you used.",
+    },
+});
+```
+
+Set `DisableWebSearch = true` when the selected provider doesn't support hosted web search or when you want to register a provider-specific search tool yourself through `ChatOptions.Tools`. If you add your own web-search tool without disabling the default, the agent receives both tools.
+
+Web search is hosted by the model provider; there is no local search-client lifecycle for the Harness to manage. Availability, supported models, search parameters, data residency, and billing depend on the `IChatClient` provider. Unsupported clients can reject the hosted tool when the request is sent.
+
+Treat search queries and results as data crossing an external trust boundary. Don't include secrets in queries, and treat retrieved pages as untrusted content that can contain indirect prompt injection. Verify important claims and citations before taking actions.
+
+`HarnessAgent` is available from the `Microsoft.Agents.AI.Harness` package.
+
+:::zone-end
+
+:::zone pivot="programming-language-python"
+
+For a plain agent, call `client.get_web_search_tool(...)` and pass the returned tool to `Agent`, as shown earlier. `create_harness_agent` calls `client.get_web_search_tool()` with no arguments by default when the client implements `SupportsWebSearchTool`:
+
+```python
+from agent_framework import create_harness_agent
+
+agent = create_harness_agent(client=client)
+```
+
+If the client doesn't implement `SupportsWebSearchTool`, the factory logs a warning and continues without web search. Set `disable_web_search=True` to suppress automatic registration and the warning.
+
+To pass provider-specific settings, disable the default and register the configured tool explicitly:
+
+```python
+agent = create_harness_agent(
+    client=client,
+    disable_web_search=True,
+    tools=[
+        client.get_web_search_tool(
+            user_location={"city": "Seattle", "country": "US"},
+            search_context_size="medium",
+        )
+    ],
+)
+```
+
+The provider owns hosted-search execution and lifecycle. Supported parameters, models, data handling, and billing depend on the client implementation. Don't put secrets in queries, treat retrieved content as untrusted input, and verify important claims and citations before taking actions.
+
+`create_harness_agent` is released in `agent-framework-core`; web search remains available only through clients that implement `SupportsWebSearchTool`.
+
+:::zone-end
+
+:::zone pivot="programming-language-go"
+
+A packaged Go Harness isn't currently available. Add `hostedtool.WebSearch` to a plain Go agent as shown earlier.
+
+:::zone-end
+
 ## Next steps
 
 > [!div class="nextstepaction"]

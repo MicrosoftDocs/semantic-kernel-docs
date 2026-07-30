@@ -56,7 +56,7 @@ The sample's file-backed storage is for local development. Use durable storage w
 > [!IMPORTANT]
 > Treat `previous_response_id` and `conversation_id` as untrusted input. Authenticate and authorize the caller before using either ID to load or save a session or checkpoint.
 
-For the broader wire format, see [OpenAI-compatible endpoints](../../integrations/openai-endpoints.md).
+For the broader wire format, see [OpenAI-compatible endpoints](openai-endpoints.md).
 
 ## Next steps
 
@@ -66,7 +66,7 @@ For the broader wire format, see [OpenAI-compatible endpoints](../../integration
 **Go deeper:**
 
 - [Self-hosting overview](index.md)
-- [A2A](a2a.md)
+- [A2A](a2a/index.md)
 - [MCP](mcp.md)
 - [Foundry Hosted Agents](../foundry-hosted-agent.md)
 

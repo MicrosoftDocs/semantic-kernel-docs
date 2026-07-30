@@ -61,7 +61,7 @@ foreach (WorkflowEvent evt in run.NewEvents)
 
 Define workflow steps (executors) and connect them with edges:
 
-:::code language="python" source="~/../agent-framework-code/python/samples/01-get-started/07_first_graph_workflow.py" id="create_workflow" highlight="26":::
+:::code language="python" source="~/../agent-framework-code/python/samples/01-get-started/07_first_graph_workflow.py" id="create_workflow" highlight="22":::
 
 Build and run the workflow:
 
@@ -136,6 +136,6 @@ func main() {
 
 **Go deeper:**
 
-- [Workflows overview](../workflows/index.md) — understand workflow architecture
+- [Workflows](../concepts/workflows/index.md) — understand workflow architecture
 - [Sequential workflows](../workflows/orchestrations/sequential.md) — linear step-by-step patterns
 - [Agents in workflows](../workflows/agents-in-workflows.md) — using agents as workflow steps

@@ -31,10 +31,8 @@
       "agent-framework/migration-guide/**/*.yml": "180-days",
       "agent-framework/overview/*.md": "180-days",
       "agent-framework/overview/*.yml": "180-days",
-      "agent-framework/devui/**/*.md": "180-days",
-      "agent-framework/devui/**/*.yml": "180-days",
-      "agent-framework/integrations/*.md": "180-days",
-      "agent-framework/integrations/*.yml": "180-days",
+      "agent-framework/integrations/**/*.md": "180-days",
+      "agent-framework/integrations/**/*.yml": "180-days",
       "agent-framework/support/**/*.md": "180-days",
       "agent-framework/support/**/*.yml": "180-days"
     },
@@ -81,8 +79,6 @@
         "support/**/*.yml": "ce-skilling-ai-copilot",
         "tutorials/**/*.md": "ce-skilling-ai-copilot",
         "tutorials/**/*.yml": "ce-skilling-ai-copilot",
-        "devui/**/*.md": "ce-skilling-ai-copilot",
-        "devui/**/*.yml": "ce-skilling-ai-copilot",
         "index.yml": "ce-skilling-ai-copilot"        
       },
       "ms.update-cycle": {
@@ -98,8 +94,6 @@
         "support/**/*.yml": "180-days",
         "tutorials/**/*.md": "180-days",
         "tutorials/**/*.yml": "180-days",
-        "devui/**/*.md": "180-days",
-        "devui/**/*.yml": "180-days",
         "index.yml": "180-days"
       }
     },

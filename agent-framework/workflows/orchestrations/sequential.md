@@ -368,7 +368,7 @@ This is useful for translation pipelines, progressive refinement, and other scen
 For a complete example, see [sequential_chain_only_agent_responses.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/orchestrations/sequential_chain_only_agent_responses.py) in the Agent Framework repository.
 
 > [!TIP]
-> For more fine-grained control over context flow — including custom filter functions — see [Context Modes](../advanced/agent-executor.md#context-modes) in the Agent Executor reference.
+> For more fine-grained control over context flow — including custom filter functions — see [Context Modes](../../concepts/workflows/advanced/agent-executor.md#context-modes) in the Agent Executor reference.
 
 ## Intermediate Outputs
 

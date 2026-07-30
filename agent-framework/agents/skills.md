@@ -90,6 +90,102 @@ Working with skills involves three building blocks:
 
 The following sections show how to create skills of each source type, then how to combine sources and construct a provider from them.
 
+## Use Agent Skills with Harnessed Agent
+
+With a plain agent, create a skills provider, add it to the agent's context
+providers, and compose tool-approval middleware when needed. A harnessed agent
+can create or include the provider as part of its standard setup.
+
+:::zone pivot="programming-language-csharp"
+
+`HarnessAgent` includes `AgentSkillsProvider` by default and discovers file-based
+skills from `Directory.GetCurrentDirectory()`. To use a different source, set
+`HarnessAgentOptions.AgentSkillsSource`:
+
+```csharp
+using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
+
+AIAgent agent = chatClient.AsHarnessAgent(new HarnessAgentOptions
+{
+    AgentSkillsSource = new AgentFileSkillsSource(
+        Path.Combine(AppContext.BaseDirectory, "skills")),
+    ToolApprovalAgentOptions = new ToolApprovalAgentOptions
+    {
+        // Auto-approve load_skill and read_skill_resource, but not run_skill_script.
+        AutoApprovalRules = [AgentSkillsProvider.ReadOnlyToolsAutoApprovalRule],
+    },
+    ChatOptions = new ChatOptions
+    {
+        Instructions = "Use the available skills when they match the task.",
+    },
+});
+```
+
+`DisableAgentSkillsProvider` defaults to `false`. Set it to `true` to remove the
+built-in provider. `AgentSkillsSource` replaces the default current-directory
+source, but it doesn't expose `AgentSkillsProviderOptions`. If you need provider
+options such as `DisableLoadSkillApproval`, disable the built-in provider and
+add your configured `AgentSkillsProvider` through
+`HarnessAgentOptions.AIContextProviders`.
+
+To run scripts from file-based skills, pass an `AgentFileSkillScriptRunner`
+delegate as the second `AgentFileSkillsSource` constructor argument. Without a
+runner, script execution fails when requested.
+
+All three skill tools require approval by default. The harness tool-approval
+middleware is enabled by default, but its default options don't auto-approve any
+tool. Use `AgentSkillsProvider.ReadOnlyToolsAutoApprovalRule` or
+`AgentSkillsProvider.AllToolsAutoApprovalRule` only for skill sources you trust.
+
+:::zone-end
+
+:::zone pivot="programming-language-python"
+
+Agent Skills are opt-in for `create_harness_agent`. Pass `skills_paths` for
+file-based discovery:
+
+```python
+from pathlib import Path
+
+from agent_framework import SkillsProvider, create_harness_agent
+
+agent = create_harness_agent(
+    client=client,
+    agent_instructions="Use the available skills when they match the task.",
+    skills_paths=Path(__file__).parent / "skills",
+    # Auto-approve load_skill and read_skill_resource, but not run_skill_script.
+    auto_approval_rules=[SkillsProvider.read_only_tools_auto_approval_rule],
+)
+
+session = agent.create_session()
+result = await agent.run("Use the appropriate skill for this task.", session=session)
+```
+
+`skills_paths` accepts one `str` or `Path`, or a sequence of them. When both
+`skills_provider` and `skills_paths` are `None` (the defaults), the harness
+doesn't add a `SkillsProvider`. You can combine both parameters to include
+code-defined and file-based skills.
+
+The `skills_paths` shortcut constructs `SkillsProvider.from_paths()` without a
+`script_runner`. If file-based skills need to execute scripts, create the
+provider yourself with
+`SkillsProvider.from_paths(..., script_runner=...)` and pass it through
+`skills_provider`.
+
+All three skill tools require approval by default. Because the harness installs
+`ToolApprovalMiddleware` by default, pass a session on every run and use
+`auto_approval_rules` for trusted read-only or all-tool approval policies.
+
+:::zone-end
+
+:::zone pivot="programming-language-go"
+
+A packaged Go harness isn't currently available. Register the Go skills provider
+in `agent.Config.ContextProviders` and compose approval middleware directly.
+
+:::zone-end
+
 :::zone pivot="programming-language-csharp"
 
 ## File-based skills
@@ -1969,7 +2065,7 @@ Agent Skills should be treated like any third-party code you bring into your pro
 
 ## When to use skills vs. workflows
 
-Agent Skills and [Agent Framework Workflows](../workflows/index.md) both extend what agents can do, but they work in fundamentally different ways. Choose the approach that best matches your requirements:
+Agent Skills and [Agent Framework Workflows](../concepts/workflows/index.md) both extend what agents can do, but they work in fundamentally different ways. Choose the approach that best matches your requirements:
 
 - **Control** - With a skill, the AI decides how to execute the instructions. This is ideal when you want the agent to be creative or adaptive. With a workflow, you explicitly define the execution path. Use workflows when you need deterministic, predictable behavior.
 - **Resilience** - A skill runs within a single agent turn. If something fails, the entire operation must be retried. Workflows support [checkpointing](../workflows/checkpoints.md), so they can resume from the last successful step after a failure. Choose workflows when the cost of re-executing the entire process is high.
@@ -1982,12 +2078,12 @@ Agent Skills and [Agent Framework Workflows](../workflows/index.md) both extend 
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Agent Harness](./harness.md)
+> [Agent Harness](../concepts/harness.md)
 
 ### Related content
 
 - [Agent Skills specification](https://agentskills.io/)
-- [Agent Harness](./harness.md)
-- [Context Providers](./conversations/context-providers.md)
-- [Running Agents](./running-agents.md)
+- [Agent Harness](../concepts/harness.md)
+- [Context Providers](../concepts/agents/conversations/context-providers.md)
+- [Running Agents](../concepts/agents/running-agents.md)
 - [Tools Overview](./tools/index.md)

@@ -730,7 +730,7 @@ Could you provide photos of the damage to expedite the process?
 
 ## Context Synchronization
 
-Agents in Agent Framework relies on agent sessions ([`AgentSession`](../../agents/conversations/session.md)) to manage context. In a Handoff orchestration, agents **do not** share the same session instance, participants are responsible for ensuring context consistency. To achieve this, participants are designed to broadcast their responses or user inputs received to all others in the workflow whenever they generate a response, making sure all participants have the latest context for their next turn.
+Agents in Agent Framework relies on agent sessions ([`AgentSession`](../../concepts/agents/conversations/session.md)) to manage context. In a Handoff orchestration, agents **do not** share the same session instance, participants are responsible for ensuring context consistency. To achieve this, participants are designed to broadcast their responses or user inputs received to all others in the workflow whenever they generate a response, making sure all participants have the latest context for their next turn.
 
 <p align="center">
     <img src="../resources/images/orchestration-handoff.png" alt="Handoff Context Synchronization">
@@ -740,7 +740,7 @@ Agents in Agent Framework relies on agent sessions ([`AgentSession`](../../agent
 > Tool related contents, including handoff tool calls, are not broadcasted to other agents. Only user and agent messages are synchronized across all participants.
 
 > [!TIP]
-> Agents do not share the same session instance because different [agent types](../../agents/providers/index.md) may have different implementations of the `AgentSession` abstraction. Sharing the same session instance could lead to inconsistencies in how each agent processes and maintains context.
+> Agents do not share the same session instance because different [agent types](../../integrations/by-component/model-providers/index.md) may have different implementations of the `AgentSession` abstraction. Sharing the same session instance could lead to inconsistencies in how each agent processes and maintains context.
 
 After broadcasting the response, the participant then checks whether it needs to handoff the conversation to another agent. If so, it sends a request to the selected agent to take over the conversation. Otherwise, it requests user input or continues autonomously based on the workflow configuration.
 
@@ -783,7 +783,7 @@ After broadcasting the response, the participant then checks whether it needs to
 ::: zone-end
 ## The Handoff Agent Executor
 
-Unlike standard workflows where agents are wrapped in a general-purpose [Agent Executor](../advanced/agent-executor.md), handoff orchestration uses a specialized `HandoffAgentExecutor`. This executor extends the base agent executor with handoff-specific capabilities:
+Unlike standard workflows where agents are wrapped in a general-purpose [Agent Executor](../../concepts/workflows/advanced/agent-executor.md), handoff orchestration uses a specialized `HandoffAgentExecutor`. This executor extends the base agent executor with handoff-specific capabilities:
 
 - **Handoff tool injection** — automatically registers handoff tools on each agent based on the configured handoff rules, so the agent can invoke a tool to transfer control.
 - **Handoff function detection** — inspects the agent's response for handoff tool calls and routes control to the target agent.

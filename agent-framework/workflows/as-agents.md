@@ -661,9 +661,9 @@ Expose complex workflows through APIs that expect the standard Agent interface, 
 
 ## Next Steps
 
-- [Learn how to handle requests and responses](./state.md) in workflows
-- [Learn how to manage state](./state.md) in workflows
+- [Learn how to handle requests and responses](../concepts/workflows/state.md) in workflows
+- [Learn how to manage state](../concepts/workflows/state.md) in workflows
 - [Learn how to create checkpoints and resume from them](./checkpoints.md)
 - [Learn how to monitor workflows](./observability.md)
-- [Learn about state isolation in workflows](./state.md)
+- [Learn about state isolation in workflows](../concepts/workflows/state.md)
 - [Learn how to visualize workflows](./visualization.md)
