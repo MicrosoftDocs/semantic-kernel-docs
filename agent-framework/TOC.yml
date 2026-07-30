@@ -419,6 +419,8 @@ items:
     items:
     - name: Overview
       href: support/upgrade/index.md
+    - name: Python workflow checkpoints in 1.13.0
+      href: support/upgrade/python-1.13.0-workflow-checkpoint-upgrade-guide.md
     - name: Workflow APIs and Request-Response System in Python
       href: support/upgrade/requests-and-responses-upgrade-guide-python.md
     - name: Python Options based on TypedDicts

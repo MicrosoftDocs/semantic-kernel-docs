@@ -46,6 +46,13 @@ Remember that workflows are executed in **supersteps**, as documented in the [wo
 - Pending requests and responses
 - Shared states
 
+::: zone pivot="programming-language-python"
+
+> [!NOTE]
+> Starting in Python version 1.13.0, workflows also create an entry checkpoint before the first superstep to record the workflow input, and another entry checkpoint when responses to request events are delivered. These checkpoints make the complete workflow run replayable. This release includes minor breaking changes for applications that depend on iteration counts, message source IDs, or checkpoint ordering. Existing checkpoints remain supported. For migration details, see [Upgrade Python workflow checkpoints to 1.13.0](../support/upgrade/python-1.13.0-workflow-checkpoint-upgrade-guide.md).
+
+::: zone-end
+
 ## Capturing Checkpoints
 
 ::: zone pivot="programming-language-csharp"
