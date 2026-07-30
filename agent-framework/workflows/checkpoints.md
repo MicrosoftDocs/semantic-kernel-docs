@@ -310,24 +310,26 @@ for evt, err := range run.WatchStream(ctx) {
 
 ## Rehydrating from Checkpoints
 
+A rehydrated workflow must preserve the topology and executor identities of the workflow that created the checkpoint. How executor identity is resolved depends on the SDK and executor type.
+
 ::: zone pivot="programming-language-csharp"
 
 Or you can rehydrate a workflow from a checkpoint into a new run instance.
 
-```csharp
-// Assume we want to resume from the 6th checkpoint
-CheckpointInfo savedCheckpoint = run.Checkpoints[5];
-StreamingRun newRun = await InProcessExecution
-    .ResumeStreamingAsync(newWorkflow, savedCheckpoint, checkpointManager)
-    .ConfigureAwait(false);
-await foreach (WorkflowEvent evt in newRun.WatchStreamAsync().ConfigureAwait(false))
-{
-    if (evt is WorkflowOutputEvent workflowOutputEvt)
-    {
-        Console.WriteLine($"Workflow completed with result: {workflowOutputEvt.Data}");
-    }
-}
-```
+:::code language="csharp" source="~/../agent-framework-code/dotnet/samples/03-workflows/Checkpoint/CheckpointAndRehydrate/Program.cs" id="rehydrate_workflow":::
+
+> [!IMPORTANT]
+> The workflow passed to `ResumeStreamingAsync` must have the same structure and executor identities as the workflow that created the checkpoint. If the workflow contains local `ChatClientAgent` instances that are reconstructed across requests, dependency injection scopes, processes, or deployments, assign each agent a stable `ChatClientAgentOptions.Id`. If an agent also sets a `Name`, keep that `Name` unchanged as well.
+
+For example, assign an ID that represents the agent's logical role:
+
+:::code language="csharp" source="~/../agent-framework-code/dotnet/samples/03-workflows/Orchestration/Handoff/AgentRegistry.cs" id="stable_agent_identity":::
+
+Apply this pattern to every agent that participates in the workflow. Agent IDs must be unique within the workflow and must be reused when reconstructing the same logical agent. Don't use conversation IDs, request IDs, user IDs, personally identifiable information, or secrets as agent IDs.
+
+When an agent `Name` is set, the current .NET workflow executor identity is derived from both its `Name` and `Id`, so changing either value makes the rebuilt workflow incompatible with the checkpoint. Assigning stable values does not repair checkpoints created with different or randomly generated IDs; start a new session and checkpoint lineage instead.
+
+For related scenarios, see [Workflows as Agents](./as-agents.md#session-serialization-and-resumption) and [Handoff orchestration](./orchestrations/handoff.md#define-your-specialized-agents).
 
 ::: zone-end
 

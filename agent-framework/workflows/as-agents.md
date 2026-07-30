@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 07/01/2026
+ms.date: 07/29/2026
 ms.service: agent-framework
 ---
 
@@ -188,6 +188,11 @@ await foreach (var update in workflowAgent.RunStreamingAsync(newMessages, resume
     Console.Write(update.Text);
 }
 ```
+
+> [!IMPORTANT]
+> A serialized workflow-agent session contains the inner workflow checkpoint. If your application reconstructs the workflow before deserializing or running the session, every inner agent must be recreated with the same `ChatClientAgentOptions.Id` (and, if a `Name` is set, the same `Name`).
+>
+> The `id` passed to `workflow.AsAIAgent(...)` identifies only the outer workflow agent. It does not stabilize the executor identities of agents inside the workflow. For configuration guidance, see [Rehydrating from Checkpoints](./checkpoints.md#rehydrating-from-checkpoints).
 
 ::: zone-end
 

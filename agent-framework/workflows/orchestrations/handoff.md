@@ -4,7 +4,7 @@ description: In-depth look at Handoff Orchestrations in Microsoft Agent Framewor
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 07/16/2026
+ms.date: 07/29/2026
 ms.service: agent-framework
 zone_pivot_groups: programming-languages
 ---
@@ -91,21 +91,42 @@ Create domain-specific agents and a triage agent for routing:
 
 ```csharp
 // 2) Create specialized agents
-ChatClientAgent historyTutor = new(client,
-    "You provide assistance with historical queries. Explain important events and context clearly. Only respond about history.",
-    "history_tutor",
-    "Specialist agent for historical questions");
+ChatClientAgent historyTutor = client.AsAIAgent(new ChatClientAgentOptions
+{
+    Id = "history-tutor",
+    Name = "history_tutor",
+    Description = "Specialist agent for historical questions",
+    ChatOptions = new()
+    {
+        Instructions = "You provide assistance with historical queries. Explain important events and context clearly. Only respond about history."
+    }
+});
 
-ChatClientAgent mathTutor = new(client,
-    "You provide help with math problems. Explain your reasoning at each step and include examples. Only respond about math.",
-    "math_tutor",
-    "Specialist agent for math questions");
+ChatClientAgent mathTutor = client.AsAIAgent(new ChatClientAgentOptions
+{
+    Id = "math-tutor",
+    Name = "math_tutor",
+    Description = "Specialist agent for math questions",
+    ChatOptions = new()
+    {
+        Instructions = "You provide help with math problems. Explain your reasoning at each step and include examples. Only respond about math."
+    }
+});
 
-ChatClientAgent triageAgent = new(client,
-    "You determine which agent to use based on the user's homework question. ALWAYS handoff to another agent.",
-    "triage_agent",
-    "Routes messages to the appropriate specialist agent");
+ChatClientAgent triageAgent = client.AsAIAgent(new ChatClientAgentOptions
+{
+    Id = "triage-agent",
+    Name = "triage_agent",
+    Description = "Routes messages to the appropriate specialist agent",
+    ChatOptions = new()
+    {
+        Instructions = "You determine which agent to use based on the user's homework question. ALWAYS handoff to another agent."
+    }
+});
 ```
+
+> [!NOTE]
+> If a Handoff workflow is checkpointed and later rebuilt, reuse the same unique `Id` (and, if set, the same `Name`) for every participating agent. Stable IDs are especially important when agents are scoped or reconstructed for each request because Handoff routing and checkpoint compatibility depend on the inner agent identities. For more information, see [Rehydrating from Checkpoints](../checkpoints.md#rehydrating-from-checkpoints).
 
 ## Configure Handoff Rules
 
