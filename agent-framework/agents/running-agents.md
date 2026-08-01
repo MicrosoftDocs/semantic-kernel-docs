@@ -379,7 +379,7 @@ mixed_message = Message(
 )
 
 # Access content from responses
-response = await agent.run("Describe the image")
+response = await agent.run(mixed_message)
 for message in response.messages:
     for content in message.contents:
         if content.type == "text":
