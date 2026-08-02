@@ -639,35 +639,38 @@ from random import randint
 from typing import Annotated
 
 from agent_framework import (
+    Agent,
     AgentContext,
-    AgentMiddleware,
-    AgentResponse,
     FunctionInvocationContext,
-    FunctionMiddleware,
-    Message,
     tool,
 )
-from agent_framework import Agent
 from agent_framework.foundry import FoundryChatClient
 from azure.identity.aio import AzureCliCredential
+from dotenv import load_dotenv
 from pydantic import Field
 
+# Load environment variables from .env file
+load_dotenv()
+
 """
-Class-based MiddlewareTypes Example
+Function-based MiddlewareTypes Example
 
-This sample demonstrates how to implement middleware using class-based approach by inheriting
-from AgentMiddleware and FunctionMiddleware base classes. The example includes:
+This sample demonstrates how to implement middleware using simple async functions instead of classes.
+The example includes:
 
-- SecurityAgentMiddleware: Checks for security violations in user queries and blocks requests
-  containing sensitive information like passwords or secrets
-- LoggingFunctionMiddleware: Logs function execution details including timing and parameters
+- Security middleware that validates agent requests for sensitive information
+- Logging middleware that tracks function execution timing and parameters
+- Performance monitoring to measure execution duration
 
-This approach is useful when you need stateful middleware or complex logic that benefits
-from object-oriented design patterns.
+Function-based middleware is ideal for simple, stateless operations and provides a more
+lightweight approach compared to class-based middleware. Both agent and function middleware
+can be implemented as async functions that accept context and call_next parameters.
 """
 
 
-# NOTE: approval_mode="never_require" is for sample brevity. Use "always_require" in production; see samples/02-agents/tools/function_tool_with_approval.py and samples/02-agents/tools/function_tool_with_approval_and_sessions.py.
+# NOTE: approval_mode="never_require" is for sample brevity. Use "always_require" in production;
+# see samples/02-agents/tools/function_tool_with_approval.py
+# and samples/02-agents/tools/function_tool_with_approval_and_sessions.py.
 @tool(approval_mode="never_require")
 def get_weather(
     location: Annotated[str, Field(description="The location to get the weather for.")],
@@ -677,56 +680,46 @@ def get_weather(
     return f"The weather in {location} is {conditions[randint(0, 3)]} with a high of {randint(10, 30)}°C."
 
 
-class SecurityAgentMiddleware(AgentMiddleware):
+async def security_agent_middleware(
+    context: AgentContext,
+    call_next: Callable[[], Awaitable[None]],
+) -> None:
     """Agent middleware that checks for security violations."""
+    # Check for potential security violations in the query
+    # For this example, we'll check the last user message
+    last_message = context.messages[-1] if context.messages else None
+    if last_message and last_message.text:
+        query = last_message.text
+        if "password" in query.lower() or "secret" in query.lower():
+            print("[SecurityAgentMiddleware] Security Warning: Detected sensitive information, blocking request.")
+            # Simply don't call call_next() to prevent execution
+            return
 
-    async def process(
-        self,
-        context: AgentContext,
-        call_next: Callable[[], Awaitable[None]],
-    ) -> None:
-        # Check for potential security violations in the query
-        # Look at the last user message
-        last_message = context.messages[-1] if context.messages else None
-        if last_message and last_message.text:
-            query = last_message.text
-            if "password" in query.lower() or "secret" in query.lower():
-                print("[SecurityAgentMiddleware] Security Warning: Detected sensitive information, blocking request.")
-                # Override the result with warning message
-                context.result = AgentResponse(
-                    messages=[Message("assistant", ["Detected sensitive information, the request is blocked."])]
-                )
-                # Simply don't call call_next() to prevent execution
-                return
-
-        print("[SecurityAgentMiddleware] Security check passed.")
-        await call_next()
+    print("[SecurityAgentMiddleware] Security check passed.")
+    await call_next()
 
 
-class LoggingFunctionMiddleware(FunctionMiddleware):
+async def logging_function_middleware(
+    context: FunctionInvocationContext,
+    call_next: Callable[[], Awaitable[None]],
+) -> None:
     """Function middleware that logs function calls."""
+    function_name = context.function.name
+    print(f"[LoggingFunctionMiddleware] About to call function: {function_name}.")
 
-    async def process(
-        self,
-        context: FunctionInvocationContext,
-        call_next: Callable[[], Awaitable[None]],
-    ) -> None:
-        function_name = context.function.name
-        print(f"[LoggingFunctionMiddleware] About to call function: {function_name}.")
+    start_time = time.time()
 
-        start_time = time.time()
+    await call_next()
 
-        await call_next()
+    end_time = time.time()
+    duration = end_time - start_time
 
-        end_time = time.time()
-        duration = end_time - start_time
-
-        print(f"[LoggingFunctionMiddleware] Function {function_name} completed in {duration:.5f}s.")
+    print(f"[LoggingFunctionMiddleware] Function {function_name} completed in {duration:.5f}s.")
 
 
 async def main() -> None:
-    """Example demonstrating class-based middleware."""
-    print("=== Class-based MiddlewareTypes Example ===")
+    """Example demonstrating function-based middleware."""
+    print("=== Function-based MiddlewareTypes Example ===")
 
     # For authentication, run `az login` command in terminal or replace AzureCliCredential with preferred
     # authentication option.
@@ -737,22 +730,22 @@ async def main() -> None:
             name="WeatherAgent",
             instructions="You are a helpful weather assistant.",
             tools=get_weather,
-            middleware=[SecurityAgentMiddleware(), LoggingFunctionMiddleware()],
+            middleware=[security_agent_middleware, logging_function_middleware],
         ) as agent,
     ):
         # Test with normal query
         print("\n--- Normal Query ---")
-        query = "What's the weather like in Seattle?"
+        query = "What's the weather like in Tokyo?"
         print(f"User: {query}")
         result = await agent.run(query)
-        print(f"Agent: {result.text}\n")
+        print(f"Agent: {result.text if result.text else 'No response'}\n")
 
-        # Test with security-related query
+        # Test with security violation
         print("--- Security Test ---")
-        query = "What's the password for the weather service?"
+        query = "What's the secret weather password?"
         print(f"User: {query}")
         result = await agent.run(query)
-        print(f"Agent: {result.text}\n")
+        print(f"Agent: {result.text if result and result.text else 'No response'}\n")
 
 
 if __name__ == "__main__":
@@ -765,100 +758,80 @@ if __name__ == "__main__":
 # Copyright (c) Microsoft. All rights reserved.
 
 import asyncio
-import time
-from collections.abc import Awaitable, Callable
-from random import randint
-from typing import Annotated
+import datetime
 
 from agent_framework import (
-    AgentContext,
-    AgentMiddleware,
-    AgentResponse,
-    FunctionInvocationContext,
-    FunctionMiddleware,
-    Message,
+    Agent,
+    agent_middleware,
+    function_middleware,
     tool,
 )
-from agent_framework import Agent
 from agent_framework.foundry import FoundryChatClient
 from azure.identity.aio import AzureCliCredential
-from pydantic import Field
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 """
-Class-based MiddlewareTypes Example
+Decorator MiddlewareTypes Example
 
-This sample demonstrates how to implement middleware using class-based approach by inheriting
-from AgentMiddleware and FunctionMiddleware base classes. The example includes:
+This sample demonstrates how to use @agent_middleware and @function_middleware decorators
+to explicitly mark middleware functions without requiring type annotations.
 
-- SecurityAgentMiddleware: Checks for security violations in user queries and blocks requests
-  containing sensitive information like passwords or secrets
-- LoggingFunctionMiddleware: Logs function execution details including timing and parameters
+The framework supports the following middleware detection scenarios:
 
-This approach is useful when you need stateful middleware or complex logic that benefits
-from object-oriented design patterns.
+1. Both decorator and parameter type specified:
+   - Validates that they match (e.g., @agent_middleware with AgentContext)
+   - Throws exception if they don't match for safety
+
+2. Only decorator specified:
+   - Relies on decorator to determine middleware type
+   - No type annotations needed - framework handles context types automatically
+
+3. Only parameter type specified:
+   - Uses type annotations (AgentContext, FunctionInvocationContext) for detection
+
+4. Neither decorator nor parameter type specified:
+   - Throws exception requiring either decorator or type annotation
+   - Prevents ambiguous middleware that can't be properly classified
+
+Key benefits of decorator approach:
+- No type annotations needed (simpler syntax)
+- Explicit middleware type declaration
+- Clear intent in code
+- Prevents type mismatches
 """
 
 
-# NOTE: approval_mode="never_require" is for sample brevity. Use "always_require" in production; see samples/02-agents/tools/function_tool_with_approval.py and samples/02-agents/tools/function_tool_with_approval_and_sessions.py.
+# NOTE: approval_mode="never_require" is for sample brevity. Use "always_require" in production;
+# see samples/02-agents/tools/function_tool_with_approval.py
+# and samples/02-agents/tools/function_tool_with_approval_and_sessions.py.
 @tool(approval_mode="never_require")
-def get_weather(
-    location: Annotated[str, Field(description="The location to get the weather for.")],
-) -> str:
-    """Get the weather for a given location."""
-    conditions = ["sunny", "cloudy", "rainy", "stormy"]
-    return f"The weather in {location} is {conditions[randint(0, 3)]} with a high of {randint(10, 30)}°C."
+def get_current_time() -> str:
+    """Get the current time."""
+    return f"Current time is {datetime.datetime.now().strftime('%H:%M:%S')}"
 
 
-class SecurityAgentMiddleware(AgentMiddleware):
-    """Agent middleware that checks for security violations."""
-
-    async def process(
-        self,
-        context: AgentContext,
-        call_next: Callable[[], Awaitable[None]],
-    ) -> None:
-        # Check for potential security violations in the query
-        # Look at the last user message
-        last_message = context.messages[-1] if context.messages else None
-        if last_message and last_message.text:
-            query = last_message.text
-            if "password" in query.lower() or "secret" in query.lower():
-                print("[SecurityAgentMiddleware] Security Warning: Detected sensitive information, blocking request.")
-                # Override the result with warning message
-                context.result = AgentResponse(
-                    messages=[Message("assistant", ["Detected sensitive information, the request is blocked."])]
-                )
-                # Simply don't call call_next() to prevent execution
-                return
-
-        print("[SecurityAgentMiddleware] Security check passed.")
-        await call_next()
+@agent_middleware  # Decorator marks this as agent middleware - no type annotations needed
+async def simple_agent_middleware(context, call_next):  # type: ignore - parameters intentionally untyped to demonstrate decorator functionality
+    """Agent middleware that runs before and after agent execution."""
+    print("[Agent MiddlewareTypes] Before agent execution")
+    await call_next()
+    print("[Agent MiddlewareTypes] After agent execution")
 
 
-class LoggingFunctionMiddleware(FunctionMiddleware):
-    """Function middleware that logs function calls."""
-
-    async def process(
-        self,
-        context: FunctionInvocationContext,
-        call_next: Callable[[], Awaitable[None]],
-    ) -> None:
-        function_name = context.function.name
-        print(f"[LoggingFunctionMiddleware] About to call function: {function_name}.")
-
-        start_time = time.time()
-
-        await call_next()
-
-        end_time = time.time()
-        duration = end_time - start_time
-
-        print(f"[LoggingFunctionMiddleware] Function {function_name} completed in {duration:.5f}s.")
+@function_middleware  # Decorator marks this as function middleware - no type annotations needed
+async def simple_function_middleware(context, call_next):  # type: ignore - parameters intentionally untyped to demonstrate decorator functionality
+    """Function middleware that runs before and after function calls."""
+    print(f"[Function MiddlewareTypes] Before calling: {context.function.name}")  # type: ignore
+    await call_next()
+    print(f"[Function MiddlewareTypes] After calling: {context.function.name}")  # type: ignore
 
 
 async def main() -> None:
-    """Example demonstrating class-based middleware."""
-    print("=== Class-based MiddlewareTypes Example ===")
+    """Example demonstrating decorator-based middleware."""
+    print("=== Decorator MiddlewareTypes Example ===")
 
     # For authentication, run `az login` command in terminal or replace AzureCliCredential with preferred
     # authentication option.
@@ -866,25 +839,16 @@ async def main() -> None:
         AzureCliCredential() as credential,
         Agent(
             client=FoundryChatClient(credential=credential),
-            name="WeatherAgent",
-            instructions="You are a helpful weather assistant.",
-            tools=get_weather,
-            middleware=[SecurityAgentMiddleware(), LoggingFunctionMiddleware()],
+            name="TimeAgent",
+            instructions="You are a helpful time assistant. Call get_current_time when asked about time.",
+            tools=get_current_time,
+            middleware=[simple_agent_middleware, simple_function_middleware],
         ) as agent,
     ):
-        # Test with normal query
-        print("\n--- Normal Query ---")
-        query = "What's the weather like in Seattle?"
+        query = "What time is it?"
         print(f"User: {query}")
         result = await agent.run(query)
-        print(f"Agent: {result.text}\n")
-
-        # Test with security-related query
-        print("--- Security Test ---")
-        query = "What's the password for the weather service?"
-        print(f"User: {query}")
-        result = await agent.run(query)
-        print(f"Agent: {result.text}\n")
+        print(f"Agent: {result.text if result.text else 'No response'}")
 
 
 if __name__ == "__main__":
