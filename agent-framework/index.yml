@@ -77,7 +77,7 @@ productDirectory:
       imageSrc: /agent-framework/media/architecture.svg
       links:
         - url: /agent-framework/workflows/index
-          text: Workflow capabilities overview
+          text: Workflows overview
         - url: /agent-framework/workflows/agents-in-workflows
           text: Agents in workflows
         - url: /agent-framework/workflows/human-in-the-loop

@@ -339,10 +339,10 @@ items:
   items:
   - name: Overview
     href: hosting/index.md
-  - name: Azure Functions and Durable Extension
-    href: hosting/azure-functions.md
   - name: Foundry Hosted Agents
     href: hosting/foundry-hosted-agent.md
+  - name: Azure Functions and Durable Extension
+    href: hosting/azure-functions.md
   - name: Self-hosting
     items:
     - name: Overview
