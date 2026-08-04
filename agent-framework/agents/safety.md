@@ -95,7 +95,7 @@ Sessions (`AgentSession`) represent conversation context and can be serialized f
 
 - Sessions may reference conversation content or session identifiers.
 - **Restoring a session from an untrusted source is equivalent to accepting untrusted input.** A compromised storage backend could alter roles to escalate trust.
-- Store sessions in secure storage with appropriate access controls and enryption.
+- Store sessions in secure storage with appropriate access controls and encryption.
 
 ### Implement resource limits
 
