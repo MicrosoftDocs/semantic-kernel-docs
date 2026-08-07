@@ -641,7 +641,7 @@ The middleware emits spans with attributes including:
 
 <a id="use-observability-with-harnessed-agent"></a>
 
-## Use observability with Harnessed Agent
+## Use observability with Harness Agent
 
 ::: zone pivot="programming-language-csharp"
 

@@ -126,7 +126,7 @@ a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(m
 
 <a id="use-web-search-with-harnessed-agent"></a>
 
-## Use web search with Harnessed Agent
+## Use web search with Harness Agent
 
 :::zone pivot="programming-language-csharp"
 

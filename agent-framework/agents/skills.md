@@ -90,10 +90,10 @@ Working with skills involves three building blocks:
 
 The following sections show how to create skills of each source type, then how to combine sources and construct a provider from them.
 
-## Use Agent Skills with Harnessed Agent
+## Use Agent Skills with Harness Agent
 
 With a plain agent, create a skills provider, add it to the agent's context
-providers, and compose tool-approval middleware when needed. A harnessed agent
+providers, and compose tool-approval middleware when needed. A Harness Agent
 can create or include the provider as part of its standard setup.
 
 :::zone pivot="programming-language-csharp"

@@ -688,9 +688,9 @@ a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(m
 
 :::zone-end
 
-## Use compaction with Harnessed Agent
+## Use compaction with Harness Agent
 
-The manual setup above gives full control over where a compaction provider runs. Harnessed Agent instead wires compaction into its per-service-call history pipeline so long tool-calling loops can compact between model calls.
+The manual setup above gives full control over where a compaction provider runs. Harness Agent instead wires compaction into its per-service-call history pipeline so long tool-calling loops can compact between model calls.
 
 :::zone pivot="programming-language-csharp"
 
@@ -728,7 +728,7 @@ With the token settings, the harness reuses one `ContextWindowCompactionStrategy
 
 :::zone pivot="programming-language-go"
 
-Harnessed Agent isn't currently available in the Go SDK. Register a compaction context provider manually as shown above.
+Harness Agent isn't currently available in the Go SDK. Register a compaction context provider manually as shown above.
 
 :::zone-end
 

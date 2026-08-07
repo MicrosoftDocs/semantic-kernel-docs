@@ -10,7 +10,7 @@ ms.service: agent-framework
 
 # Agent Framework concepts
 
-Agent Framework is built around a couple of foundational concepts, Agents and building on that: Workflows and Harnessed Agents.
+Agent Framework is built around a couple of foundational concepts, Agents and building on that: Workflows and Harness Agents.
 
 These pages go into the underlying concepts and link you to relevant pages describing certain capabilities. Use them to build the mental model behind the feature-oriented Agent Capabilities and Workflow Capabilities guides.
 
@@ -18,7 +18,7 @@ These pages go into the underlying concepts and link you to relevant pages descr
 |---|---|
 | [Agents](agents/index.md) | Agent types, runtime execution, sessions, conversations, middleware, and safety. |
 | [Workflows](workflows/index.md) | Workflow APIs, graph primitives, execution, state, and advanced composition. |
-| [Harnessed Agent](harness.md) | How an opinionated harness assembles agents, providers, middleware, tools, loops, and operational capabilities. |
+| [Agent Harness](harness.md) | How an opinionated harness assembles agents, providers, middleware, tools, loops, and operational capabilities. |
 
 ## Next steps
 

@@ -25,7 +25,7 @@ agent-framework/
 │   ├── workflows/
 │   │   ├── index.md           # Workflows landing
 │   │   └── advanced/
-│   └── harness.md             # Harnessed Agent composition and architecture
+│   └── harness.md             # Agent Harness composition and architecture
 ├── get-started/               # 7-step progressive tutorial
 │   ├── index.md               # Tutorial landing page
 │   ├── your-first-agent.md    # Step 1
@@ -200,7 +200,7 @@ implementation package lives.
 | **R1: Learning intent first** | Put a page where readers look for the thing being taught, not where an incidental API or package lives. | Function tools → `agents/tools/`; Foundry evaluation service → `integrations/by-component/evaluation/microsoft-foundry.md` |
 | **R2: Integrations name an external thing** | Use `integrations/` only when the primary lesson is a named external library, tool, protocol, runtime, or service. Most integrations require a service outside Agent Framework; do not put a generic or built-in capability here merely because a provider-specific sample exists. | Redis, Mem0, Azure AI Search, AG-UI, ChatKit, DevUI, Foundry, OpenAI |
 | **R3: Component then external thing** | Canonical implementation pages use `integrations/by-component/<component>/<external-thing>`. Context providers use one flat page per external provider for all supported patterns. | `integrations/by-component/model-providers/openai.md`, `integrations/by-component/context-providers/redis.md` |
-| **R4: Split concepts from capabilities** | Fundamental runtime, type, conversation, middleware, safety, workflow API, and execution-model guidance lives under `concepts/`. Generic or built-in opt-in features stay under Agent Capabilities or Workflow Capabilities. Built-in does not mean fundamental. Security remains an Agent Capability. Harnessed Agent is a standalone concept that links to its composed capabilities. | `concepts/agents/agent-pipeline.md`, `agents/security.md`, `concepts/harness.md` |
+| **R4: Split concepts from capabilities** | Fundamental runtime, type, conversation, middleware, safety, workflow API, and execution-model guidance lives under `concepts/`. Generic or built-in opt-in features stay under Agent Capabilities or Workflow Capabilities. Built-in does not mean fundamental. Security remains an Agent Capability. Agent Harness is a standalone concept that links to its composed capabilities. | `concepts/agents/agent-pipeline.md`, `agents/security.md`, `concepts/harness.md` |
 | **R5: Inference providers use `model-providers`** | Public inference-provider pages live under `integrations/by-component/model-providers/`, never a generic `providers/` or `chat-clients/` bucket. | OpenAI, Azure OpenAI, Anthropic, Ollama |
 | **R6: Do not clone generic features** | Keep one generic framework page unless an external provider materially changes behavior, authentication, hosted tools, API shape, or runtime semantics. | Function tools stay generic; provider-hosted file search can be provider-specific |
 | **R7: Distinguish memory from storage** | Long-term memory and exact conversation persistence remain distinct patterns even when one provider page documents both. Explain the difference before setup guidance. | `integrations/by-component/context-providers/redis.md`, `integrations/by-component/context-providers/azure-cosmos.md` |

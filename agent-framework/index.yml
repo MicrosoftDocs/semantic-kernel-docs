@@ -16,7 +16,7 @@ metadata:
   hide_bc: true
 
 productDirectory:
-    items:
+  items:
     - title: Overview
       imageSrc: /agent-framework/media/overview.svg
       links:
@@ -53,7 +53,7 @@ productDirectory:
         - url: /agent-framework/concepts/workflows/
           text: Workflows
         - url: /agent-framework/concepts/harness
-          text: Harnessed Agent
+          text: Agent Harness
         - url: /agent-framework/concepts/agents/conversations/
           text: Conversations and memory
         - url: /agent-framework/concepts/agents/middleware/

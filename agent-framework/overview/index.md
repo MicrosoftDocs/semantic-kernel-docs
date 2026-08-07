@@ -17,7 +17,7 @@ Agent Framework brings together four primary areas:
 | | Description |
 |---|---|
 | **[Agents](../concepts/agents/index.md)** | Individual agents that use LLMs to process inputs, call [tools](../agents/tools/index.md) and [MCP servers](../agents/tools/hosted-mcp-tools.md), and generate responses. Supports Microsoft Foundry, Anthropic, Azure OpenAI, OpenAI, Ollama, and [more](../integrations/by-component/model-providers/index.md). |
-| **[Harnessed Agent](../concepts/harness.md)** | An opinionated agent with batteries-included capabilities for long, multi-step tasks — planning and todo tracking, context compaction, file access and memory, don't-ask-again tool approval, and observability. |
+| **[Harness Agent](../concepts/harness.md)** | An opinionated agent with batteries-included capabilities for long, multi-step tasks — planning and todo tracking, context compaction, file access and memory, don't-ask-again tool approval, and observability. |
 | **[Workflows](../concepts/workflows/index.md)** | Functional and graph-based workflows that connect agents and functions through explicit execution paths. |
 | **[Integrations](../integrations/index.md)** | Connections to model providers, agent services, tools, context providers, middleware, evaluation services, and UI frameworks, organized by provider and component. |
 
@@ -196,6 +196,6 @@ and the same is expected for Agent Framework. Microsoft Agent Framework welcomes
 **Go deeper:**
 
 - [Agents](../concepts/agents/index.md) — runtime and execution, agent types, conversations, middleware, and safety
-- [Harnessed Agent](../concepts/harness.md) — architecture, capability composition, and customization for long-running work
+- [Agent Harness](../concepts/harness.md) — architecture, capability composition, and customization for long-running work
 - [Workflows](../concepts/workflows/index.md) — functional and graph APIs, execution, state, and advanced composition
 - [Integrations](../integrations/index.md) — providers and components for models, agent services, tools, context, middleware, evaluation, and UI

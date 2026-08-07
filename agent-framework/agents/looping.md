@@ -17,7 +17,7 @@ ms.service: agent-framework
   | Manual composition              | ✅ |   ✅   | ❌ | Go status guidance   |
   | Evaluators and AI judge         | ✅ |   ✅   | ❌ |                      |
   | Context, progress, and output   | ✅ |   ✅   | ❌ |                      |
-  | Harnessed Agent setup           | ✅ |   ✅   | ❌ | Includes approval/session behavior; Go status guidance |
+  | Harness Agent setup           | ✅ |   ✅   | ❌ | Includes approval/session behavior; Go status guidance |
 -->
 
 # Agent looping
@@ -31,7 +31,7 @@ Always bound autonomous loops. A completion condition can fail, a model can stal
 
 ## Set up looping manually
 
-Use the direct composition API when you want looping without the other Harnessed Agent defaults.
+Use the direct composition API when you want looping without the other Harness Agent defaults.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -180,9 +180,9 @@ The packaged completion conditions and judge integration described on this page 
 
 ::: zone-end
 
-## Use looping with Harnessed Agent
+## Use looping with Harness Agent
 
-Use the Harnessed Agent setup when you also want its preconfigured history, planning, memory, approval, and observability pipeline.
+Use the Harness Agent setup when you also want its preconfigured history, planning, memory, approval, and observability pipeline.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -215,7 +215,7 @@ An empty or `null` `LoopEvaluators` collection leaves the harness single-shot.
 
 `LoopAgent` stops before evaluating its completion condition when an iteration returns a pending tool-approval request. It returns the request to the caller instead of hiding it behind another autonomous iteration. After the caller supplies the approval response through the normal [tool approval](./tools/tool-approval.md) flow, the agent can continue.
 
-`LoopAgent` doesn't add approval handling itself. The Harnessed Agent applies the loop outside `ToolApprovalAgent`, allowing pending approval requests to escape the loop.
+`LoopAgent` doesn't add approval handling itself. The Harness Agent applies the loop outside `ToolApprovalAgent`, allowing pending approval requests to escape the loop.
 
 Reuse the same `AgentSession` across calls to continue the conversation. Loop iterations share that session by default. With `FreshContextPerIteration = true`, `LoopAgent` resets or restores caller-supplied session state where supported. Service-owned conversation storage can retain history when the serialized session contains only a remote conversation identifier.
 
@@ -247,7 +247,7 @@ session = agent.create_session()
 
 `AgentLoopMiddleware` stops before evaluating its continuation predicate when an iteration returns a pending tool-approval request. It returns the request to the caller instead of hiding it behind another autonomous iteration. After the caller supplies the approval response through the normal [tool approval](./tools/tool-approval.md) flow, the agent can continue.
 
-`AgentLoopMiddleware` doesn't add `ToolApprovalMiddleware` itself. The Harnessed Agent places the loop outside its approval middleware, allowing pending approval requests to escape the loop. Create and pass an `AgentSession` on every Harnessed Agent run while tool auto-approval is enabled.
+`AgentLoopMiddleware` doesn't add `ToolApprovalMiddleware` itself. The Harness Agent places the loop outside its approval middleware, allowing pending approval requests to escape the loop. Create and pass an `AgentSession` on every Harness Agent run while tool auto-approval is enabled.
 
 Reuse the same `AgentSession` across calls to continue the conversation. Loop iterations share that session by default. With `fresh_context=True`, the middleware restores the attached session to its pre-loop snapshot between iterations. Service-owned conversation storage can retain history when the serialized session contains only a remote conversation identifier.
 
@@ -256,7 +256,7 @@ Reuse the same `AgentSession` across calls to continue the conversation. Loop it
 ::: zone pivot="programming-language-go"
 
 > [!NOTE]
-> Harnessed Agent looping isn't currently available in Go, so its approval and session behavior doesn't apply.
+> Harness Agent looping isn't currently available in Go, so its approval and session behavior doesn't apply.
 
 ::: zone-end
 
@@ -269,4 +269,4 @@ Reuse the same `AgentSession` across calls to continue the conversation. Loop it
 
 - [Planning and todos](./planning-and-todos.md)
 - [Tool approval](./tools/tool-approval.md)
-- [Harnessed Agent](../concepts/harness.md)
+- [Agent Harness](../concepts/harness.md)

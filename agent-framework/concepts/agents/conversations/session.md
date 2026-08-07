@@ -16,7 +16,7 @@ ms.service: agent-framework
   |----------------------------------|:--:|:------:|:--:|-------|
   | Session state fields             | ✅ |   ✅   | ✅ | SDK-specific state shapes |
   | Session reuse                    | ✅ |   ✅   | ✅ |       |
-  | Harnessed Agent session usage    | ✅ |   ✅   | ❌ | Harnessed Agent isn't available in Go |
+  | Harness Agent session usage    | ✅ |   ✅   | ❌ | Harness Agent isn't available in Go |
   | Existing service conversation ID | ✅ |   ✅   | ❌ |       |
   | Serialization and restoration    | ✅ |   ✅   | ✅ |       |
 -->
@@ -115,9 +115,9 @@ resp, _ = a.RunText(ctx, "Follow-up question.", agent.WithSession(session)).Coll
 
 :::zone-end
 
-## Use sessions with Harnessed Agent
+## Use sessions with Harness Agent
 
-Harnessed Agent uses the same `AgentSession` lifecycle described above. Reuse one session across turns so chat history and session-backed harness features—such as todos, operating mode, file memory, tool approvals, and background-task state—remain connected. Serialize the session when that state must survive a process restart.
+Harness Agent uses the same `AgentSession` lifecycle described above. Reuse one session across turns so chat history and session-backed harness features—such as todos, operating mode, file memory, tool approvals, and background-task state—remain connected. Serialize the session when that state must survive a process restart.
 
 :::zone pivot="programming-language-csharp"
 
@@ -159,7 +159,7 @@ The harness requires per-service-call history persistence, so the configured his
 
 :::zone pivot="programming-language-go"
 
-Harnessed Agent isn't currently available in the Go SDK. Use the regular session pattern shown above.
+Harness Agent isn't currently available in the Go SDK. Use the regular session pattern shown above.
 
 :::zone-end
 

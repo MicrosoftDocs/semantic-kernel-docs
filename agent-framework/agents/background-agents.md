@@ -17,7 +17,7 @@ ms.service: agent-framework
   | Manual composition              | ✅ |   ✅   | ❌ | Go status guidance   |
   | Task lifecycle                  | ✅ |   ✅   | ✅ | Shared               |
   | Manual loop integration         | ✅ |   ✅   | ❌ | Go status guidance   |
-  | Harnessed Agent setup           | ✅ |   ✅   | ❌ | Go status guidance   |
+  | Harness Agent setup           | ✅ |   ✅   | ❌ | Go status guidance   |
   | Security considerations         | ✅ |   ✅   | ✅ | Shared               |
 -->
 
@@ -166,9 +166,9 @@ Automatic background-task loop integration isn't currently available in Go.
 
 ::: zone-end
 
-## Use background agents with Harnessed Agent
+## Use background agents with Harness Agent
 
-Use this setup when you also want the Harnessed Agent's default planning, memory, approval, and observability pipeline.
+Use this setup when you also want the Harness Agent's default planning, memory, approval, and observability pipeline.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -224,7 +224,7 @@ Use `background_agents_instructions` to replace the provider instructions. The P
 ::: zone pivot="programming-language-go"
 
 > [!NOTE]
-> Harnessed Agent background delegation isn't currently available in Go.
+> Harness Agent background delegation isn't currently available in Go.
 
 ::: zone-end
 
@@ -242,4 +242,4 @@ Only register child agents you trust. The parent can send them text derived from
 - [Agent looping](./looping.md)
 - [Background responses](./background-responses.md)
 - [Sessions](../concepts/agents/conversations/session.md)
-- [Harnessed Agent](../concepts/harness.md)
+- [Agent Harness](../concepts/harness.md)

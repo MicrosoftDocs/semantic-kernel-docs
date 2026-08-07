@@ -54,7 +54,7 @@ Looking for the agent-type and SDK-selection guidance previously hosted on this 
 | [Evaluation](evaluation.md) | Measure agent quality, safety, and correctness. |
 | [Agent Security with FIDES](security.md) | Enforce information-flow controls across agent data and tools. |
 
-The [Harnessed Agent](../concepts/harness.md) assembles many of these capabilities into an opinionated operational agent.
+The [Harness Agent](../concepts/harness.md) assembles many of these capabilities into an opinionated operational agent.
 
 ## Next steps
 

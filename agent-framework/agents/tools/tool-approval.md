@@ -443,10 +443,10 @@ When the model requests a tool call, the framework intercepts it and waits for a
 
 <a id="use-tool-approval-with-harnessed-agent"></a>
 
-## Use tool approval with Harnessed Agent
+## Use tool approval with Harness Agent
 
 Plain/manual composition requires an approval-marked tool and an
-approval-response loop. A harnessed agent uses the same approval-marked tools
+approval-response loop. A Harness Agent uses the same approval-marked tools
 and response content, but also installs middleware for queued requests, standing
 "always approve" rules, and optional heuristic auto-approval.
 

@@ -1,5 +1,5 @@
 ---
-title: Harnessed Agent
+title: Agent Harness 
 description: Understand how the Agent Framework Harness composes an agentic runtime and how to create and customize a harness agent.
 zone_pivot_groups: programming-languages
 author: westey-m
@@ -20,7 +20,7 @@ ms.service: agent-framework
   | Sample terminal UX    | ✅ |   ✅   | ❌ | Go status guidance     |
 -->
 
-# Harnessed Agent
+# Agent Harness 
 
 An *agent harness* is the runtime scaffolding that turns a language model into an agent that can perform work. It drives model and tool calls, manages conversation state and context, applies approval policies, and can keep the agent progressing through a multi-step task.
 

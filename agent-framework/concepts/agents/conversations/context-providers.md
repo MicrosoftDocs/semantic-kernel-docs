@@ -16,7 +16,7 @@ ms.service: agent-framework
   |--------------------------------------|:--:|:------:|:--:|-------|
   | Built-in provider configuration      | ✅ |   ✅   | ✅ |       |
   | File-backed memory setup             | ❌ |   ✅   | ❌ | Python sample uses `FileMemoryProvider` directly |
-  | Harnessed Agent provider composition | ✅ |   ✅   | ❌ | Harnessed Agent isn't available in Go |
+  | Harness Agent provider composition | ✅ |   ✅   | ❌ | Harness Agent isn't available in Go |
   | Custom context provider              | ✅ |   ✅   | ✅ | SDK-specific extension APIs |
   | Advanced provider lifecycle override | ✅ |   ❌   | ❌ | C#-specific advanced hooks |
   | Custom history provider              | ❌ |   ✅   | ❌ | Python example |
@@ -101,9 +101,9 @@ a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(m
 
 :::zone-end
 
-## Use context providers with Harnessed Agent
+## Use context providers with Harness Agent
 
-The manual patterns above attach only the providers you choose. Harnessed Agent assembles an ordered provider set when it is created. Use each SDK's construction options to disable or replace defaults and append additional providers.
+The manual patterns above attach only the providers you choose. Harness Agent assembles an ordered provider set when it is created. Use each SDK's construction options to disable or replace defaults and append additional providers.
 
 :::zone pivot="programming-language-csharp"
 
@@ -140,7 +140,7 @@ Use `history_provider`, `todo_provider`, and `mode_provider` to replace those de
 
 :::zone pivot="programming-language-go"
 
-Harnessed Agent isn't currently available in the Go SDK. Add context providers explicitly through `agent.Config.ContextProviders`.
+Harness Agent isn't currently available in the Go SDK. Add context providers explicitly through `agent.Config.ContextProviders`.
 
 :::zone-end
 

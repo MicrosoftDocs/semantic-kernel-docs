@@ -18,7 +18,7 @@ ms.service: agent-framework
   | Manual composition              | ✅ |   ✅   | ❌ | Go status guidance   |
   | Change modes                    | ✅ |   ✅   | ❌ | Go status guidance   |
   | Manual loop integration         | ✅ |   ✅   | ❌ | Go status guidance   |
-  | Harnessed Agent setup           | ✅ |   ✅   | ❌ | Go status guidance   |
+  | Harness Agent setup           | ✅ |   ✅   | ❌ | Go status guidance   |
 -->
 
 # Planning and todos
@@ -28,7 +28,7 @@ Two context providers support long-running work:
 - A **todo provider** stores trackable work items and gives the agent tools to add, complete, remove, and inspect them.
 - An **agent mode provider** stores the current operating mode and gives the agent tools to read or change it.
 
-Compose these providers directly when you only need planning, or use the Harnessed Agent to enable both as part of its broader default pipeline.
+Compose these providers directly when you only need planning, or use the Harness Agent to enable both as part of its broader default pipeline.
 
 ## Todo tools
 
@@ -206,9 +206,9 @@ Todo-driven loop integration isn't currently available in Go.
 
 ::: zone-end
 
-## Use planning and todos with Harnessed Agent
+## Use planning and todos with Harness Agent
 
-Use this setup when you also want the Harnessed Agent's preconfigured history, memory, approval, and observability pipeline.
+Use this setup when you also want the Harness Agent's preconfigured history, memory, approval, and observability pipeline.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -279,7 +279,7 @@ Set `disable_todo` or `disable_mode` to remove a default provider. The Python ha
 ::: zone pivot="programming-language-go"
 
 > [!NOTE]
-> Harnessed Agent planning and todo providers aren't currently available in Go.
+> Harness Agent planning and todo providers aren't currently available in Go.
 
 ::: zone-end
 
@@ -294,7 +294,7 @@ The plan-to-execute confirmation is instruction-level behavior, not a tool-appro
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Understand the Harnessed Agent composition](../concepts/harness.md)
+> [Understand the Agent Harness composition](../concepts/harness.md)
 
 ### Go deeper
 

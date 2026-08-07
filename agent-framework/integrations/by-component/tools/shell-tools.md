@@ -18,7 +18,7 @@ ms.service: agent-framework
   | Local shell                | ✅ |   ✅   | ✅ |                               |
   | Docker shell               | ✅ |   ✅   | ❌ | No dedicated .NET sample      |
   | Environment provider       | ✅ |   ✅   | ✅ |                               |
-  | Harnessed Agent setup      | ✅ |   ✅   | ❌ | Go status guidance            |
+  | Harness Agent setup      | ✅ |   ✅   | ❌ | Go status guidance            |
   | Language availability      | ✅ |   ✅   | ✅ |                               |
 -->
 
@@ -127,7 +127,7 @@ Go provides local shell execution and environment probing through `tool/shelltoo
 
 <a id="use-shell-tools-with-harnessed-agent"></a>
 
-## Use shell tools with Harnessed Agent
+## Use shell tools with Harness Agent
 
 :::zone pivot="programming-language-csharp"
 

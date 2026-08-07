@@ -293,10 +293,10 @@ Use `shelltool.ModeStateless` when each call should run in a fresh shell. Use `s
 
 <a id="use-function-tools-with-harnessed-agent"></a>
 
-## Use function tools with Harnessed Agent
+## Use function tools with Harness Agent
 
 A plain agent uses the tools you pass during agent construction, and you compose
-any additional providers or middleware yourself. A harnessed agent uses the same
+any additional providers or middleware yourself. A Harness Agent uses the same
 function tools, but preconfigures the function-invocation pipeline,
 per-service-call history persistence, tool-approval support, and other harness
 capabilities.

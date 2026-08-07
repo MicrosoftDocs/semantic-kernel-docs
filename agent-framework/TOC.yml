@@ -101,7 +101,7 @@ items:
         href: concepts/workflows/advanced/resettable-executors.md
       - name: Sub-Workflows
         href: concepts/workflows/advanced/sub-workflows.md
-  - name: Harnessed Agent
+  - name: Agent Harness
     href: concepts/harness.md
 - name: Agent Capabilities
   items:
