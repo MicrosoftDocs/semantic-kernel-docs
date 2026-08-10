@@ -20,14 +20,93 @@ items:
     href: get-started/harness.md
   - name: "Step 7: Host Your Agent"
     href: get-started/hosting.md
-- name: Agents
+- name: Concepts
+  expanded: true
+  items:
+  - name: Overview
+    href: concepts/index.md
+  - name: Agents
+    items:
+    - name: Overview
+      href: concepts/agents/index.md
+    - name: Runtime and execution
+      items:
+      - name: Running Agents
+        href: concepts/agents/running-agents.md
+      - name: Agent Pipeline
+        href: concepts/agents/agent-pipeline.md
+    - name: Custom Agents
+      href: concepts/agents/custom-agents.md
+    - name: Conversations & Memory
+      items:
+      - name: Overview
+        href: concepts/agents/conversations/index.md
+      - name: Session
+        href: concepts/agents/conversations/session.md
+      - name: Context Providers
+        href: concepts/agents/conversations/context-providers.md
+      - name: Storage
+        href: concepts/agents/conversations/storage.md
+      - name: Compaction
+        href: concepts/agents/conversations/compaction.md
+      - name: Chat History Memory Provider
+        href: concepts/agents/conversations/chat-history-memory-provider.md
+    - name: Middleware
+      items:
+      - name: Overview
+        href: concepts/agents/middleware/index.md
+      - name: Defining Middleware
+        href: concepts/agents/middleware/defining-middleware.md
+      - name: Chat-Level Middleware
+        href: concepts/agents/middleware/chat-middleware.md
+      - name: Agent vs Run Scope
+        href: concepts/agents/middleware/agent-vs-run-scope.md
+      - name: Termination & Guardrails
+        href: concepts/agents/middleware/termination.md
+      - name: Result Overrides
+        href: concepts/agents/middleware/result-overrides.md
+      - name: Exception Handling
+        href: concepts/agents/middleware/exception-handling.md
+      - name: Shared State
+        href: concepts/agents/middleware/shared-state.md
+      - name: Runtime Context
+        href: concepts/agents/middleware/runtime-context.md
+    - name: Agent Safety
+      href: concepts/agents/safety.md
+  - name: Workflows
+    items:
+    - name: Overview
+      href: concepts/workflows/index.md
+    - name: Functional Workflow API
+      href: concepts/workflows/functional.md
+    - name: Graph-based workflows
+      items:
+      - name: Workflow Builder & Execution
+        href: concepts/workflows/builder-and-execution.md
+      - name: Executors
+        href: concepts/workflows/executors.md
+      - name: Edges
+        href: concepts/workflows/edges.md
+      - name: Events
+        href: concepts/workflows/events.md
+      - name: State Management
+        href: concepts/workflows/state.md
+    - name: Advanced execution
+      items:
+      - name: Agent Executor
+        href: concepts/workflows/advanced/agent-executor.md
+      - name: Execution Modes
+        href: concepts/workflows/advanced/execution-modes.md
+      - name: Resettable Executors
+        href: concepts/workflows/advanced/resettable-executors.md
+      - name: Sub-Workflows
+        href: concepts/workflows/advanced/sub-workflows.md
+  - name: Agent Harness
+    href: concepts/harness.md
+- name: Agent Capabilities
   items:
   - name: Overview
     href: agents/index.md
-  - name: Running Agents
-    href: agents/running-agents.md
-  - name: Agent Pipeline
-    href: agents/agent-pipeline.md
   - name: Multimodal
     href: agents/multimodal.md
   - name: Structured Outputs
@@ -44,14 +123,16 @@ items:
     href: agents/evaluation.md
   - name: Agent Skills
     href: agents/skills.md
-  - name: Agent Harnesses
-    href: agents/harness.md
   - name: CodeAct
     href: agents/code_act.md
-  - name: Agent Safety
-    href: agents/safety.md
   - name: Agent Security (FIDES)
     href: agents/security.md
+  - name: Looping
+    href: agents/looping.md
+  - name: Background agents
+    href: agents/background-agents.md
+  - name: Planning and todos
+    href: agents/planning-and-todos.md
   - name: Tools
     items:
     - name: Overview
@@ -72,180 +153,214 @@ items:
       href: agents/tools/hosted-mcp-tools.md
     - name: Local MCP Tools
       href: agents/tools/local-mcp-tools.md
-  - name: Conversations & Memory
-    items:
-    - name: Overview
-      href: agents/conversations/index.md
-    - name: Session
-      href: agents/conversations/session.md
-    - name: Context Providers
-      href: agents/conversations/context-providers.md
-    - name: Storage
-      href: agents/conversations/storage.md
-    - name: Compaction
-      href: agents/conversations/compaction.md
-  - name: Middleware
-    items:
-    - name: Overview
-      href: agents/middleware/index.md
-    - name: Defining Middleware
-      href: agents/middleware/defining-middleware.md
-    - name: Chat-Level Middleware
-      href: agents/middleware/chat-middleware.md
-    - name: Agent vs Run Scope
-      href: agents/middleware/agent-vs-run-scope.md
-    - name: Termination & Guardrails
-      href: agents/middleware/termination.md
-    - name: Result Overrides
-      href: agents/middleware/result-overrides.md
-    - name: Exception Handling
-      href: agents/middleware/exception-handling.md
-    - name: Shared State
-      href: agents/middleware/shared-state.md
-    - name: Runtime Context
-      href: agents/middleware/runtime-context.md
-  - name: Providers
-    items:
-    - name: Overview
-      href: agents/providers/index.md
-    - name: Azure OpenAI
-      href: agents/providers/azure-openai.md
-    - name: OpenAI
-      href: agents/providers/openai.md
-    - name: Microsoft Foundry
-      href: agents/providers/microsoft-foundry.md
-    - name: Foundry Local
-      href: agents/providers/foundry-local.md
-    - name: Anthropic
-      href: agents/providers/anthropic.md
-    - name: Ollama
-      href: agents/providers/ollama.md
-    - name: GitHub Copilot
-      href: agents/providers/github-copilot.md
-    - name: Copilot Studio
-      href: agents/providers/copilot-studio.md
-    - name: A2A
-      href: agents/providers/agent-to-agent.md
-    - name: Custom Provider
-      href: agents/providers/custom.md
-- name: Workflows
+- name: Workflow Capabilities
   items:
   - name: Overview
     href: workflows/index.md
-  - name: Functional
+  - name: Agents in Workflows
+    href: workflows/agents-in-workflows.md
+  - name: Human-in-the-Loop
+    href: workflows/human-in-the-loop.md
+  - name: Checkpoints & Resuming
+    href: workflows/checkpoints.md
+  - name: Declarative Workflows
+    href: workflows/declarative.md
+  - name: Observability
+    href: workflows/observability.md
+  - name: Workflows as Agents
+    href: workflows/as-agents.md
+  - name: Visualization
+    href: workflows/visualization.md
+  - name: Orchestrations
     items:
-    - name: Functional Workflow API
-      href: workflows/functional.md
-  - name: Graph-based
-    items:
-    - name: Executors
-      href: workflows/executors.md
-    - name: Edges
-      href: workflows/edges.md
-    - name: Events
-      href: workflows/events.md
-    - name: Workflow Builder & Execution
-      href: workflows/workflows.md
-    - name: Agents in Workflows
-      href: workflows/agents-in-workflows.md
-    - name: Human-in-the-Loop
-      href: workflows/human-in-the-loop.md
-    - name: State Management
-      href: workflows/state.md
-    - name: Checkpoints & Resuming
-      href: workflows/checkpoints.md
-    - name: Declarative Workflows
-      href: workflows/declarative.md
-    - name: Observability
-      href: workflows/observability.md
-    - name: Workflows as Agents
-      href: workflows/as-agents.md
-    - name: Visualization
-      href: workflows/visualization.md
-    - name: Orchestrations
-      items:
-      - name: Overview
-        href: workflows/orchestrations/index.md
-      - name: Sequential
-        href: workflows/orchestrations/sequential.md
-      - name: Concurrent
-        href: workflows/orchestrations/concurrent.md
-      - name: Handoff
-        href: workflows/orchestrations/handoff.md
-      - name: Group Chat
-        href: workflows/orchestrations/group-chat.md
-      - name: Magentic
-        href: workflows/orchestrations/magentic.md
-    - name: Advanced
-      items:
-      - name: Agent Executor
-        href: workflows/advanced/agent-executor.md
-      - name: Execution Modes
-        href: workflows/advanced/execution-modes.md
-      - name: Resettable Executors
-        href: workflows/advanced/resettable-executors.md
-      - name: Sub-Workflows
-        href: workflows/advanced/sub-workflows.md
+    - name: Overview
+      href: workflows/orchestrations/index.md
+    - name: Sequential
+      href: workflows/orchestrations/sequential.md
+    - name: Concurrent
+      href: workflows/orchestrations/concurrent.md
+    - name: Handoff
+      href: workflows/orchestrations/handoff.md
+    - name: Group Chat
+      href: workflows/orchestrations/group-chat.md
+    - name: Magentic
+      href: workflows/orchestrations/magentic.md
 - name: Integrations
   items:
   - name: Overview
     href: integrations/index.md
-  - name: Durable Extension
-    href: integrations/durable-extension.md
-  - name: OpenAI-Compatible Endpoints
-    href: integrations/openai-endpoints.md
-  - name: Hyperlight CodeAct
-    href: integrations/hyperlight.md
-  - name: Purview
-    href: integrations/purview.md
-  - name: M365
-    href: integrations/m365.md
-  - name: Neo4j GraphRAG Provider
-    href: integrations/neo4j-graphrag.md
-  - name: Chat History Memory Provider
-    href: integrations/chat-history-memory-provider.md
-  - name: Neo4j Memory Provider
-    href: integrations/neo4j-memory.md
-  - name: A2A Protocol
-    href: integrations/a2a.md
-  - name: AG-UI Protocol
+  - name: By Provider
     items:
     - name: Overview
-      href: integrations/ag-ui/index.md
-    - name: Getting Started
-      href: integrations/ag-ui/getting-started.md
-    - name: Backend Tool Rendering
-      href: integrations/ag-ui/backend-tool-rendering.md
-    - name: Frontend Tool Rendering
-      href: integrations/ag-ui/frontend-tools.md
-    - name: Security Considerations
-      href: integrations/ag-ui/security-considerations.md
-    - name: Workflows
-      href: integrations/ag-ui/workflows.md
-    - name: Human-in-the-Loop
-      href: integrations/ag-ui/human-in-the-loop.md
-    - name: MCP Apps Compatibility
-      href: integrations/ag-ui/mcp-apps.md
-    - name: State Management
-      href: integrations/ag-ui/state-management.md
-    - name: Testing with Dojo
-      href: integrations/ag-ui/testing-with-dojo.md
+      href: integrations/by-provider/index.md
+    - name: Microsoft Foundry
+      href: integrations/by-provider/microsoft-foundry.md
+    - name: Microsoft Azure
+      href: integrations/by-provider/microsoft-azure.md
+    - name: OpenAI
+      href: integrations/by-provider/openai.md
+    - name: Anthropic
+      href: integrations/by-provider/anthropic.md
+    - name: Amazon Web Services
+      href: integrations/by-provider/amazon-web-services.md
+    - name: Google
+      href: integrations/by-provider/google.md
+    - name: Ollama
+      href: integrations/by-provider/ollama.md
+    - name: Mistral
+      href: integrations/by-provider/mistral.md
+  - name: By Component
+    items:
+    - name: Overview
+      href: integrations/by-component/index.md
+    - name: Model Providers
+      items:
+      - name: Overview
+        href: integrations/by-component/model-providers/index.md
+      - name: Azure OpenAI
+        href: integrations/by-component/model-providers/azure-openai.md
+      - name: OpenAI
+        href: integrations/by-component/model-providers/openai.md
+      - name: Microsoft Foundry
+        href: integrations/by-component/model-providers/microsoft-foundry.md
+      - name: Foundry Local
+        href: integrations/by-component/model-providers/foundry-local.md
+      - name: Anthropic
+        href: integrations/by-component/model-providers/anthropic.md
+      - name: Ollama
+        href: integrations/by-component/model-providers/ollama.md
+      - name: Amazon Bedrock
+        href: integrations/by-component/model-providers/amazon-bedrock.md
+      - name: Google Gemini
+        href: integrations/by-component/model-providers/google-gemini.md
+      - name: ONNX
+        href: integrations/by-component/model-providers/onnx.md
+      - name: Dapr
+        href: integrations/by-component/model-providers/dapr.md
+      - name: Mistral
+        href: integrations/by-component/model-providers/mistral.md
+    - name: Agent Services
+      items:
+      - name: Overview
+        href: integrations/by-component/agent-services/index.md
+      - name: Microsoft Foundry
+        href: integrations/by-component/agent-services/foundry.md
+      - name: GitHub Copilot
+        href: integrations/by-component/agent-services/github-copilot.md
+      - name: Copilot Studio
+        href: integrations/by-component/agent-services/copilot-studio.md
+      - name: Anthropic Claude
+        href: integrations/by-component/agent-services/anthropic-claude.md
+      - name: A2A
+        href: integrations/by-component/agent-services/a2a.md
+    - name: Tools
+      items:
+      - name: Overview
+        href: integrations/by-component/tools/index.md
+      - name: Microsoft Foundry Toolbox
+        href: integrations/by-component/tools/foundry-toolbox.md
+      - name: Shell tools
+        href: integrations/by-component/tools/shell-tools.md
+    - name: Context Providers
+      items:
+      - name: Overview
+        href: integrations/by-component/context-providers/index.md
+      - name: Azure AI Search
+        href: integrations/by-component/context-providers/azure-ai-search.md
+      - name: Azure Content Understanding
+        href: integrations/by-component/context-providers/azure-content-understanding.md
+      - name: Azure Cosmos DB
+        href: integrations/by-component/context-providers/azure-cosmos.md
+      - name: Hyperlight
+        href: integrations/by-component/context-providers/hyperlight.md
+      - name: Local (.NET)
+        href: integrations/by-component/context-providers/local.md
+      - name: Mem0
+        href: integrations/by-component/context-providers/mem0.md
+      - name: Microsoft Foundry
+        href: integrations/by-component/context-providers/microsoft-foundry.md
+      - name: Monty
+        href: integrations/by-component/context-providers/monty.md
+      - name: Neo4j
+        href: integrations/by-component/context-providers/neo4j.md
+      - name: Redis
+        href: integrations/by-component/context-providers/redis.md
+      - name: Valkey
+        href: integrations/by-component/context-providers/valkey.md
+    - name: Middleware
+      items:
+      - name: Microsoft Purview
+        href: integrations/by-component/middleware/purview.md
+    - name: Evaluation
+      items:
+      - name: Microsoft Foundry
+        href: integrations/by-component/evaluation/microsoft-foundry.md
+    - name: UI
+      items:
+      - name: AG-UI
+        items:
+        - name: Overview
+          href: integrations/by-component/ui/ag-ui/index.md
+        - name: Getting Started
+          href: integrations/by-component/ui/ag-ui/getting-started.md
+        - name: Backend Tool Rendering
+          href: integrations/by-component/ui/ag-ui/backend-tool-rendering.md
+        - name: Frontend Tool Rendering
+          href: integrations/by-component/ui/ag-ui/frontend-tools.md
+        - name: Security Considerations
+          href: integrations/by-component/ui/ag-ui/security-considerations.md
+        - name: Workflows
+          href: integrations/by-component/ui/ag-ui/workflows.md
+        - name: Human-in-the-Loop
+          href: integrations/by-component/ui/ag-ui/human-in-the-loop.md
+        - name: MCP Apps Compatibility
+          href: integrations/by-component/ui/ag-ui/mcp-apps.md
+        - name: State Management
+          href: integrations/by-component/ui/ag-ui/state-management.md
+        - name: Testing with Dojo
+          href: integrations/by-component/ui/ag-ui/testing-with-dojo.md
+      - name: ChatKit
+        href: integrations/by-component/ui/chatkit.md
+      - name: DevUI
+        items:
+        - name: Overview
+          href: integrations/by-component/ui/devui/index.md
+        - name: Directory Discovery
+          href: integrations/by-component/ui/devui/directory-discovery.md
+        - name: API Reference
+          href: integrations/by-component/ui/devui/api-reference.md
+        - name: Tracing & Observability
+          href: integrations/by-component/ui/devui/tracing.md
+        - name: Security & Deployment
+          href: integrations/by-component/ui/devui/security.md
+        - name: Samples
+          href: integrations/by-component/ui/devui/samples.md
 - name: Hosting
   items:
   - name: Overview
     href: hosting/index.md
   - name: Foundry Hosted Agents
     href: hosting/foundry-hosted-agent.md
+  - name: Azure Functions and Durable Extension
+    href: hosting/azure-functions.md
   - name: Self-hosting
     items:
     - name: Overview
       href: hosting/self-hosting/index.md
     - name: OpenAI Responses
       href: hosting/self-hosting/responses.md
+    - name: OpenAI-Compatible Endpoints
+      href: hosting/self-hosting/openai-endpoints.md
     - name: Telegram
       href: hosting/self-hosting/telegram.md
     - name: A2A
-      href: hosting/self-hosting/a2a.md
+      items:
+      - name: Overview
+        href: hosting/self-hosting/a2a/index.md
+      - name: Server guide
+        href: hosting/self-hosting/a2a/server.md
+      - name: ASP.NET Core
+        href: hosting/self-hosting/a2a/dotnet.md
     - name: MCP
       href: hosting/self-hosting/mcp.md
 - name: The Agent Development Journey
@@ -270,20 +385,6 @@ items:
     href: journey/agent-to-agent.md
   - name: Workflows
     href: journey/workflows.md
-- name: DevUI
-  items:
-  - name: Overview
-    href: devui/index.md
-  - name: Directory Discovery
-    href: devui/directory-discovery.md
-  - name: API Reference
-    href: devui/api-reference.md
-  - name: Tracing & Observability
-    href: devui/tracing.md
-  - name: Security & Deployment
-    href: devui/security.md
-  - name: Samples
-    href: devui/samples.md
 - name: Migration Guide
   items:
   - name: Overview
@@ -318,6 +419,8 @@ items:
     items:
     - name: Overview
       href: support/upgrade/index.md
+    - name: Python workflow checkpoints in 1.13.0
+      href: support/upgrade/python-1.13.0-workflow-checkpoint-upgrade-guide.md
     - name: Workflow APIs and Request-Response System in Python
       href: support/upgrade/requests-and-responses-upgrade-guide-python.md
     - name: Python Options based on TypedDicts

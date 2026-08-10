@@ -5,15 +5,28 @@ zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: reference
 ms.author: westey
-ms.date: 11/11/2025
+ms.date: 07/28/2026
 ms.service: agent-framework
 ---
+
+<!--
+  Language parity table - keep in sync when adding/removing sections.
+
+  | Section                  | C# | Python | Go | Notes                          |
+  |--------------------------|:--:|:------:|:--:|--------------------------------|
+  | RAG overview             | ✅ |   ✅   | ✅ | Shared                         |
+  | TextSearchProvider       | ✅ |   ❌   | ❌ | .NET-specific                  |
+  | VectorStore search tools | ❌ |   ✅   | ❌ | Python Semantic Kernel bridge  |
+  | Go availability          | ✅ |   ✅   | ✅ | Go zone is status only         |
+  | Service integrations     | ✅ |   ✅   | ✅ | Shared links                   |
+-->
 
 # RAG
 
 Microsoft Agent Framework supports adding Retrieval Augmented Generation (RAG) capabilities to agents easily by adding AI Context Providers to the agent.
 
-For conversation/session patterns alongside retrieval, see [Conversations & Memory overview](./conversations/index.md).
+For conversation/session patterns alongside retrieval, see [Conversations & Memory overview](../concepts/agents/conversations/index.md).
+For service-specific setup, see [Azure AI Search](../integrations/by-component/context-providers/azure-ai-search.md), [Microsoft Foundry](../integrations/by-component/context-providers/microsoft-foundry.md#use-file-search-rag), and [Neo4j](../integrations/by-component/context-providers/neo4j.md#graphrag-from-an-existing-knowledge-graph).
 
 ::: zone pivot="programming-language-csharp"
 
@@ -113,6 +126,7 @@ Use [the vector store connectors documentation](/semantic-kernel/concepts/vector
 from semantic_kernel.connectors.ai.open_ai import OpenAITextEmbedding
 from semantic_kernel.connectors.azure_ai_search import AzureAISearchCollection
 from semantic_kernel.functions import KernelParameterMetadata
+from agent_framework import Agent
 from agent_framework.openai import OpenAIChatClient
 
 # Define your data model
@@ -162,7 +176,8 @@ async with collection:
     search_tool = search_function.as_agent_framework_tool()
 
     # Create an agent with the search tool
-    agent = OpenAIChatClient(model="gpt-4o").as_agent(
+    agent = Agent(
+        client=OpenAIChatClient(model="gpt-4o"),
         instructions="You are a helpful support specialist. Use the search tool to find relevant information before answering questions. Always cite your sources.",
         tools=search_tool
     )
@@ -237,7 +252,8 @@ policy_search = policy_collection.create_search_function(
 ).as_agent_framework_tool()
 
 # Create an agent with multiple search tools
-agent = chat_client.as_agent(
+agent = Agent(
+    client=chat_client,
     instructions="You are a support agent. Use the appropriate search tool to find information before answering. Cite your sources.",
     tools=[product_search, policy_search]
 )
@@ -283,7 +299,8 @@ detail_lookup = support_collection.create_search_function(
 ).as_agent_framework_tool()
 
 # Create an agent with both search functions
-agent = chat_client.as_agent(
+agent = Agent(
+    client=chat_client,
     instructions="You are a support agent. Use search_all_articles for general queries and get_article_details when you need full details about a specific article.",
     tools=[general_search, detail_lookup]
 )
@@ -315,7 +332,7 @@ Each connector provides the same `create_search_function` method that can be bri
 ::: zone-end
 ## Graph RAG
 
-For GraphRAG using graph traversal enriched search with Cypher queries, see the [Neo4j GraphRAG Provider](../integrations/neo4j-graphrag.md).
+For GraphRAG using graph traversal enriched search with Cypher queries, see the [Neo4j GraphRAG Provider](../integrations/by-component/context-providers/neo4j.md#graphrag-from-an-existing-knowledge-graph).
 
 ## Next steps
 

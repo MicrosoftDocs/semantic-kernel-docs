@@ -86,7 +86,13 @@ Deep-dive docs pages link to corresponding concept samples.
 | `get-started/*.md` | `01-get-started/` | Each step → next step + lateral deep-dive |
 | `agents/**/*.md` | `02-agents/` | Each topic → matching concept sample(s) |
 | `workflows/*.md` | `03-workflows/` | Each pattern → matching workflow sample |
-| `integrations/*.md` | `04-hosting/` | Each integration → matching hosting sample |
+| `integrations/**/*.md` | Current location depends on the feature | Keep existing sample references until the corresponding phased sample move lands |
+| `hosting/**/*.md` | `04-hosting/` | Hosting guides → matching hosting sample |
+
+The documentation taxonomy can move before the sample taxonomy. During that
+transition, move docs and update doc-to-doc links, TOC entries, and redirects,
+but keep `:::code` paths and sample repository URLs unchanged until the sample
+move is available.
 
 ## Navigation Pattern
 
@@ -98,7 +104,8 @@ Docs pages follow consistent navigation:
 
 ## When Adding New Content
 
-1. Determine which layer (1–5) the content belongs to
+1. Apply the content placement rules in `agent-framework/AGENTS.md`, then
+   determine which learning layer the content belongs to
 2. For Get Started: only add a step if it introduces a truly foundational concept
 3. For Agent Concepts: group under the appropriate topic area
 4. For Workflows: coordinate with the workflow team

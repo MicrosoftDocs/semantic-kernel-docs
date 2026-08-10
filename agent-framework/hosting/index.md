@@ -23,7 +23,7 @@ After you build an agent or workflow, first choose who operates its infrastructu
 
 Microsoft Foundry Hosted Agents is generally available. The current Python self-hosting packages are prerelease; see the self-hosting guide for package-specific lifecycle information.
 
-For Azure Functions triggers, durable execution, or long-running orchestration, use the [Durable Extension](../integrations/durable-extension.md). It is a self-managed hosting path with Durable Task infrastructure.
+For Azure Functions triggers, durable execution, or long-running orchestration, use the [Durable Extension](azure-functions.md). It is a self-managed hosting path with Durable Task infrastructure.
 
 ## Choose a protocol separately
 
@@ -34,9 +34,10 @@ The hosting model does not determine the protocol. For example, the OpenAI Respo
 
 After choosing a host, select the client integration that fits your scenario:
 
-- [OpenAI-compatible endpoints](../integrations/openai-endpoints.md) for Responses and Chat Completions-compatible APIs.
-- [Agent-to-Agent (A2A)](../integrations/a2a.md) for agent interoperability.
-- [AG-UI](../integrations/ag-ui/index.md) for web-based agent applications.
+- [OpenAI-compatible endpoints](self-hosting/openai-endpoints.md) for Responses and Chat Completions-compatible APIs.
+- [A2A hosting](./self-hosting/a2a/server.md) to expose an Agent Framework agent through the Agent-to-Agent protocol.
+- [A2A agent service](../integrations/by-component/agent-services/a2a.md) to invoke a remote A2A-compliant agent.
+- [AG-UI](../integrations/by-component/ui/ag-ui/index.md) for web-based agent applications.
 - [Telegram bots](self-hosting/telegram.md) for a self-hosted native Telegram Bot API integration.
 - [MCP tools](self-hosting/mcp.md) for exposing an agent or workflow as a native MCP tool.
 
@@ -48,4 +49,4 @@ After choosing a host, select the client integration that fits your scenario:
 **Go deeper:**
 
 - [Self-hosting](self-hosting/index.md)
-- [Durable Extension](../integrations/durable-extension.md)
+- [Durable Extension](azure-functions.md)

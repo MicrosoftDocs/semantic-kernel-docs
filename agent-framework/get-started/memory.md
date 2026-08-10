@@ -251,5 +251,5 @@ fmt.Println(resp, err)
 
 **Go deeper:**
 
-- [Persistent storage](../agents/conversations/storage.md) — store conversations in databases
-- [Chat history](../agents/conversations/context-providers.md) — manage chat history and memory
+- [Persistent storage](../concepts/agents/conversations/storage.md) — store conversations in databases
+- [Chat history](../concepts/agents/conversations/context-providers.md) — manage chat history and memory

@@ -21,7 +21,7 @@ The caller of the agent is then responsible for getting the required input from 
 
 ## Prerequisites
 
-For prerequisites and installing NuGet packages, see the [Create and run a simple agent](../running-agents.md) step in this tutorial.
+For prerequisites and installing NuGet packages, see the [Create and run a simple agent](../../concepts/agents/running-agents.md) step in this tutorial.
 
 ## Create the agent with function tools
 
@@ -66,29 +66,36 @@ AIAgent agent = new AIProjectClient(
 > [!WARNING]
 > `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
 
-Since you now have a function that requires approval, the agent might respond with a request for approval instead of executing the function directly and returning the result.
-You can check the response content for any `FunctionApprovalRequestContent` instances, which indicates that the agent requires user approval for a function.
+Since you now have a function that requires approval, the agent might respond
+with a request for approval instead of executing the function directly and
+returning the result.
+You can check the response content for any `ToolApprovalRequestContent`
+instances, which indicates that the agent requires user approval for a function.
 
 ```csharp
 AgentSession session = await agent.CreateSessionAsync();
 AgentResponse response = await agent.RunAsync("What is the weather like in Amsterdam?", session);
 
-var functionApprovalRequests = response.Messages
+var toolApprovalRequests = response.Messages
     .SelectMany(x => x.Contents)
-    .OfType<FunctionApprovalRequestContent>()
+    .OfType<ToolApprovalRequestContent>()
     .ToList();
 ```
 
-If there are any function approval requests, the detail of the function call including name and arguments can be found in the `FunctionCall` property on the `FunctionApprovalRequestContent` instance.
+If there are any function approval requests, the function call including its
+name and arguments is available from the `ToolCall` property on the
+`ToolApprovalRequestContent` instance.
 This can be shown to the user, so that they can decide whether to approve or reject the function call.
 For this example, assume there is one request.
 
 ```csharp
-FunctionApprovalRequestContent requestContent = functionApprovalRequests.First();
-Console.WriteLine($"We require approval to execute '{requestContent.FunctionCall.Name}'");
+ToolApprovalRequestContent requestContent = toolApprovalRequests.First();
+var functionCall = (FunctionCallContent)requestContent.ToolCall;
+Console.WriteLine($"We require approval to execute '{functionCall.Name}'");
 ```
 
-Once the user has provided their input, you can create a `FunctionApprovalResponseContent` instance using the `CreateResponse` method on the `FunctionApprovalRequestContent`.
+Once the user has provided their input, use the `CreateResponse` method on
+`ToolApprovalRequestContent` to create the approval response.
 Pass `true` to approve the function call, or `false` to reject it.
 
 The response content can then be passed to the agent in a new `User` `ChatMessage`, along with the same session object to get the result back from the agent.
@@ -98,7 +105,9 @@ var approvalMessage = new ChatMessage(ChatRole.User, [requestContent.CreateRespo
 Console.WriteLine(await agent.RunAsync(approvalMessage, session));
 ```
 
-Whenever you are using function tools with human in the loop approvals, remember to check for `FunctionApprovalRequestContent` instances in the response, after each agent run, until all function calls have been approved or rejected.
+Whenever you are using function tools with human in the loop approvals,
+remember to check for `ToolApprovalRequestContent` instances in the response,
+after each agent run, until all function calls have been approved or rejected.
 
 > [!TIP]
 > See the [.NET Agents Step 01: Using Function Tools with Approvals](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/02-agents/Agents/Agent_Step01_UsingFunctionToolsWithApprovals) sample for a complete, runnable example.
@@ -114,7 +123,7 @@ The caller of the agent is then responsible for getting the required input from 
 
 ## Prerequisites
 
-For prerequisites and installing Python packages, see the [Create and run a simple agent](../running-agents.md) step in this tutorial.
+For prerequisites and installing Python packages, see the [Create and run a simple agent](../../concepts/agents/running-agents.md) step in this tutorial.
 
 ## Create the agent with function tools requiring approval
 
@@ -431,6 +440,102 @@ a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(m
 When the model requests a tool call, the framework intercepts it and waits for approval before executing. The approval flow is handled through middleware.
 
 ::: zone-end
+
+<a id="use-tool-approval-with-harnessed-agent"></a>
+
+## Use tool approval with Harness Agent
+
+Plain/manual composition requires an approval-marked tool and an
+approval-response loop. A Harness Agent uses the same approval-marked tools
+and response content, but also installs middleware for queued requests, standing
+"always approve" rules, and optional heuristic auto-approval.
+
+::: zone pivot="programming-language-csharp"
+
+Wrap functions that require approval in `ApprovalRequiredAIFunction`, then add
+them through `HarnessAgentOptions.ChatOptions.Tools`:
+
+```csharp
+using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
+
+var weatherTool = new ApprovalRequiredAIFunction(
+    AIFunctionFactory.Create(GetWeather));
+
+AIAgent agent = chatClient.AsHarnessAgent(new HarnessAgentOptions
+{
+    ChatOptions = new ChatOptions
+    {
+        Instructions = "You are a helpful assistant.",
+        Tools = [weatherTool],
+    },
+});
+
+AgentSession session = await agent.CreateSessionAsync();
+AgentResponse response = await agent.RunAsync(
+    "What is the weather like in Amsterdam?",
+    session);
+```
+
+`DisableToolAutoApproval` defaults to `false`, so the harness adds
+`ToolApprovalAgent`. With the default `ToolApprovalAgentOptions`, no heuristic
+rules are configured; unmatched `ToolApprovalRequestContent` items still return
+to the caller for approval. To add trusted auto-approval callbacks, set
+`ToolApprovalAgentOptions.AutoApprovalRules`.
+
+Setting `DisableToolAutoApproval = true` removes only the standing-rule, queuing,
+and heuristic auto-approval middleware. It doesn't remove the approval
+requirement from an `ApprovalRequiredAIFunction`. Approval-response binding and
+bypassing of tools that don't require approval also remain enabled by default;
+their separate opt-outs are `DisableApprovalResponseBinding` and
+`DisableApprovalNotRequiredFunctionBypassing`.
+
+::: zone-end
+
+::: zone pivot="programming-language-python"
+
+Mark the tool with `approval_mode="always_require"` and pass it to `create_harness_agent`:
+
+```python
+from agent_framework import create_harness_agent, tool
+
+@tool(approval_mode="always_require")
+def get_weather_detail(location: str) -> str:
+    """Get detailed weather information for a location."""
+    return f"The weather in {location} is cloudy with a high of 15°C."
+
+agent = create_harness_agent(
+    client=client,
+    agent_instructions="You are a helpful weather assistant.",
+    tools=get_weather_detail,
+)
+
+session = agent.create_session()
+result = await agent.run(
+    "What is the detailed weather like in Amsterdam?",
+    session=session,
+)
+```
+
+`disable_tool_auto_approval=False` adds `ToolApprovalMiddleware` by default. The
+middleware requires the same `AgentSession` across approval round-trips, queues
+multiple requests, applies standing approvals from earlier user responses, and
+evaluates `auto_approval_rules` before returning a request to the caller. With
+`auto_approval_rules=None`, no heuristic callback auto-approves a call.
+
+Setting `disable_tool_auto_approval=True` removes that harness middleware, but
+it doesn't change the tool's `approval_mode`; the normal
+`result.user_input_requests` approval flow still applies.
+
+::: zone-end
+
+::: zone pivot="programming-language-go"
+
+A packaged Go harness isn't currently available. Wrap approval-required tools
+with `tool.ApprovalRequiredFunc` and compose the approval middleware directly.
+
+::: zone-end
+
 ## Next steps
 
 > [!div class="nextstepaction"]

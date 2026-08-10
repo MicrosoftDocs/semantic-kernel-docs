@@ -49,7 +49,7 @@ For polling and webhook setup, command handling, inbound media policy, streaming
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Add A2A](a2a.md)
+> [Add A2A](a2a/index.md)
 
 **Go deeper:**
 

@@ -837,8 +837,8 @@
     },
     {
       "source_path": "agent-framework/tutorials/plugins/use-purview-with-agent-framework-sdk.md",
-      "redirect_url": "/agent-framework/integrations/purview",
-      "redirect_document_id": true
+      "redirect_url": "/agent-framework/integrations/by-component/middleware/purview",
+      "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/tutorials/overview.md",
@@ -852,8 +852,8 @@
     },
     {
       "source_path": "agent-framework/tutorials/agents/run-agent.md",
-      "redirect_url": "/agent-framework/agents/running-agents",
-      "redirect_document_id": true
+      "redirect_url": "/agent-framework/concepts/agents/running-agents",
+      "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/tutorials/agents/function-tools.md",
@@ -882,22 +882,22 @@
     },
     {
       "source_path": "agent-framework/tutorials/agents/middleware.md",
-      "redirect_url": "/agent-framework/agents/middleware/index",
-      "redirect_document_id": true
+      "redirect_url": "/agent-framework/concepts/agents/middleware/",
+      "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/tutorials/agents/multi-turn-conversation.md",
-      "redirect_url": "/agent-framework/agents/conversations/multi-turn",
-      "redirect_document_id": true
+      "redirect_url": "/agent-framework/concepts/agents/conversations/session",
+      "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/tutorials/agents/persisted-conversation.md",
-      "redirect_url": "/agent-framework/agents/conversations/persistent-storage",
-      "redirect_document_id": true
+      "redirect_url": "/agent-framework/concepts/agents/conversations/storage",
+      "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/tutorials/agents/third-party-chat-history-storage.md",
-      "redirect_url": "/agent-framework/agents/conversations/persistent-storage",
+      "redirect_url": "/agent-framework/concepts/agents/conversations/storage",
       "redirect_document_id": false
     },
     {
@@ -922,17 +922,17 @@
     },
     {
       "source_path": "agent-framework/integrations/azure-functions.md",
-      "redirect_url": "/agent-framework/integrations/durable-extension",
-      "redirect_document_id": true
+      "redirect_url": "/agent-framework/hosting/azure-functions",
+      "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/tutorials/agents/create-and-run-durable-agent.md",
-      "redirect_url": "/agent-framework/integrations/durable-extension",
-      "redirect_document_id": true
+      "redirect_url": "/agent-framework/hosting/azure-functions",
+      "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/tutorials/agents/orchestrate-durable-agents.md",
-      "redirect_url": "/agent-framework/integrations/durable-extension",
+      "redirect_url": "/agent-framework/hosting/azure-functions",
       "redirect_document_id": false
     },
     {
@@ -952,8 +952,8 @@
     },
     {
       "source_path": "agent-framework/tutorials/workflows/workflow-with-branching-logic.md",
-      "redirect_url": "/agent-framework/workflows/edges",
-      "redirect_document_id": true
+      "redirect_url": "/agent-framework/concepts/workflows/edges",
+      "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/tutorials/workflows/checkpointing-and-resuming.md",
@@ -962,8 +962,8 @@
     },
     {
       "source_path": "agent-framework/tutorials/workflows/requests-and-responses.md",
-      "redirect_url": "/agent-framework/workflows/state",
-      "redirect_document_id": true
+      "redirect_url": "/agent-framework/concepts/workflows/state",
+      "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/user-guide/agents/agent-memory.md",
@@ -977,7 +977,7 @@
     },
     {
       "source_path": "agent-framework/user-guide/agents/agent-middleware.md",
-      "redirect_url": "/agent-framework/agents/middleware/index",
+      "redirect_url": "/agent-framework/concepts/agents/middleware/",
       "redirect_document_id": false
     },
     {
@@ -992,102 +992,102 @@
     },
     {
       "source_path": "agent-framework/user-guide/agents/multi-turn-conversation.md",
-      "redirect_url": "/agent-framework/agents/conversations/multi-turn",
+      "redirect_url": "/agent-framework/concepts/agents/conversations/session",
       "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/user-guide/agents/running-agents.md",
-      "redirect_url": "/agent-framework/agents/running-agents",
+      "redirect_url": "/agent-framework/concepts/agents/running-agents",
       "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/user-guide/agents/agent-types/index.md",
-      "redirect_url": "/agent-framework/agents/providers/index",
-      "redirect_document_id": true
+      "redirect_url": "/agent-framework/integrations/by-component/model-providers/",
+      "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/user-guide/agents/agent-types/azure-openai-responses-agent.md",
-      "redirect_url": "/agent-framework/agents/providers/azure-openai",
-      "redirect_document_id": true
+      "redirect_url": "/agent-framework/integrations/by-component/model-providers/azure-openai",
+      "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/user-guide/agents/agent-types/azure-openai-chat-completion-agent.md",
-      "redirect_url": "/agent-framework/agents/providers/azure-openai",
+      "redirect_url": "/agent-framework/integrations/by-component/model-providers/azure-openai",
       "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/user-guide/agents/agent-types/openai-responses-agent.md",
-      "redirect_url": "/agent-framework/agents/providers/openai",
-      "redirect_document_id": true
+      "redirect_url": "/agent-framework/integrations/by-component/model-providers/openai",
+      "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/user-guide/agents/agent-types/openai-chat-completion-agent.md",
-      "redirect_url": "/agent-framework/agents/providers/openai",
+      "redirect_url": "/agent-framework/integrations/by-component/model-providers/openai",
       "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/user-guide/agents/agent-types/openai-assistants-agent.md",
-      "redirect_url": "/agent-framework/agents/providers/openai",
+      "redirect_url": "/agent-framework/integrations/by-component/model-providers/openai",
       "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/user-guide/agents/agent-types/azure-ai-foundry-agent.md",
-      "redirect_url": "/agent-framework/agents/providers/microsoft-foundry",
-      "redirect_document_id": true
+      "redirect_url": "/agent-framework/integrations/by-component/model-providers/microsoft-foundry",
+      "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/user-guide/agents/agent-types/azure-ai-foundry-models-chat-completion-agent.md",
-      "redirect_url": "/agent-framework/agents/providers/microsoft-foundry",
+      "redirect_url": "/agent-framework/integrations/by-component/model-providers/microsoft-foundry",
       "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/user-guide/agents/agent-types/azure-ai-foundry-models-responses-agent.md",
-      "redirect_url": "/agent-framework/agents/providers/microsoft-foundry",
+      "redirect_url": "/agent-framework/integrations/by-component/model-providers/microsoft-foundry",
       "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/agents/providers/azure-ai-foundry.md",
-      "redirect_url": "/agent-framework/agents/providers/microsoft-foundry",
+      "redirect_url": "/agent-framework/integrations/by-component/model-providers/microsoft-foundry",
       "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/user-guide/agents/agent-types/anthropic-agent.md",
-      "redirect_url": "/agent-framework/agents/providers/anthropic",
-      "redirect_document_id": true
+      "redirect_url": "/agent-framework/integrations/by-component/model-providers/anthropic",
+      "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/user-guide/agents/agent-types/claude-agent-sdk.md",
-      "redirect_url": "/agent-framework/agents/providers/anthropic",
+      "redirect_url": "/agent-framework/integrations/by-component/agent-services/anthropic-claude",
       "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/user-guide/agents/agent-types/chat-client-agent.md",
-      "redirect_url": "/agent-framework/agents/providers/custom",
-      "redirect_document_id": true
+      "redirect_url": "/agent-framework/concepts/agents/custom-agents",
+      "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/user-guide/agents/agent-types/custom-agent.md",
-      "redirect_url": "/agent-framework/agents/providers/custom",
+      "redirect_url": "/agent-framework/concepts/agents/custom-agents",
       "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/user-guide/agents/agent-types/github-copilot-agent.md",
-      "redirect_url": "/agent-framework/agents/providers/github-copilot",
-      "redirect_document_id": true
+      "redirect_url": "/agent-framework/integrations/by-component/agent-services/github-copilot",
+      "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/user-guide/agents/agent-types/a2a-agent.md",
-      "redirect_url": "/agent-framework/integrations/a2a",
-      "redirect_document_id": true
+      "redirect_url": "/agent-framework/integrations/by-component/agent-services/a2a",
+      "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/user-guide/agents/agent-types/durable-agent/create-durable-agent.md",
-      "redirect_url": "/agent-framework/integrations/durable-extension",
+      "redirect_url": "/agent-framework/hosting/azure-functions",
       "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/user-guide/agents/agent-types/durable-agent/features.md",
-      "redirect_url": "/agent-framework/integrations/durable-extension",
+      "redirect_url": "/agent-framework/hosting/azure-functions",
       "redirect_document_id": false
     },
     {
@@ -1097,13 +1097,13 @@
     },
     {
       "source_path": "agent-framework/user-guide/hosting/agent-to-agent-integration.md",
-      "redirect_url": "/agent-framework/integrations/a2a",
+      "redirect_url": "/agent-framework/hosting/self-hosting/a2a/server",
       "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/user-guide/hosting/openai-integration.md",
-      "redirect_url": "/agent-framework/integrations/openai-endpoints",
-      "redirect_document_id": true
+      "redirect_url": "/agent-framework/hosting/self-hosting/openai-endpoints",
+      "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/user-guide/model-context-protocol/index.md",
@@ -1152,12 +1152,12 @@
     },
     {
       "source_path": "agent-framework/user-guide/workflows/state.md",
-      "redirect_url": "/agent-framework/workflows/state",
+      "redirect_url": "/agent-framework/concepts/workflows/state",
       "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/user-guide/workflows/state-isolation.md",
-      "redirect_url": "/agent-framework/workflows/state",
+      "redirect_url": "/agent-framework/concepts/workflows/state",
       "redirect_document_id": false
     },
     {
@@ -1172,7 +1172,7 @@
     },
     {
       "source_path": "agent-framework/user-guide/workflows/requests-and-responses.md",
-      "redirect_url": "/agent-framework/workflows/state",
+      "redirect_url": "/agent-framework/concepts/workflows/state",
       "redirect_document_id": false
     },
     {
@@ -1187,23 +1187,23 @@
     },
     {
       "source_path": "agent-framework/user-guide/workflows/core-concepts/workflows.md",
-      "redirect_url": "/agent-framework/workflows/workflows",
-      "redirect_document_id": true
+      "redirect_url": "/agent-framework/concepts/workflows/builder-and-execution",
+      "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/user-guide/workflows/core-concepts/edges.md",
-      "redirect_url": "/agent-framework/workflows/edges",
+      "redirect_url": "/agent-framework/concepts/workflows/edges",
       "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/user-guide/workflows/core-concepts/events.md",
-      "redirect_url": "/agent-framework/workflows/events",
-      "redirect_document_id": true
+      "redirect_url": "/agent-framework/concepts/workflows/events",
+      "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/user-guide/workflows/core-concepts/executors.md",
-      "redirect_url": "/agent-framework/workflows/executors",
-      "redirect_document_id": true
+      "redirect_url": "/agent-framework/concepts/workflows/executors",
+      "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/user-guide/workflows/declarative-workflows/actions-reference.md",
@@ -1257,7 +1257,7 @@
     },
     {
       "source_path": "agent-framework/integrations/use-purview-with-agent-framework-sdk.md",
-      "redirect_url": "/agent-framework/integrations/purview",
+      "redirect_url": "/agent-framework/integrations/by-component/middleware/purview",
       "redirect_document_id": false
     },
     {
@@ -1277,12 +1277,12 @@
     },
     {
       "source_path": "agent-framework/agents/middleware/overview.md",
-      "redirect_url": "/agent-framework/agents/middleware/index",
+      "redirect_url": "/agent-framework/concepts/agents/middleware/",
       "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/agents/providers/overview.md",
-      "redirect_url": "/agent-framework/agents/providers/index",
+      "redirect_url": "/agent-framework/integrations/by-component/model-providers/",
       "redirect_document_id": false
     },
     {
@@ -1292,7 +1292,7 @@
     },
     {
       "source_path": "agent-framework/workflows/branching.md",
-      "redirect_url": "/agent-framework/workflows/edges",
+      "redirect_url": "/agent-framework/concepts/workflows/edges",
       "redirect_document_id": false
     },
     {
@@ -1302,53 +1302,383 @@
     },
     {
       "source_path": "agent-framework/user-guide/devui/index.md",
-      "redirect_url": "/agent-framework/devui/index",
+      "redirect_url": "/agent-framework/integrations/by-component/ui/devui/",
       "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/user-guide/devui/api-reference.md",
-      "redirect_url": "/agent-framework/devui/api-reference",
-      "redirect_document_id": true
+      "redirect_url": "/agent-framework/integrations/by-component/ui/devui/api-reference",
+      "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/user-guide/devui/directory-discovery.md",
-      "redirect_url": "/agent-framework/devui/directory-discovery",
-      "redirect_document_id": true
+      "redirect_url": "/agent-framework/integrations/by-component/ui/devui/directory-discovery",
+      "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/user-guide/devui/tracing.md",
-      "redirect_url": "/agent-framework/devui/tracing",
-      "redirect_document_id": true
+      "redirect_url": "/agent-framework/integrations/by-component/ui/devui/tracing",
+      "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/user-guide/devui/security.md",
-      "redirect_url": "/agent-framework/devui/security",
-      "redirect_document_id": true
+      "redirect_url": "/agent-framework/integrations/by-component/ui/devui/security",
+      "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/user-guide/devui/samples.md",
-      "redirect_url": "/agent-framework/devui/samples",
-      "redirect_document_id": true
+      "redirect_url": "/agent-framework/integrations/by-component/ui/devui/samples",
+      "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/agents/conversations/multi-turn.md",
-      "redirect_url": "/agent-framework/agents/conversations/session",
-      "redirect_document_id": true
+      "redirect_url": "/agent-framework/concepts/agents/conversations/session",
+      "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/agents/conversations/threads.md",
-      "redirect_url": "/agent-framework/agents/conversations/session",
+      "redirect_url": "/agent-framework/concepts/agents/conversations/session",
       "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/agents/conversations/chat-history.md",
-      "redirect_url": "/agent-framework/agents/conversations/storage",
-      "redirect_document_id": true
+      "redirect_url": "/agent-framework/concepts/agents/conversations/storage",
+      "redirect_document_id": false
     },
     {
       "source_path": "agent-framework/agents/conversations/persistent-storage.md",
-      "redirect_url": "/agent-framework/agents/conversations/storage",
+      "redirect_url": "/agent-framework/concepts/agents/conversations/storage",
       "redirect_document_id": false
+    },
+    {
+      "source_path": "agent-framework/agents/agent-pipeline.md",
+      "redirect_url": "/agent-framework/concepts/agents/agent-pipeline",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/agents/conversations/index.md",
+      "redirect_url": "/agent-framework/concepts/agents/conversations/",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/integrations/chat-history-memory-provider.md",
+      "redirect_url": "/agent-framework/concepts/agents/conversations/chat-history-memory-provider",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/agents/conversations/compaction.md",
+      "redirect_url": "/agent-framework/concepts/agents/conversations/compaction",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/agents/conversations/context-providers.md",
+      "redirect_url": "/agent-framework/concepts/agents/conversations/context-providers",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/agents/conversations/session.md",
+      "redirect_url": "/agent-framework/concepts/agents/conversations/session",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/agents/conversations/storage.md",
+      "redirect_url": "/agent-framework/concepts/agents/conversations/storage",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/agents/providers/custom.md",
+      "redirect_url": "/agent-framework/concepts/agents/custom-agents",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/agents/middleware/index.md",
+      "redirect_url": "/agent-framework/concepts/agents/middleware/",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/agents/middleware/agent-vs-run-scope.md",
+      "redirect_url": "/agent-framework/concepts/agents/middleware/agent-vs-run-scope",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/agents/middleware/chat-middleware.md",
+      "redirect_url": "/agent-framework/concepts/agents/middleware/chat-middleware",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/agents/middleware/defining-middleware.md",
+      "redirect_url": "/agent-framework/concepts/agents/middleware/defining-middleware",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/agents/middleware/exception-handling.md",
+      "redirect_url": "/agent-framework/concepts/agents/middleware/exception-handling",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/agents/middleware/result-overrides.md",
+      "redirect_url": "/agent-framework/concepts/agents/middleware/result-overrides",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/agents/middleware/runtime-context.md",
+      "redirect_url": "/agent-framework/concepts/agents/middleware/runtime-context",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/agents/middleware/shared-state.md",
+      "redirect_url": "/agent-framework/concepts/agents/middleware/shared-state",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/agents/middleware/termination.md",
+      "redirect_url": "/agent-framework/concepts/agents/middleware/termination",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/agents/running-agents.md",
+      "redirect_url": "/agent-framework/concepts/agents/running-agents",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/agents/safety.md",
+      "redirect_url": "/agent-framework/concepts/agents/safety",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/agents/harness.md",
+      "redirect_url": "/agent-framework/concepts/harness",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/workflows/advanced/agent-executor.md",
+      "redirect_url": "/agent-framework/concepts/workflows/advanced/agent-executor",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/workflows/advanced/execution-modes.md",
+      "redirect_url": "/agent-framework/concepts/workflows/advanced/execution-modes",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/workflows/advanced/resettable-executors.md",
+      "redirect_url": "/agent-framework/concepts/workflows/advanced/resettable-executors",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/workflows/advanced/sub-workflows.md",
+      "redirect_url": "/agent-framework/concepts/workflows/advanced/sub-workflows",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/workflows/workflows.md",
+      "redirect_url": "/agent-framework/concepts/workflows/builder-and-execution",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/workflows/edges.md",
+      "redirect_url": "/agent-framework/concepts/workflows/edges",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/workflows/events.md",
+      "redirect_url": "/agent-framework/concepts/workflows/events",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/workflows/executors.md",
+      "redirect_url": "/agent-framework/concepts/workflows/executors",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/workflows/functional.md",
+      "redirect_url": "/agent-framework/concepts/workflows/functional",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/workflows/state.md",
+      "redirect_url": "/agent-framework/concepts/workflows/state",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/integrations/durable-extension.md",
+      "redirect_url": "/agent-framework/hosting/azure-functions",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/hosting/self-hosting/a2a.md",
+      "redirect_url": "/agent-framework/hosting/self-hosting/a2a/",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/hosting/agent-to-agent.md",
+      "redirect_url": "/agent-framework/hosting/self-hosting/a2a/dotnet",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/integrations/a2a.md",
+      "redirect_url": "/agent-framework/hosting/self-hosting/a2a/server",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/integrations/openai-endpoints.md",
+      "redirect_url": "/agent-framework/hosting/self-hosting/openai-endpoints",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/integrations/m365.md",
+      "redirect_url": "/agent-framework/integrations/by-component/agent-services/",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/agents/providers/agent-to-agent.md",
+      "redirect_url": "/agent-framework/integrations/by-component/agent-services/a2a",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/agents/providers/copilot-studio.md",
+      "redirect_url": "/agent-framework/integrations/by-component/agent-services/copilot-studio",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/agents/providers/github-copilot.md",
+      "redirect_url": "/agent-framework/integrations/by-component/agent-services/github-copilot",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/integrations/hyperlight.md",
+      "redirect_url": "/agent-framework/integrations/by-component/context-providers/hyperlight",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/integrations/neo4j-graphrag.md",
+      "redirect_url": "/agent-framework/integrations/by-component/context-providers/neo4j",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/integrations/neo4j-memory.md",
+      "redirect_url": "/agent-framework/integrations/by-component/context-providers/neo4j",
+      "redirect_document_id": false
+    },
+    {
+      "source_path": "agent-framework/integrations/purview.md",
+      "redirect_url": "/agent-framework/integrations/by-component/middleware/purview",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/agents/providers/index.md",
+      "redirect_url": "/agent-framework/integrations/by-component/model-providers/",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/agents/providers/anthropic.md",
+      "redirect_url": "/agent-framework/integrations/by-component/model-providers/anthropic",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/agents/providers/azure-openai.md",
+      "redirect_url": "/agent-framework/integrations/by-component/model-providers/azure-openai",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/agents/providers/foundry-local.md",
+      "redirect_url": "/agent-framework/integrations/by-component/model-providers/foundry-local",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/agents/providers/microsoft-foundry.md",
+      "redirect_url": "/agent-framework/integrations/by-component/model-providers/microsoft-foundry",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/agents/providers/ollama.md",
+      "redirect_url": "/agent-framework/integrations/by-component/model-providers/ollama",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/agents/providers/openai.md",
+      "redirect_url": "/agent-framework/integrations/by-component/model-providers/openai",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/integrations/ag-ui/index.md",
+      "redirect_url": "/agent-framework/integrations/by-component/ui/ag-ui/",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/integrations/ag-ui/backend-tool-rendering.md",
+      "redirect_url": "/agent-framework/integrations/by-component/ui/ag-ui/backend-tool-rendering",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/integrations/ag-ui/frontend-tools.md",
+      "redirect_url": "/agent-framework/integrations/by-component/ui/ag-ui/frontend-tools",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/integrations/ag-ui/getting-started.md",
+      "redirect_url": "/agent-framework/integrations/by-component/ui/ag-ui/getting-started",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/integrations/ag-ui/human-in-the-loop.md",
+      "redirect_url": "/agent-framework/integrations/by-component/ui/ag-ui/human-in-the-loop",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/integrations/ag-ui/mcp-apps.md",
+      "redirect_url": "/agent-framework/integrations/by-component/ui/ag-ui/mcp-apps",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/integrations/ag-ui/security-considerations.md",
+      "redirect_url": "/agent-framework/integrations/by-component/ui/ag-ui/security-considerations",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/integrations/ag-ui/state-management.md",
+      "redirect_url": "/agent-framework/integrations/by-component/ui/ag-ui/state-management",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/integrations/ag-ui/testing-with-dojo.md",
+      "redirect_url": "/agent-framework/integrations/by-component/ui/ag-ui/testing-with-dojo",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/integrations/ag-ui/workflows.md",
+      "redirect_url": "/agent-framework/integrations/by-component/ui/ag-ui/workflows",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/devui/index.md",
+      "redirect_url": "/agent-framework/integrations/by-component/ui/devui/",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/devui/api-reference.md",
+      "redirect_url": "/agent-framework/integrations/by-component/ui/devui/api-reference",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/devui/directory-discovery.md",
+      "redirect_url": "/agent-framework/integrations/by-component/ui/devui/directory-discovery",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/devui/samples.md",
+      "redirect_url": "/agent-framework/integrations/by-component/ui/devui/samples",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/devui/security.md",
+      "redirect_url": "/agent-framework/integrations/by-component/ui/devui/security",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "agent-framework/devui/tracing.md",
+      "redirect_url": "/agent-framework/integrations/by-component/ui/devui/tracing",
+      "redirect_document_id": true
     }
   ]
 }

@@ -309,5 +309,5 @@ for evt := range run.NewEvents() {
 ::: zone-end
 ## Next Steps
 
-- [Learn about state isolation in workflows](./state.md).
+- [Learn about state isolation in workflows](../concepts/workflows/state.md).
 - [Learn how to visualize workflows](./visualization.md).

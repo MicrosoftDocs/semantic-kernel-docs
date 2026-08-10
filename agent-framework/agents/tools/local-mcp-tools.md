@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: reference
 ms.author: evmattso
-ms.date: 07/01/2026
+ms.date: 07/30/2026
 ms.service: agent-framework
 ---
 
@@ -229,7 +229,9 @@ if __name__ == "__main__":
     asyncio.run(http_mcp_example())
 ```
 
-For authenticated HTTP endpoints, prefer `header_provider` together with `function_invocation_kwargs` so secrets stay in runtime context instead of being baked into a shared HTTP client.
+For authenticated HTTP endpoints, use `header_provider` so credentials are added only to same-origin requests. During a tool call, the provider receives the values from `function_invocation_kwargs`. For ambient requests such as the initialize handshake, tool or prompt discovery, and background pings, it receives an empty dictionary.
+
+If the server requires authentication during connection, capture or refresh the required credential in the provider instead of depending only on per-run values. A provider that raises `KeyError` because a per-run value is unavailable lets an ambient request continue without that header; this pattern works only when the server permits unauthenticated initialization and discovery. Other provider errors are surfaced.
 
 ### MCPWebsocketTool - WebSocket MCP Servers
 
@@ -288,7 +290,7 @@ from agent_framework.openai import OpenAIChatClient
 """
 MCP Authentication Example
 
-This example demonstrates the runtime `header_provider` pattern for authenticating with MCP servers.
+This example demonstrates a `header_provider` that authenticates both connection-time and tool-call requests.
 
 For more authentication examples including OAuth 2.0 flows, see:
 - https://github.com/modelcontextprotocol/python-sdk/tree/main/examples/clients/simple-auth-client
@@ -311,15 +313,12 @@ async def api_key_auth_example() -> None:
             name="MCP tool",
             description="MCP tool description",
             url=mcp_server_url,
-            header_provider=lambda kwargs: {"Authorization": f"Bearer {kwargs['mcp_api_key']}"},
+            header_provider=lambda _kwargs: {"Authorization": f"Bearer {api_key}"},
         ),
     ) as agent:
         query = "What tools are available to you?"
         print(f"User: {query}")
-        result = await agent.run(
-            query,
-            function_invocation_kwargs={"mcp_api_key": api_key},
-        )
+        result = await agent.run(query)
         print(f"Agent: {result.text}")
 
 if __name__ == "__main__":
@@ -514,4 +513,4 @@ if err := server.Run(context.Background(), &mcp.StdioTransport{}); err != nil {
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Conversations & Memory](../conversations/index.md)
+> [Conversations & Memory](../../concepts/agents/conversations/index.md)

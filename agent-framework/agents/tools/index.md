@@ -25,7 +25,8 @@ Agent Framework supports many different types of tools that extend agent capabil
 | [Web Search](./web-search.md) | Search the web for information |
 | [Hosted MCP Tools](./hosted-mcp-tools.md) | MCP servers invoked by the provider runtime |
 | [Local MCP Tools](./local-mcp-tools.md) | MCP servers running locally or on custom hosts |
-| [Foundry Toolboxes](../providers/microsoft-foundry.md#toolboxes) | Named, versioned bundles of hosted tool configurations managed in a Foundry project |
+| [Microsoft Foundry Toolbox](../../integrations/by-component/tools/foundry-toolbox.md) | Named, versioned bundles of hosted tool configurations managed in a Foundry project |
+| [Shell tools](../../integrations/by-component/tools/shell-tools.md) | Local and containerized shell execution with environment probing and policy controls |
 
 :::zone-end
 
@@ -39,18 +40,19 @@ Agent Framework supports many different types of tools that extend agent capabil
 | [Web Search](./web-search.md) | Search the web for information |
 | [Hosted MCP Tools](./hosted-mcp-tools.md) | MCP servers invoked by the provider runtime |
 | [Local MCP Tools](./local-mcp-tools.md) | MCP servers running locally or on custom hosts |
-| [Foundry Toolboxes](../providers/microsoft-foundry.md#toolboxes) | Named, versioned bundles of hosted tool configurations managed in a Foundry project |
-| [Image Generation](../providers/microsoft-foundry.md#image-generation) | Hosted image generation on the Foundry / OpenAI Responses runtime |
-| [Shell](../providers/openai.md#tools) | Hosted shell execution on the OpenAI Responses runtime — distinct from the GitHub Copilot CLI's built-in shell/file/URL runtime tools |
-| [Bing Grounding](../providers/microsoft-foundry.md#bing-grounding) | Web grounding via your own Grounding with Bing Search resource — experimental |
-| [Bing Custom Search](../providers/microsoft-foundry.md#bing-custom-search) | Bing grounding restricted to a curated domain list — preview |
-| [Azure AI Search](../providers/microsoft-foundry.md#azure-ai-search) | Query an Azure AI Search index through a Foundry connection — experimental |
-| [SharePoint](../providers/microsoft-foundry.md#sharepoint) | Ground answers in SharePoint content — preview |
-| [Microsoft Fabric](../providers/microsoft-foundry.md#microsoft-fabric) | Query a Fabric data agent — preview |
-| [Memory Search](../providers/microsoft-foundry.md#memory-search) | Search a Foundry-managed memory store — preview |
-| [Computer Use](../providers/microsoft-foundry.md#computer-use) | Drive a desktop or browser environment — preview |
-| [Browser Automation](../providers/microsoft-foundry.md#browser-automation) | Drive a browser via Azure Playwright — preview |
-| [Agent-to-Agent (A2A) tool](../providers/microsoft-foundry.md#agent-to-agent-a2a) | Call a remote A2A agent as a tool from a Foundry agent — preview |
+| [Microsoft Foundry Toolbox](../../integrations/by-component/tools/foundry-toolbox.md) | Named, versioned bundles of hosted tool configurations managed in a Foundry project |
+| [Shell tools](../../integrations/by-component/tools/shell-tools.md) | Local and containerized shell execution with environment probing and policy controls |
+| [Image Generation](../../integrations/by-component/model-providers/microsoft-foundry.md#image-generation) | Hosted image generation on the Foundry / OpenAI Responses runtime |
+| [Shell](../../integrations/by-component/model-providers/openai.md#tools) | Hosted shell execution on the OpenAI Responses runtime — distinct from the GitHub Copilot CLI's built-in shell/file/URL runtime tools |
+| [Bing Grounding](../../integrations/by-component/model-providers/microsoft-foundry.md#bing-grounding) | Web grounding via your own Grounding with Bing Search resource — experimental |
+| [Bing Custom Search](../../integrations/by-component/model-providers/microsoft-foundry.md#bing-custom-search) | Bing grounding restricted to a curated domain list — preview |
+| [Azure AI Search](../../integrations/by-component/model-providers/microsoft-foundry.md#azure-ai-search) | Query an Azure AI Search index through a Foundry connection — experimental |
+| [SharePoint](../../integrations/by-component/model-providers/microsoft-foundry.md#sharepoint) | Ground answers in SharePoint content — preview |
+| [Microsoft Fabric](../../integrations/by-component/model-providers/microsoft-foundry.md#microsoft-fabric) | Query a Fabric data agent — preview |
+| [Memory Search](../../integrations/by-component/model-providers/microsoft-foundry.md#memory-search) | Search a Foundry-managed memory store — preview |
+| [Computer Use](../../integrations/by-component/model-providers/microsoft-foundry.md#computer-use) | Drive a desktop or browser environment — preview |
+| [Browser Automation](../../integrations/by-component/model-providers/microsoft-foundry.md#browser-automation) | Drive a browser via Azure Playwright — preview |
+| [Agent-to-Agent (A2A) tool](../../integrations/by-component/model-providers/microsoft-foundry.md#agent-to-agent-a2a) | Call a remote A2A agent as a tool from a Foundry agent — preview |
 
 > [!NOTE]
 > Tools marked **experimental** or **preview** are documented on the relevant provider page and emit an `ExperimentalWarning` the first time they are used in a process.
@@ -127,9 +129,9 @@ For Go, mark an invocable tool with `tool.ApprovalRequiredFunc` or use a tool th
 
 ## Provider Support Matrix
 
-The OpenAI and Azure OpenAI providers each offer two client types — Responses and Chat Completion — with different tool capabilities. Azure OpenAI clients mirror their OpenAI equivalents. [Copilot Studio](../providers/copilot-studio.md) and [A2A](../providers/agent-to-agent.md) agents run on a remote service so their capabilities are configured on the remote agent rather than through the Agent Framework client — they are not listed in the matrix.
+The OpenAI and Azure OpenAI providers each offer two client types — Responses and Chat Completion — with different tool capabilities. Azure OpenAI clients mirror their OpenAI equivalents. [Copilot Studio](../../integrations/by-component/agent-services/copilot-studio.md) and [A2A](../../integrations/by-component/agent-services/a2a.md) agents run on a remote service so their capabilities are configured on the remote agent rather than through the Agent Framework client — they are not listed in the matrix.
 
-| Tool Type | [Responses](../providers/openai.md#tools) | [Chat Completion](../providers/openai.md#tools) | [Foundry](../providers/microsoft-foundry.md#tools) | [Anthropic](../providers/anthropic.md#tools) | [Ollama](../providers/ollama.md#tools) | [GitHub Copilot](../providers/github-copilot.md#tools) |
+| Tool Type | [Responses](../../integrations/by-component/model-providers/openai.md#tools) | [Chat Completion](../../integrations/by-component/model-providers/openai.md#tools) | [Foundry](../../integrations/by-component/model-providers/microsoft-foundry.md#tools) | [Anthropic](../../integrations/by-component/model-providers/anthropic.md#tools) | [Ollama](../../integrations/by-component/model-providers/ollama.md#tools) | [GitHub Copilot](../../integrations/by-component/agent-services/github-copilot.md#tools) |
 |-----------|:---:|:---:|:---:|:---:|:---:|:---:|
 | [Function Tools](./function-tools.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [Code Interpreter](./code-interpreter.md) | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ |
@@ -147,29 +149,29 @@ The OpenAI and Azure OpenAI providers each offer two client types — Responses 
 
 ## Provider Support Matrix
 
-The OpenAI and Azure OpenAI providers each offer multiple client types with different tool capabilities. Azure OpenAI clients mirror their OpenAI equivalents. The Foundry column applies to `FoundryChatClient` — for `FoundryAgent`, the tools are configured on the Foundry agent definition (see [What works and what doesn't with `FoundryAgent`](../providers/microsoft-foundry.md#what-works-and-what-doesnt-with-foundryagent)). [Copilot Studio](../providers/copilot-studio.md) and [A2A](../providers/agent-to-agent.md) agents run on a remote service so their capabilities are configured on the remote agent rather than through the Agent Framework client — they are not listed in the matrix.
+The OpenAI and Azure OpenAI providers each offer multiple client types with different tool capabilities. Azure OpenAI clients mirror their OpenAI equivalents. The Foundry column applies to `FoundryChatClient` — for `FoundryAgent`, the tools are configured on the Foundry agent definition (see [What works and what doesn't with `FoundryAgent`](../../integrations/by-component/agent-services/foundry.md#what-works-and-what-doesnt-with-foundryagent)). [Copilot Studio](../../integrations/by-component/agent-services/copilot-studio.md) and [A2A](../../integrations/by-component/agent-services/a2a.md) agents run on a remote service so their capabilities are configured on the remote agent rather than through the Agent Framework client — they are not listed in the matrix.
 
-| Tool Type | [Responses](../providers/openai.md#tools) | [Chat Completion](../providers/openai.md#tools) | [Foundry](../providers/microsoft-foundry.md#tools) | [Anthropic](../providers/anthropic.md#tools) | [Ollama](../providers/ollama.md#tools) | [Foundry Local](../providers/foundry-local.md#tools) | [GitHub Copilot](../providers/github-copilot.md#tools) |
+| Tool Type | [Responses](../../integrations/by-component/model-providers/openai.md#tools) | [Chat Completion](../../integrations/by-component/model-providers/openai.md#tools) | [Foundry](../../integrations/by-component/model-providers/microsoft-foundry.md#tools) | [Anthropic](../../integrations/by-component/model-providers/anthropic.md#tools) | [Ollama](../../integrations/by-component/model-providers/ollama.md#tools) | [Foundry Local](../../integrations/by-component/model-providers/foundry-local.md#tools) | [GitHub Copilot](../../integrations/by-component/agent-services/github-copilot.md#tools) |
 |-----------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | [Function Tools](./function-tools.md) | ✅ | ✅ | ✅ | ✅ | ⚠️¹ | ⚠️¹ | ✅ |
 | [Code Interpreter](./code-interpreter.md) | ✅ | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ |
 | [File Search](./file-search.md) | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
 | [Web Search](./web-search.md) | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
-| [Image Generation](../providers/microsoft-foundry.md#image-generation) | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| [Image Generation](../../integrations/by-component/model-providers/microsoft-foundry.md#image-generation) | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
 | Hosted Shell (`get_shell_tool`) | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | Built-in shell / file system / URL fetch | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅² |
 | [Hosted MCP Tools](./hosted-mcp-tools.md) | ✅ | ❌ | ✅ | ✅ | ❌ | ❌ | ✅ |
 | [Local MCP Tools](./local-mcp-tools.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [Foundry Toolboxes](../providers/microsoft-foundry.md#toolboxes) | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
-| [Bing Grounding](../providers/microsoft-foundry.md#bing-grounding) (experimental) | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
-| [Bing Custom Search](../providers/microsoft-foundry.md#bing-custom-search) (preview) | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
-| [Azure AI Search](../providers/microsoft-foundry.md#azure-ai-search) (experimental) | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
-| [SharePoint](../providers/microsoft-foundry.md#sharepoint) (preview) | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
-| [Microsoft Fabric](../providers/microsoft-foundry.md#microsoft-fabric) (preview) | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
-| [Memory Search](../providers/microsoft-foundry.md#memory-search) (preview) | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
-| [Computer Use](../providers/microsoft-foundry.md#computer-use) (preview) | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
-| [Browser Automation](../providers/microsoft-foundry.md#browser-automation) (preview) | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
-| [Agent-to-Agent (A2A) tool](../providers/microsoft-foundry.md#agent-to-agent-a2a) (preview) | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| [Microsoft Foundry Toolbox](../../integrations/by-component/tools/foundry-toolbox.md) | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| [Bing Grounding](../../integrations/by-component/model-providers/microsoft-foundry.md#bing-grounding) (experimental) | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| [Bing Custom Search](../../integrations/by-component/model-providers/microsoft-foundry.md#bing-custom-search) (preview) | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| [Azure AI Search](../../integrations/by-component/model-providers/microsoft-foundry.md#azure-ai-search) (experimental) | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| [SharePoint](../../integrations/by-component/model-providers/microsoft-foundry.md#sharepoint) (preview) | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| [Microsoft Fabric](../../integrations/by-component/model-providers/microsoft-foundry.md#microsoft-fabric) (preview) | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| [Memory Search](../../integrations/by-component/model-providers/microsoft-foundry.md#memory-search) (preview) | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| [Computer Use](../../integrations/by-component/model-providers/microsoft-foundry.md#computer-use) (preview) | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| [Browser Automation](../../integrations/by-component/model-providers/microsoft-foundry.md#browser-automation) (preview) | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| [Agent-to-Agent (A2A) tool](../../integrations/by-component/model-providers/microsoft-foundry.md#agent-to-agent-a2a) (preview) | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
 
 ¹ Depends on the chosen local model supporting function calling.
 ² Built into the GitHub Copilot CLI runtime, gated by a permission handler. Different surface from OpenAI's `get_shell_tool`.
@@ -185,7 +187,7 @@ The OpenAI and Azure OpenAI providers each offer multiple client types with diff
 
 The Go SDK exposes Microsoft Foundry through `foundryprovider` and OpenAI/Azure OpenAI through `openaiprovider`. Hosted tools in `tool/hostedtool` are declarations: the Go SDK sends them to the provider, and the provider decides whether that hosted capability is available.
 
-| Tool Type | [Foundry](../providers/microsoft-foundry.md#tools) | [Responses](../providers/openai.md#tools) | [Chat Completions](../providers/openai.md#tools) | [Anthropic](../providers/anthropic.md#tools) |
+| Tool Type | [Foundry](../../integrations/by-component/model-providers/microsoft-foundry.md#tools) | [Responses](../../integrations/by-component/model-providers/openai.md#tools) | [Chat Completions](../../integrations/by-component/model-providers/openai.md#tools) | [Anthropic](../../integrations/by-component/model-providers/anthropic.md#tools) |
 |-----------|:---:|:---:|:---:|:---:|
 | [Function Tools](./function-tools.md) | ✅ | ✅ | ✅ | ✅ |
 | [Agent as Function Tool](#using-an-agent-as-a-function-tool) | ✅ | ✅ | ✅ | ✅ |

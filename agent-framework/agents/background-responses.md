@@ -46,7 +46,7 @@ AgentRunOptions options = new()
 ```
 
 > [!NOTE]
-> Currently, only agents that use the OpenAI Responses API support background responses: [OpenAI Responses Agent](providers/openai.md) and [Azure OpenAI Responses Agent](providers/azure-openai.md).
+> Currently, only agents that use the OpenAI Responses API support background responses: [OpenAI Responses Agent](../integrations/by-component/model-providers/openai.md) and [Azure OpenAI Responses Agent](../integrations/by-component/model-providers/azure-openai.md).
 
 Some agents may not allow explicit control over background responses. These agents can decide autonomously whether to initiate a background response based on the complexity of the operation, regardless of the `AllowBackgroundResponses` setting.
 
@@ -161,7 +161,7 @@ response = await agent.run(
 ```
 
 > [!NOTE]
-> Currently, only agents that use the OpenAI Responses API support background responses: [OpenAI Responses Agent](providers/openai.md) and [Azure OpenAI Responses Agent](providers/azure-openai.md).
+> Currently, only agents that use the OpenAI Responses API support background responses: [OpenAI Responses Agent](../integrations/by-component/model-providers/openai.md) and [Azure OpenAI Responses Agent](../integrations/by-component/model-providers/azure-openai.md).
 
 ## Non-Streaming Background Responses
 
@@ -268,6 +268,13 @@ resp, err := a.RunText(ctx, "Start a long analysis.",
 Background responses require an explicit session via `agent.WithSession(session)` to ensure consistent behavior between initial and follow-up runs.
 
 ::: zone-end
+
+## Use background responses with Harness Agent
+
+A Harness Agent remains a standard Agent Framework agent, so provider background responses use the same per-run options documented above. Harness construction doesn't enable provider background responses automatically: set `AllowBackgroundResponses` in .NET or `options={"background": True}` in Python when starting the run, keep the session, and persist continuation tokens when the operation must survive a process restart.
+
+This is separate from [background agents](background-agents.md#use-background-agents-with-harnessed-agent), which delegate work to child agents rather than continuing one provider request.
+
 ## Best Practices
 
 When working with background responses, consider the following best practices:

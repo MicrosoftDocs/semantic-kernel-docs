@@ -14,7 +14,7 @@ ms.service: agent-framework
 File Search enables agents to search through uploaded files to find relevant information. This tool is particularly useful for building agents that can answer questions about documents, analyze file contents, and extract information.
 
 > [!NOTE]
-> File Search availability depends on the underlying agent provider. See [Providers Overview](../providers/index.md) for provider-specific support.
+> File Search availability depends on the underlying agent provider. See [Providers Overview](../../integrations/by-component/model-providers/index.md) for provider-specific support.
 
 :::zone pivot="programming-language-csharp"
 

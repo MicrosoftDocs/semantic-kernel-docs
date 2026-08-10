@@ -324,7 +324,7 @@ After restoring, listen for the re-emitted request events and respond through th
 ## Next Steps
 
 - [Learn about sequential orchestration with HITL](./orchestrations/sequential.md#sequential-orchestration-with-human-in-the-loop).
-- [Learn how to manage state](./state.md) in workflows.
+- [Learn how to manage state](../concepts/workflows/state.md) in workflows.
 - [Learn how to create checkpoints and resume from them](./checkpoints.md).
 - [Learn how to monitor workflows](./observability.md).
 - [Learn how to visualize workflows](./visualization.md).

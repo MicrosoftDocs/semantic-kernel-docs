@@ -6,7 +6,7 @@ metadata:
   title: Agent Framework documentation
   description: Agent Framework documentation.
   ms.topic: hub-page
-  ms.date: 07/14/2026
+  ms.date: 07/29/2026
   ms.service: agent-framework
   searchScope: []
   titleSuffix: ""
@@ -16,7 +16,7 @@ metadata:
   hide_bc: true
 
 productDirectory:
-    items:
+  items:
     - title: Overview
       imageSrc: /agent-framework/media/overview.svg
       links:
@@ -43,32 +43,49 @@ productDirectory:
           text: "Step 6: Agent Harness"
         - url: /agent-framework/get-started/hosting
           text: "Step 7: Host Your Agent"
-    - title: Agents
+    - title: Concepts
+      imageSrc: /agent-framework/media/agent.svg
+      links:
+        - url: /agent-framework/concepts/
+          text: Concepts overview
+        - url: /agent-framework/concepts/agents/
+          text: Agents
+        - url: /agent-framework/concepts/workflows/
+          text: Workflows
+        - url: /agent-framework/concepts/harness
+          text: Agent Harness
+        - url: /agent-framework/concepts/agents/conversations/
+          text: Conversations and memory
+        - url: /agent-framework/concepts/agents/middleware/
+          text: Middleware
+    - title: Agent Capabilities
       imageSrc: /agent-framework/media/concept.svg
       links:
         - url: /agent-framework/agents/index
-          text: Agents overview
+          text: Agent capabilities overview
         - url: /agent-framework/agents/tools/index
           text: Tools
-        - url: /agent-framework/agents/harness
-          text: Agent Harness
         - url: /agent-framework/agents/skills
           text: Agent Skills
-        - url: /agent-framework/agents/conversations/index
-          text: Conversations
-        - url: /agent-framework/agents/providers/index
-          text: Providers
-    - title: Workflows
+        - url: /agent-framework/agents/rag
+          text: RAG
+        - url: /agent-framework/agents/security
+          text: Security
+        - url: /agent-framework/agents/background-agents
+          text: Background agents
+    - title: Workflow Capabilities
       imageSrc: /agent-framework/media/architecture.svg
       links:
         - url: /agent-framework/workflows/index
           text: Workflows overview
-        - url: /agent-framework/workflows/executors
-          text: Executors
-        - url: /agent-framework/workflows/edges
-          text: Edges
-        - url: /agent-framework/workflows/workflows
-          text: Workflow Builder & Execution
+        - url: /agent-framework/workflows/agents-in-workflows
+          text: Agents in workflows
+        - url: /agent-framework/workflows/human-in-the-loop
+          text: Human-in-the-loop
+        - url: /agent-framework/workflows/checkpoints
+          text: Checkpoints and resuming
+        - url: /agent-framework/workflows/orchestrations/
+          text: Orchestrations
     - title: Integrations & Hosting
       imageSrc: /agent-framework/media/minihub.svg
       links:
@@ -76,14 +93,14 @@ productDirectory:
           text: Integrations overview
         - url: /agent-framework/hosting/
           text: Hosting overview
-        - url: /agent-framework/hosting/foundry-hosted-agent
-          text: Foundry Hosted Agents
+        - url: /agent-framework/integrations/by-provider/
+          text: Integrations by provider
         - url: /agent-framework/hosting/self-hosting
           text: Self-hosting
-        - url: /agent-framework/integrations/durable-extension
+        - url: /agent-framework/hosting/azure-functions
           text: Azure Functions and durable hosting
-        - url: /agent-framework/integrations/a2a
-          text: A2A Protocol
+        - url: /agent-framework/integrations/by-component/
+          text: Integrations by component
     - title: Support
       imageSrc: /agent-framework/media/howtoguide.svg
       links:

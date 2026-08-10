@@ -362,7 +362,7 @@ Enable plan review when building the Magentic workflow. The defaults differ betw
 Plan review pauses are surfaced through the workflow's request/response mechanism with `MagenticPlanReviewRequest` data. You handle these in the event stream and resume the workflow with a `MagenticPlanReviewResponse` once the human has approved or revised the plan.
 
 > [!TIP]
-> Learn more about requests and responses in the [Requests and Responses](../state.md) guide.
+> Learn more about requests and responses in the [Requests and Responses](../../concepts/workflows/state.md) guide.
 
 ::: zone pivot="programming-language-csharp"
 
