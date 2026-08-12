@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: article
 ms.author: taochen
-ms.date: 07/01/2026
+ms.date: 08/11/2026
 ms.service: agent-framework
 ---
 
@@ -20,6 +20,7 @@ ms.service: agent-framework
     | Function-Based Executors                           | ✅ |   ✅   | ✅ |                  |
     | Explicit Type Parameters                           | ❌ |   ✅   | ❌ | Python-specific  |
     | The WorkflowContext Object                         | ✅ |   ✅   | ✅ |                  |
+    | Declaring Protocol Types                           | ✅ |   ❌   | ❌ | C#-specific protocol declaration attributes |
     | Designating Terminal and Intermediate Outputs      | ❌ |   ✅   | ❌ | Python-specific  |
     | Agent Executors                                    | ❌ |   ❌   | ✅ | Go-specific      |
     | Executor Lifecycle                                 | ❌ |   ❌   | ✅ | Go-specific      |
@@ -136,6 +137,47 @@ internal sealed partial class LogExecutor() : Executor("LogExecutor")
     }
 }
 ```
+
+## Declaring Protocol Types
+
+An executor's protocol declares the message types it may send to connected executors and the output types it may yield. The workflow validates calls to `SendMessageAsync` and `YieldOutputAsync` against these declarations and throws an `InvalidOperationException` when an executor uses an undeclared type.
+
+Use `[SendsMessage]` to declare sent message types and `[YieldsOutput]` to declare yielded output types. These attributes describe the executor's capabilities; they do not send or yield values themselves. Apply each attribute multiple times when the executor uses multiple types.
+
+For executors with a single typed handler, derive from `Executor<TInput>` or `Executor<TInput, TOutput>` and override `HandleAsync`:
+
+```csharp
+internal sealed record ProcessRequest(string Text);
+internal sealed record ProgressUpdate(string Status);
+
+[SendsMessage(typeof(ProgressUpdate))]
+[YieldsOutput(typeof(string))]
+internal sealed partial class ProcessingExecutor()
+    : Executor<ProcessRequest>("ProcessingExecutor")
+{
+    public override async ValueTask HandleAsync(
+        ProcessRequest message,
+        IWorkflowContext context,
+        CancellationToken cancellationToken = default)
+    {
+        await context.SendMessageAsync(
+            new ProgressUpdate("Processing started"),
+            cancellationToken);
+
+        await context.YieldOutputAsync(
+            message.Text.ToUpperInvariant(),
+            cancellationToken);
+    }
+}
+```
+
+When the workflows source generator is referenced, a class with `[SendsMessage]` or `[YieldsOutput]` must be declared `partial` so the generator can add its protocol configuration.
+
+For source-generated executors with `[MessageHandler]` methods, declare types used by one handler with its `Send` and `Yield` named arguments, such as `[MessageHandler(Send = [typeof(ProgressUpdate)], Yield = [typeof(string)])]`. Use class-level `[SendsMessage]` and `[YieldsOutput]` when the declarations apply to the entire executor.
+
+Non-void handler return types are automatically added to the sent and yielded protocol types when `ExecutorOptions.AutoSendMessageHandlerResultObject` and `ExecutorOptions.AutoYieldOutputHandlerResultObject` are enabled. Both options are enabled by default. Explicit declarations are therefore primarily needed for additional types emitted directly through `SendMessageAsync` or `YieldOutputAsync`.
+
+`[YieldsOutput]` permits the executor to yield a type, but it does not designate the executor as a terminal output source. Register the executor with `WorkflowBuilder.WithOutputFrom` for its yielded values to surface to the workflow caller.
 
 ::: zone-end
 
