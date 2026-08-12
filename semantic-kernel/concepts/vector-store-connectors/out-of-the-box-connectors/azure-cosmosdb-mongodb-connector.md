@@ -1,19 +1,19 @@
 ---
-title: Using the Semantic Kernel Azure CosmosDB MongoDB (vCore) Vector Store connector (Preview)
-description: Contains information on how to use a Semantic Kernel Vector store connector to access and manipulate data in Azure CosmosDB MongoDB (vCore).
+title: Using the Semantic Kernel Azure DocumentDB (with MongoDB compatibility) Vector Store connector (Preview)
+description: Contains information on how to use a Semantic Kernel Vector store connector to access and manipulate data in Azure DocumentDB (with MongoDB compatibility).
 zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: article
 ms.author: westey
-ms.date: 09/23/2024
+ms.date: 08/12/2026
 ms.service: semantic-kernel
 ---
-# Using the Azure CosmosDB MongoDB (vCore) Vector Store connector (Preview)
+# Using the Azure DocumentDB (with MongoDB compatibility) Vector Store connector (Preview)
 
 ::: zone pivot="programming-language-csharp"
 
 > [!WARNING]
-> The Azure CosmosDB MongoDB (vCore) Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
+> The Azure DocumentDB Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
@@ -31,13 +31,13 @@ ms.service: semantic-kernel
 
 ## Overview
 
-The Azure CosmosDB MongoDB Vector Store connector can be used to access and manage data in Azure CosmosDB MongoDB (vCore). The connector has the following characteristics.
+The Azure CosmosDB MongoDB Vector Store connector can be used to access and manage data in Azure DocumentDB. The connector has the following characteristics.
 
 ::: zone pivot="programming-language-csharp"
 
 | Feature Area                          | Support                                                                                                                                                                       |
 | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Collection maps to                    | Azure Cosmos DB MongoDB (vCore) Collection + Index                                                                                                                            |
+| Collection maps to                    | Azure DocumentDB Collection + Index                                                                                                                            |
 | Supported key property types          | string                                                                                                                                                                        |
 | Supported data property types         | <ul><li>string</li><li>int</li><li>long</li><li>double</li><li>float</li><li>decimal</li><li>bool</li><li>DateTime</li><li>*and enumerables of each of these types*</li></ul> |
 | Supported vector property types       | <ul><li>ReadOnlyMemory\<float\></li><li>Embedding\<float\></li><li>float[]</li></ul>                                                                                                    |
@@ -55,7 +55,7 @@ The Azure CosmosDB MongoDB Vector Store connector can be used to access and mana
 
 | Feature Area                          | Support                                                                                                                                                                     |
 | ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Collection maps to                    | Azure Cosmos DB MongoDB (vCore) Collection + Index                                                                                                                          |
+| Collection maps to                    | Azure DocumentDB Collection + Index                                                                                                                          |
 | Supported key property types          | string                                                                                                                                                                      |
 | Supported data property types         | <ul><li>string</li><li>int</li><li>long</li><li>double</li><li>float</li><li>decimal</li><li>bool</li><li>DateTime</li><li>*and iterables of each of these types*</li></ul> |
 | Supported vector property types       | <ul><li>list[float]</li><li>list[int]</li><li>ndarray</li></ul>                                                                                                             |
@@ -73,7 +73,7 @@ More info coming soon.
 
 ## Limitations
 
-This connector is compatible with Azure Cosmos DB MongoDB (vCore) and is *not* designed to be compatible with Azure Cosmos DB MongoDB (RU).
+This connector is compatible with Azure DocumentDB and is *not* designed to be compatible with Azure Cosmos DB MongoDB (RU).
 
 ::: zone pivot="programming-language-csharp"
 
