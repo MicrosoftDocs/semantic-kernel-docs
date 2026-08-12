@@ -33,7 +33,7 @@ Modern AI agents often are not bottlenecked by model quality, but by orchestrati
 
 CodeAct collapses that model -> tool -> model loop. Instead of asking the model to pick one tool at a time, Agent Framework can expose a single `execute_code` tool and let the model express the full plan as a short program. The tools stay the same, the model stays the same, and the main change is that the plan runs once inside a sandbox instead of being scattered across several tool-call turns.
 
-For tool-heavy workloads, that can materially reduce end-to-end latency and token usage while keeping the plan compact and auditable in one code block. See the [Hyperlight CodeAct integration](../integrations/hyperlight.md) for a side-by-side wiring comparison.
+For tool-heavy workloads, that can materially reduce end-to-end latency and token usage while keeping the plan compact and auditable in one code block. See the [Hyperlight CodeAct integration](../integrations/by-component/context-providers/hyperlight.md) for a side-by-side wiring comparison.
 
 ## When CodeAct is a good fit
 
@@ -66,7 +66,7 @@ Because the connector owns the runtime configuration, the exact setup details de
 
 CodeAct is a strong fit for tool-heavy workflows, but there are a few current constraints to keep in mind:
 
-- The documented Agent Framework connector today is [Hyperlight CodeAct](../integrations/hyperlight.md), available for both Python and .NET (in preview).
+- The documented Agent Framework connector today is [Hyperlight CodeAct](../integrations/by-component/context-providers/hyperlight.md), available for both Python and .NET (in preview).
 - Approvals currently apply to the `execute_code` call as a whole. If you need individual operations to be approved one by one, keep those operations as direct agent tools instead of relying on `call_tool(...)`.
 - Tools reached through `call_tool(...)` still execute in the host process. Use narrow, reviewed host tools for sensitive I/O instead of broadening sandbox access unnecessarily.
 - CodeAct works best when orchestration overhead dominates. For small tasks with only one or two tool calls, the added abstraction may not buy you much.
@@ -76,7 +76,7 @@ CodeAct is a strong fit for tool-heavy workflows, but there are a few current co
 
 ## Get started
 
-For .NET, the documented connector today is [Hyperlight CodeAct](../integrations/hyperlight.md), shipped as the `Microsoft.Agents.AI.Hyperlight` package.
+For .NET, the documented connector today is [Hyperlight CodeAct](../integrations/by-component/context-providers/hyperlight.md), shipped as the `Microsoft.Agents.AI.Hyperlight` package.
 
 The package provides:
 
@@ -87,9 +87,9 @@ The package provides:
 - optional filesystem (`FileMounts`, `HostInputDirectory`) and outbound-network (`AllowedDomains`) configuration for the sandbox runtime
 
 > [!IMPORTANT]
-> The .NET package is in preview and depends on the `Hyperlight.HyperlightSandbox.Api` NuGet, which is not yet published on nuget.org. See [Hyperlight CodeAct](../integrations/hyperlight.md) for current install caveats and platform requirements.
+> The .NET package is in preview and depends on the `Hyperlight.HyperlightSandbox.Api` NuGet, which is not yet published on nuget.org. See [Hyperlight CodeAct](../integrations/by-component/context-providers/hyperlight.md) for current install caveats and platform requirements.
 
-See [Hyperlight CodeAct](../integrations/hyperlight.md) for installation, examples, and runtime-specific guidance.
+See [Hyperlight CodeAct](../integrations/by-component/context-providers/hyperlight.md) for installation, examples, and runtime-specific guidance.
 
 ::: zone-end
 
@@ -97,7 +97,7 @@ See [Hyperlight CodeAct](../integrations/hyperlight.md) for installation, exampl
 
 ## Get started
 
-For Python, the documented connector today is [Hyperlight CodeAct](../integrations/hyperlight.md).
+For Python, the documented connector today is [Hyperlight CodeAct](../integrations/by-component/context-providers/hyperlight.md).
 
 The Hyperlight package provides:
 
@@ -106,7 +106,7 @@ The Hyperlight package provides:
 - provider-managed tools that remain available inside the sandbox through `call_tool(...)`
 - optional filesystem and outbound-network configuration for the sandbox runtime
 
-See [Hyperlight CodeAct](../integrations/hyperlight.md) for installation, examples, runtime-specific guidance such as when to use `print(...)` and `/output/`, and the current Hyperlight-specific limitations.
+See [Hyperlight CodeAct](../integrations/by-component/context-providers/hyperlight.md) for installation, examples, runtime-specific guidance such as when to use `print(...)` and `/output/`, and the current Hyperlight-specific limitations.
 
 ::: zone-end
 
@@ -120,12 +120,12 @@ See [Hyperlight CodeAct](../integrations/hyperlight.md) for installation, exampl
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Agent Safety](./safety.md)
+> [Agent Safety](../concepts/agents/safety.md)
 
 ### Related content
 
-- [Hyperlight CodeAct](../integrations/hyperlight.md)
+- [Hyperlight CodeAct](../integrations/by-component/context-providers/hyperlight.md)
 - [CodeAct paper](https://arxiv.org/abs/2402.01030)
 - [Code Interpreter](./tools/code-interpreter.md)
 - [Tool Approval](./tools/tool-approval.md)
-- [Context Providers](./conversations/context-providers.md)
+- [Context Providers](../concepts/agents/conversations/context-providers.md)

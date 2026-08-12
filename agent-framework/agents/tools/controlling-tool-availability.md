@@ -192,7 +192,7 @@ agent = Agent(
 )
 ```
 
-For more on function middleware, see [Defining Middleware](../middleware/defining-middleware.md) and [Result Overrides](../middleware/result-overrides.md).
+For more on function middleware, see [Defining Middleware](../../concepts/agents/middleware/defining-middleware.md) and [Result Overrides](../../concepts/agents/middleware/result-overrides.md).
 
 ## Forcing a tool call with `tool_choice`
 
@@ -240,4 +240,4 @@ tool_choice: ToolMode = {"mode": "required", "required_function_name": "get_reco
 > [Function Tools](./function-tools.md)
 
 > [!div class="nextstepaction"]
-> [Defining Middleware](../middleware/defining-middleware.md)
+> [Defining Middleware](../../concepts/agents/middleware/defining-middleware.md)

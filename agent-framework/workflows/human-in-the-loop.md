@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 05/27/2026
+ms.date: 07/16/2026
 ms.service: agent-framework
 ---
 
@@ -304,6 +304,8 @@ The `RequestPort` pattern described above works with custom executors and `Workf
 
 Agents can use tools that require human approval before execution. When the agent attempts to call an approval-required tool, the workflow pauses and emits a `RequestInfoEvent` just like the `RequestPort` pattern, but the event payload contains a `ToolApprovalRequestContent` (C# and Go) or a `Content` with `type == "function_approval_request"` (Python) instead of a custom request type.
 
+For interactive scenarios where an agent needs to gather more information from the user and iterate before proceeding; rather than only approving or rejecting a tool call; use the **[handoff orchestration](./orchestrations/handoff.md)**. Handoff is interactive by default: when an agent responds without handing off to another agent, control returns to the user for the next input, which enables multi-turn back-and-forth within the orchestration. Sequential, concurrent, and group chat orchestrations do not pause for free-form user input on their own; pair them with a `RequestPort` in a custom `WorkflowBuilder` workflow when you need that control between steps.
+
 > [!TIP]
 > For complete examples with code, see:
 > - [Sequential orchestration with HITL](./orchestrations/sequential.md#sequential-orchestration-with-human-in-the-loop)
@@ -322,7 +324,7 @@ After restoring, listen for the re-emitted request events and respond through th
 ## Next Steps
 
 - [Learn about sequential orchestration with HITL](./orchestrations/sequential.md#sequential-orchestration-with-human-in-the-loop).
-- [Learn how to manage state](./state.md) in workflows.
+- [Learn how to manage state](../concepts/workflows/state.md) in workflows.
 - [Learn how to create checkpoints and resume from them](./checkpoints.md).
 - [Learn how to monitor workflows](./observability.md).
 - [Learn how to visualize workflows](./visualization.md).

@@ -1,414 +1,62 @@
 ---
-title: Microsoft Agent Framework Agent Types
-titleSuffix: Microsoft Foundry
-description: Learn different Agent Framework agent types.
+title: Agent capabilities
+description: Browse built-in Agent Framework capabilities for multimodal input, tools, retrieval, evaluation, security, and autonomous execution.
+author: eavanvalkenburg
+ms.topic: overview
+ms.author: edvan
+ms.date: 07/30/2026
 ms.service: agent-framework
-ms.topic: tutorial
-ms.date: 07/01/2026
-ms.reviewer: ssalgado
-zone_pivot_groups: programming-languages
-author: TaoChenOSU
-ms.author: taochen
 ---
 
-# Microsoft Agent Framework agent types
+# Agent capabilities
 
-The Microsoft Agent Framework provides support for several types of agents to accommodate different use cases and requirements.
+Agent capabilities are opt-in features that extend what an agent can understand, produce, retrieve, execute, observe, or secure. For the runtime, type, conversation, and middleware foundations behind these features, see [Agents](../concepts/agents/index.md).
 
-::: zone pivot="programming-language-csharp"
-All agents are derived from a common base class, `AIAgent`, which provides a consistent interface for all agent types. This allows for building common, agent agnostic, higher level functionality such as multi-agent orchestrations.
-::: zone-end
+## Agent types and model connections
 
-::: zone pivot="programming-language-python"
-All agents are derived from a common base class, `Agent`, which provides a consistent interface for all agent types. This allows for building common, agent agnostic, higher level functionality such as multi-agent orchestrations.
-::: zone-end
+Looking for the agent-type and SDK-selection guidance previously hosted on this page?
 
-## Default Agent Runtime Execution Model
+- [Agent concepts](../concepts/agents/index.md#chat-client-agents) explains application-owned chat-client agents, custom agents, and remote agent types.
+- [Model providers](../integrations/by-component/model-providers/index.md) compares inference providers, conversation-history support, and .NET SDK and endpoint options.
+- [Agent services](../integrations/by-component/agent-services/index.md) covers managed and protocol-backed remote agent runtimes.
 
-All agents in the Microsoft Agent Framework execute using a structured runtime model. This model coordinates user interaction, model inference, and tool execution in a deterministic loop.
+## Input and output
 
-![AI Agent Diagram](../media/agent.svg)
-
-> [!IMPORTANT]
-> If you use Microsoft Agent Framework to build applications that operate with any third-party servers, agents, code, or non-Azure Direct models ("Third-Party Systems"), you do so at your own risk. Third-Party Systems are Non-Microsoft Products under the Microsoft Product Terms and are governed by their own third-party license terms. You are responsible for any usage and associated costs.
->
-> We recommend reviewing all data being shared with and received from Third-Party Systems and being cognizant of third-party practices for handling, sharing, retention and location of data. It is your responsibility to manage whether your data will flow outside of your organization's Azure compliance and geographic boundaries and any related implications, and that appropriate permissions, boundaries and approvals are provisioned.
->
-> You are responsible for carefully reviewing and testing applications you build using Microsoft Agent Framework in the context of your specific use cases, and making all appropriate decisions and customizations. This includes implementing your own responsible AI mitigations such as metaprompt, content filters, or other safety systems, and ensuring your applications meet appropriate quality, reliability, security, and trustworthiness standards. See also: [Transparency FAQ](https://github.com/microsoft/agent-framework/blob/main/TRANSPARENCY_FAQS.md)
-
-::: zone pivot="programming-language-csharp"
-
-## Simple agents based on inference services
-
-Agent Framework makes it easy to create simple agents based on many different inference services.
-Any inference service that provides a [`Microsoft.Extensions.AI.IChatClient`](/dotnet/ai/microsoft-extensions-ai#the-ichatclient-interface) implementation can be used to build these agents. The `Microsoft.Agents.AI.ChatClientAgent` is the agent class used to provide an agent for any <xref:Microsoft.Extensions.AI.IChatClient> implementation.
-
-These agents support a wide range of functionality out of the box:
-
-1. Function calling.
-1. Multi-turn conversations with local chat history management or service provided chat history management.
-1. Custom service provided tools (for example, MCP, Code Execution).
-1. Structured outputs.
-
-To create one of these agents, simply construct a `ChatClientAgent` using the `IChatClient` implementation of your choice.
-
-```csharp
-using Microsoft.Agents.AI;
-
-var agent = new ChatClientAgent(chatClient, instructions: "You are a helpful assistant");
-```
-
-To make creating these agents even easier, Agent Framework provides helpers for many popular services. For more information, see the documentation for each service.
-
-| Underlying inference service | Description | Service chat history storage supported | InMemory/Custom chat history storage supported |
-|------------------------------|-------------|----------------------------------------|------------------------------------------------|
-|[Microsoft Foundry Agent](./providers/microsoft-foundry.md)|An agent that uses the Foundry Agent Service as its backend.|Yes|No|
-|[Foundry Models ChatCompletion](./providers/microsoft-foundry.md)|An agent that uses any of the models deployed in the Foundry Service as its backend via ChatCompletion.|No|Yes|
-|[Foundry Models Responses](./providers/microsoft-foundry.md)|An agent that uses any of the models deployed in the Foundry Service as its backend via Responses.|Yes|Yes|
-|[Foundry Anthropic](./providers/anthropic.md)|An agent that uses a Claude model via the Foundry Anthropic Service as its backend.|No|Yes|
-|[Azure OpenAI ChatCompletion](./providers/azure-openai.md)|An agent that uses the Azure OpenAI ChatCompletion service.|No|Yes|
-|[Azure OpenAI Responses](./providers/azure-openai.md)|An agent that uses the Azure OpenAI Responses service.|Yes|Yes|
-|[Anthropic](./providers/anthropic.md)|An agent that uses a Claude model via the Anthropic Service as its backend.|No|Yes|
-|[OpenAI ChatCompletion](./providers/openai.md)|An agent that uses the OpenAI ChatCompletion service.|No|Yes|
-|[OpenAI Responses](./providers/openai.md)|An agent that uses the OpenAI Responses service.|Yes|Yes|
-|[Any other `IChatClient`](./providers/custom.md)|You can also use any other [`Microsoft.Extensions.AI.IChatClient`](/dotnet/ai/microsoft-extensions-ai#the-ichatclient-interface) implementation to create an agent.|Varies|Varies|
-
-## Complex custom agents
-
-It's also possible to create fully custom agents that aren't just wrappers around an `IChatClient`.
-The agent framework provides the `AIAgent` base type.
-This base type is the core abstraction for all agents, which, when subclassed, allows for complete control over the agent's behavior and capabilities.
-
-For more information, see the documentation for [Custom Agents](./providers/custom.md).
-
-## Proxies for remote agents
-
-Agent Framework provides out of the box `AIAgent` implementations for common service hosted agent protocols,
-such as A2A. This way you can easily connect to and use remote agents from your application.
-
-See the documentation for each agent type, for more information:
-
-| Protocol              | Description                                                             |
-|-----------------------|-------------------------------------------------------------------------|
-| [A2A](../integrations/a2a.md) | An agent that serves as a proxy to a remote agent via the A2A protocol. |
-
-## Azure and OpenAI SDK Options Reference
-
-When using Foundry, Azure OpenAI, OpenAI services, or Anthropic services, you have various SDK options to connect to these services. In some cases, it is possible to use multiple SDKs to connect to the same service or to use the same SDK to connect to different services. Here is a list of the different options available with the url that you should use when connecting to each. Make sure to replace `<resource>` and `<project>` with your actual resource and project names.
-
-| AI service | SDK | Nuget | Url |
-|------------------|-----|-------|-----|
-| [Foundry Models](/azure/ai-foundry/concepts/foundry-models-overview) | Azure OpenAI SDK <sup>2</sup> | [Azure.AI.OpenAI](https://www.nuget.org/packages/Azure.AI.OpenAI) | https://ai-foundry-&lt;resource&gt;.services.ai.azure.com/ |
-| [Foundry Models](/azure/ai-foundry/concepts/foundry-models-overview) | OpenAI SDK <sup>3</sup> | [OpenAI](https://www.nuget.org/packages/OpenAI) | https://ai-foundry-&lt;resource&gt;.services.ai.azure.com/openai/v1/ |
-| [Foundry Models](/azure/ai-foundry/concepts/foundry-models-overview) | Azure AI Inference SDK <sup>2</sup> | [Azure.AI.Inference](https://www.nuget.org/packages/Azure.AI.Inference) | https://ai-foundry-&lt;resource&gt;.services.ai.azure.com/models |
-| [Foundry Agents](/azure/ai-foundry/agents/overview) | Azure AI Projects SDK + Microsoft Agents AI Foundry | [Azure.AI.Projects](https://www.nuget.org/packages/Azure.AI.Projects) / [Microsoft.Agents.AI.Foundry](https://www.nuget.org/packages/Microsoft.Agents.AI.Foundry) | https://ai-foundry-&lt;resource&gt;.services.ai.azure.com/api/projects/ai-project-&lt;project&gt; |
-| [Azure OpenAI](/azure/ai-foundry/openai/overview) <sup>1</sup> | Azure OpenAI SDK <sup>2</sup> | [Azure.AI.OpenAI](https://www.nuget.org/packages/Azure.AI.OpenAI) | https://&lt;resource&gt;.openai.azure.com/ |
-| [Azure OpenAI](/azure/ai-foundry/openai/overview) <sup>1</sup> | OpenAI SDK | [OpenAI](https://www.nuget.org/packages/OpenAI) | https://&lt;resource&gt;.openai.azure.com/openai/v1/ |
-| OpenAI | OpenAI SDK | [OpenAI](https://www.nuget.org/packages/OpenAI) | No url required |
-| [Microsoft Foundry Anthropic](/azure/ai-foundry/foundry-models/how-to/use-foundry-models-claude) | Anthropic Foundry SDK | [Anthropic.Foundry](https://www.nuget.org/packages/Anthropic.Foundry) | Resource name required |
-| Anthropic | Anthropic SDK | [Anthropic](https://www.nuget.org/packages/Anthropic) | No url or resource name required |
-
-1. [Upgrading from Azure OpenAI to Foundry](/azure/ai-foundry/how-to/upgrade-azure-openai)
-1. We recommend using the OpenAI SDK.
-1. While we recommend using the OpenAI SDK to access Foundry models, Foundry Models support models from many different vendors, not just OpenAI. All these models are supported via the OpenAI SDK.
-
-### Using the OpenAI SDK
-
-As shown in the table above, the OpenAI SDK can be used to connect to multiple services.
-Depending on the service you are connecting to, you may need to set a custom URL when creating the `OpenAIClient`.
-You can also use different authentication mechanisms depending on the service.
-
-If a custom URL is required (see table above), you can set it via the OpenAIClientOptions.
-
-```csharp
-var clientOptions = new OpenAIClientOptions() { Endpoint = new Uri(serviceUrl) };
-```
-
-It's possible to use an API key when creating the client.
-
-```csharp
-OpenAIClient client = new OpenAIClient(new ApiKeyCredential(apiKey), clientOptions);
-```
-
-When using an Azure Service, it's also possible to use Azure credentials instead of an API key.
-
-```csharp
-OpenAIClient client = new OpenAIClient(new BearerTokenPolicy(new DefaultAzureCredential(), "https://ai.azure.com/.default"), clientOptions)
-```
-
-> [!WARNING]
-> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
-
-Once you have created the OpenAIClient, you can get a sub client for the specific service you want to use and then create an `AIAgent` from that.
-
-```csharp
-AIAgent agent = client
-    .AsAIAgent(model: model, instructions: "You are good at telling jokes.", name: "Joker");
-```
-
-### Using the Azure AI Projects SDK
-
-This SDK can be used to connect to Foundry services.
-You will need to supply the correct project endpoint URL when creating the `AIProjectClient`.
-See the table above for the correct URL to use.
-
-```csharp
-AIAgent agent = new AIProjectClient(
-    new Uri(serviceUrl),
-    new DefaultAzureCredential())
-     .AsAIAgent(
-         model: deploymentName,
-         instructions: "You are good at telling jokes.",
-         name: "Joker");
-```
-
-### Using the Azure AI Projects SDK with Foundry Agents
-
-This SDK is used for both Responses API based agents and versioned Foundry Agents. See the table above for the correct URL to use.
-
-```csharp
-var aiProjectClient = new AIProjectClient(new Uri(serviceUrl), new DefaultAzureCredential());
-AIAgent agent = aiProjectClient.AsAIAgent(
-    model: deploymentName,
-    instructions: "You are good at telling jokes.",
-    name: "Joker");
-```
-
-### Using the Foundry Anthropic SDK
-
-The resource is the subdomain name / first name coming before '.services.ai.azure.com' in the endpoint Uri.
-
-For example: `https://(resource name).services.ai.azure.com/anthropic/v1/chat/completions`
-
-```csharp
-var client = new AnthropicFoundryClient(new AnthropicFoundryApiKeyCredentials(apiKey, resource));
-AIAgent agent = client.AsAIAgent(
-    model: deploymentName,
-    instructions: "Joker",
-    name: "You are good at telling jokes.");
-```
-
-### Using the Anthropic SDK
-
-```csharp
-var client = new AnthropicClient() { ApiKey = apiKey };
-AIAgent agent = client.AsAIAgent(
-    model: deploymentName,
-    instructions: "Joker",
-    name: "You are good at telling jokes.");
-```
-
-::: zone-end
-
-::: zone pivot="programming-language-python"
-
-## Simple agents based on inference services
-
-Agent Framework makes it easy to create simple agents based on many different inference services.
-Any inference service that provides a chat client implementation can be used to build these agents.
-This can be done using the `SupportsChatGetResponse` protocol, which defines a standard for the methods that a client needs to support to be used with the standard `Agent` class.
-
-These agents support a wide range of functionality out of the box:
-
-1. Function calling
-1. Multi-turn conversations with local chat history management or service provided chat history management
-1. Custom service provided tools (for example, MCP, Code Execution)
-1. Structured outputs
-1. Streaming responses
-
-To create one of these agents, simply construct an `Agent` using the chat client implementation of your choice.
-
-
-```python
-import os
-from agent_framework import Agent
-from agent_framework.foundry import FoundryChatClient
-from azure.identity.aio import DefaultAzureCredential
-
-agent = Agent(
-    client=FoundryChatClient(
-        credential=DefaultAzureCredential(),
-        project_endpoint=os.getenv("FOUNDRY_PROJECT_ENDPOINT"),
-        model=os.getenv("FOUNDRY_MODEL"),
-    ),
-    instructions="You are a helpful assistant",
-)
-response = await agent.run("Hello!")
-```
-
-Alternatively, you can use the convenience method on the chat client:
-
-```python
-from agent_framework.foundry import FoundryChatClient
-from azure.identity.aio import DefaultAzureCredential
-
-agent = FoundryChatClient(
-    credential=DefaultAzureCredential(),
-    project_endpoint=os.getenv("FOUNDRY_PROJECT_ENDPOINT"),
-    model=os.getenv("FOUNDRY_MODEL"),
-).as_agent(
-    instructions="You are a helpful assistant"
-)
-```
-
-> [!NOTE]
-> This example shows using the FoundryChatClient, but the same pattern applies to any chat client that implements `SupportsChatGetResponse`, see [providers overview](./providers/index.md) for more details on other clients.
-
-For detailed examples, see the agent-specific documentation sections below.
-
-### Supported Chat Providers
-
-|Underlying Inference Service|Description|Service Chat History storage supported|
-|---|---|---|
-|[Foundry Agent](./providers/microsoft-foundry.md)|An agent that uses the Agent Service as its backend.|Yes|
-|[Azure OpenAI Chat Completion](./providers/azure-openai.md)|An agent that uses the Azure OpenAI Chat Completion service.|No|
-|[Azure OpenAI Responses](./providers/azure-openai.md)|An agent that uses the Azure OpenAI Responses service.|Yes|
-|[OpenAI Chat Completion](./providers/openai.md)|An agent that uses the OpenAI Chat Completion service.|No|
-|[OpenAI Responses](./providers/openai.md)|An agent that uses the OpenAI Responses service.|Yes|
-|[Anthropic Claude](./providers/anthropic.md)|An agent that uses Anthropic Claude models.|No|
-|[Amazon Bedrock](https://github.com/microsoft/agent-framework/tree/main/python/packages/bedrock)|An agent that uses Amazon Bedrock models through the Agent Framework Bedrock chat client.|No|
-|[GitHub Copilot](./providers/github-copilot.md)|An agent that uses the GitHub Copilot SDK backend.|No|
-|[Ollama (OpenAI-compatible)](./providers/ollama.md)|An agent that uses locally hosted Ollama models via OpenAI-compatible APIs.|No|
-|[Any other ChatClient](./providers/custom.md)|You can also use any other implementation of `SupportsChatGetResponse` to create an agent.|Varies|
-
-Custom chat history storage is supported whenever session-based conversation state is supported.
-
-### Streaming Responses
-
-Agents support both regular and streaming responses:
-
-```python
-# Regular response (wait for complete result)
-response = await agent.run("What's the weather like in Seattle?")
-print(response.text)
-
-# Streaming response (get results as they are generated)
-async for chunk in agent.run("What's the weather like in Portland?", stream=True):
-    if chunk.text:
-        print(chunk.text, end="", flush=True)
-```
-
-For streaming examples, see:
-
-- [Foundry streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/foundry/foundry_chat_client_basic.py)
-- [Azure OpenAI Chat Completion streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure/openai_chat_completion_client_basic.py)
-- [Azure OpenAI Responses streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/azure/openai_client_basic.py)
-- [OpenAI Chat Completion streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/chat_completion_client_basic.py)
-- [OpenAI Responses streaming examples](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/providers/openai/client_basic.py)
-
-For more invocation patterns, see [Running Agents](./running-agents.md).
-
-### Function Tools
-
-You can provide function tools to agents for enhanced capabilities:
-
-```python
-import os
-from typing import Annotated
-from azure.identity.aio import DefaultAzureCredential
-from agent_framework.foundry import FoundryChatClient
-
-def get_weather(location: Annotated[str, "The location to get the weather for."]) -> str:
-    """Get the weather for a given location."""
-    return f"The weather in {location} is sunny with a high of 25°C."
-
-async with DefaultAzureCredential() as credential:
-    agent = FoundryChatClient(
-        credential=credential,
-        project_endpoint=os.getenv("FOUNDRY_PROJECT_ENDPOINT"),
-        model=os.getenv("FOUNDRY_MODEL"),
-    ).as_agent(
-        instructions="You are a helpful weather assistant.",
-        tools=get_weather,
-    )
-    response = await agent.run("What's the weather in Seattle?")
-```
-
-For tools and tool patterns, see [Tools overview](./tools/index.md).
-
-## Custom agents
-
-For fully custom implementations (for example deterministic agents or API-backed agents), see [Custom Agents](./providers/custom.md). That page covers implementing `SupportsAgentRun` or extending `BaseAgent`, including streaming updates with `AgentResponseUpdate`.
-
-## Other agent types
-
-Agent Framework also includes protocol-backed agents, such as:
-
-| Agent Type | Description |
+| Capability | Purpose |
 |---|---|
-| [A2A](../integrations/a2a.md) | A proxy agent that connects to and invokes remote A2A-compliant agents. |
+| [Multimodal](multimodal.md) | Send images and other supported content to an agent. |
+| [Structured outputs](structured-outputs.md) | Return values that conform to a schema or application type. |
+| [Background responses](background-responses.md) | Continue, poll, and reconnect to long-running responses. |
 
-::: zone-end
+## Context and knowledge
 
-::: zone pivot="programming-language-go"
-## Agent overview
+| Capability | Purpose |
+|---|---|
+| [RAG](rag.md) | Ground responses with retrieved application knowledge. |
+| [Declarative agents](declarative.md) | Define supported agents through YAML or JSON. |
+| [Agent Skills](skills.md) | Discover and progressively load reusable instructions, resources, and scripts. |
 
-In Go, agents are created through provider-specific constructors that return an `*agent.Agent`. The core types are:
+## Execution and autonomy
 
-- `agent.Agent` — The main agent type with `Run`, `RunText`, `RunMessage` methods
-- `agent.Config` — Configuration for name, instructions, tools, middleware, and context providers
-- `agent.ProviderConfig` — Provider-level configuration (run function, session management)
+| Capability | Purpose |
+|---|---|
+| [Tools](tools/index.md) | Let agents call functions and provider-hosted capabilities. |
+| [CodeAct](code_act.md) | Let the model write programs that coordinate tools through a managed execution provider. |
+| [Looping](looping.md) | Re-run an agent until a bounded completion condition is met. |
+| [Background agents](background-agents.md) | Delegate work to background agents and retrieve task results. |
+| [Planning and todos](planning-and-todos.md) | Track plans, operational todos, dependencies, and completion. |
 
-```go
-import (
-    "github.com/microsoft/agent-framework-go/agent"
-    "github.com/microsoft/agent-framework-go/provider/foundryprovider"
-    "github.com/microsoft/agent-framework-go/tool"
-)
+## Operations and trust
 
-a := foundryprovider.NewAgent(endpoint, token, foundryprovider.ModelDeployment(model), foundryprovider.AgentConfig{
-    Instructions: "You are a helpful assistant.",
-    Config: agent.Config{
-        Name:        "MyAgent",
-        Tools:       []tool.Tool{myTool},
-        Middlewares: []agent.Middleware{logger},
-    },
-})
-```
+| Capability | Purpose |
+|---|---|
+| [Observability](observability.md) | Export traces, metrics, and logs. |
+| [Evaluation](evaluation.md) | Measure agent quality, safety, and correctness. |
+| [Agent Security with FIDES](security.md) | Enforce information-flow controls across agent data and tools. |
 
-### Running the agent
+The [Harness Agent](../concepts/harness.md) assembles many of these capabilities into an opinionated operational agent.
 
-```go
-// Non-streaming
-resp, err := a.RunText(ctx, "Hello!").Collect()
-
-// Streaming
-for update, err := range a.RunText(ctx, "Hello!", agent.Stream(true)) {
-    // process each update
-}
-
-// With message objects
-msg := message.New(&message.TextContent{Text: "Hello!"})
-resp, err := a.RunMessage(ctx, msg).Collect()
-```
-
-### Sessions
-
-Sessions maintain conversation state across multiple turns:
-
-```go
-session, err := a.CreateSession(ctx)
-resp, _ := a.RunText(ctx, "My name is Alice.", agent.WithSession(session)).Collect()
-resp, _ = a.RunText(ctx, "What is my name?", agent.WithSession(session)).Collect()
-```
-
-### Supported providers
-
-| Provider | Package | Constructor |
-|---|---|---|
-| [Microsoft Foundry](./providers/microsoft-foundry.md) | `foundryprovider` | `foundryprovider.NewAgent(endpoint, credential, target, config)` |
-| [OpenAI Chat Completions](./providers/openai.md) | `openaiprovider` | `openaiprovider.NewChatCompletionsAgent(client, config)` |
-| [OpenAI Responses](./providers/openai.md) | `openaiprovider` | `openaiprovider.NewResponsesAgent(client, config)` |
-| [Anthropic](./providers/anthropic.md) | `anthropicprovider` | `anthropicprovider.NewAgent(client, config)` |
-| [Google Gemini](https://github.com/microsoft/agent-framework-go/tree/main/examples/02-agents/providers/gemini) | `geminiprovider` | `geminiprovider.NewAgent(client, config)` |
-| [A2A](./providers/agent-to-agent.md) | `a2aprovider` | `a2aprovider.NewAgent(client, config)` |
-| [AG-UI](../integrations/ag-ui/getting-started.md) | `aguiprovider` | `aguiprovider.NewAgent(client, config)` |
-
-> [!TIP]
-> See the [Go examples](https://github.com/microsoft/agent-framework-go/tree/main/examples) for complete runnable samples.
-
-::: zone-end
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Running Agents](running-agents.md)
+> [Add tools to an agent](tools/index.md)

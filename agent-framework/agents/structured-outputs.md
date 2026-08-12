@@ -20,7 +20,7 @@ This tutorial step shows you how to produce structured outputs with an agent, wh
 
 ## Prerequisites
 
-For prerequisites and installing NuGet packages, see the [Create and run a simple agent](./running-agents.md) step in this tutorial.
+For prerequisites and installing NuGet packages, see the [Create and run a simple agent](../concepts/agents/running-agents.md) step in this tutorial.
 
 ## Define a type for structured outputs
 
@@ -202,7 +202,7 @@ This tutorial step shows you how to produce structured outputs with an agent, wh
 
 ## Prerequisites
 
-For prerequisites and installing packages, see the [Create and run a simple agent](./running-agents.md) step in this tutorial.
+For prerequisites and installing packages, see the [Create and run a simple agent](../concepts/agents/running-agents.md) step in this tutorial.
 
 ## Create the agent with structured outputs
 

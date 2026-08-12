@@ -189,7 +189,7 @@ dotnet add package Microsoft.Agents.AI.Workflows.Declarative.Mcp --prerelease
 ```
 
 - Basic familiarity with YAML syntax
-- Understanding of [workflow concepts](./index.md)
+- Understanding of [workflow concepts](../concepts/workflows/index.md)
 
 ## Your First Declarative Workflow
 
@@ -1571,7 +1571,7 @@ pip install agent-framework-declarative --pre
 This package pulls in the underlying `agent-framework-core` automatically.
 
 - Basic familiarity with YAML syntax
-- Understanding of [workflow concepts](./index.md)
+- Understanding of [workflow concepts](../concepts/workflows/index.md)
 
 ## Your First Declarative Workflow
 

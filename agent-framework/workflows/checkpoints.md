@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 05/27/2026
+ms.date: 07/30/2026
 ms.service: agent-framework
 ---
 
@@ -39,12 +39,19 @@ Checkpoints allow you to save the state of a workflow at specific points during 
 
 ## When Are Checkpoints Created?
 
-Remember that workflows are executed in **supersteps**, as documented in the [core concepts](./index.md#core-concepts). Checkpoints are created at the end of each superstep, after all executors in that superstep have completed their execution. A checkpoint captures the entire state of the workflow, including:
+Remember that workflows are executed in **supersteps**, as documented in the [workflow execution model](../concepts/workflows/builder-and-execution.md#execution-model-supersteps). Checkpoints are created at the end of each superstep, after all executors in that superstep have completed their execution. A checkpoint captures the entire state of the workflow, including:
 
 - The current state of all executors
 - All pending messages in the workflow for the next superstep
 - Pending requests and responses
 - Shared states
+
+::: zone pivot="programming-language-python"
+
+> [!NOTE]
+> Starting in Python version 1.13.0, workflows also create an entry checkpoint before the first superstep to record the workflow input, and another entry checkpoint when responses to request events are delivered. These checkpoints make the complete workflow run replayable. This release includes minor breaking changes for applications that depend on iteration counts, message source IDs, or checkpoint ordering. Existing checkpoints remain supported. For migration details, see [Upgrade Python workflow checkpoints to 1.13.0](../support/upgrade/python-1.13.0-workflow-checkpoint-upgrade-guide.md).
+
+::: zone-end
 
 ## Capturing Checkpoints
 
@@ -310,24 +317,26 @@ for evt, err := range run.WatchStream(ctx) {
 
 ## Rehydrating from Checkpoints
 
+A rehydrated workflow must preserve the topology and executor identities of the workflow that created the checkpoint. How executor identity is resolved depends on the SDK and executor type.
+
 ::: zone pivot="programming-language-csharp"
 
 Or you can rehydrate a workflow from a checkpoint into a new run instance.
 
-```csharp
-// Assume we want to resume from the 6th checkpoint
-CheckpointInfo savedCheckpoint = run.Checkpoints[5];
-StreamingRun newRun = await InProcessExecution
-    .ResumeStreamingAsync(newWorkflow, savedCheckpoint, checkpointManager)
-    .ConfigureAwait(false);
-await foreach (WorkflowEvent evt in newRun.WatchStreamAsync().ConfigureAwait(false))
-{
-    if (evt is WorkflowOutputEvent workflowOutputEvt)
-    {
-        Console.WriteLine($"Workflow completed with result: {workflowOutputEvt.Data}");
-    }
-}
-```
+:::code language="csharp" source="~/../agent-framework-code/dotnet/samples/03-workflows/Checkpoint/CheckpointAndRehydrate/Program.cs" id="rehydrate_workflow":::
+
+> [!IMPORTANT]
+> The workflow passed to `ResumeStreamingAsync` must have the same structure and executor identities as the workflow that created the checkpoint. If the workflow contains local `ChatClientAgent` instances that are reconstructed across requests, dependency injection scopes, processes, or deployments, assign each agent a stable `ChatClientAgentOptions.Id`. If an agent also sets a `Name`, keep that `Name` unchanged as well.
+
+For example, assign an ID that represents the agent's logical role:
+
+:::code language="csharp" source="~/../agent-framework-code/dotnet/samples/03-workflows/Orchestration/Handoff/AgentRegistry.cs" id="stable_agent_identity":::
+
+Apply this pattern to every agent that participates in the workflow. Agent IDs must be unique within the workflow and must be reused when reconstructing the same logical agent. Don't use conversation IDs, request IDs, user IDs, personally identifiable information, or secrets as agent IDs.
+
+When an agent `Name` is set, the current .NET workflow executor identity is derived from both its `Name` and `Id`, so changing either value makes the rebuilt workflow incompatible with the checkpoint. Assigning stable values does not repair checkpoints created with different or randomly generated IDs; start a new session and checkpoint lineage instead.
+
+For related scenarios, see [Workflows as Agents](./as-agents.md#session-serialization-and-resumption) and [Handoff orchestration](./orchestrations/handoff.md#define-your-specialized-agents).
 
 ::: zone-end
 
@@ -517,7 +526,7 @@ Ensure that the storage location used for checkpoints is secured appropriately. 
 
 ### Pickle serialization
 
-Both `FileCheckpointStorage` and `CosmosCheckpointStorage` use Python's [`pickle`](https://docs.python.org/3/library/pickle.html) module to serialize non-JSON-native state such as dataclasses, datetimes, and custom objects. To mitigate the risks of arbitrary code execution during deserialization, both providers use a **restricted unpickler** by default. Only a built-in set of safe Python types (primitives, `datetime`, `uuid`, `Decimal`, common collections, etc.) and all `agent_framework` internal types are permitted during deserialization. Any other type encountered in a checkpoint causes deserialization to fail with a `WorkflowCheckpointException`.
+Both `FileCheckpointStorage` and `CosmosCheckpointStorage` use Python's [`pickle`](https://docs.python.org/3/library/pickle.html) module to serialize non-JSON-native state such as dataclasses, datetimes, and custom objects. To mitigate the risks of arbitrary code execution during deserialization, both providers use a **restricted unpickler** by default. Only a built-in set of safe Python types (primitives, `datetime`, `uuid`, `Decimal`, common collections, etc.) and supported Agent Framework or OpenAI SDK types are permitted during deserialization. Module-prefix allowlisting is type-only: helper functions and other non-type globals are rejected. Any unsupported type causes deserialization to fail with a `WorkflowCheckpointException`.
 
 To allow additional application-specific types, pass them via the `allowed_checkpoint_types` parameter using `"module:qualname"` format:
 
@@ -532,6 +541,8 @@ storage = FileCheckpointStorage(
     ],
 )
 ```
+
+Each `allowed_checkpoint_types` entry must resolve to a type. Adding a module-level function or another non-type global doesn't make that global deserializable.
 
 `CosmosCheckpointStorage` accepts the same parameter:
 
@@ -570,5 +581,5 @@ Go checkpoint managers serialize checkpoint state as JSON, but checkpoint storag
 ## Next Steps
 
 - [Learn how to monitor workflows](./observability.md).
-- [Learn about state isolation in workflows](./state.md).
+- [Learn about state isolation in workflows](../concepts/workflows/state.md).
 - [Learn how to visualize workflows](./visualization.md).

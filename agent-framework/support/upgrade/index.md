@@ -4,7 +4,7 @@ description: Guides for upgrading between Agent Framework versions, covering bre
 author: eavanvalkenburg
 ms.topic: article
 ms.author: edvan
-ms.date: 02/12/2026
+ms.date: 07/30/2026
 ms.service: agent-framework
 ---
 
@@ -12,6 +12,7 @@ ms.service: agent-framework
 
 These guides cover breaking changes and migration steps between Agent Framework versions:
 
+- [Python workflow checkpoint replayability in 1.13.0](python-1.13.0-workflow-checkpoint-upgrade-guide.md)
 - [Workflow APIs and Request-Response System in Python](requests-and-responses-upgrade-guide-python.md)
 - [Python Options based on TypedDicts](typed-options-guide-python.md)
 - [2026 Python Significant Changes](python-2026-significant-changes.md)

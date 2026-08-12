@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: taochen
 ms.topic: article
 ms.author: taochen
-ms.date: 05/27/2026
+ms.date: 07/17/2026
 ms.service: agent-framework
 ---
 
@@ -24,9 +24,9 @@ ms.service: agent-framework
 
 # Foundry Hosted Agents
 
-[Hosted agents](/azure/foundry/agents/concepts/hosted-agents) in Microsoft Foundry Agent Service let you deploy Agent Framework agents as containerized applications to Microsoft-managed infrastructure. The platform handles scaling, session state persistence, security, and lifecycle management so you can focus on your agent's logic.
+[Hosted agents](/azure/foundry/agents/concepts/hosted-agents) in Microsoft Foundry Agent Service let you deploy Agent Framework agents as containerized applications to Microsoft-managed infrastructure. The platform handles scaling, session state persistence, security, and lifecycle management so you can focus on your agent's logic. Microsoft Foundry Hosted Agents is generally available.
 
-With the Agent Framework hosting integration, you can take any `Agent` or workflow and expose it through the Foundry Responses or Invocations protocol with minimal code.
+With the Agent Framework hosting integration, you can expose an `Agent`, including a workflow wrapped with `Workflow.as_agent()`, through the Foundry Responses or Invocations protocol with minimal code.
 
 ## When to use hosted agents
 
@@ -38,7 +38,7 @@ Choose Foundry hosted agents when you want:
 - **OpenAI-compatible endpoints** — clients can interact with your agent using any OpenAI-compatible SDK through the Responses protocol.
 
 > [!NOTE]
-> Foundry hosted agents are currently in preview. See the [Foundry hosted agents documentation](/azure/foundry/agents/concepts/hosted-agents#limits-pricing-and-availability-preview) for the latest availability, limits, and pricing.
+> The Python `agent-framework-foundry-hosting` integration is prerelease. Microsoft Foundry Hosted Agents, the managed hosting service, is generally available.
 
 ## Prerequisites
 
@@ -67,13 +67,15 @@ dotnet add package Azure.AI.Projects --prerelease
 
 - Python 3.10 or later
 
-Install the hosting Python package:
+Install the prerelease hosting package, Foundry client, and Azure authentication package:
 
 ```bash
-pip install agent-framework agent-framework-foundry-hosting
+pip install --pre agent-framework-foundry agent-framework-foundry-hosting azure-identity
 ```
 
 :::zone-end
+
+In Foundry, the platform supplies the caller's user context and call context; the hosting infrastructure uses them to isolate state per user and forward request context to Foundry services. Local runs don't receive that platform context, so applications must supply their own identity and state controls when needed.
 
 ## Responses protocol
 
@@ -363,7 +365,7 @@ Once deployed, your agent is accessible through its dedicated Foundry endpoint a
 
 - [Deploy a hosted agent with the Foundry SDK](/azure/foundry/agents/how-to/deploy-hosted-agent)
 - [Manage hosted agents](/azure/foundry/agents/how-to/manage-hosted-agent)
-- [Azure Functions (Durable) hosting](../integrations/azure-functions.md)
-- [A2A Hosting](agent-to-agent.md)
+- [Azure Functions and durable hosting](azure-functions.md)
+- [Self-host A2A agents](self-hosting/a2a/index.md)
 - [Python samples](https://github.com/microsoft-foundry/foundry-samples/tree/main/samples/python/hosted-agents/agent-framework)
 - [C# samples](https://github.com/microsoft-foundry/foundry-samples/tree/main/samples/csharp/hosted-agents/agent-framework)

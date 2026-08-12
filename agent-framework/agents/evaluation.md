@@ -1,6 +1,6 @@
 ---
 title: Evaluation
-description: Learn how to evaluate agents and workflows in Agent Framework using local checks, custom evaluators, and Azure AI Foundry.
+description: Learn how to evaluate agents and workflows in Agent Framework using local checks, custom evaluators, and Microsoft Foundry.
 zone_pivot_groups: programming-languages
 author: bentho
 ms.topic: article
@@ -19,7 +19,7 @@ ms.service: agent-framework
     | Local evaluators                 | ✅ |   ✅   | ❌ |                                        |
     | Built-in checks                  | ✅ |   ✅   | ❌ |                                        |
     | Custom function evaluators       | ✅ |   ✅   | ❌ | Python: @evaluator, C#: FunctionEvaluator.Create |
-    | Azure AI Foundry evaluators      | ✅ |   ✅   | ❌ |                                        |
+    | Microsoft Foundry evaluators     | ✅ |   ✅   | ❌ |                                        |
     | Evaluate an agent                | ✅ |   ✅   | ❌ |                                        |
     | Evaluate with expected outputs   | ✅ |   ✅   | ❌ |                                        |
     | Evaluate pre-existing responses  | ✅ |   ✅   | ❌ |                                        |
@@ -31,7 +31,7 @@ ms.service: agent-framework
 
 # Evaluation
 
-Agent Framework includes a built-in evaluation framework that lets you measure agent quality, safety, and correctness. You can run fast local checks during development, use Azure AI Foundry's cloud-based evaluators for production-grade assessment, or combine both in a single evaluation run.
+Agent Framework includes a built-in evaluation framework that lets you measure agent quality, safety, and correctness. You can run fast local checks during development, use Microsoft Foundry's cloud-based evaluators for production-grade assessment, or combine both in a single evaluation run.
 
 The evaluation framework is designed around a few key principles:
 
@@ -46,7 +46,7 @@ The evaluation framework is built on three types:
 | Type | Purpose |
 |------|---------|
 | **EvalItem** | A single item to evaluate — wraps the full conversation and derives query/response via a split strategy. |
-| **Evaluator** | A provider that scores items — local checks, Azure AI Foundry, or any custom implementation. |
+| **Evaluator** | A provider that scores items — local checks, Microsoft Foundry, or any custom implementation. |
 | **EvalResults** | Aggregated results from an evaluation run — pass/fail counts, per-item detail, and optional portal links. |
 
 ::: zone pivot="programming-language-csharp"
@@ -184,9 +184,11 @@ Return types: `bool`, `float` (≥ 0.5 = pass), `dict` with `score` or `passed` 
 
 ::: zone-end
 
-## Azure AI Foundry evaluators
+## Microsoft Foundry evaluators
 
-`FoundryEvals` connects to [Azure AI Foundry's evaluation service](/azure/ai-foundry/concepts/evaluation-approach-gen-ai) for cloud-based LLM-as-judge evaluation. Results are viewable in the Foundry portal with dashboards and comparison views.
+`FoundryEvals` connects to [Microsoft Foundry's evaluation service](/azure/ai-foundry/concepts/evaluation-approach-gen-ai) for cloud-based LLM-as-judge evaluation. Results are viewable in the Foundry portal with dashboards and comparison views.
+
+For project setup, trace evaluation, rubric evaluators, and runnable service-specific samples, see [Microsoft Foundry evaluation](../integrations/by-component/evaluation/microsoft-foundry.md).
 
 ::: zone pivot="programming-language-csharp"
 
@@ -226,7 +228,7 @@ By default, `FoundryEvals` runs **relevance**, **coherence**, and **task adheren
 | **Safety** | `violence`, `sexual`, `self_harm`, `hate_unfairness` |
 
 > [!NOTE]
-> `FoundryEvals` requires an Azure AI Foundry project with an AI model deployment. The `model` parameter specifies which model to use as the LLM judge.
+> `FoundryEvals` requires a Microsoft Foundry project with an AI model deployment. The `model` parameter specifies which model to use as the LLM judge.
 
 ## Evaluate an agent
 
@@ -666,5 +668,5 @@ AgentEvaluationResults safetyResults = await agent.EvaluateAsync(
 ### Related content
 
 - [Observability](observability.md)
-- [Agent Safety](safety.md)
-- [Azure AI Foundry evaluation overview](/azure/ai-foundry/concepts/evaluation-approach-gen-ai)
+- [Agent Safety](../concepts/agents/safety.md)
+- [Microsoft Foundry evaluation overview](/azure/ai-foundry/concepts/evaluation-approach-gen-ai)

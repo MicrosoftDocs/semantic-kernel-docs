@@ -14,7 +14,7 @@ The [previous page](adding-skills.md) showed how skills package reusable domain 
 
 You need to log every request and response. You need guardrails that block harmful content before the model sees it. You need to enforce rate limits, catch exceptions gracefully, and inject telemetry — all without touching the agent's core logic. Copy-pasting these concerns into every agent (or every tool, or every skill) doesn't scale and creates maintenance nightmares.
 
-**Middleware** solves this. Middleware lets you wrap the agent's [**execution pipeline**](../agents/agent-pipeline.md) with reusable behaviors that intercept, inspect, and modify requests and responses at well-defined points. Think of middleware as a series of concentric layers around the agent — each layer gets a chance to act on the input before it reaches the agent, and on the output before it reaches the caller.
+**Middleware** solves this. Middleware lets you wrap the agent's [**execution pipeline**](../concepts/agents/agent-pipeline.md) with reusable behaviors that intercept, inspect, and modify requests and responses at well-defined points. Think of middleware as a series of concentric layers around the agent — each layer gets a chance to act on the input before it reaches the agent, and on the output before it reaches the caller.
 
 ## When to use this
 
@@ -66,7 +66,7 @@ Key points:
 3. **Multiple middleware chain together.** When you register several middleware components, they nest: the first registered middleware is the outermost layer, and the last registered is the innermost layer closest to the agent.
 
 > [!TIP]
-> For a detailed view of how middleware fits into the full agent execution pipeline — including context providers and chat client layers — see the [Agent Pipeline Architecture](../agents/agent-pipeline.md).
+> For a detailed view of how middleware fits into the full agent execution pipeline — including context providers and chat client layers — see the [Agent Pipeline Architecture](../concepts/agents/agent-pipeline.md).
 
 ## What middleware can do
 
@@ -74,14 +74,14 @@ Agent Framework supports middleware at three layers of the pipeline — agent ru
 
 | Pattern | Example | Reference |
 |---------|---------|-----------|
-| Guardrails & termination | Block harmful content, limit conversation length | [Termination & Guardrails](../agents/middleware/termination.md) |
-| Exception handling | Retry on transient failures, return fallback responses | [Exception Handling](../agents/middleware/exception-handling.md) |
-| Result overrides | Redact sensitive data, enrich or replace agent output | [Result Overrides](../agents/middleware/result-overrides.md) |
-| Shared state | Pass request IDs or timing data between middleware | [Shared State](../agents/middleware/shared-state.md) |
-| Runtime context | Vary behavior based on session, user, or per-run config | [Runtime Context](../agents/middleware/runtime-context.md) |
-| Scoping | Apply middleware to all runs or just a single run | [Agent vs Run Scope](../agents/middleware/agent-vs-run-scope.md) |
+| Guardrails & termination | Block harmful content, limit conversation length | [Termination & Guardrails](../concepts/agents/middleware/termination.md) |
+| Exception handling | Retry on transient failures, return fallback responses | [Exception Handling](../concepts/agents/middleware/exception-handling.md) |
+| Result overrides | Redact sensitive data, enrich or replace agent output | [Result Overrides](../concepts/agents/middleware/result-overrides.md) |
+| Shared state | Pass request IDs or timing data between middleware | [Shared State](../concepts/agents/middleware/shared-state.md) |
+| Runtime context | Vary behavior based on session, user, or per-run config | [Runtime Context](../concepts/agents/middleware/runtime-context.md) |
+| Scoping | Apply middleware to all runs or just a single run | [Agent vs Run Scope](../concepts/agents/middleware/agent-vs-run-scope.md) |
 
-For a complete walkthrough of defining and registering middleware, see [Defining Middleware](../agents/middleware/defining-middleware.md). For the full architecture overview, see the [Middleware Overview](../agents/middleware/index.md).
+For a complete walkthrough of defining and registering middleware, see [Defining Middleware](../concepts/agents/middleware/defining-middleware.md). For the full architecture overview, see the [Middleware Overview](../concepts/agents/middleware/index.md).
 
 ## Considerations
 
@@ -101,5 +101,5 @@ Now that your agent has tools, skills, and middleware, the next step is **contex
 
 **Go deeper:**
 
-- [Middleware Overview](../agents/middleware/index.md) — full reference for all middleware types
-- [Agent Pipeline Architecture](../agents/agent-pipeline.md) — how middleware fits into the execution pipeline
+- [Middleware Overview](../concepts/agents/middleware/index.md) — full reference for all middleware types
+- [Agent Pipeline Architecture](../concepts/agents/agent-pipeline.md) — how middleware fits into the execution pipeline

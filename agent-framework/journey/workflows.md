@@ -25,7 +25,7 @@ Consider scenarios like these:
 
 In each case, the *structure* of the process is known ahead of time. The steps, their ordering, the decision points — these aren't things you want the model to figure out at runtime. You want to **define the graph explicitly** and let agents (or any other logic) execute within it.
 
-That's what [**workflows**](../workflows/index.md) provide.
+That's what [**workflows**](../concepts/workflows/index.md) provide.
 
 ## The intelligence spectrum
 
@@ -61,7 +61,7 @@ The patterns from earlier in this journey and workflows aren't competing approac
 
 | Question | If the answer is "the model" | If the answer is "the developer" |
 |----------|------------------------------|----------------------------------|
-| Which subtask to tackle next? | [Agents as tools](agents-as-tools.md) — the outer agent routes dynamically | [Workflows](../workflows/index.md) — the graph defines the path |
+| Which subtask to tackle next? | [Agents as tools](agents-as-tools.md) — the outer agent routes dynamically | [Workflows](../concepts/workflows/index.md) — the graph defines the path |
 | Whether to involve another agent? | [Agents as tools](agents-as-tools.md) — model-driven delegation | [Agents in workflows](../workflows/agents-in-workflows.md) — the graph wires agents together |
 | When to ask a human? | [Tool approval](../agents/tools/tool-approval.md) — reactive, per-tool | [Human-in-the-loop](../workflows/human-in-the-loop.md) — explicit gates at defined points |
 | How to handle partial failure? | Retry logic in tool implementations | [Checkpoints](../workflows/checkpoints.md) — resume from the last saved state |
@@ -108,11 +108,11 @@ Each pattern adds capability — and complexity. The best agent systems use the 
 
 **Go deeper:**
 
-- [Workflows overview](../workflows/index.md) — core concepts, architecture, and getting started
-- [Executors](../workflows/executors.md) and [Edges](../workflows/edges.md) — building blocks of the workflow graph
+- [Workflows](../concepts/workflows/index.md) — core concepts and architecture
+- [Executors](../concepts/workflows/executors.md) and [Edges](../concepts/workflows/edges.md) — building blocks of the workflow graph
 - [Agents in Workflows](../workflows/agents-in-workflows.md) — integrating AI agents into workflow steps
 - [Orchestrations](../workflows/orchestrations/index.md) — prebuilt multi-agent patterns (sequential, concurrent, handoff, group chat, magentic)
 - [Human-in-the-Loop](../workflows/human-in-the-loop.md) — approval gates and external input
 - [Checkpoints & Resuming](../workflows/checkpoints.md) — long-running workflow recovery
-- [State Management](../workflows/state.md) — sharing data across executors
+- [State Management](../concepts/workflows/state.md) — sharing data across executors
 - [Workflows as Agents](../workflows/as-agents.md) — exposing workflows through the agent interface

@@ -614,6 +614,6 @@ After completing the migration:
 
 1. Explore provider-specific options in the [API documentation](/python/api/agent-framework-core/agent_framework)
 2. Review updated [samples](https://github.com/microsoft/agent-framework/tree/main/python/samples)
-3. Learn about creating [custom chat clients](../../agents/providers/custom.md)
+3. Learn about creating [custom chat clients](../../concepts/agents/custom-agents.md)
 
 For additional help, refer to the [Agent Framework documentation](../../overview/index.md) or reach out to the community.

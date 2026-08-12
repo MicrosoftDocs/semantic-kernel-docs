@@ -4,7 +4,7 @@ description: In-depth look at Handoff Orchestrations in Microsoft Agent Framewor
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 05/27/2026
+ms.date: 07/29/2026
 ms.service: agent-framework
 zone_pivot_groups: programming-languages
 ---
@@ -18,8 +18,8 @@ zone_pivot_groups: programming-languages
     | Define Specialized Agents            | ✅ |   ✅   | ❌ |                                |
     | Configure Handoff Rules              | ✅ |   ✅   | ❌ |                                |
     | Run Interactive Workflow             | ✅ |   ✅   | ❌ | Different patterns per language |
-    | Autonomous Mode                      | ❌ |   ✅   | ❌ | Python-specific                |
-    | Tool Approval (HITL)                 | ❌ |   ✅   | ❌ |                                |
+    | Autonomous Mode                      | ✅ |   ✅   | ❌ |                                |
+    | Tool Approval (HITL)                 | ✅ |   ✅   | ❌ |                                |
     | Checkpointing                        | ❌ |   ✅   | ❌ |                                |
     | Sample Interaction                   | ✅ |   ✅   | ❌ |                                |
     | Context Synchronization              | ✅ |   ✅   | ❌ | Shared section                 |
@@ -91,21 +91,42 @@ Create domain-specific agents and a triage agent for routing:
 
 ```csharp
 // 2) Create specialized agents
-ChatClientAgent historyTutor = new(client,
-    "You provide assistance with historical queries. Explain important events and context clearly. Only respond about history.",
-    "history_tutor",
-    "Specialist agent for historical questions");
+ChatClientAgent historyTutor = client.AsAIAgent(new ChatClientAgentOptions
+{
+    Id = "history-tutor",
+    Name = "history_tutor",
+    Description = "Specialist agent for historical questions",
+    ChatOptions = new()
+    {
+        Instructions = "You provide assistance with historical queries. Explain important events and context clearly. Only respond about history."
+    }
+});
 
-ChatClientAgent mathTutor = new(client,
-    "You provide help with math problems. Explain your reasoning at each step and include examples. Only respond about math.",
-    "math_tutor",
-    "Specialist agent for math questions");
+ChatClientAgent mathTutor = client.AsAIAgent(new ChatClientAgentOptions
+{
+    Id = "math-tutor",
+    Name = "math_tutor",
+    Description = "Specialist agent for math questions",
+    ChatOptions = new()
+    {
+        Instructions = "You provide help with math problems. Explain your reasoning at each step and include examples. Only respond about math."
+    }
+});
 
-ChatClientAgent triageAgent = new(client,
-    "You determine which agent to use based on the user's homework question. ALWAYS handoff to another agent.",
-    "triage_agent",
-    "Routes messages to the appropriate specialist agent");
+ChatClientAgent triageAgent = client.AsAIAgent(new ChatClientAgentOptions
+{
+    Id = "triage-agent",
+    Name = "triage_agent",
+    Description = "Routes messages to the appropriate specialist agent",
+    ChatOptions = new()
+    {
+        Instructions = "You determine which agent to use based on the user's homework question. ALWAYS handoff to another agent."
+    }
+});
 ```
+
+> [!NOTE]
+> If a Handoff workflow is checkpointed and later rebuilt, reuse the same unique `Id` (and, if set, the same `Name`) for every participating agent. Stable IDs are especially important when agents are scoped or reconstructed for each request because Handoff routing and checkpoint compatibility depend on the inner agent identities. For more information, see [Rehydrating from Checkpoints](../checkpoints.md#rehydrating-from-checkpoints).
 
 ## Configure Handoff Rules
 
@@ -179,6 +200,125 @@ Q: Can you help me with calculus integration?
 triage_agent: This is another math question. I'll route this to the math tutor.
 math_tutor: I'd be happy to help with calculus integration! Integration is the reverse of differentiation. The basic power rule for integration is: ∫x^n dx = x^(n+1)/(n+1) + C, where C is the constant of integration.
 ```
+
+## Autonomous Mode
+
+By default, handoff orchestration is interactive: when an agent responds without handing off, the workflow returns control to you for the next user input. Enable **autonomous mode** to let an agent keep working without waiting for user input. When an agent does not hand off, the workflow feeds it a continuation prompt and invokes it again, until the agent hands off, a termination condition is met, or the per-agent turn limit is reached.
+
+Enable it by calling `WithAutonomousMode()` on the handoff builder:
+
+```csharp
+var workflow = AgentWorkflowBuilder.CreateHandoffBuilderWith(triageAgent)
+    .WithHandoffs(triageAgent, [mathTutor, historyTutor])
+    .WithHandoffs([mathTutor, historyTutor], triageAgent)
+    .WithAutonomousMode()
+    .Build();
+```
+
+By default, each agent runs up to 50 autonomous turns, and each continuation uses the prompt `"User did not respond. Continue assisting autonomously."`. Override the turn limit and prompt as needed:
+
+```csharp
+var workflow = AgentWorkflowBuilder.CreateHandoffBuilderWith(triageAgent)
+    .WithHandoffs(triageAgent, [mathTutor, historyTutor])
+    .WithAutonomousMode(turnLimit: 10, continuationPrompt: "Continue assisting the user.")
+    .Build();
+```
+
+Pass a list of agents to the `agents` parameter to enable autonomous mode for only a subset of participants. Agents not in the list always return control after a single response:
+
+```csharp
+var workflow = AgentWorkflowBuilder.CreateHandoffBuilderWith(triageAgent)
+    .WithHandoffs(triageAgent, [mathTutor, historyTutor])
+    .WithAutonomousMode(agents: [triageAgent]) // Only triageAgent runs autonomously
+    .Build();
+```
+
+Combine autonomous mode with a termination condition to stop the loop when the conversation reaches a certain state:
+
+```csharp
+var workflow = AgentWorkflowBuilder.CreateHandoffBuilderWith(triageAgent)
+    .WithHandoffs(triageAgent, [mathTutor, historyTutor])
+    .WithAutonomousMode(turnLimit: 10)
+    .WithTerminationCondition(conversation => conversation.Any(m => m.Text?.Contains("RESOLVED") == true))
+    .Build();
+```
+
+## Advanced: Tool Approval in Handoff Workflows
+
+Agents in a handoff workflow can use tools that require human approval before they run; useful for sensitive operations such as processing refunds, making purchases, or executing irreversible actions. Wrap the sensitive function with `ApprovalRequiredAIFunction`. When the agent tries to call it, the workflow pauses and emits a `RequestInfoEvent` containing a `ToolApprovalRequestContent`.
+
+### Define Agents with Approval-Required Tools
+
+```csharp
+ChatClientAgent triageAgent = new(client,
+    "You are frontline support. Route the customer to the right specialist.",
+    "triage_agent",
+    "Routes customers to specialists");
+
+ChatClientAgent refundAgent = new(client,
+    "You process refund requests.",
+    "refund_agent",
+    "Handles refund requests",
+    [new ApprovalRequiredAIFunction(AIFunctionFactory.Create(ProcessRefund))]);
+```
+
+### Handle User Input and Tool Approval Requests
+
+Two things can pause a handoff workflow: an agent finishing its turn and waiting for the next user message, and an approval-required tool call. Handle both in the same event loop; respond to a `RequestInfoEvent` approval with `SendResponseAsync`, and supply the next user message when the workflow returns control:
+
+```csharp
+var workflow = AgentWorkflowBuilder.CreateHandoffBuilderWith(triageAgent)
+    .WithHandoffs(triageAgent, [refundAgent])
+    .WithHandoffs([refundAgent], triageAgent)
+    .Build();
+
+List<ChatMessage> messages = [];
+
+while (true)
+{
+    Console.Write("You: ");
+    string userInput = Console.ReadLine()!;
+    if (userInput.Equals("exit", StringComparison.OrdinalIgnoreCase))
+    {
+        break;
+    }
+
+    messages.Add(new(ChatRole.User, userInput));
+
+    await using StreamingRun run = await InProcessExecution.RunStreamingAsync(workflow, messages);
+    await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
+
+    List<ChatMessage> newMessages = [];
+    await foreach (WorkflowEvent evt in run.WatchStreamAsync())
+    {
+        // An approval-required tool call pauses the workflow and emits a RequestInfoEvent.
+        if (evt is RequestInfoEvent requestEvt &&
+            requestEvt.Request.TryGetDataAs(out ToolApprovalRequestContent? approval))
+        {
+            var toolCall = (FunctionCallContent)approval.ToolCall;
+            Console.Write($"Approve {toolCall.Name}? (y/n): ");
+            bool approved = (Console.ReadLine() ?? "n").Trim().Equals("y", StringComparison.OrdinalIgnoreCase);
+            await run.SendResponseAsync(requestEvt.Request.CreateResponse(approval.CreateResponse(approved)));
+        }
+        else if (evt is AgentResponseUpdateEvent update)
+        {
+            Console.Write(update.Update.Text);
+        }
+        else if (evt is WorkflowOutputEvent outputEvt)
+        {
+            newMessages = outputEvt.As<List<ChatMessage>>()!;
+            break;
+        }
+    }
+
+    // Control returns here after the agent responds without handing off. Merge the new
+    // messages into the conversation and loop to collect the next user input.
+    messages.AddRange(newMessages.Skip(messages.Count));
+}
+```
+
+> [!NOTE]
+> Tool approval works with `CreateHandoffBuilderWith()` out of the box; no extra builder configuration is needed. When an agent calls a tool wrapped with `ApprovalRequiredAIFunction`, the workflow automatically pauses and emits a `RequestInfoEvent`. The same `RequestInfoEvent` handling pattern is used across orchestrations; see the [`GroupChatToolApproval` sample](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/03-workflows/Agents/GroupChatToolApproval) for a complete runnable project.
 
 ::: zone-end
 
@@ -611,7 +751,7 @@ Could you provide photos of the damage to expedite the process?
 
 ## Context Synchronization
 
-Agents in Agent Framework relies on agent sessions ([`AgentSession`](../../agents/conversations/session.md)) to manage context. In a Handoff orchestration, agents **do not** share the same session instance, participants are responsible for ensuring context consistency. To achieve this, participants are designed to broadcast their responses or user inputs received to all others in the workflow whenever they generate a response, making sure all participants have the latest context for their next turn.
+Agents in Agent Framework relies on agent sessions ([`AgentSession`](../../concepts/agents/conversations/session.md)) to manage context. In a Handoff orchestration, agents **do not** share the same session instance, participants are responsible for ensuring context consistency. To achieve this, participants are designed to broadcast their responses or user inputs received to all others in the workflow whenever they generate a response, making sure all participants have the latest context for their next turn.
 
 <p align="center">
     <img src="../resources/images/orchestration-handoff.png" alt="Handoff Context Synchronization">
@@ -621,7 +761,7 @@ Agents in Agent Framework relies on agent sessions ([`AgentSession`](../../agent
 > Tool related contents, including handoff tool calls, are not broadcasted to other agents. Only user and agent messages are synchronized across all participants.
 
 > [!TIP]
-> Agents do not share the same session instance because different [agent types](../../agents/providers/index.md) may have different implementations of the `AgentSession` abstraction. Sharing the same session instance could lead to inconsistencies in how each agent processes and maintains context.
+> Agents do not share the same session instance because different [agent types](../../integrations/by-component/model-providers/index.md) may have different implementations of the `AgentSession` abstraction. Sharing the same session instance could lead to inconsistencies in how each agent processes and maintains context.
 
 After broadcasting the response, the participant then checks whether it needs to handoff the conversation to another agent. If so, it sends a request to the selected agent to take over the conversation. Otherwise, it requests user input or continues autonomously based on the workflow configuration.
 
@@ -635,6 +775,8 @@ After broadcasting the response, the participant then checks whether it needs to
 - **Context Preservation**: Full conversation history is maintained across all handoffs
 - **Multi-turn Support**: Supports ongoing conversations with seamless agent switching
 - **Specialized Expertise**: Each agent focuses on their domain while collaborating through handoffs
+- **WithAutonomousMode()**: Lets agents continue without waiting for user input, up to a per-agent turn limit or until a termination condition is met
+- **Tool Approval (HITL)**: Wrap sensitive tools with `ApprovalRequiredAIFunction`; the workflow pauses and emits a `RequestInfoEvent` with `ToolApprovalRequestContent`, which you answer via `SendResponseAsync`
 
 ::: zone-end
 
@@ -662,7 +804,7 @@ After broadcasting the response, the participant then checks whether it needs to
 ::: zone-end
 ## The Handoff Agent Executor
 
-Unlike standard workflows where agents are wrapped in a general-purpose [Agent Executor](../advanced/agent-executor.md), handoff orchestration uses a specialized `HandoffAgentExecutor`. This executor extends the base agent executor with handoff-specific capabilities:
+Unlike standard workflows where agents are wrapped in a general-purpose [Agent Executor](../../concepts/workflows/advanced/agent-executor.md), handoff orchestration uses a specialized `HandoffAgentExecutor`. This executor extends the base agent executor with handoff-specific capabilities:
 
 - **Handoff tool injection** — automatically registers handoff tools on each agent based on the configured handoff rules, so the agent can invoke a tool to transfer control.
 - **Handoff function detection** — inspects the agent's response for handoff tool calls and routes control to the target agent.
