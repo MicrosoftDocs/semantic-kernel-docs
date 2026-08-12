@@ -273,7 +273,7 @@ Background responses require an explicit session via `agent.WithSession(session)
 
 A Harness Agent remains a standard Agent Framework agent, so provider background responses use the same per-run options documented above. Harness construction doesn't enable provider background responses automatically: set `AllowBackgroundResponses` in .NET or `options={"background": True}` in Python when starting the run, keep the session, and persist continuation tokens when the operation must survive a process restart.
 
-This is separate from [background agents](background-agents.md#use-background-agents-with-harnessed-agent), which delegate work to child agents rather than continuing one provider request.
+This is separate from [background agents](background-agents.md#use-background-agents-with-harness-agent), which delegate work to child agents rather than continuing one provider request.
 
 ## Best Practices
 
