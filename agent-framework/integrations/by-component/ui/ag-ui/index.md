@@ -140,6 +140,7 @@ To get started with AG-UI integration:
 2. **[Backend Tool Rendering](backend-tool-rendering.md)**: Add function tools to your agents
 3. **[Human-in-the-Loop](human-in-the-loop.md)**: Implement approval workflows
 4. **[State Management](state-management.md)**: Synchronize state between client and server
+5. **[Slack with CopilotKit Channels](channels.md)**: Run the same AG-UI endpoint as a bot in Slack and other messaging platforms
 
 ## Additional Resources
 
@@ -250,6 +251,7 @@ To get started with AG-UI integration:
 4. **[Human-in-the-Loop](human-in-the-loop.md)**: Implement approval workflows
 5. **[MCP Apps Compatibility](mcp-apps.md)**: Use MCP Apps with your AG-UI endpoint
 6. **[State Management](state-management.md)**: Synchronize state between client and server
+7. **[Slack with CopilotKit Channels](channels.md)**: Run the same AG-UI endpoint as a bot in Slack and other messaging platforms
 
 ## Additional Resources
 
