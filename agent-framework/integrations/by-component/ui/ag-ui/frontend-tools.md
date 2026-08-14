@@ -5,146 +5,67 @@ zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: tutorial
 ms.author: evmattso
-ms.date: 07/01/2026
+ms.date: 08/11/2026
 ms.service: agent-framework
 ---
+
+<!--
+  Language parity table – keep in sync when adding/removing sections.
+
+  | Section                    | C# | Python | Go | Notes |
+  |----------------------------|:--:|:------:|:--:|-------|
+  | Frontend tool declarations | ✅ |   ✅   | ❌ | Go zone covers server-side forwarding only |
+  | Client execution flow      | ✅ |   ✅   | ❌ | Not documented for Go |
+-->
 
 # Frontend Tool Rendering with AG-UI
 
 ::: zone pivot="programming-language-csharp"
 
-This tutorial shows you how to add frontend function tools to your AG-UI clients. Frontend tools are functions that execute on the client side, allowing the AI agent to interact with the user's local environment, access client-specific data, or perform UI operations. The server orchestrates when to call these tools, but the execution happens entirely on the client.
+Frontend tools are declared and executed by the AG-UI client. The server receives their schemas so the model can request them, but it doesn't receive their implementations.
 
-## Prerequisites
+## Register a frontend tool
 
-Before you begin, ensure you have completed the [Getting Started](getting-started.md) tutorial and have:
-
-- .NET 8.0 or later
-- `AGUI.Client` package installed (the AG-UI C# SDK client)
-- `Microsoft.Agents.AI` package installed
-- Basic understanding of AG-UI client setup
-
-## What are Frontend Tools?
-
-Frontend tools are function tools that:
-
-- Are defined and registered on the client
-- Execute in the client's environment (not on the server)
-- Allow the AI agent to interact with client-specific resources
-- Provide results back to the server for the agent to incorporate into responses
-- Enable personalized, context-aware experiences
-
-Common use cases:
-- Reading local sensor data (GPS, temperature, etc.)
-- Accessing client-side storage or preferences
-- Performing UI operations (changing themes, displaying notifications)
-- Interacting with device-specific features (camera, microphone)
-
-## Registering Frontend Tools on the Client
-
-The key difference from the Getting Started tutorial is registering tools with the client agent. Here's what changes:
+Create the tool and pass it to the agent backed by `AGUIChatClient`:
 
 ```csharp
-// Define a frontend function tool
-[Description("Get the user's current location from GPS.")]
-static string GetUserLocation()
-{
-    // Access client-side GPS
-    return "Amsterdam, Netherlands (52.37°N, 4.90°E)";
-}
+using System.ComponentModel;
+using AGUI.Client;
+using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
 
-// Create frontend tools
-AITool[] frontendTools = [AIFunctionFactory.Create(GetUserLocation)];
+[Description("Get the user's current location from the client device.")]
+static string GetUserLocation() => "Amsterdam, Netherlands";
 
-// Pass tools when creating the agent
-AIAgent agent = chatClient.AsAIAgent(
-    name: "agui-client",
-    description: "AG-UI Client Agent",
-    tools: frontendTools);
+AITool locationTool = AIFunctionFactory.Create(
+    GetUserLocation,
+    name: "get_user_location");
+
+using HttpClient httpClient = new() { BaseAddress = new Uri("http://localhost:8888") };
+AGUIChatClient chatClient = new(new AGUIChatClientOptions(httpClient, "/"));
+AIAgent agent = chatClient.AsAIAgent(tools: [locationTool]);
 ```
 
-The rest of your client code remains the same as shown in the Getting Started tutorial.
+`AGUIChatClient` handles the continuation flow:
 
-### How Tools Are Sent to the Server
+1. Sends the frontend tool declaration with the run request.
+2. Receives the model's tool call from the server.
+3. Executes the matching function locally.
+4. Sends the result back to the server.
+5. Continues the run and streams the final response.
 
-When you register tools with `AsAIAgent()`, the `AGUIChatClient` automatically:
+> [!TIP]
+> See the [.NET frontend-tools sample](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/02-agents/AGUI/Step03_FrontendTools) for a complete client and server.
 
-1. Captures the tool definitions (names, descriptions, parameter schemas)
-2. Sends the tools with each request to the server agent, which maps them to `ChatClientAgentRunOptions.ChatOptions.Tools`
+> [!WARNING]
+> Tool declarations and results supplied by an untrusted client are untrusted input. Authorize which client tools may influence server-side agent execution, and validate results before using them for privileged operations.
 
-The server receives the client tool declarations and the AI model can decide when to call them.
+For general tool-authoring guidance, see [Use function tools with an agent](../../../../agents/tools/function-tools.md).
 
-### Key Concepts
+## Next steps
 
-The following are new concepts for frontend tools:
-
-- **Client-side registration**: Tools are registered on the client using `AIFunctionFactory.Create()` and passed to `AsAIAgent()`
-- **Automatic capture**: Tools are automatically captured and sent via `ChatClientAgentRunOptions.ChatOptions.Tools`
-
-## How Frontend Tools Work
-
-### Server-Side Flow
-
-The server doesn't know the implementation details of frontend tools. It only knows:
-
-1. Tool names and descriptions (from client registration)
-2. Parameter schemas
-3. When to request tool execution
-
-When the AI agent decides to call a frontend tool:
-
-1. Server sends a tool call request to the client via SSE
-2. Server waits for the client to execute the tool and return results
-3. Server incorporates the results into the agent's context
-4. Agent continues processing with the tool results
-
-### Client-Side Flow
-
-The client handles frontend tool execution:
-
-1. Receives `FunctionCallContent` from server indicating a tool call request
-2. Matches the tool name to a locally registered function
-3. Deserializes parameters from the request
-4. Executes the function locally
-5. Serializes the result
-6. Sends `FunctionResultContent` back to the server
-7. Continues receiving agent responses
-
-## Expected Output with Frontend Tools
-
-When the agent calls frontend tools, you'll see the tool call and result in the streaming output:
-
-```
-User (:q or quit to exit): Where am I located?
-
-[Client Tool Call - Name: GetUserLocation]
-[Client Tool Result: Amsterdam, Netherlands (52.37°N, 4.90°E)]
-
-You are currently in Amsterdam, Netherlands, at coordinates 52.37°N, 4.90°E.
-```
-
-## Server Setup for Frontend Tools
-
-The server doesn't need special configuration to support frontend tools. Use the standard AG-UI server from the Getting Started tutorial - it automatically:
-- Receives frontend tool declarations during client connection
-- Requests tool execution when the AI agent needs them
-- Waits for results from the client
-- Incorporates results into the agent's decision-making
-
-## Next Steps
-
-Now that you understand frontend tools, you can:
-
-<!-- - **[Implement Human-in-the-Loop](human-in-the-loop.md)**: Add approval workflows before tool execution -->
-<!-- - **[Manage State](state-management.md)**: Share state between client and server -->
-- **[Combine with Backend Tools](backend-tool-rendering.md)**: Use both frontend and backend tools together
-
-## Additional Resources
-
-- [AG-UI Overview](index.md)
-- [Getting Started Tutorial](getting-started.md)
-- [Backend Tool Rendering](backend-tool-rendering.md)
-- [Agent Framework Documentation](../../../../overview/index.md)
+> [!div class="nextstepaction"]
+> [Use human approval with AG-UI](./human-in-the-loop.md)
 
 ::: zone-end
 

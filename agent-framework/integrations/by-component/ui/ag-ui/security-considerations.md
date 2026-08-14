@@ -4,7 +4,7 @@ description: Essential security guidelines for building secure AG-UI application
 author: moonbox3
 ms.topic: reference
 ms.author: evmattso
-ms.date: 07/10/2026
+ms.date: 08/11/2026
 ms.service: agent-framework
 ---
 
@@ -148,7 +148,11 @@ Forwarded properties contain arbitrary JSON that passes through the system. Trea
 
 ## Authentication and Authorization
 
-AG-UI does not include built-in authorization mechanism. It is up to your application to prevent unauthorized use of the exposed AG-UI endpoint. 
+AG-UI does not include a built-in authorization mechanism. Authenticate and authorize the exposed endpoint with your application framework.
+
+Treat a client-supplied `threadId` as an untrusted continuation identifier, not an authorization credential. When session persistence is enabled, authorize the caller before resuming the selected session. See [Conversation continuity](./getting-started.md#conversation-continuity) for AG-UI behavior and [Self-host Agent Framework applications](../../../../hosting/self-hosting/index.md#isolate-sessions-in-multi-user-hosts) for shared persistence and isolation configuration.
+
+For ASP.NET Core authentication schemes and policies, see [ASP.NET Core authentication](/aspnet/core/security/authentication/) and [ASP.NET Core authorization](/aspnet/core/security/authorization/introduction).
 
 ### Approval State Storage
 
@@ -159,14 +163,13 @@ Approval State is not an authentication, tenant authorization, or distributed du
 authorize every endpoint request, and choose deployment and storage architecture that matches your availability and
 worker topology requirements.
 
-### Session ID Management
+### Thread ID management
 
-Session IDs identify conversation sessions. Implement proper validation to prevent unauthorized access.
+AG-UI thread IDs identify conversation continuations. Clients can provide a thread ID, and an endpoint can generate one when it is omitted. In either case:
 
-**Security considerations:**
-- Generate Session IDs server-side using cryptographically secure random values
-- Never allow clients to directly access arbitrary Session IDs
-- Verify session ownership before processing requests
+- Don't treat a thread ID as proof of identity or ownership.
+- Verify that the authenticated caller can access persisted data associated with the thread.
+- Scope storage by an authenticated user, tenant, workspace, or another application-owned boundary.
 
 ### Sensitive Data Filtering
 
