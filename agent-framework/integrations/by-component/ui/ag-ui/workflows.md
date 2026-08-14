@@ -1,73 +1,48 @@
 ---
 title: Workflows with AG-UI
-description: Learn how to expose Agent Framework workflows through AG-UI with step tracking, interrupt/resume, and custom events
+description: Review language-specific support for exposing Agent Framework workflows through AG-UI
 zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: tutorial
 ms.author: evmattso
-ms.date: 07/10/2026
+ms.date: 08/11/2026
 ms.service: agent-framework
 ---
+
+<!--
+  Language parity table – keep in sync when adding/removing sections.
+
+  | Section                       | C# | Python | Go | Notes |
+  |-------------------------------|:--:|:------:|:--:|-------|
+  | Basic workflow exposure       | ✅ |   ✅   | ✅ | .NET and Go stream standard agent output |
+  | Workflow lifecycle events     | ❌ |   ✅   | ❌ | Python-specific |
+  | Workflow interrupt and resume | ❌ |   ✅   | ❌ | Python-specific |
+-->
 
 # Workflows with AG-UI
 
 ::: zone pivot="programming-language-csharp"
 
-[Workflows](../../../../concepts/workflows/index.md) orchestrate multiple agents in a defined execution graph. In .NET
-you expose a workflow over AG-UI exactly the way you expose any agent: convert it to an `AIAgent` with
-`AsAIAgent()` and map it with `MapAGUIServer`. There is no workflow-specific server API to learn.
+MAF .NET can expose a workflow through AG-UI by converting the workflow to an `AIAgent` and mapping it like any other agent:
 
 ```csharp
-using Azure.AI.OpenAI;
-using Azure.Identity;
-using Microsoft.Agents.AI;
-using Microsoft.Agents.AI.Hosting.AGUI.AspNetCore;
-using Microsoft.Agents.AI.Workflows;
-using OpenAI.Chat;
+AIAgent workflowAgent = AgentWorkflowBuilder
+    .BuildSequential(researcher, reporter)
+    .AsAIAgent();
 
-WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-builder.Services.AddAGUIServer();
-
-string endpoint = builder.Configuration["AZURE_OPENAI_ENDPOINT"]
-    ?? throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
-string deploymentName = builder.Configuration["AZURE_OPENAI_DEPLOYMENT_NAME"]
-    ?? throw new InvalidOperationException("AZURE_OPENAI_DEPLOYMENT_NAME is not set.");
-
-ChatClient chatClient = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredential())
-    .GetChatClient(deploymentName);
-
-AIAgent researcher = chatClient.AsAIAgent(
-    name: "researcher", instructions: "Research the user's topic and write a short, factual brief.");
-AIAgent reporter = chatClient.AsAIAgent(
-    name: "reporter", instructions: "Summarize the researcher's brief into a single clear paragraph.");
-
-// A workflow-as-agent is just an AIAgent. Map it like any other agent.
-AIAgent workflowAgent = AgentWorkflowBuilder.BuildSequential(researcher, reporter).AsAIAgent();
-
-WebApplication app = builder.Build();
 app.MapAGUIServer("/", workflowAgent);
-
-await app.RunAsync();
 ```
 
-> [!WARNING]
-> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
+The endpoint streams the constituent agents' standard text and tool-call output. `AuthorName` identifies the agent that produced each update.
 
-The client side is unchanged. Connect with `AGUIChatClient` as in [Getting Started](getting-started.md).
-Each agent's output streams as normal AG-UI text and tool-call events, and the `AuthorName` on each update
-identifies which agent in the workflow produced it.
+MAF .NET doesn't currently map workflow-specific lifecycle behavior to AG-UI. Clients don't receive workflow step events, activity snapshots, workflow interrupts, or workflow resume operations equivalent to the Python integration. Wrapping a workflow as an `AIAgent` doesn't add those mappings.
 
-> [!NOTE]
-> The .NET integration streams a workflow's **agent output** (text and tool calls) over AG-UI, but not the
-> workflow-specific AG-UI events shown in the Python version of this article: step tracking
-> (`STEP_STARTED` / `STEP_FINISHED`), activity snapshots, and workflow-level interrupts. Those events are
-> still evolving for .NET (tracked by [agent-framework#2494](https://github.com/microsoft/agent-framework/issues/2494)).
+For the current .NET tracking status, see [microsoft/agent-framework#2494](https://github.com/microsoft/agent-framework/issues/2494). For workflow construction and execution independent of AG-UI, see [MAF workflow concepts](../../../../concepts/workflows/index.md).
 
 ## Next steps
 
-- [State Management](state-management.md)
-- [Human-in-the-Loop](human-in-the-loop.md)
-- [Workflows](../../../../concepts/workflows/index.md)
+> [!div class="nextstepaction"]
+> [Review production and security considerations](./security-considerations.md)
 
 ::: zone-end
 

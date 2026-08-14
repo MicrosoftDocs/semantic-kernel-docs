@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: dmytrostruk
 ms.topic: reference
 ms.author: dmytrostruk
-ms.date: 07/01/2026
+ms.date: 08/07/2026
 ms.service: agent-framework
 ---
 
@@ -192,6 +192,9 @@ All types support both function-based and class-based implementations. When mult
 > - For agent middleware `[A1, A2]` and run middleware `[R1, R2]`, execution order is:
 >   `A1 -> A2 -> R1 -> R2 -> Agent -> R2 -> R1 -> A2 -> A1`.
 > - Function/chat middleware follows the same wrapping principle at tool/chat-call time.
+
+> [!TIP]
+> For a standardized, fail-closed control boundary spanning agent, chat, and function middleware, see [Agent Hooks](../../../agents/agent-hooks.md). Agent Hooks also coordinates core streaming and persistence behavior that ordinary middleware can't provide by itself.
 
 ## Agent Middleware
 
