@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: dmkorolev
 ms.service: agent-framework
 ms.topic: tutorial
-ms.date: 07/01/2026
+ms.date: 08/17/2026
 ms.author: dmkorolev
 ---
 
@@ -315,8 +315,17 @@ The Responses API is similar to Chat Completions but is stateful, allowing you t
 Like Chat Completions, it supports the `stream` parameter, which controls the output format: either a single JSON response or a stream of events.
 The Responses API defines its own streaming event types, including `response.created`, `response.output_item.added`, `response.output_item.done`, `response.completed`, and others.
 
+#### Continue a response
+
+The Responses protocol provides two mutually exclusive ways to continue:
+
+- Set `previous_response_id` to the `resp_*` ID returned by the preceding response. This ID changes each turn and follows that response chain.
+- Set `conversation` to a `conv_*` ID. The conversation ID remains stable across turns, and inputs and outputs are added to that conversation.
+
+`MapOpenAIResponses` manages Responses API storage for its endpoints. If your application instead owns the route and uses the `OpenAIResponses` helpers with an `AgentSessionStore`, `OpenAIResponses.GetSessionStoreId(...)` returns `previous_response_id` when present or otherwise the conversation ID. For a response chain, load the prior snapshot and save the advanced session under the new response ID. For a conversation, load and save the session under the same conversation ID.
+
 > [!IMPORTANT]
-> OpenAI response and conversation IDs are opaque service-side IDs. OpenAI scopes `resp_*` and `conv_*` IDs to the backing API key or project by default, so they are usually constrained when that boundary matches your app or tenant boundary. Risk appears when a hosted agent uses one backing key or project for multiple end users, echoes raw OpenAI IDs to clients, and accepts those IDs back without checking ownership. Store them server-side, map them from your own client session IDs, and verify the authenticated user or tenant before passing them as `previous_response_id` or `conversation`.
+> Treat response and conversation IDs as opaque continuation data, not authorization credentials. Before accepting `previous_response_id` or `conversation` from a client, verify that the authenticated user or tenant owns that ID. For an application-owned route that uses `AgentSessionStore`, enable [session isolation](./index.md#secure-session-continuation).
 
 #### Create a Conversation and Response
 
