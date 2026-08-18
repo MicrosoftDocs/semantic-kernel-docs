@@ -5,9 +5,19 @@ zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: overview
 ms.author: evmattso
-ms.date: 07/10/2026
+ms.date: 08/11/2026
 ms.service: agent-framework
 ---
+
+<!--
+  Language parity table – keep in sync when adding/removing sections.
+
+  | Section                        | C# | Python | Go | Notes |
+  |--------------------------------|:--:|:------:|:--:|-------|
+  | Supported integration behavior | ✅ |   ✅   | ✅ | SDK capabilities differ |
+  | Architecture                   | ✅ |   ✅   | ❌ | Not documented for Go |
+  | Installation                   | ✅ |   ✅   | ❌ | Go zone links to runnable samples |
+-->
 
 # AG-UI Integration with Agent Framework
 
@@ -34,9 +44,9 @@ Consider using AG-UI when you need to:
 - Synchronize state between client and server for interactive experiences
 - Render custom UI components based on agent tool calls
 
-## Supported Features
+## AG-UI scenarios
 
-The Agent Framework AG-UI integration supports all 7 AG-UI protocol features:
+AG-UI defines seven showcase scenarios. MAF support varies by SDK; use the language-specific section on this page for the current support level and implementation guidance.
 
 1. **Agentic Chat**: Basic streaming chat with automatic tool calling
 2. **Backend Tool Rendering**: Tools executed on backend with results streamed to client
@@ -57,96 +67,47 @@ To learn more about getting started with Microsoft Agent Framework and CopilotKi
 
 ::: zone pivot="programming-language-csharp"
 
-## AG-UI vs. Direct Agent Usage
+## .NET integration
 
-While you can run agents directly in your application using Agent Framework's `Run` and `RunStreamingAsync` methods, AG-UI provides additional capabilities:
+The .NET integration exposes a MAF `AIAgent` as an AG-UI HTTP endpoint. The hosting adapter converts the agent's response stream into AG-UI events; core agent behavior such as tool execution and approval remains part of MAF.
 
-| Feature | Direct Agent Usage | AG-UI Integration |
-|---------|-------------------|-------------------|
-| Deployment | Embedded in application | Remote service via HTTP |
-| Client Access | Single application | Multiple clients (web, mobile) |
-| Streaming | In-process async iteration | Server-Sent Events (SSE) |
-| State Management | Application-managed | Protocol-level state snapshots |
-| Session Context | Application-managed | Protocol-managed session IDs |
-| Approval Workflows | Custom implementation | Built-in middleware pattern |
+Use the .NET integration to:
 
-## Architecture Overview
+- Stream agent text over Server-Sent Events (SSE).
+- Surface [backend](./backend-tool-rendering.md) and [frontend](./frontend-tools.md) tool calls as AG-UI events.
+- Send [MAF tool approval](./human-in-the-loop.md) requests to the client and return the decision.
+- Exchange [client state, state snapshots and deltas, and forwarded properties](./state-management.md).
+- [Resume persisted hosted sessions](./getting-started.md#conversation-continuity) using the AG-UI `threadId`.
+- Expose [workflows converted to agents](./workflows.md) through the same endpoint.
 
-The AG-UI integration uses ASP.NET Core and follows a clean middleware-based architecture:
+AG-UI clients decide how to render text, tool, approval, and state events.
 
-```
-┌─────────────────┐
-│  Web Client     │
-│  (Browser/App)  │
-└────────┬────────┘
-         │ HTTP POST + SSE
-         ▼
-┌────────────────────────────┐
-│  ASP.NET Core              │
-│  MapAGUIServer("/", agent) │
-└────────┬───────────────────┘
-         │
-         ▼
-┌────────────────────────────┐
-│  AIAgent                   │
-│  (with Middleware)         │
-└────────┬───────────────────┘
-         │
-         ▼
-┌────────────────────────────┐
-│  IChatClient               │
-│  (Azure OpenAI, etc.)      │
-└────────────────────────────┘
+## Architecture
+
+The C# hosting package adds an ASP.NET Core endpoint around an ordinary MAF agent:
+
+```text
+AG-UI client -- HTTP POST / SSE --> MapAGUIServer --> AIAgent
 ```
 
-### Key Components
-
-- **ASP.NET Core Endpoint**: `MapAGUIServer` extension method handles HTTP requests and SSE streaming
-- **AIAgent**: Agent Framework agent created from `IChatClient` or custom implementation
-- **Middleware Pipeline**: Optional middleware for approvals, state management, and custom logic
-- **Protocol Adapter**: Converts between Agent Framework types and AG-UI protocol events
-- **Chat Client**: Microsoft.Extensions.AI chat client (Azure OpenAI, OpenAI, Ollama, etc.)
-
-## How Agent Framework Translates to AG-UI
-
-Understanding how Agent Framework concepts map to AG-UI helps you build effective integrations:
-
-| Agent Framework Concept | AG-UI Equivalent | Description |
-|------------------------|------------------|-------------|
-| `AIAgent` | Agent Endpoint | Each agent becomes an HTTP endpoint |
-| `agent.Run()` | HTTP POST Request | Client sends messages via HTTP |
-| `agent.RunStreamingAsync()` | Server-Sent Events | Streaming responses via SSE |
-| `AgentResponseUpdate` | AG-UI Events | Converted to protocol events automatically |
-| `AIFunctionFactory.Create()` | Backend Tools | Executed on server, results streamed |
-| `ApprovalRequiredAIFunction` | Human-in-the-Loop | Middleware converts to approval protocol |
-| `AgentSession` | Session Management | `ConversationId` maintains context |
-| `ChatResponseFormat.ForJsonSchema<T>()` | State Snapshots | Structured output becomes state events |
+`MapAGUIServer` adapts the AG-UI request to MAF messages and run options. It then converts the agent's streaming response to AG-UI events using the AG-UI .NET SDK.
 
 ## Installation
 
-The AG-UI integration is included in the ASP.NET Core hosting package:
-
-```bash
-dotnet add package Microsoft.Agents.AI.Hosting.AGUI.AspNetCore
+```dotnetcli
+dotnet add package Microsoft.Agents.AI.Hosting.AGUI.AspNetCore --prerelease
 ```
 
-This package includes all dependencies needed for AG-UI integration including `Microsoft.Extensions.AI`.
+## Next steps
 
-## Next Steps
+> [!div class="nextstepaction"]
+> [Get started with AG-UI](./getting-started.md)
 
-To get started with AG-UI integration:
+## Related resources
 
-1. **[Getting Started](getting-started.md)**: Build your first AG-UI server and client
-2. **[Backend Tool Rendering](backend-tool-rendering.md)**: Add function tools to your agents
-3. **[Human-in-the-Loop](human-in-the-loop.md)**: Implement approval workflows
-4. **[State Management](state-management.md)**: Synchronize state between client and server
-
-## Additional Resources
-
-- [Agent Framework Documentation](../../../../overview/index.md)
-- [AG-UI Protocol Documentation](https://docs.ag-ui.com/introduction)
-- [Microsoft.Extensions.AI Documentation](/dotnet/api/microsoft.extensions.ai)
-- [Agent Framework GitHub Repository](https://github.com/microsoft/agent-framework)
+- [Agent Framework overview](../../../../overview/index.md)
+- [AG-UI protocol documentation](https://docs.ag-ui.com/introduction)
+- [Microsoft Agent Framework repository](https://github.com/microsoft/agent-framework)
 
 ::: zone-end
 

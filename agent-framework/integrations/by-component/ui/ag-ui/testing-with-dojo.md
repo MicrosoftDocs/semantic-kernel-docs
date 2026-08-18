@@ -4,10 +4,19 @@ description: Learn how to test your Microsoft Agent Framework agents with AG-UI'
 zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: tutorial
-ms.date: 07/01/2026
+ms.date: 08/11/2026
 ms.author: evmattso
 ms.service: agent-framework
 ---
+
+<!--
+  Language parity table – keep in sync when adding/removing sections.
+
+  | Section                            | C# | Python | Go | Notes |
+  |------------------------------------|:--:|:------:|:--:|-------|
+  | MAF-specific Dojo setup            | ❌ |   ✅   | ❌ | Dojo is an external interoperability tool |
+  | Standard AG-UI endpoint compatibility | ✅ |   ✅   | ✅ |       |
+-->
 
 # Testing with AG-UI Dojo
 
@@ -262,6 +271,13 @@ if err := http.ListenAndServe(":8888", mux); err != nil {
 :::zone-end
 ::: zone pivot="programming-language-csharp"
 
-Coming soon.
+Dojo is an AG-UI interoperability tool and doesn't require MAF-specific .NET configuration. Expose the scenario through `MapAGUIServer`, then follow the Dojo documentation for connecting an AG-UI endpoint.
+
+For MAF implementation guidance, use the scenario articles in this section:
+
+- [Backend tools](./backend-tool-rendering.md)
+- [Frontend tools](./frontend-tools.md)
+- [Human approval](./human-in-the-loop.md)
+- [State management](./state-management.md)
 
 ::: zone-end
