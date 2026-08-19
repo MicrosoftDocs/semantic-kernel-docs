@@ -48,7 +48,7 @@ while (true)
 }
 ```
 
-The harness handles planning, todo tracking, and history persistence for you across the whole conversation. For a full-featured console — with tool-approval prompts, todo/mode rendering, and slash commands — see the [sample terminal UX](../agents/harness.md#a-sample-terminal-ux).
+The harness handles planning, todo tracking, and history persistence for you across the whole conversation. For a full-featured console — with tool-approval prompts, todo/mode rendering, and slash commands — see the [sample terminal UX](../concepts/harness.md#sample-terminal-ux).
 
 > [!TIP]
 > See the [.NET harness samples](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/02-agents/Harness) for full runnable applications.
@@ -83,7 +83,7 @@ while True:
     print()
 ```
 
-The harness handles planning, todo tracking, and history persistence for you across the whole conversation. For a full-featured console — with tool-approval prompts, todo/mode rendering, and slash commands — see the [sample terminal UX](../agents/harness.md#a-sample-terminal-ux).
+The harness handles planning, todo tracking, and history persistence for you across the whole conversation. For a full-featured console — with tool-approval prompts, todo/mode rendering, and slash commands — see the [sample terminal UX](../concepts/harness.md#sample-terminal-ux).
 
 > [!TIP]
 > See the [Python harness samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/harness) for full runnable applications.
@@ -104,5 +104,5 @@ The harness handles planning, todo tracking, and history persistence for you acr
 
 **Go deeper:**
 
-- [Agent Harnesses](../agents/harness.md) — compaction, looping, shell, and the sample terminal UX
+- [Agent Harnesses](../concepts/harness.md) — compaction, looping, shell, and the sample terminal UX
 - [Agent Skills](../agents/skills.md) — progressively load skills from the file system

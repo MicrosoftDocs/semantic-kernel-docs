@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: TaoChenOSU
 ms.topic: tutorial
 ms.author: taochen
-ms.date: 07/01/2026
+ms.date: 07/16/2026
 ms.service: agent-framework
 ---
 
@@ -19,7 +19,7 @@ ms.service: agent-framework
     | Set Up the Sequential Orchestration           | ✅ |   ✅   | ✅ |                 |
     | Run the Sequential Workflow                   | ✅ |   ✅   | ✅ |                 |
     | Sample Output                                 | ✅ |   ✅   | ✅ |                 |
-    | Sequential with Human-in-the-Loop             | ✅ |   ✅   | ✅ |                 |
+    | Sequential with Human-in-the-Loop             | ✅ |   ✅   | ✅ | Python adds a request-info feedback step; C# covers tool approval and links to Handoff for interactive HITL |
     | Advanced: Mixing Agents with Custom Executors | ❌ |   ✅   | ✅ | Python/Go-specific |
     | Controlling Context Between Agents             | ❌ |   ✅   | ✅ | Python/Go-specific |
     | Intermediate Outputs                           | ❌ |   ✅   | ✅ | Python/Go-specific |
@@ -207,6 +207,13 @@ await foreach (WorkflowEvent evt in run.WatchStreamAsync())
 > [!TIP]
 > For a complete runnable example of this approval flow, see the [`GroupChatToolApproval` sample](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/03-workflows/Agents/GroupChatToolApproval). The same `RequestInfoEvent` handling pattern applies to other orchestrations.
 
+### Beyond Tool Approval: Interactive Feedback
+
+Tool approval lets a human accept or reject a specific tool call, but a sequential orchestration does not include a built-in step to pause for free-form user feedback between agents, and it cannot return control to a previous agent. When an agent needs to interactively ask the user for more information and iterate before continuing; for example, collecting booking details before it calls a reservation tool; use one of the following approaches instead:
+
+- **[Handoff orchestration](./handoff.md)** is interactive by default: when an agent responds without handing off, control returns to the user for the next input, enabling multi-turn back-and-forth within the orchestration. Restrict each agent to a single handoff target to approximate a sequential flow that still pauses for user input.
+- A **custom workflow** built with `WorkflowBuilder` and a [`RequestPort`](../human-in-the-loop.md) lets you send a typed request to the user at any point and route the response back to an executor, which you can place before or after your agents in the pipeline.
+
 ## Key Concepts
 
 - **Sequential Processing**: Each agent processes the output of the previous agent in order
@@ -216,6 +223,7 @@ await foreach (WorkflowEvent evt in run.WatchStreamAsync())
 - **Event Handling**: Monitor agent progress through `AgentResponseUpdateEvent` and completion through `WorkflowOutputEvent`
 - **Tool Approval**: Wrap sensitive tools with `ApprovalRequiredAIFunction` to require human approval before execution
 - **RequestInfoEvent**: Emitted when a tool requires approval; contains `ToolApprovalRequestContent` with the tool call details
+- **Interactive HITL**: Sequential orchestration covers tool approval; for interactive back-and-forth where an agent gathers more information from the user, use [handoff orchestration](./handoff.md) or a custom `RequestPort` workflow
 
 ::: zone-end
 
@@ -360,7 +368,7 @@ This is useful for translation pipelines, progressive refinement, and other scen
 For a complete example, see [sequential_chain_only_agent_responses.py](https://github.com/microsoft/agent-framework/blob/main/python/samples/03-workflows/orchestrations/sequential_chain_only_agent_responses.py) in the Agent Framework repository.
 
 > [!TIP]
-> For more fine-grained control over context flow — including custom filter functions — see [Context Modes](../advanced/agent-executor.md#context-modes) in the Agent Executor reference.
+> For more fine-grained control over context flow — including custom filter functions — see [Context Modes](../../concepts/workflows/advanced/agent-executor.md#context-modes) in the Agent Executor reference.
 
 ## Intermediate Outputs
 

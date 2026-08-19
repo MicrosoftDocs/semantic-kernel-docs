@@ -174,5 +174,5 @@ Or stream the response:
 
 **Go deeper:**
 
-- [Agents overview](../agents/index.md) — understand agent architecture
-- [Providers](../agents/providers/index.md) — see all supported providers
+- [Agents](../concepts/agents/index.md) — understand agent architecture
+- [Providers](../integrations/by-component/model-providers/index.md) — see all supported providers

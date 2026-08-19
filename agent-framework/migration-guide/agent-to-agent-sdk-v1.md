@@ -146,7 +146,7 @@ builder.Services.AddA2AServer("weather-agent");
 builder.Services.AddA2AServer(agent);
 ```
 
-For details on how `AddA2AServer` works and how to override its defaults, see [A2A Hosting](../hosting/agent-to-agent.md#how-adda2aserver-works).
+For details on how `AddA2AServer` works and how to override its defaults, see [A2A Hosting](../hosting/self-hosting/a2a/dotnet.md#how-adda2aserver-works).
 
 ### Endpoint mapping
 
@@ -500,12 +500,13 @@ uvicorn.run(server, host="0.0.0.0", port=9999)
 ::: zone pivot="programming-language-go"
 
 > [!NOTE]
-> This migration guide applies to the C# and Python Agent Framework A2A packages. For Go A2A usage, see [A2A integration](../integrations/a2a.md).
+> This migration guide applies to the C# and Python Agent Framework A2A packages. For Go A2A clients, see the [A2A agent service](../integrations/by-component/agent-services/a2a.md); for Go servers, see [A2A hosting](../hosting/self-hosting/a2a/server.md).
 
 ::: zone-end
 
 ## See also
 
-- [A2A Agent](../agents/providers/agent-to-agent.md) - full reference for the A2A agent provider
-- [A2A Hosting](../hosting/agent-to-agent.md) - full reference for the new hosting API
+- [A2A agent service](../integrations/by-component/agent-services/a2a.md) - full reference for consuming remote A2A agents
+- [A2A hosting](../hosting/self-hosting/a2a/server.md) - expose Agent Framework agents through A2A
+- [A2A Hosting](../hosting/self-hosting/a2a/dotnet.md) - full reference for the new hosting API
 - [A2A Protocol Specification](https://a2a-protocol.org/latest/)

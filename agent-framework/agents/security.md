@@ -18,12 +18,12 @@ Prompt injection is the #1 risk on the OWASP LLM Top 10, and most agents in prod
 FIDES is based on the [FIDES paper by Costa et al.](https://arxiv.org/abs/2505.23643) and ships in `agent-framework-core` as an experimental feature behind `agent_framework.security`.
 
 > [!TIP]
-> FIDES is a deterministic complement to the heuristic best-practices in [Agent Safety](./safety.md). Read that page first for general guidance on trust boundaries, tool approval, and input validation; reach for FIDES when you need a deterministic guarantee about *which untrusted data is allowed to drive which sensitive tool*.
+> FIDES is a deterministic complement to the heuristic best-practices in [Agent Safety](../concepts/agents/safety.md). Read that page first for general guidance on trust boundaries, tool approval, and input validation; reach for FIDES when you need a deterministic guarantee about *which untrusted data is allowed to drive which sensitive tool*.
 
 ::: zone pivot="programming-language-csharp"
 
 > [!NOTE]
-> FIDES is currently Python-only. A .NET implementation is coming soon. In the meantime, follow the general guidance in [Agent Safety](./safety.md) for .NET agents and gate high-risk tools behind [Tool Approval](./tools/tool-approval.md).
+> FIDES is currently Python-only. A .NET implementation is coming soon. In the meantime, follow the general guidance in [Agent Safety](../concepts/agents/safety.md) for .NET agents and gate high-risk tools behind [Tool Approval](./tools/tool-approval.md).
 
 ::: zone-end
 
@@ -81,7 +81,7 @@ The next sections take each of these apart.
 
 ## Wiring FIDES into an agent
 
-Adding FIDES to the triage agent is a single opt-in. `SecureAgentConfig` is a [context provider](./conversations/context-providers.md) — attach it to the agent and the middleware, security tools, and instructions are injected automatically. All later snippets build on this one:
+Adding FIDES to the triage agent is a single opt-in. `SecureAgentConfig` is a [context provider](../concepts/agents/conversations/context-providers.md) — attach it to the agent and the middleware, security tools, and instructions are injected automatically. All later snippets build on this one:
 
 ```python
 import os
@@ -373,7 +373,7 @@ FIDES is opt-in and adds per-tool-call middleware overhead. A rough guide:
 - Your agent has no privileged tools — the worst case is a wrong answer, not a wrong action.
 - You're prototyping and the labeling overhead would slow you down. (You can add `SecureAgentConfig` later without changing your tools.)
 
-In all cases, the general best practices in [Agent Safety](./safety.md) — validating function inputs, vetting context providers, sanitizing LLM output, and limiting log/telemetry exposure — still apply.
+In all cases, the general best practices in [Agent Safety](../concepts/agents/safety.md) — validating function inputs, vetting context providers, sanitizing LLM output, and limiting log/telemetry exposure — still apply.
 
 ## Getting started
 
@@ -419,7 +419,7 @@ If you hit a bug or have a feature request, open an issue on [the repository](ht
 ::: zone pivot="programming-language-go"
 
 > [!NOTE]
-> FIDES is currently Python-only. For Go agents, follow the general guidance in [Agent Safety](./safety.md) and gate high-risk tools behind [Tool Approval](./tools/tool-approval.md).
+> FIDES is currently Python-only. For Go agents, follow the general guidance in [Agent Safety](../concepts/agents/safety.md) and gate high-risk tools behind [Tool Approval](./tools/tool-approval.md).
 
 ::: zone-end
 
@@ -430,10 +430,10 @@ If you hit a bug or have a feature request, open an issue on [the repository](ht
 
 ### Related content
 
-- [Agent Safety](./safety.md) — general best practices for safe agents
+- [Agent Safety](../concepts/agents/safety.md) — general best practices for safe agents
 - [Tool Approval](./tools/tool-approval.md) — gate high-risk tools behind human confirmation
 - [Function Tools](./tools/function-tools.md)
-- [Context Providers](./conversations/context-providers.md)
+- [Context Providers](../concepts/agents/conversations/context-providers.md)
 - [`agent_framework.security` source](https://github.com/microsoft/agent-framework/blob/main/python/packages/core/agent_framework/security.py)
 - [FIDES samples](https://github.com/microsoft/agent-framework/tree/main/python/samples/02-agents/security)
 - [FIDES Developer Guide](https://github.com/microsoft/agent-framework/blob/main/python/samples/02-agents/security/FIDES_DEVELOPER_GUIDE.md)

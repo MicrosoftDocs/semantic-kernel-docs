@@ -21,12 +21,17 @@ title: Page title
 description: Brief description
 zone_pivot_groups: programming-languages  # If showing code in multiple languages
 author: github-username
-ms.topic: conceptual
+ms.topic: article
 ms.author: microsoft-alias
 ms.date: MM/DD/YYYY
 ms.service: semantic-kernel
 ---
 ```
+
+Use `article` by default. The docsets also use `how-to`, `overview`,
+`quickstart`, `reference`, `sample`, `tutorial`, and
+`upgrade-and-migration-article` when those types match the page's purpose.
+Do not use `conceptual`.
 
 ### Zone Pivots for Multi-Language Content
 

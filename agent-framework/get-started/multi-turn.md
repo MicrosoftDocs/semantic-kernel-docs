@@ -110,5 +110,5 @@ fmt.Println(resp, err)
 
 **Go deeper:**
 
-- [Multi-turn conversations](../agents/conversations/session.md) — advanced conversation patterns
-- [Middleware](../agents/middleware/index.md) — intercept and modify agent interactions
+- [Multi-turn conversations](../concepts/agents/conversations/session.md) — advanced conversation patterns
+- [Middleware](../concepts/agents/middleware/index.md) — intercept and modify agent interactions

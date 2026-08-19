@@ -35,10 +35,11 @@ One use case for storing information in a vector database is to enable large lan
 
 For example, if you want to write a blog post about the latest trends in AI, you can use a vector database to store the latest information about that topic and pass the information along with the ask to a LLM in order to generate a blog post that leverages the latest information.
 
-Semantic Kernel and .net provides an abstraction for interacting with Vector Stores and a list of out-of-the-box implementations that implement these abstractions for various databases. Features include creating, listing and deleting collections of records, and uploading, retrieving and deleting records. The abstraction makes it easy to experiment with a free or locally hosted Vector Store and then switch to a service when needing to scale up.
+For python, Semantic Kernel provides an abstraction for interacting with Vector Stores and a list of out-of-the-box implementations that implement these abstractions for various databases.
 
-The out-of-the-box implementations can be used with Semantic Kernel, but do not depend on the core Semantic Kernel stack and can also therefore be used completely independently if required.
-The Semantic Kernel provided imlementations are referred to as 'connectors'.
+For .net an abstraction is provided by the .net Foundation.  Various implementations that implement these abstractions are shipped by database providers and the .net Foundation via the [community toolkit](https://github.com/CommunityToolkit/AI/tree/main/MEVD). 
+
+Features include creating, listing and deleting collections of records, and uploading, retrieving and deleting records. The abstraction makes it easy to experiment with a free or locally hosted Vector Store and then switch to a service when needing to scale up.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -258,7 +259,7 @@ Once you have defined your data model, the next step is to create a VectorStore 
 In this example, we'll use Qdrant. You will therefore need to import the Qdrant nuget package.
 
 ```dotnetcli
-dotnet add package Microsoft.SemanticKernel.Connectors.Qdrant --prerelease
+dotnet add package CommunityToolkit.VectorData.Qdrant
 ```
 
 If you want to run Qdrant locally using Docker, use the following command to start the Qdrant container
@@ -275,7 +276,7 @@ Since databases support many different types of keys and records, we allow you t
 In our case, the type of record will be the `Hotel` class we already defined, and the type of key will be `ulong`, since the `HotelId` property is a `ulong` and Qdrant only supports `Guid` or `ulong` keys.
 
 ```csharp
-using Microsoft.SemanticKernel.Connectors.Qdrant;
+using CommunityToolkit.VectorData.Qdrant;
 using Qdrant.Client;
 
 // Create a Qdrant VectorStore object

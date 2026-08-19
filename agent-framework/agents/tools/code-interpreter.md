@@ -14,7 +14,7 @@ ms.service: agent-framework
 Code Interpreter allows agents to write and execute code in a sandboxed environment. This is useful for data analysis, mathematical computations, file processing, and other tasks that benefit from code execution.
 
 > [!NOTE]
-> Code Interpreter availability depends on the underlying agent provider. See [Providers Overview](../providers/index.md) for provider-specific support.
+> Code Interpreter availability depends on the underlying agent provider. See [Providers Overview](../../integrations/by-component/model-providers/index.md) for provider-specific support.
 
 :::zone pivot="programming-language-csharp"
 

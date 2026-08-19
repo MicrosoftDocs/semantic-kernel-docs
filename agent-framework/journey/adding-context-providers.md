@@ -80,16 +80,16 @@ Key points:
 1. **Context providers run automatically.** You register them once when creating the agent. After that, they participate in every invocation without any extra code on your part.
 2. **Multiple providers compose together.** You can register several context providers — a history provider, a RAG provider, and a custom provider — and they all contribute to the same context window. Their contributions are merged in registration order.
 3. **Providers have two hooks.** The *before* hook injects context (messages, instructions, tools) into the prompt. The *after* hook processes the response — storing messages, extracting memories, or updating state.
-4. **Providers are session-aware.** Context providers receive the current session, so they can load and store data scoped to a specific conversation. See [Sessions](../agents/conversations/session.md) for how session management works.
+4. **Providers are session-aware.** Context providers receive the current session, so they can load and store data scoped to a specific conversation. See [Sessions](../concepts/agents/conversations/session.md) for how session management works.
 
 > [!TIP]
-> For a detailed view of where context providers sit in the full agent execution pipeline — alongside middleware and the chat client — see the [Agent Pipeline Architecture](../agents/agent-pipeline.md).
+> For a detailed view of where context providers sit in the full agent execution pipeline — alongside middleware and the chat client — see the [Agent Pipeline Architecture](../concepts/agents/agent-pipeline.md).
 
 ## Managing the context window
 
 Every piece of context you inject consumes tokens from the model's context window. History grows with each turn. RAG results add document chunks. User profiles add metadata. If the total exceeds the model's limit, the oldest or least relevant information gets truncated — potentially losing important context.
 
-Context window management is a critical consideration when using context providers: **Compaction** strategies summarize or trim older history to stay within token limits while preserving key information. See [Compaction](../agents/conversations/compaction.md).
+Context window management is a critical consideration when using context providers: **Compaction** strategies summarize or trim older history to stay within token limits while preserving key information. See [Compaction](../concepts/agents/conversations/compaction.md).
 
 > [!TIP]
 > For hands-on experience with memory and context providers, see [Step 4: Memory](../get-started/memory.md) in the Get Started tutorial.
@@ -116,10 +116,10 @@ Now that your agent has tools, skills, middleware, and context providers, the ne
 
 **Go deeper:**
 
-- [Context Providers reference](../agents/conversations/context-providers.md) — built-in and custom provider patterns
-- [Conversations & Memory overview](../agents/conversations/index.md) — sessions, history, and storage
+- [Context Providers reference](../concepts/agents/conversations/context-providers.md) — built-in and custom provider patterns
+- [Conversations & Memory overview](../concepts/agents/conversations/index.md) — sessions, history, and storage
 - [RAG](../agents/rag.md) — retrieval-augmented generation patterns
-- [Compaction](../agents/conversations/compaction.md) — managing context window size
-- [Storage](../agents/conversations/storage.md) — persisting conversation data
-- [Agent Pipeline Architecture](../agents/agent-pipeline.md) — how context providers fit in the execution pipeline
+- [Compaction](../concepts/agents/conversations/compaction.md) — managing context window size
+- [Storage](../concepts/agents/conversations/storage.md) — persisting conversation data
+- [Agent Pipeline Architecture](../concepts/agents/agent-pipeline.md) — how context providers fit in the execution pipeline
 - [Step 4: Memory](../get-started/memory.md) — hands-on tutorial

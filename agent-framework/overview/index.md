@@ -3,7 +3,7 @@ title: Microsoft Agent Framework Overview
 description: "Build AI agents and multi-agent workflows in .NET, Python, and Go with Microsoft Agent Framework."
 zone_pivot_groups: programming-languages
 ms.topic: overview
-ms.date: 07/08/2026
+ms.date: 07/29/2026
 ms.service: agent-framework
 author: moonbox3
 ms.author: evmattso
@@ -12,13 +12,14 @@ ms.reviewer: ssalgado
 
 # Microsoft Agent Framework
 
-Agent Framework offers three primary categories of capabilities:
+Agent Framework brings together four primary areas:
 
 | | Description |
 |---|---|
-| **[Agents](../agents/index.md)** | Individual agents that use LLMs to process inputs, call [tools](../agents/tools/index.md) and [MCP servers](../agents/tools/hosted-mcp-tools.md), and generate responses. Supports Microsoft Foundry, Anthropic, Azure OpenAI, OpenAI, Ollama, and [more](../agents/providers/index.md). |
-| **[Harness](../agents/harness.md)** | An opinionated agent with batteries-included capabilities for long, multi-step tasks — planning and todo tracking, context compaction, file access and memory, don't-ask-again tool approval, and observability. |
-| **[Workflows](../workflows/index.md)** | Graph-based workflows that connect agents and functions for multi-step tasks with type-safe routing, checkpointing, and human-in-the-loop support. |
+| **[Agents](../concepts/agents/index.md)** | Individual agents that use LLMs to process inputs, call [tools](../agents/tools/index.md) and [MCP servers](../agents/tools/hosted-mcp-tools.md), and generate responses. Supports Microsoft Foundry, Anthropic, Azure OpenAI, OpenAI, Ollama, and [more](../integrations/by-component/model-providers/index.md). |
+| **[Harness Agent](../concepts/harness.md)** | An opinionated agent with batteries-included capabilities for long, multi-step tasks — planning and todo tracking, context compaction, file access and memory, don't-ask-again tool approval, and observability. |
+| **[Workflows](../concepts/workflows/index.md)** | Functional and graph-based workflows that connect agents and functions through explicit execution paths. |
+| **[Integrations](../integrations/index.md)** | Connections to model providers, agent services, tools, context providers, middleware, evaluation services, and UI frameworks, organized by provider and component. |
 
 The framework also provides foundational building
 blocks, including model clients (chat completions and responses), an agent session for state management, context providers for agent memory,
@@ -67,26 +68,25 @@ pip install agent-framework
 ```
 
 ```python
-    from agent_framework.foundry import FoundryChatClient
-    from azure.identity import AzureCliCredential
+from agent_framework import Agent
+from agent_framework.foundry import FoundryChatClient
+from azure.identity import AzureCliCredential
 
-    credential = AzureCliCredential()
-    client = FoundryChatClient(
+agent = Agent(
+    client=FoundryChatClient(
         project_endpoint="https://your-foundry-service.services.ai.azure.com/api/projects/your-foundry-project",
         model="gpt-5.4-mini",
-        credential=credential,
-    )
-
-    agent = client.as_agent(
-        name="HelloAgent",
-        instructions="You are a friendly assistant. Keep your answers brief.",
-    )
+        credential=AzureCliCredential(),
+    ),
+    name="HelloAgent",
+    instructions="You are a friendly assistant. Keep your answers brief.",
+)
 ```
 
 ```python
-    # Non-streaming: get the complete response at once
-    result = await agent.run("What is the largest city in France?")
-    print(f"Agent: {result}")
+# Non-streaming: get the complete response at once
+result = await agent.run("What is the largest city in France?")
+print(f"Agent: {result}")
 ```
 :::zone-end
 
@@ -138,7 +138,7 @@ func main() {
 
 :::zone-end
 
-That's it — an agent that calls an LLM and returns a response. From here you can [add tools](../agents/tools/index.md), [multi-turn conversations](../agents/conversations/session.md), [middleware](../agents/middleware/index.md), and [workflows](#when-to-use-agents-vs-workflows) to build production applications.
+That's it — an agent that calls an LLM and returns a response. From here you can [add tools](../agents/tools/index.md), [multi-turn conversations](../concepts/agents/conversations/session.md), [middleware](../concepts/agents/middleware/index.md), and [workflows](#when-to-use-agents-vs-workflows) to build production applications.
 
 :::zone pivot="programming-language-python"
 
@@ -195,7 +195,7 @@ and the same is expected for Agent Framework. Microsoft Agent Framework welcomes
 
 **Go deeper:**
 
-- [Agents overview](../agents/index.md) — architecture, providers, tools
-- [Agent Harnesses](../agents/harness.md) — an opinionated agent with built-in features
-- [Workflows overview](../workflows/index.md) — sequential, concurrent, branching
-- [Integrations](../integrations/index.md) — A2A, AG-UI, Durable Extension, M365
+- [Agents](../concepts/agents/index.md) — runtime and execution, agent types, conversations, middleware, and safety
+- [Agent Harness](../concepts/harness.md) — architecture, capability composition, and customization for long-running work
+- [Workflows](../concepts/workflows/index.md) — functional and graph APIs, execution, state, and advanced composition
+- [Integrations](../integrations/index.md) — providers and components for models, agent services, tools, context, middleware, evaluation, and UI

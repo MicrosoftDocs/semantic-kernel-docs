@@ -87,7 +87,7 @@ An agent takes the raw LLM call and wraps it in a structured runtime:
 | **LLM Provider** | Abstract the LLM backend. Switch from Azure OpenAI to another provider without changing your agent code. |
 
 > [!TIP]
-> To see the full list of LLM provider options in Agent Framework, refer to [Providers](../agents/providers/index.md). To see the full agentic pipeline in Agent Framework, refer to [Agent Pipeline](../agents/agent-pipeline.md).
+> To see the full list of LLM provider options in Agent Framework, refer to [Providers](../integrations/by-component/model-providers/index.md). To see the full agentic pipeline in Agent Framework, refer to [Agent Pipeline](../concepts/agents/agent-pipeline.md).
 
 ## Your first agent: instructions only
 
@@ -112,5 +112,5 @@ To make the agent more capable, the first thing you may want to do is add **tool
 
 **Go deeper:**
 
-- [Running Agents](../agents/running-agents.md) — streaming, invocation patterns
-- [Providers](../agents/providers/index.md) — choose your LLM provider
+- [Running Agents](../concepts/agents/running-agents.md) — streaming, invocation patterns
+- [Providers](../integrations/by-component/model-providers/index.md) — choose your LLM provider
