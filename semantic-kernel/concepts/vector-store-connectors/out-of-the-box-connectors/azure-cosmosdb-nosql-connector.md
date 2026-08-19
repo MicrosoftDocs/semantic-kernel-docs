@@ -38,7 +38,7 @@ The Azure CosmosDB NoSQL Vector Store connector can be used to access and manage
 | Feature Area                          | Support                                                                                                                                                             |
 | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Collection maps to                    | Azure Cosmos DB NoSQL Container                                                                                                                                     |
-| Supported key property types          | <ul><li>string</li><li>CosmosNoSqlCompositeKey</li></ul>                                                                                                     |
+| Supported key property types          | <ul><li>string</li><li>CosmosKey</li></ul>                                                                                                     |
 | Supported data property types         | <ul><li>string</li><li>int</li><li>long</li><li>double</li><li>float</li><li>bool</li><li>DateTimeOffset</li><li>*and enumerables of each of these types*</li></ul> |
 | Supported vector property types       | <ul><li>ReadOnlyMemory\<float\></li><li>Embedding\<float\></li><li>float[]</li><li>ReadOnlyMemory\<byte\></li><li>Embedding\<byte\></li><li>byte[]</li><li>ReadOnlyMemory\<sbyte\></li><li>Embedding\<sbyte\></li><li>sbyte[]</li></ul>                             |
 | Supported index types                 | <ul><li>Flat</li><li>QuantizedFlat</li><li>DiskAnn</li></ul>                                                                                                        |
@@ -244,9 +244,9 @@ public class Hotel
 
 In the Azure Cosmos DB for NoSQL connector, the partition key property defaults to the key property - `id`. The `PartitionKeyPropertyName` property in `CosmosCollectionOptions` class allows specifying a different property as the partition key.
 
-The `CosmosCollection` class supports two key types: `string` and `CosmosNoSqlCompositeKey`. The `CosmosNoSqlCompositeKey` consists of `RecordKey` and `PartitionKey`.
+The `CosmosCollection` class supports two key types: `string` and `CosmosKey`. The `CosmosKey` consists of `RecordKey` and `PartitionKey`.
 
-If the partition key property is not set (and the default key property is used), `string` keys can be used for operations with database records. However, if a partition key property is specified, it is recommended to use `CosmosNoSqlCompositeKey` to provide both the key and partition key values.
+If the partition key property is not set (and the default key property is used), `string` keys can be used for operations with database records. However, if a partition key property is specified, it is recommended to use `CosmosKey` to provide both the key and partition key values.
 
 Specify partition key property name:
 
@@ -257,13 +257,13 @@ var options = new CosmosCollectionOptions
 };
 
 var collection = new CosmosCollection<string, Hotel>(database, "collection-name", options)
-    as VectorStoreCollection<CosmosNoSqlCompositeKey, Hotel>;
+    as VectorStoreCollection<CosmosKey, Hotel>;
 ```
 
 Get with partition key:
 
 ```csharp
-var record = await collection.GetAsync(new CosmosNoSqlCompositeKey("hotel-id", "hotel-name"));
+var record = await collection.GetAsync(new CosmosKey("hotel-id", "hotel-name"));
 ```
 
 ::: zone-end
