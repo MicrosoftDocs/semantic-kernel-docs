@@ -36,27 +36,27 @@ The Harness composes existing Agent Framework building blocks rather than defini
 1. **Middleware and decorators** — add approval handling, observability, and optional bounded looping.
 1. **Application UX** — streams responses, displays progress, and collects input such as tool approvals.
 
-The resulting object remains a normal Agent Framework agent: a `HarnessAgent` that derives from `AIAgent` in .NET, or an `Agent` returned by `create_harness_agent` in Python. Its sessions use the same [session](./agents/conversations/session.md#use-sessions-with-harnessed-agent) and [context provider](./agents/conversations/context-providers.md#use-context-providers-with-harnessed-agent) abstractions as other agents.
+The resulting object remains a normal Agent Framework agent: a `HarnessAgent` that derives from `AIAgent` in .NET, or an `Agent` returned by `create_harness_agent` in Python. Its sessions use the same [session](./agents/conversations/session.md#use-sessions-with-harness-agent) and [context provider](./agents/conversations/context-providers.md#use-context-providers-with-harness-agent) abstractions as other agents.
 
 ## Harness capability matrix
 
 | Capability | Harness behavior | Canonical guidance |
 |---|---|---|
 | Function invocation | Enabled with a configurable per-request iteration limit. | [Function tools](../agents/tools/function-tools.md#use-function-tools-with-harnessed-agent) |
-| Per-service-call history persistence | Persists history after each model call in a tool-calling run. | [Sessions](./agents/conversations/session.md#use-sessions-with-harnessed-agent) |
-| Compaction | Enabled when token limits or a custom strategy are supplied. | [Compaction](./agents/conversations/compaction.md#use-compaction-with-harnessed-agent) |
-| Todo tracking | Enabled by default. | [Planning and todos](../agents/planning-and-todos.md#use-planning-and-todos-with-harnessed-agent) |
-| Agent modes | Plan and execute modes are enabled by default. | [Planning and todos](../agents/planning-and-todos.md#use-planning-and-todos-with-harnessed-agent) |
-| File memory and file access | Session file memory is enabled by default; shared file access is opt-in. | [Context providers](./agents/conversations/context-providers.md#use-context-providers-with-harnessed-agent) |
+| Per-service-call history persistence | Persists history after each model call in a tool-calling run. | [Sessions](./agents/conversations/session.md#use-sessions-with-harness-agent) |
+| Compaction | Enabled when token limits or a custom strategy are supplied. | [Compaction](./agents/conversations/compaction.md#use-compaction-with-harness-agent) |
+| Todo tracking | Enabled by default. | [Planning and todos](../agents/planning-and-todos.md#use-planning-and-todos-with-harness-agent) |
+| Agent modes | Plan and execute modes are enabled by default. | [Planning and todos](../agents/planning-and-todos.md#use-planning-and-todos-with-harness-agent) |
+| File memory and file access | Session file memory is enabled by default; shared file access is opt-in. | [Context providers](./agents/conversations/context-providers.md#use-context-providers-with-harness-agent) |
 | Tool approval | Standing approvals and auto-approval rules are enabled by default. | [Tool approval](../agents/tools/tool-approval.md#use-tool-approval-with-harnessed-agent) |
 | OpenTelemetry | Agent observability is enabled by default. | [Observability](../agents/observability.md#use-observability-with-harnessed-agent) |
 | Web search | Added by default where the selected chat client supports it. | [Web search](../agents/tools/web-search.md#use-web-search-with-harnessed-agent) |
-| Agent Skills | Enabled by default in .NET; opt-in through a provider or paths in Python. | [Agent Skills](../agents/skills.md#use-agent-skills-with-harnessed-agent) |
-| Background agents | Optional parallel delegation to named child agents. | [Background agents](../agents/background-agents.md#use-background-agents-with-harnessed-agent) |
+| Agent Skills | Enabled by default in .NET; opt-in through a provider or paths in Python. | [Agent Skills](../agents/skills.md#use-agent-skills-with-harness-agent) |
+| Background agents | Optional parallel delegation to named child agents. | [Background agents](../agents/background-agents.md#use-background-agents-with-harness-agent) |
 | Shell execution | Composed from the shell package; the Python factory can wire it automatically. | [Shell tools](../integrations/by-component/tools/shell-tools.md#use-shell-tools-with-harnessed-agent) |
-| Looping | Optional bounded re-invocation driven by evaluators or predicates. | [Agent looping](../agents/looping.md#use-looping-with-harnessed-agent) |
+| Looping | Optional bounded re-invocation driven by evaluators or predicates. | [Agent looping](../agents/looping.md#use-looping-with-harness-agent) |
 
-Background-agent delegation is separate from provider-managed [background responses](../agents/background-responses.md#use-background-responses-with-harnessed-agent). Background agents run child agents on delegated tasks; background responses poll or resume one provider request by using a continuation token.
+Background-agent delegation is separate from provider-managed [background responses](../agents/background-responses.md#use-background-responses-with-harness-agent). Background agents run child agents on delegated tasks; background responses poll or resume one provider request by using a continuation token.
 
 ::: zone pivot="programming-language-csharp"
 
@@ -198,11 +198,11 @@ The repository doesn't currently include a packaged Go Harness terminal sample.
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Plan work and track todos](../agents/planning-and-todos.md#use-planning-and-todos-with-harnessed-agent)
+> [Plan work and track todos](../agents/planning-and-todos.md#use-planning-and-todos-with-harness-agent)
 
 ### Go deeper
 
-- [Looping](../agents/looping.md#use-looping-with-harnessed-agent)
-- [Background agents](../agents/background-agents.md#use-background-agents-with-harnessed-agent)
-- [Compaction](./agents/conversations/compaction.md#use-compaction-with-harnessed-agent)
+- [Looping](../agents/looping.md#use-looping-with-harness-agent)
+- [Background agents](../agents/background-agents.md#use-background-agents-with-harness-agent)
+- [Compaction](./agents/conversations/compaction.md#use-compaction-with-harness-agent)
 - [Shell tools](../integrations/by-component/tools/shell-tools.md#use-shell-tools-with-harnessed-agent)

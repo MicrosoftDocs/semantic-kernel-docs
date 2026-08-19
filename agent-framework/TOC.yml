@@ -121,6 +121,8 @@ items:
     href: agents/observability.md
   - name: Evaluation
     href: agents/evaluation.md
+  - name: Agent Hooks
+    href: agents/agent-hooks.md
   - name: Agent Skills
     href: agents/skills.md
   - name: CodeAct
@@ -307,7 +309,7 @@ items:
           href: integrations/by-component/ui/ag-ui/backend-tool-rendering.md
         - name: Frontend Tool Rendering
           href: integrations/by-component/ui/ag-ui/frontend-tools.md
-        - name: Security Considerations
+        - name: Production and Security Considerations
           href: integrations/by-component/ui/ag-ui/security-considerations.md
         - name: Workflows
           href: integrations/by-component/ui/ag-ui/workflows.md

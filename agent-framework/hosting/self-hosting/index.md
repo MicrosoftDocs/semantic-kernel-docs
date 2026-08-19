@@ -5,16 +5,187 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: article
 ms.author: edvan
-ms.date: 07/22/2026
+ms.date: 08/17/2026
 ms.service: agent-framework
 ---
+
+<!--
+  Language parity table – keep in sync when adding/removing sections.
+
+  | Section                       | C# | Python | Go | Notes                                  |
+  |-------------------------------|:--:|:------:|:--:|----------------------------------------|
+  | Self-hosting responsibilities | ✅ |   ✅   | ❌ |                                        |
+  | Shared hosting helpers        | ✅ |   ✅   | ❌ | SDK-specific APIs                      |
+  | Framework integration         | ✅ |   ✅   | ❌ | ASP.NET Core for C#; framework-neutral Python helpers |
+  | Protocol selection            | ✅ |   ✅   | ❌ | Available protocol adapters differ     |
+  | Session persistence           | ✅ |   ✅   | ❌ | SDK-specific stores                    |
+  | History storage distinction   | ✅ |   ✅   | ❌ | SDK-specific providers                 |
+  | Secure session continuation   | ✅ |   ✅   | ❌ | SDK-specific isolation mechanisms      |
+-->
 
 # Self-host Agent Framework applications
 
 :::zone pivot="programming-language-csharp"
 
-> [!NOTE]
-> Self-hosting protocol helpers for .NET are coming soon. The hosting model will let your application own its server, state, and protocol integrations.
+Self-hosting lets you run an Agent Framework agent or workflow in your own ASP.NET Core application, container, service, or runtime. Your application controls routing, identity, authorization, request policy, storage, deployment, and scaling. Add protocol integrations to the host based on the clients you need to support.
+
+Use this option when you need to integrate an agent endpoint with your existing application infrastructure. If you want Microsoft Foundry to run the agent for you, see [Foundry Hosted Agents](../foundry-hosted-agent.md). If you need Azure Functions triggers or durable execution, see [Durable Extension](../azure-functions.md).
+
+> [!IMPORTANT]
+> The .NET hosting packages are prerelease. Install prerelease versions explicitly and review release notes before updating a production deployment.
+
+```dotnetcli
+dotnet add package Microsoft.Agents.AI.Hosting --prerelease
+```
+
+## What the hosting helpers provide
+
+The `Microsoft.Agents.AI.Hosting` package integrates agents and workflows with the .NET generic host:
+
+- `AddAIAgent` registers a named `AIAgent` with dependency injection.
+- `AddWorkflow` registers a named workflow. Chain `AddAsAIAgent` to make the workflow available to protocol integrations through the standard agent interface.
+- `IHostedAgentBuilder` configures hosting services associated with that agent.
+- `AgentSessionStore` optionally loads and saves `AgentSession` instances by an application- or protocol-supplied continuation ID.
+
+The hosting package isn't an HTTP server or protocol registry. Your application selects the hosted agents and workflows, configures their services, and adds the protocol endpoints it needs.
+
+## Integrate with ASP.NET Core
+
+The shared hosting package uses the .NET generic host and dependency injection. For an HTTP server, create an ASP.NET Core application and add the protocol-specific packages for the endpoints you want to expose. Those packages resolve named `AIAgent` instances from dependency injection and add ASP.NET Core route mappings.
+
+For example, the OpenAI hosting package can expose a configured agent through a Responses endpoint:
+
+```dotnetcli
+dotnet add package Microsoft.Agents.AI.Hosting.OpenAI --prerelease
+```
+
+```csharp
+using Microsoft.Agents.AI.Hosting;
+
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+var hostedAgent = builder.AddAIAgent("weather-agent", (_, _) => agent);
+
+WebApplication app = builder.Build();
+app.MapOpenAIResponses(hostedAgent);
+app.Run();
+```
+
+See [OpenAI-compatible endpoints](openai-endpoints.md) for complete configuration.
+
+Your application remains responsible for its middleware pipeline, authentication, authorization, request validation, allowed model options, and durable storage. A non-HTTP host can use the shared hosting services without adding ASP.NET Core protocol endpoints.
+
+## Add protocols to your server
+
+Choose the protocol integrations your application needs:
+
+| Protocol | Integration |
+|---|---|
+| [OpenAI-compatible endpoints](openai-endpoints.md) | Chat Completions and Responses-compatible HTTP endpoints |
+| [A2A](a2a/server.md) | Agent-to-agent discovery, messaging, and task endpoints |
+| [AG-UI](../../integrations/by-component/ui/ag-ui/index.md) | Event-streaming endpoints for web agent applications |
+
+## Persist hosted sessions
+
+`AgentSessionStore` persistence is opt-in for hosting integrations that use it. Without a configured store, those integrations can create a new session for each request but can't recover server-owned session state from an earlier request.
+
+> [!IMPORTANT]
+> MAF doesn't include a general-purpose durable session store. For production, provide an `AgentSessionStore` implementation backed by storage appropriate for your application.
+
+Register your durable implementation with dependency injection and pass it to the hosted agent. You can use the in-memory store conditionally during development:
+
+```csharp
+builder.Services.AddSingleton<AgentSessionStore, MyAgentSessionStore>();
+
+var hostedAgent = builder.AddAIAgent("weather-agent", (_, _) => agent);
+
+if (builder.Environment.IsDevelopment())
+{
+    hostedAgent.WithInMemorySessionStore(withIsolation: false);
+}
+else
+{
+    hostedAgent.WithSessionStore((services, _) =>
+        services.GetRequiredService<AgentSessionStore>());
+}
+```
+
+In this example, `MyAgentSessionStore` is your application-provided durable implementation. The development branch assumes a local environment with one trusted user and is the only path that disables isolation. The production branch keeps the default isolation behavior; configure an isolation key provider as described in [Secure session continuation](#secure-session-continuation).
+
+`InMemoryAgentSessionStore` loses all sessions when the process exits and doesn't share state across application instances. Implement your own `AgentSessionStore` with persistent storage to retain sessions.
+
+An `AgentSessionStore` implements asynchronous save, get, and delete operations. It receives the owning `AIAgent` and an opaque continuation ID selected by a hosting integration or application-owned route, and it must return an independent `AgentSession` instance from each get operation. Treat the continuation ID as an opaque key in custom stores; how the ID is interpreted is protocol-specific.
+
+A durable implementation has the following structure. Replace each stub with operations for your chosen storage system:
+
+```csharp
+public sealed class MyAgentSessionStore : AgentSessionStore
+{
+    public override ValueTask SaveSessionAsync(
+        AIAgent agent,
+        string sessionStoreId,
+        AgentSession session,
+        CancellationToken cancellationToken = default)
+    {
+        // Persist the session using your storage system.
+        throw new NotImplementedException();
+    }
+
+    public override ValueTask<AgentSession> GetSessionAsync(
+        AIAgent agent,
+        string sessionStoreId,
+        CancellationToken cancellationToken = default)
+    {
+        // Restore an independent session, or create one when no state exists.
+        throw new NotImplementedException();
+    }
+
+    public override ValueTask DeleteSessionAsync(
+        AIAgent agent,
+        string sessionStoreId,
+        CancellationToken cancellationToken = default)
+    {
+        // Delete the stored session if it exists.
+        throw new NotImplementedException();
+    }
+}
+```
+
+Key records by both `agent.Id` and the opaque `sessionStoreId`. `GetSessionAsync` must return an independent session instance on every call; use the owning agent's session serialization APIs when storing serialized state. Persisted sessions can contain sensitive data, so protect them with appropriate access controls and encryption.
+
+`AgentSessionStore` persists the complete `AgentSession` selected by a hosted request, not only conversation messages. Depending on the agent stack, a session can contain a service-managed conversation ID, framework-managed chat history, memory or context-provider state, queued messages, pending approvals, and other state that must survive across runs.
+
+[History providers](../../concepts/agents/conversations/storage.md) control where conversation messages are stored. When history is held in session state, persisting the session also persists that history. An external history provider stores messages separately; the session may retain a reference or related provider state.
+
+## Secure session continuation
+
+A continuation ID identifies a session to resume; it doesn't prove that the caller owns that session. Scope persisted sessions by an authenticated user, tenant, or other authorization boundary before accepting client-supplied IDs. The `IsolationKeyScopedAgentSessionStore` gets an isolation key from `AgentIsolationKeyProvider`, combines it with the protocol continuation ID, and passes the resulting scoped ID to the underlying store. As a result, the same continuation ID under two different isolation keys resolves to two different stored sessions, and a caller can retrieve only sessions saved with that caller's isolation key.
+
+For ASP.NET Core applications that use claims-based authentication, install the prerelease `Microsoft.Agents.AI.Hosting.AspNetCore` package, register the claims-based isolation provider, and keep isolation enabled on the session store:
+
+```dotnetcli
+dotnet add package Microsoft.Agents.AI.Hosting.AspNetCore --prerelease
+```
+
+```csharp
+builder.Services.AddHttpContextAccessor();
+builder.Services.UseClaimsBasedAgentIsolation();
+```
+
+By default, `UseClaimsBasedAgentIsolation` uses the `ClaimTypes.NameIdentifier` claim. Configure another claim only when it is stable and unique across every caller served by the store. The isolation provider doesn't authenticate requests; configure ASP.NET Core authentication and authorization separately. With the default strict isolation behavior, session access fails when the current principal doesn't provide the configured claim.
+
+For a non-HTTP host or another tenancy model, register a custom `AgentIsolationKeyProvider`. The default `WithInMemorySessionStore()` and `WithSessionStore(...)` overloads wrap the configured store in `IsolationKeyScopedAgentSessionStore`.
+
+## Next steps
+
+> [!div class="nextstepaction"]
+> [Add an OpenAI-compatible endpoint](openai-endpoints.md)
+
+**Go deeper:**
+
+- [Host agents with A2A](a2a/server.md)
+- [Build web agent applications with AG-UI](../../integrations/by-component/ui/ag-ui/index.md)
+- [Foundry Hosted Agents](../foundry-hosted-agent.md)
 
 :::zone-end
 
