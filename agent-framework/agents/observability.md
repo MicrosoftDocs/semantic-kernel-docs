@@ -47,7 +47,10 @@ var agent = new ChatClientAgent(
     name: "OpenTelemetryDemoAgent",
     instructions: "You are a helpful assistant that provides concise and informative responses.",
     tools: [AIFunctionFactory.Create(GetWeatherAsync)]
-).WithOpenTelemetry(sourceName: SourceName, configure: (cfg) => cfg.EnableSensitiveData = true); // Enable OpenTelemetry instrumentation with sensitive data
+)
+    .AsBuilder()
+    .UseOpenTelemetry(sourceName: SourceName, configure: (cfg) => cfg.EnableSensitiveData = true) // Enable OpenTelemetry instrumentation with sensitive data
+    .Build();
 ```
 
 > [!IMPORTANT]

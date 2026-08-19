@@ -5,286 +5,85 @@ zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: tutorial
 ms.author: evmattso
-ms.date: 07/01/2026
+ms.date: 08/11/2026
 ms.service: agent-framework
 ---
+
+<!--
+  Language parity table – keep in sync when adding/removing sections.
+
+  | Section                    | C# | Python | Go | Notes |
+  |----------------------------|:--:|:------:|:--:|-------|
+  | Backend tool registration  | ✅ |   ✅   | ✅ |       |
+  | AG-UI tool event mapping   | ✅ |   ✅   | ❌ | Not documented for Go |
+  | Complex JSON serialization | ✅ |   ✅   | ❌ | Not documented for Go |
+-->
 
 # Backend Tool Rendering with AG-UI
 
 ::: zone pivot="programming-language-csharp"
 
-This tutorial shows you how to add function tools to your AG-UI agents. Function tools are custom C# methods that the agent can call to perform specific tasks like retrieving data, performing calculations, or interacting with external systems. With AG-UI, these tools execute on the backend and their results are automatically streamed to the client.
+Backend tools use the normal MAF tool pipeline. AG-UI adds transport events so a client can observe the call and result; it doesn't introduce a separate tool abstraction.
 
-## Prerequisites
+## Add a backend tool
 
-Before you begin, ensure you have completed the [Getting Started](getting-started.md) tutorial and have:
-
-- .NET 8.0 or later
-- `Microsoft.Agents.AI.Hosting.AGUI.AspNetCore` package installed
-- Azure OpenAI service configured
-- Basic understanding of AG-UI server and client setup
-
-## What is Backend Tool Rendering?
-
-Backend tool rendering means:
-
-- Function tools are defined on the server
-- The AI agent decides when to call these tools
-- Tools execute on the backend (server-side)
-- Tool call events and results are streamed to the client in real-time
-- The client receives updates about tool execution progress
-
-## Creating an AG-UI Server with Function Tools
-
-Here's a complete server implementation demonstrating how to register tools with complex parameter types:
+Define and register the tool as you would for any MAF agent:
 
 ```csharp
-// Copyright (c) Microsoft. All rights reserved.
-
 using System.ComponentModel;
-using System.Text.Json.Serialization;
-using Azure.AI.OpenAI;
-using Azure.Identity;
-using Microsoft.Agents.AI;
-using Microsoft.Agents.AI.Hosting.AGUI.AspNetCore;
 using Microsoft.Extensions.AI;
-using Microsoft.Extensions.Options;
-using OpenAI.Chat;
 
-WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-builder.Services.ConfigureHttpJsonOptions(options =>
-    options.SerializerOptions.TypeInfoResolverChain.Add(SampleJsonSerializerContext.Default));
-builder.Services.AddAGUIServer();
+[Description("Get the weather for a location.")]
+static string GetWeather(
+    [Description("The city to look up.")] string location) =>
+    $"The weather in {location} is sunny.";
 
-WebApplication app = builder.Build();
+AITool getWeather = AIFunctionFactory.Create(GetWeather, name: "get_weather");
+AIAgent agent = chatClient.AsAIAgent(tools: [getWeather]);
 
-string endpoint = builder.Configuration["AZURE_OPENAI_ENDPOINT"]
-    ?? throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
-string deploymentName = builder.Configuration["AZURE_OPENAI_DEPLOYMENT_NAME"]
-    ?? throw new InvalidOperationException("AZURE_OPENAI_DEPLOYMENT_NAME is not set.");
-
-// Define the function tool
-[Description("Search for restaurants in a location.")]
-static RestaurantSearchResponse SearchRestaurants(
-    [Description("The restaurant search request")] RestaurantSearchRequest request)
-{
-    // Simulated restaurant data
-    string cuisine = request.Cuisine == "any" ? "Italian" : request.Cuisine;
-
-    return new RestaurantSearchResponse
-    {
-        Location = request.Location,
-        Cuisine = request.Cuisine,
-        Results =
-        [
-            new RestaurantInfo
-            {
-                Name = "The Golden Fork",
-                Cuisine = cuisine,
-                Rating = 4.5,
-                Address = $"123 Main St, {request.Location}"
-            },
-            new RestaurantInfo
-            {
-                Name = "Spice Haven",
-                Cuisine = cuisine == "Italian" ? "Indian" : cuisine,
-                Rating = 4.7,
-                Address = $"456 Oak Ave, {request.Location}"
-            },
-            new RestaurantInfo
-            {
-                Name = "Green Leaf",
-                Cuisine = "Vegetarian",
-                Rating = 4.3,
-                Address = $"789 Elm Rd, {request.Location}"
-            }
-        ]
-    };
-}
-
-// Get JsonSerializerOptions from the configured HTTP JSON options
-Microsoft.AspNetCore.Http.Json.JsonOptions jsonOptions = app.Services.GetRequiredService<IOptions<Microsoft.AspNetCore.Http.Json.JsonOptions>>().Value;
-
-// Create tool with serializer options
-AITool[] tools =
-[
-    AIFunctionFactory.Create(
-        SearchRestaurants,
-        name: "search_restaurants",
-        serializerOptions: jsonOptions.SerializerOptions)
-];
-
-// Create the AI agent with tools
-AIAgent agent = new AzureOpenAIClient(
-        new Uri(endpoint),
-        new DefaultAzureCredential())
-    .GetChatClient(deploymentName)
-    .AsAIAgent(
-        name: "AGUIAssistant",
-        instructions: "You are a helpful assistant with access to restaurant information.",
-        tools: tools);
-
-// Map the AG-UI agent endpoint
 app.MapAGUIServer("/", agent);
-
-await app.RunAsync();
-
-// Define request/response types for the tool
-internal sealed class RestaurantSearchRequest
-{
-    public string Location { get; set; } = string.Empty;
-    public string Cuisine { get; set; } = "any";
-}
-
-internal sealed class RestaurantSearchResponse
-{
-    public string Location { get; set; } = string.Empty;
-    public string Cuisine { get; set; } = string.Empty;
-    public RestaurantInfo[] Results { get; set; } = [];
-}
-
-internal sealed class RestaurantInfo
-{
-    public string Name { get; set; } = string.Empty;
-    public string Cuisine { get; set; } = string.Empty;
-    public double Rating { get; set; }
-    public string Address { get; set; } = string.Empty;
-}
-
-// JSON serialization context for source generation
-[JsonSerializable(typeof(RestaurantSearchRequest))]
-[JsonSerializable(typeof(RestaurantSearchResponse))]
-internal sealed partial class SampleJsonSerializerContext : JsonSerializerContext;
 ```
 
-> [!WARNING]
-> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
+For complex request or response types, configure the same `JsonSerializerOptions` for ASP.NET Core and `AIFunctionFactory.Create`.
 
-### Key Concepts
+> [!TIP]
+> See the [.NET backend-tools sample](https://github.com/microsoft/agent-framework/tree/main/dotnet/samples/02-agents/AGUI/Step02_BackendTools) for a complete implementation.
 
-- **Server-side execution**: Tools execute in the server process
-- **Automatic streaming**: Tool calls and results are streamed to clients in real-time
+For tool schemas, dependency injection, error handling, and general tool design, see [Use function tools with an agent](../../../../agents/tools/function-tools.md).
 
-> [!IMPORTANT]
-> When creating tools with complex parameter types (objects, arrays, etc.), you must provide the `serializerOptions` parameter to `AIFunctionFactory.Create()`. The serializer options should be obtained from the application's configured `JsonOptions` via `IOptions<Microsoft.AspNetCore.Http.Json.JsonOptions>` to ensure consistency with the rest of the application's JSON serialization.
+## AG-UI event mapping
 
-### Running the Server
+When the agent calls the tool:
 
-Set environment variables and run:
+- `FunctionCallContent` is emitted as AG-UI `TOOL_CALL_START`, `TOOL_CALL_ARGS`, and `TOOL_CALL_END` events.
+- `FunctionResultContent` is emitted as a `TOOL_CALL_RESULT` event.
+- Text and other agent content continue to stream normally.
 
-```bash
-export AZURE_OPENAI_ENDPOINT="https://your-resource.openai.azure.com/"
-export AZURE_OPENAI_DEPLOYMENT_NAME="gpt-4o-mini"
-dotnet run --urls http://localhost:8888
-```
-
-## Observing Tool Calls in the Client
-
-The basic client from the Getting Started tutorial displays the agent's final text response. However, you can extend it to observe tool calls and results as they're streamed from the server.
-
-### Displaying Tool Execution Details
-
-To see tool calls and results in real-time, extend the client's streaming loop to handle `FunctionCallContent` and `FunctionResultContent`:
+A .NET client receives the translated content as `FunctionCallContent` and `FunctionResultContent`:
 
 ```csharp
-// Inside the streaming loop from getting-started.md
 await foreach (AgentResponseUpdate update in agent.RunStreamingAsync(messages, session))
 {
-    ChatResponseUpdate chatUpdate = update.AsChatResponseUpdate();
-
-    // ... existing run started code ...
-
-    // Display streaming content
     foreach (AIContent content in update.Contents)
     {
-        switch (content)
+        if (content is FunctionCallContent call)
         {
-            case TextContent textContent:
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.Write(textContent.Text);
-                Console.ResetColor();
-                break;
-
-            case FunctionCallContent functionCallContent:
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"\n[Function Call - Name: {functionCallContent.Name}]");
-                
-                // Display individual parameters
-                if (functionCallContent.Arguments != null)
-                {
-                    foreach (var kvp in functionCallContent.Arguments)
-                    {
-                        Console.WriteLine($"  Parameter: {kvp.Key} = {kvp.Value}");
-                    }
-                }
-                Console.ResetColor();
-                break;
-
-            case FunctionResultContent functionResultContent:
-                Console.ForegroundColor = ConsoleColor.Magenta;
-                Console.WriteLine($"\n[Function Result - CallId: {functionResultContent.CallId}]");
-                
-                if (functionResultContent.Exception != null)
-                {
-                    Console.WriteLine($"  Exception: {functionResultContent.Exception}");
-                }
-                else
-                {
-                    Console.WriteLine($"  Result: {functionResultContent.Result}");
-                }
-                Console.ResetColor();
-                break;
-
-            case ErrorContent errorContent:
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"\n[Error: {errorContent.Message}]");
-                Console.ResetColor();
-                break;
+            Console.WriteLine($"Calling {call.Name}");
+        }
+        else if (content is FunctionResultContent result)
+        {
+            Console.WriteLine($"Result: {result.Result}");
         }
     }
 }
 ```
 
-### Expected Output with Tool Calls
+Tool results are model-facing values that AG-UI also exposes to the client. To emit shared UI state in addition to a tool result, use the explicit mappings described in [State management](./state-management.md).
 
-When the agent calls backend tools, you'll see:
+## Next steps
 
-```
-User (:q or quit to exit): What's the weather like in Amsterdam?
-
-[Run Started - Run: run_xyz789]
-
-[Function Call - Name: search_restaurants]
-  Parameter: Location = Amsterdam
-  Parameter: Cuisine = any
-
-[Function Result - CallId: call_def456]
-  Result: {"Location":"Amsterdam","Cuisine":"any","Results":[...]}
-
-The weather in Amsterdam is sunny with a temperature of 22°C. Here are some 
-great restaurants in the area: The Golden Fork (Italian, 4.5 stars)...
-[Run Finished]
-```
-
-### Key Concepts
-
-- **`FunctionCallContent`**: Represents a tool being called with its `Name` and `Arguments` (parameter key-value pairs)
-- **`FunctionResultContent`**: Contains the tool's `Result` or `Exception`, identified by `CallId`
-
-## Next Steps
-
-Now that you can add function tools, you can:
-
-- **[Frontend tools](frontend-tools.md)**: Add frontend tools.
-<!-- - **[Implement Human-in-the-Loop](human-in-the-loop.md)**: Add approval workflows for sensitive operations -->
-<!-- - **[Manage State](state-management.md)**: Implement shared state for generative UI applications -->
-- **[Test with Dojo](testing-with-dojo.md)**: Use AG-UI's Dojo app to test your agents
-
-## Additional Resources
-
-- [AG-UI Overview](index.md)
-- [Getting Started Tutorial](getting-started.md)
-- [Agent Framework Documentation](../../../../overview/index.md)
+> [!div class="nextstepaction"]
+> [Use frontend tools with AG-UI](./frontend-tools.md)
 
 ::: zone-end
 

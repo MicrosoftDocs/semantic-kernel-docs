@@ -4,10 +4,19 @@ description: Learn how to test your Microsoft Agent Framework agents with AG-UI'
 zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: tutorial
-ms.date: 07/01/2026
+ms.date: 08/11/2026
 ms.author: evmattso
 ms.service: agent-framework
 ---
+
+<!--
+  Language parity table – keep in sync when adding/removing sections.
+
+  | Section                            | C# | Python | Go | Notes |
+  |------------------------------------|:--:|:------:|:--:|-------|
+  | MAF-specific Dojo setup            | ❌ |   ✅   | ❌ | Dojo is an external interoperability tool |
+  | Standard AG-UI endpoint compatibility | ✅ |   ✅   | ✅ |       |
+-->
 
 # Testing with AG-UI Dojo
 
@@ -263,7 +272,11 @@ if err := http.ListenAndServe(":8888", mux); err != nil {
 
 ::: zone pivot="programming-language-csharp"
 
-## Prerequisites
+Dojo is an AG-UI interoperability tool and doesn't require MAF-specific .NET configuration. Expose the scenario through `MapAGUIServer`, then follow the Dojo documentation for connecting an AG-UI endpoint.
+
+## Agent Framework / Dojo example
+
+### Prerequisites
 
 Before you begin, ensure you have:
 
@@ -272,9 +285,9 @@ Before you begin, ensure you have:
 - Azure credentials usable by `DefaultAzureCredential` (for example, sign in with `az login`)
 - Node.js and pnpm (for running the Dojo frontend)
 
-## Installation
+### Installation
 
-### 1. Clone the AG-UI Repository
+#### 1. Clone the AG-UI Repository
 
 First, clone the AG-UI repository which contains the Dojo application and Microsoft Agent Framework integration examples:
 
@@ -283,13 +296,13 @@ git clone https://github.com/ag-ui-protocol/ag-ui.git
 cd ag-ui
 ```
 
-### 2. Navigate to Examples Directory
+#### 2. Navigate to Examples Directory
 
 ```bash
 cd integrations/microsoft-agent-framework/dotnet/examples
 ```
 
-### 3. Configure Environment Variables
+#### 3. Configure Environment Variables
 
 Set the Azure OpenAI endpoint and chat deployment name used by the sample server:
 
@@ -301,9 +314,9 @@ export AZURE_OPENAI_CHAT_DEPLOYMENT_NAME="gpt-4o-mini"
 > [!NOTE]
 > The sample authenticates with `DefaultAzureCredential`, so make sure you're authenticated with Azure (e.g., via `az login`) before running the server. For more information, see the [Azure Identity documentation](/dotnet/api/overview/azure/identity-readme).
 
-## Running the Dojo Application
+### Running the Dojo Application
 
-### 1. Start the Backend Server
+#### 1. Start the Backend Server
 
 In the examples directory, restore and run the sample server with the example agents:
 
@@ -314,7 +327,7 @@ dotnet run --project AGUIDojoServer/AGUIDojoServer.csproj --urls "http://localho
 
 The server will start on `http://localhost:8889`.
 
-### 2. Start the Dojo Frontend
+#### 2. Start the Dojo Frontend
 
 Open a new terminal window, navigate to the root of the AG-UI repository, and then to the Dojo application directory. Set `AGENT_FRAMEWORK_DOTNET_URL` so Dojo can discover your .NET server, then start it:
 
@@ -330,13 +343,13 @@ The Dojo frontend will be available at `http://localhost:3000`.
 > [!NOTE]
 > Set `AGENT_FRAMEWORK_DOTNET_URL` before running `pnpm dev`. This environment variable is what makes the "Microsoft Agent Framework (.NET)" entry appear in Dojo.
 
-### 3. Connect to Your Agent
+#### 3. Connect to Your Agent
 
 1. Open `http://localhost:3000` in your browser
 2. Select "Microsoft Agent Framework (.NET)" from the dropdown
 3. Start exploring the example agents
 
-## Available Example Agents
+### Available Example Agents
 
 The integration examples demonstrate all 7 AG-UI features through different agent endpoints:
 
@@ -361,5 +374,14 @@ The integration examples demonstrate all 7 AG-UI features through different agen
 - [AG-UI GitHub Repository](https://github.com/ag-ui-protocol/ag-ui)
 - [Microsoft Agent Framework (.NET) Dojo](https://dojo.ag-ui.com/microsoft-agent-framework-dotnet)
 - [Microsoft Agent Framework Integration Examples](https://github.com/ag-ui-protocol/ag-ui/tree/main/integrations/microsoft-agent-framework)
+
+## Nexte Steps
+
+For MAF implementation guidance, use the scenario articles in this section:
+
+- [Backend tools](./backend-tool-rendering.md)
+- [Frontend tools](./frontend-tools.md)
+- [Human approval](./human-in-the-loop.md)
+- [State management](./state-management.md)
 
 ::: zone-end

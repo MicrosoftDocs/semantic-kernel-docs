@@ -5,170 +5,82 @@ zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: tutorial
 ms.author: evmattso
-ms.date: 07/10/2026
+ms.date: 08/11/2026
 ms.service: agent-framework
 ---
+
+<!--
+  Language parity table – keep in sync when adding/removing sections.
+
+  | Section                 | C# | Python | Go | Notes |
+  |-------------------------|:--:|:------:|:--:|-------|
+  | Approval-required tools | ✅ |   ✅   | ✅ |       |
+  | Interrupt and resume    | ✅ |   ✅   | ❌ | Go zone covers tool registration only |
+-->
 
 # Human-in-the-Loop with AG-UI
 
 ::: zone pivot="programming-language-csharp"
 
-This tutorial demonstrates how to implement human-in-the-loop approval workflows with AG-UI in .NET. The .NET implementation uses Microsoft.Extensions.AI's `ApprovalRequiredAIFunction` and translates approval requests into AG-UI "client tool calls" that the client handles and responds to.
+MAF tool approval remains responsible for deciding whether a tool requires approval. AG-UI transports the approval request to the client and the client's decision back to the server.
 
-## Overview
+For approval policies, conditional rules, and general safety guidance, see [Use function tools with human-in-the-loop approvals](../../../../agents/tools/tool-approval.md).
 
-The C# AG-UI approval pattern works as follows:
+## Require approval
 
-1. **Server**: Wraps a function with `ApprovalRequiredAIFunction` to mark it as requiring approval, and maps the agent with `MapAGUIServer`.
-2. **Interrupt**: When the model calls the tool, the run ends with an interrupt instead of executing it. The AG-UI client surfaces this as a `ToolApprovalRequestContent`.
-3. **Client**: Presents the request to the user, then creates a decision with `CreateResponse(approved)` and sends it back.
-4. **Resume**: `AGUIChatClient` transports the decision over the AG-UI resume mechanism. The agent continues and runs (or skips) the tool.
-
-## Prerequisites
-
-- Azure OpenAI resource with a deployed model
-- Environment variables:
-  - `AZURE_OPENAI_ENDPOINT`
-  - `AZURE_OPENAI_DEPLOYMENT_NAME`
-- Understanding of [Backend Tool Rendering](backend-tool-rendering.md)
-
-## Server Implementation
-
-To require human approval before a tool runs, wrap the tool's `AIFunction` in `ApprovalRequiredAIFunction` and map the agent with `MapAGUIServer`. The AG-UI hosting layer raises an approval interrupt automatically when the model calls the tool.
+Wrap the MAF function with `ApprovalRequiredAIFunction` and expose the agent normally:
 
 ```csharp
-using System.ComponentModel;
-using Azure.AI.OpenAI;
-using Azure.Identity;
 using Microsoft.Agents.AI;
-using Microsoft.Agents.AI.Hosting.AGUI.AspNetCore;
 using Microsoft.Extensions.AI;
-using OpenAI.Chat;
 
-WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-builder.Services.AddAGUIServer();
+AIFunction deleteFile = AIFunctionFactory.Create(
+    (string path) => $"Deleted {path}",
+    name: "delete_file",
+    description: "Delete a file.");
 
-WebApplication app = builder.Build();
-
-string endpoint = builder.Configuration["AZURE_OPENAI_ENDPOINT"]
-    ?? throw new InvalidOperationException("AZURE_OPENAI_ENDPOINT is not set.");
-string deploymentName = builder.Configuration["AZURE_OPENAI_DEPLOYMENT_NAME"]
-    ?? throw new InvalidOperationException("AZURE_OPENAI_DEPLOYMENT_NAME is not set.");
-
-// A tool that must be approved before it runs.
-[Description("Send an email to a recipient.")]
-static string SendEmail(
-    [Description("The email address to send to.")] string to,
-    [Description("The subject line.")] string subject,
-    [Description("The email body.")] string body)
-    => $"Email sent to {to} with subject '{subject}'.";
-
-AITool sendEmail = new ApprovalRequiredAIFunction(AIFunctionFactory.Create(SendEmail, name: "send_email"));
-
-AIAgent agent = new AzureOpenAIClient(new Uri(endpoint), new DefaultAzureCredential())
-    .GetChatClient(deploymentName)
-    .AsAIAgent(
-        name: "AGUIAssistant",
-        instructions: "You are a helpful assistant. Use the send_email tool when asked to send email.",
-        tools: [sendEmail]);
+AITool approvalRequiredTool = new ApprovalRequiredAIFunction(deleteFile);
+AIAgent agent = chatClient.AsAIAgent(tools: [approvalRequiredTool]);
 
 app.MapAGUIServer("/", agent);
-
-await app.RunAsync();
 ```
 
-> [!WARNING]
-> `DefaultAzureCredential` is convenient for development but requires careful consideration in production. In production, consider using a specific credential (e.g., `ManagedIdentityCredential`) to avoid latency issues, unintended credential probing, and potential security risks from fallback mechanisms.
+When the model calls the tool, the AG-UI adapter finishes the run with a tool-call interrupt instead of executing the function.
 
-When the model calls `SendEmail`, the run ends with an **interrupt** outcome instead of executing the
-tool. The AG-UI client surfaces this as a `ToolApprovalRequestContent` that carries the tool call and a
-response schema of `{ "approved": boolean }`. The tool runs only after the client sends an approval.
+## Resolve the interrupt from a .NET client
 
-## Client Implementation
-
-A client handles the interrupt by reading the `ToolApprovalRequestContent`, creating a decision with
-`CreateResponse(approved)`, and sending it back on the next turn. You don't hand-encode the AG-UI
-resume message. `AGUIChatClient` converts the decision into the AG-UI resume for you, and reusing the
-same `AgentSession` resumes the run.
+`AGUIChatClient` surfaces the interrupt as `ToolApprovalRequestContent`. Create and send a response using the normal MAF approval types:
 
 ```csharp
-using AGUI.Client;
-using Microsoft.Agents.AI;
-using Microsoft.Extensions.AI;
+ToolApprovalRequestContent? request = null;
 
-string serverUrl = Environment.GetEnvironmentVariable("AGUI_SERVER_URL") ?? "http://localhost:8888";
-using HttpClient httpClient = new() { BaseAddress = new Uri(serverUrl) };
-
-AGUIChatClient chatClient = new(new AGUIChatClientOptions(httpClient, "/"));
-AIAgent agent = chatClient.AsAIAgent();
-AgentSession session = await agent.CreateSessionAsync();
-
-List<ChatMessage> messages = [new(ChatRole.User, "Email alice@example.com to say the report is ready.")];
-
-// First turn: run until the agent requests approval.
-ToolApprovalRequestContent? approvalRequest = null;
-await foreach (AgentResponseUpdate update in agent.RunStreamingAsync(messages, session))
+await foreach (AgentResponseUpdate update in
+    remoteAgent.RunStreamingAsync(messages, session))
 {
-    foreach (AIContent content in update.Contents)
-    {
-        if (content is ToolApprovalRequestContent request)
-        {
-            approvalRequest = request;
-            var call = request.ToolCall as FunctionCallContent;
-            Console.WriteLine($"Approval requested for '{call?.Name}'.");
-        }
-        else if (content is TextContent text)
-        {
-            Console.Write(text.Text);
-        }
-    }
+    request ??= update.Contents
+        .OfType<ToolApprovalRequestContent>()
+        .FirstOrDefault();
 }
 
-// Second turn: send the decision. The agent resumes and runs (or skips) the tool.
-if (approvalRequest is not null)
+if (request is not null)
 {
-    ToolApprovalResponseContent decision = approvalRequest.CreateResponse(approved: true);
-    List<ChatMessage> resume = [new(ChatRole.User, [decision])];
+    ToolApprovalResponseContent response = request.CreateResponse(approved: true);
+    ChatMessage resume = new(ChatRole.User, [response]);
 
-    // Reusing the same session resumes the run. No thread/run id plumbing is needed.
-    await foreach (AgentResponseUpdate update in agent.RunStreamingAsync(resume, session))
+    await foreach (AgentResponseUpdate update in
+        remoteAgent.RunStreamingAsync([resume], session))
     {
-        foreach (AIContent content in update.Contents)
-        {
-            if (content is TextContent text)
-            {
-                Console.Write(text.Text);
-            }
-        }
+        // Process the resumed response.
     }
 }
 ```
 
-To reject instead, call `approvalRequest.CreateResponse(approved: false)`; the agent continues without running the tool.
-
-## Approval modes
-
-Marking a tool for approval, and deciding *when* a call needs it, is a general Agent Framework
-capability, not something AG-UI defines. It works the same for an agent exposed over AG-UI:
-
-- **Always require / never require** approval by wrapping (or not wrapping) the function in
-  `ApprovalRequiredAIFunction`.
-- **Selective approval**: wrap only the sensitive tools so the rest run unattended.
-- **Conditional approval**: auto-approve some calls to an approval-required tool based on their
-  **arguments** using `AIAgentBuilder.UseToolApproval` with `AutoApprovalRules`.
-
-For the APIs, examples, and guidance, see [Using function tools with human-in-the-loop approvals](../../../../agents/tools/tool-approval.md).
-
-What AG-UI adds is the transport. A call that needs a human ends the run with a `RUN_FINISHED`
-**interrupt** that carries the tool call and a `{ "approved": boolean }` response schema, which the
-AG-UI client approves and resumes. The [Server](#server-implementation) and [Client](#client-implementation)
-implementations above show this end to end. Calls that run directly, or that a conditional rule
-auto-approves, stream their `TOOL_CALL_RESULT` normally and never interrupt.
+Reuse the same `AgentSession` when sending the response so the client can continue the interrupted run. Use `approved: false` to reject the call. The adapter converts the MAF response to the canonical AG-UI resume payload.
 
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [MCP Apps Compatibility](./mcp-apps.md)
+> [Manage shared state with AG-UI](./state-management.md)
 
 ::: zone-end
 

@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: article
 ms.author: edvan
-ms.date: 07/01/2026
+ms.date: 08/07/2026
 ms.service: agent-framework
 ---
 
@@ -50,6 +50,8 @@ The `Agent` class builds a pipeline through class composition with two main comp
 3. **RawChatClient** - Provider-specific implementation (Azure OpenAI, OpenAI, Anthropic, etc.) that communicates with the LLM
 
 When you call `run()`, your request flows through the Agent layers, then into the ChatClient pipeline for LLM communication.
+
+The optional [Agent Hooks](../../agents/agent-hooks.md) capability installs one middleware bundle across the agent, chat, and function layers. Core streaming and persistence gates extend that boundary so output isn't released or stored before the applicable verdict permits it.
 
 ::: zone-end
 

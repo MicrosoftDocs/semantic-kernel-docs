@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: article
 ms.author: edvan
-ms.date: 07/29/2026
+ms.date: 08/11/2026
 ms.service: agent-framework
 ---
 
@@ -19,6 +19,7 @@ ms.service: agent-framework
   | Harness Agent session usage    | ✅ |   ✅   | ❌ | Harness Agent isn't available in Go |
   | Existing service conversation ID | ✅ |   ✅   | ❌ |       |
   | Serialization and restoration    | ✅ |   ✅   | ✅ |       |
+  | Hosted session persistence       | ✅ |   ❌   | ❌ | .NET hosting-specific |
 -->
 
 # Session
@@ -204,6 +205,8 @@ In hosted apps, resolve `<service-conversation-id>` from application-owned stora
 var serialized = agent.SerializeSession(session);
 AgentSession resumed = await agent.DeserializeSessionAsync(serialized);
 ```
+
+In a self-hosted application, an `AgentSessionStore` can load and save sessions by a continuation ID as part of request processing. This is distinct from manually persisting a session and from configuring a history provider. See [Self-host Agent Framework applications](../../../hosting/self-hosting/index.md#persist-hosted-sessions).
 
 :::zone-end
 

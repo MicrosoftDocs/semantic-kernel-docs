@@ -5,16 +5,26 @@ zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: article
 ms.author: evmattso
-ms.date: 04/09/2026
+ms.date: 08/11/2026
 ms.service: agent-framework
 ---
+
+<!--
+  Language parity table – keep in sync when adding/removing sections.
+
+  | Section                         | C# | Python | Go | Notes |
+  |---------------------------------|:--:|:------:|:--:|-------|
+  | MAF-specific MCP Apps behavior  | ❌ |   ❌   | ❌ | MCP Apps is implemented by external middleware |
+  | External middleware setup       | ❌ |   ✅   | ❌ | Python zone documents CopilotKit middleware |
+-->
 
 # MCP Apps Compatibility with AG-UI
 
 ::: zone pivot="programming-language-csharp"
 
-> [!NOTE]
-> MCP Apps compatibility documentation for the .NET AG-UI integration is coming soon.
+MAF doesn't provide MCP Apps-specific configuration or runtime behavior. MCP Apps support is implemented by middleware outside the MAF AG-UI endpoint, which continues to receive standard AG-UI requests.
+
+For middleware setup and compatibility requirements, use the documentation for the selected AG-UI client or middleware.
 
 ::: zone-end
 
@@ -115,7 +125,6 @@ If your application doesn't need the MCP Apps middleware layer, your Agent Frame
 
 ::: zone pivot="programming-language-go"
 
-> [!NOTE]
-> Go support for this feature is coming soon. See the [Agent Framework Go repository](https://github.com/microsoft/agent-framework-go) for the latest status.
+MAF Go doesn't provide MCP Apps-specific configuration or runtime behavior. MCP Apps support is implemented by middleware outside the MAF AG-UI endpoint.
 
 ::: zone-end

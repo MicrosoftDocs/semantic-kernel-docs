@@ -4,7 +4,7 @@ description: Browse built-in Agent Framework capabilities for multimodal input, 
 author: eavanvalkenburg
 ms.topic: overview
 ms.author: edvan
-ms.date: 07/30/2026
+ms.date: 08/07/2026
 ms.service: agent-framework
 ---
 
@@ -52,6 +52,7 @@ Looking for the agent-type and SDK-selection guidance previously hosted on this 
 |---|---|
 | [Observability](observability.md) | Export traces, metrics, and logs. |
 | [Evaluation](evaluation.md) | Measure agent quality, safety, and correctness. |
+| [Agent Hooks](agent-hooks.md) | Apply fail-closed governance controls through a shared interception contract. |
 | [Agent Security with FIDES](security.md) | Enforce information-flow controls across agent data and tools. |
 
 The [Harness Agent](../concepts/harness.md) assembles many of these capabilities into an opinionated operational agent.
