@@ -10,12 +10,6 @@ ms.service: semantic-kernel
 ---
 # Using the Azure CosmosDB NoSQL Vector Store connector (Preview)
 
-::: zone pivot="programming-language-csharp"
-
-> [!WARNING]
-> The Azure CosmosDB NoSQL Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
-
-::: zone-end
 ::: zone pivot="programming-language-python"
 
 > [!WARNING]
@@ -63,7 +57,7 @@ var cosmosClient = new CosmosClient(connectionString, new CosmosClientOptions()
 
 ## Getting started
 
-Add the Azure CosmosDB NoSQL Vector Store connector NuGet package to your project.
+Add the Azure CosmosDB Vector Store connector NuGet package to your project.
 
 ```dotnetcli
 dotnet add package CommunityToolkit.VectorData.AzureCosmosDB
@@ -177,9 +171,9 @@ var collection = new CosmosCollection<string, Hotel>(
 
 ## Data mapping
 
-The Azure CosmosDB NoSQL Vector Store connector provides a default mapper when mapping from the data model to storage.
+The Azure CosmosDB Vector Store connector provides a default mapper when mapping from the data model to storage.
 
-This mapper does a direct conversion of the list of properties on the data model to the fields in Azure CosmosDB NoSQL and uses `System.Text.Json.JsonSerializer`
+This mapper does a direct conversion of the list of properties on the data model to the fields in Azure CosmosDB and uses `System.Text.Json.JsonSerializer`
 to convert to the storage schema. This means that usage of the `JsonPropertyNameAttribute` is supported if a different storage name to the
 data model property name is required. The only exception is the key of the record which is mapped to a database field named `id`, since all CosmosDB NoSQL
 records must use this name for ids.
@@ -242,7 +236,7 @@ public class Hotel
 
 ## Using partition key
 
-In the Azure Cosmos DB for NoSQL connector, the partition key property defaults to the key property - `id`. The `PartitionKeyPropertyName` property in `CosmosCollectionOptions` class allows specifying a different property as the partition key.
+In the Azure Cosmos DB connector, the partition key property defaults to the key property - `id`. The `PartitionKeyPropertyName` property in `CosmosCollectionOptions` class allows specifying a different property as the partition key.
 
 The `CosmosCollection` class supports two key types: `string` and `CosmosKey`. The `CosmosKey` consists of `RecordKey` and `PartitionKey`.
 
