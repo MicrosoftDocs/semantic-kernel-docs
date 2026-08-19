@@ -256,7 +256,7 @@ var options = new CosmosCollectionOptions
     PartitionKeyPropertyName = nameof(Hotel.HotelName)
 };
 
-var collection = new CosmosCollection<string, Hotel>(database, "collection-name", options) 
+var collection = new CosmosCollection<string, Hotel>(database, "collection-name", options)
     as VectorStoreCollection<CosmosNoSqlCompositeKey, Hotel>;
 ```
 
