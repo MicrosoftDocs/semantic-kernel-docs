@@ -66,7 +66,7 @@ var cosmosClient = new CosmosClient(connectionString, new CosmosClientOptions()
 Add the Azure CosmosDB NoSQL Vector Store connector NuGet package to your project.
 
 ```dotnetcli
-dotnet add package CommunityToolkit.VectorData.CosmosNoSql
+dotnet add package CommunityToolkit.VectorData.AzureCosmosDB
 ```
 
 You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by the connector package.
@@ -79,7 +79,7 @@ using Microsoft.SemanticKernel;
 var kernelBuilder = Kernel
     .CreateBuilder();
 kernelBuilder.Services
-    .AddCosmosNoSqlVectorStore(connectionString, databaseName);
+    .AddCosmosVectorStore(connectionString, databaseName);
 ```
 
 ```csharp
@@ -87,7 +87,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 // Using IServiceCollection with ASP.NET Core.
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddCosmosNoSqlVectorStore(connectionString, databaseName);
+builder.Services.AddCosmosVectorStore(connectionString, databaseName);
 ```
 
 Extension methods that take no parameters are also provided. These require an instance of `Microsoft.Azure.Cosmos.Database` to be separately registered with the dependency injection container.
@@ -112,7 +112,7 @@ kernelBuilder.Services.AddSingleton<Database>(
 
         return cosmosClient.GetDatabase(databaseName);
     });
-kernelBuilder.Services.AddCosmosNoSqlVectorStore();
+kernelBuilder.Services.AddCosmosVectorStore();
 ```
 
 ```csharp
@@ -134,7 +134,7 @@ builder.Services.AddSingleton<Database>(
 
         return cosmosClient.GetDatabase(databaseName);
     });
-builder.Services.AddCosmosNoSqlVectorStore();
+builder.Services.AddCosmosVectorStore();
 ```
 
 You can construct an Azure CosmosDB NoSQL Vector Store instance directly.
@@ -142,7 +142,7 @@ You can construct an Azure CosmosDB NoSQL Vector Store instance directly.
 ```csharp
 using System.Text.Json;
 using Microsoft.Azure.Cosmos;
-using CommunityToolkit.VectorData.CosmosNoSql;
+using CommunityToolkit.VectorData.AzureCosmosDB;
 
 var cosmosClient = new CosmosClient(connectionString, new CosmosClientOptions()
 {
@@ -152,7 +152,7 @@ var cosmosClient = new CosmosClient(connectionString, new CosmosClientOptions()
 });
 
 var database = cosmosClient.GetDatabase(databaseName);
-var vectorStore = new CosmosNoSqlVectorStore(database);
+var vectorStore = new CosmosVectorStore(database);
 ```
 
 It is possible to construct a direct reference to a named collection.
@@ -160,7 +160,7 @@ It is possible to construct a direct reference to a named collection.
 ```csharp
 using System.Text.Json;
 using Microsoft.Azure.Cosmos;
-using CommunityToolkit.VectorData.CosmosNoSql;
+using CommunityToolkit.VectorData.AzureCosmosDB;
 
 var cosmosClient = new CosmosClient(connectionString, new CosmosClientOptions()
 {
@@ -170,7 +170,7 @@ var cosmosClient = new CosmosClient(connectionString, new CosmosClientOptions()
 });
 
 var database = cosmosClient.GetDatabase(databaseName);
-var collection = new CosmosNoSqlCollection<string, Hotel>(
+var collection = new CosmosCollection<string, Hotel>(
     database,
     "skhotels");
 ```
@@ -185,12 +185,12 @@ data model property name is required. The only exception is the key of the recor
 records must use this name for ids.
 
 It is also possible to use a custom `JsonSerializerOptions` instance with a customized property naming policy. To enable this, the `JsonSerializerOptions`
-must be passed to the `CosmosNoSqlCollection` on construction.
+must be passed to the `CosmosCollection` on construction.
 
 ```csharp
 using System.Text.Json;
 using Microsoft.Azure.Cosmos;
-using CommunityToolkit.VectorData.CosmosNoSql;
+using CommunityToolkit.VectorData.AzureCosmosDB;
 
 var jsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseUpper };
 
@@ -202,7 +202,7 @@ var cosmosClient = new CosmosClient(connectionString, new CosmosClientOptions()
 });
 
 var database = cosmosClient.GetDatabase(databaseName);
-var collection = new CosmosNoSqlCollection<string, Hotel>(
+var collection = new CosmosCollection<string, Hotel>(
     database,
     "skhotels",
     new() { JsonSerializerOptions = jsonSerializerOptions });
@@ -242,21 +242,21 @@ public class Hotel
 
 ## Using partition key
 
-In the Azure Cosmos DB for NoSQL connector, the partition key property defaults to the key property - `id`. The `PartitionKeyPropertyName` property in `CosmosNoSqlCollectionOptions` class allows specifying a different property as the partition key.
+In the Azure Cosmos DB for NoSQL connector, the partition key property defaults to the key property - `id`. The `PartitionKeyPropertyName` property in `CosmosCollectionOptions` class allows specifying a different property as the partition key.
 
-The `CosmosNoSqlCollection` class supports two key types: `string` and `CosmosNoSqlCompositeKey`. The `CosmosNoSqlCompositeKey` consists of `RecordKey` and `PartitionKey`.
+The `CosmosCollection` class supports two key types: `string` and `CosmosNoSqlCompositeKey`. The `CosmosNoSqlCompositeKey` consists of `RecordKey` and `PartitionKey`.
 
 If the partition key property is not set (and the default key property is used), `string` keys can be used for operations with database records. However, if a partition key property is specified, it is recommended to use `CosmosNoSqlCompositeKey` to provide both the key and partition key values.
 
 Specify partition key property name:
 
 ```csharp
-var options = new CosmosNoSqlCollectionOptions
+var options = new CosmosCollectionOptions
 {
     PartitionKeyPropertyName = nameof(Hotel.HotelName)
 };
 
-var collection = new CosmosNoSqlCollection<string, Hotel>(database, "collection-name", options) 
+var collection = new CosmosCollection<string, Hotel>(database, "collection-name", options) 
     as VectorStoreCollection<CosmosNoSqlCompositeKey, Hotel>;
 ```
 
