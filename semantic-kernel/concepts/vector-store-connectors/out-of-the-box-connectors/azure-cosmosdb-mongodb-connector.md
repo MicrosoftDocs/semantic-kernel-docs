@@ -82,7 +82,7 @@ This connector is compatible with Azure DocumentDB and is *not* designed to be c
 Add the Azure CosmosDB MongoDB Vector Store connector NuGet package to your project.
 
 ```dotnetcli
-dotnet add package CommunityToolkit.VectorData.CosmosMongoDB
+dotnet add package CommunityToolkit.VectorData.AzureDocumentDB
 ```
 
 You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by the connector package.
@@ -95,7 +95,7 @@ using Microsoft.SemanticKernel;
 var kernelBuilder = Kernel
     .CreateBuilder();
 kernelBuilder.Services
-    .AddCosmosMongoVectorStore(connectionString, databaseName);
+    .AddDocumentDBVectorStore(connectionString, databaseName);
 ```
 
 ```csharp
