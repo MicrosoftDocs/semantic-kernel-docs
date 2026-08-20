@@ -29,8 +29,8 @@ Agent run and function calling middleware types can be registered on an agent, b
 ```csharp
 var middlewareEnabledAgent = originalAgent
     .AsBuilder()
-        .Use(runFunc: CustomAgentRunMiddleware, runStreamingFunc: CustomAgentRunStreamingMiddleware)
-        .Use(CustomFunctionCallingMiddleware)
+    .Use(runFunc: CustomAgentRunMiddleware, runStreamingFunc: CustomAgentRunStreamingMiddleware)
+    .Use(CustomFunctionCallingMiddleware)
     .Build();
 ```
 
@@ -52,7 +52,7 @@ var chatClient = new AIProjectClient(
 
 var middlewareEnabledChatClient = chatClient
     .AsBuilder()
-        .Use(getResponseFunc: CustomChatClientMiddleware, getStreamingResponseFunc: null)
+    .Use(getResponseFunc: CustomChatClientMiddleware, getStreamingResponseFunc: null)
     .Build();
 
 var agent = new ChatClientAgent(middlewareEnabledChatClient, instructions: "You are a helpful assistant.");
@@ -73,7 +73,7 @@ var agent = new AIProjectClient(
             instructions: "You are a helpful assistant.",
             clientFactory: (chatClient) => chatClient
                 .AsBuilder()
-                    .Use(getResponseFunc: CustomChatClientMiddleware, getStreamingResponseFunc: null)
+                .Use(getResponseFunc: CustomChatClientMiddleware, getStreamingResponseFunc: null)
                 .Build());
 ```
 

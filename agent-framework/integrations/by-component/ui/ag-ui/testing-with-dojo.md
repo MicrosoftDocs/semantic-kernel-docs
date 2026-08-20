@@ -22,7 +22,7 @@ ms.service: agent-framework
 
 The [AG-UI Dojo application](https://dojo.ag-ui.com/) provides an interactive environment to test and explore Microsoft Agent Framework agents that implement the AG-UI protocol. Dojo offers a visual interface to connect to your agents and interact with all 7 AG-UI features.
 
-:::zone pivot="programming-language-python"
+::: zone pivot="programming-language-python"
 
 ## Prerequisites
 
@@ -40,7 +40,7 @@ Before you begin, ensure you have:
 First, clone the AG-UI repository which contains the Dojo application and Microsoft Agent Framework integration examples:
 
 ```bash
-git clone https://github.com/ag-oss/ag-ui.git
+git clone https://github.com/ag-ui-protocol/ag-ui.git
 cd ag-ui
 ```
 
@@ -246,13 +246,13 @@ If you see authentication errors:
 
 - [AG-UI Documentation](https://docs.ag-ui.com/introduction)
 - [AG-UI GitHub Repository](https://github.com/ag-ui-protocol/ag-ui)
-- [Dojo Application](https://dojo.ag-ui.com/)
+- [Microsoft Agent Framework (Python) Dojo](https://dojo.ag-ui.com/microsoft-agent-framework-python)
 
 - [Microsoft Agent Framework Integration Examples](https://github.com/ag-ui-protocol/ag-ui/tree/main/integrations/microsoft-agent-framework)
 
-:::zone-end
+::: zone-end
 
-:::zone pivot="programming-language-go"
+::: zone pivot="programming-language-go"
 
 Go AG-UI servers expose an HTTP endpoint that Dojo-compatible clients can call. Host the agent with `aguiprovider.NewJSONHTTPHandler`, then point Dojo at the server URL.
 
@@ -268,10 +268,114 @@ if err := http.ListenAndServe(":8888", mux); err != nil {
 > [!TIP]
 > See the [AG-UI getting started server sample](https://github.com/microsoft/agent-framework-go/blob/main/examples/02-agents/agui/step01_getting_started/server/main.go) for a complete runnable server.
 
-:::zone-end
+::: zone-end
+
 ::: zone pivot="programming-language-csharp"
 
 Dojo is an AG-UI interoperability tool and doesn't require MAF-specific .NET configuration. Expose the scenario through `MapAGUIServer`, then follow the Dojo documentation for connecting an AG-UI endpoint.
+
+## Agent Framework / Dojo example
+
+### Prerequisites
+
+Before you begin, ensure you have:
+
+- .NET SDK 10.0 (LTS) or later
+- An Azure OpenAI endpoint with a chat model deployment
+- Azure credentials usable by `DefaultAzureCredential` (for example, sign in with `az login`)
+- Node.js and pnpm (for running the Dojo frontend)
+
+### Installation
+
+#### 1. Clone the AG-UI Repository
+
+First, clone the AG-UI repository which contains the Dojo application and Microsoft Agent Framework integration examples:
+
+```bash
+git clone https://github.com/ag-ui-protocol/ag-ui.git
+cd ag-ui
+```
+
+#### 2. Navigate to Examples Directory
+
+```bash
+cd integrations/microsoft-agent-framework/dotnet/examples
+```
+
+#### 3. Configure Environment Variables
+
+Set the Azure OpenAI endpoint and chat deployment name used by the sample server:
+
+```bash
+export AZURE_OPENAI_ENDPOINT="https://your-resource.openai.azure.com/"
+export AZURE_OPENAI_CHAT_DEPLOYMENT_NAME="gpt-4o-mini"
+```
+
+> [!NOTE]
+> The sample authenticates with `DefaultAzureCredential`, so make sure you're authenticated with Azure (e.g., via `az login`) before running the server. For more information, see the [Azure Identity documentation](/dotnet/api/overview/azure/identity-readme).
+
+### Running the Dojo Application
+
+#### 1. Start the Backend Server
+
+In the examples directory, restore and run the sample server with the example agents:
+
+```bash
+dotnet restore AGUIDojoServer/AGUIDojoServer.csproj
+dotnet run --project AGUIDojoServer/AGUIDojoServer.csproj --urls "http://localhost:8889"
+```
+
+The server will start on `http://localhost:8889`.
+
+#### 2. Start the Dojo Frontend
+
+Open a new terminal window, navigate to the root of the AG-UI repository, and then to the Dojo application directory. Set `AGENT_FRAMEWORK_DOTNET_URL` so Dojo can discover your .NET server, then start it:
+
+```bash
+cd apps/dojo
+pnpm install
+export AGENT_FRAMEWORK_DOTNET_URL="http://localhost:8889"
+pnpm dev
+```
+
+The Dojo frontend will be available at `http://localhost:3000`.
+
+> [!NOTE]
+> Set `AGENT_FRAMEWORK_DOTNET_URL` before running `pnpm dev`. This environment variable is what makes the "Microsoft Agent Framework (.NET)" entry appear in Dojo.
+
+#### 3. Connect to Your Agent
+
+1. Open `http://localhost:3000` in your browser
+2. Select "Microsoft Agent Framework (.NET)" from the dropdown
+3. Start exploring the example agents
+
+### Available Example Agents
+
+The integration examples demonstrate all 7 AG-UI features through different agent endpoints:
+
+| Endpoint | Feature | Description |
+|----------|---------|-------------|
+| `/agentic_chat` | Feature 1: Agentic Chat | Basic conversational agent with tool calling |
+| `/backend_tool_rendering` | Feature 2: Backend Tool Rendering | Agent with custom tool UI rendering |
+| `/human_in_the_loop` | Feature 3: Human in the Loop | Agent with approval workflows |
+| `/agentic_generative_ui` | Feature 4: Agentic Generative UI | Agent that breaks down tasks into steps with streaming updates |
+| `/tool_based_generative_ui` | Feature 5: Tool-based Generative UI | Agent that generates custom UI components |
+| `/shared_state` | Feature 6: Shared State | Agent with bidirectional state synchronization |
+| `/predictive_state_updates` | Feature 7: Predictive State Updates | Agent with predictive state updates during tool execution |
+
+## Next Steps
+
+- Create your own agent by following the [Getting Started](getting-started.md) guide
+- Learn about [Backend Tool Rendering](backend-tool-rendering.md) to customize tool UIs
+
+## Additional Resources
+
+- [AG-UI Documentation](https://docs.ag-ui.com/introduction)
+- [AG-UI GitHub Repository](https://github.com/ag-ui-protocol/ag-ui)
+- [Microsoft Agent Framework (.NET) Dojo](https://dojo.ag-ui.com/microsoft-agent-framework-dotnet)
+- [Microsoft Agent Framework Integration Examples](https://github.com/ag-ui-protocol/ag-ui/tree/main/integrations/microsoft-agent-framework)
+
+## Nexte Steps
 
 For MAF implementation guidance, use the scenario articles in this section:
 
