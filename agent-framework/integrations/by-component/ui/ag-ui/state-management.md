@@ -62,29 +62,56 @@ State mapping is opt-in. Arbitrary tool results don't automatically become share
 
 ## Read client state
 
-`MapAGUIServer` stores the originating `RunAgentInput` on `ChatOptions`. A delegating agent or chat-client middleware can recover it with `TryGetRunAgentInput`:
+`MapAGUIServer` stores the originating `RunAgentInput` on `ChatOptions`. If the model needs the client's current state, wrap the base agent with a lightweight `DelegatingAIAgent` that recovers the state with `TryGetRunAgentInput` and adds it to the model context:
 
 ```csharp
 using System.Text.Json;
 using AGUI.Abstractions;
 using AGUI.Server;
+using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
 
-static bool TryGetClientState(ChatOptions options, out JsonElement state)
+internal sealed class RecipeStateAgent(AIAgent innerAgent)
+    : DelegatingAIAgent(innerAgent)
 {
-    if (options.TryGetRunAgentInput(out RunAgentInput? input) &&
-        input.State is { ValueKind: not JsonValueKind.Undefined } value)
-    {
-        state = value;
-        return true;
-    }
+    protected override Task<AgentResponse> RunCoreAsync(
+        IEnumerable<ChatMessage> messages,
+        AgentSession? session = null,
+        AgentRunOptions? options = null,
+        CancellationToken cancellationToken = default) =>
+        RunCoreStreamingAsync(messages, session, options, cancellationToken)
+            .ToAgentResponseAsync(cancellationToken);
 
-    state = default;
-    return false;
+    protected override IAsyncEnumerable<AgentResponseUpdate> RunCoreStreamingAsync(
+        IEnumerable<ChatMessage> messages,
+        AgentSession? session = null,
+        AgentRunOptions? options = null,
+        CancellationToken cancellationToken = default)
+    {
+        if (options is ChatClientAgentRunOptions { ChatOptions: { } chatOptions } &&
+            chatOptions.TryGetRunAgentInput(out RunAgentInput? input) &&
+            input.State is { ValueKind: JsonValueKind.Object } state)
+        {
+            ChatMessage stateMessage = new(
+                ChatRole.System,
+                $"The user's current recipe state is:\n{state.GetRawText()}");
+            messages = [stateMessage, .. messages];
+        }
+
+        return InnerAgent.RunStreamingAsync(
+            messages,
+            session,
+            options,
+            cancellationToken);
+    }
 }
+
+AIAgent agent = new RecipeStateAgent(baseAgent);
 ```
 
-Client state is request input. Validate its shape and values before using it in prompts, routing, or privileged operations.
+The wrapper handles only the input path. State-event emission remains declarative through `AGUIStreamOptions`, as shown in the following sections. `TryGetRunAgentInput` reads the input that the hosting layer stored on `ChatOptions.AdditionalProperties`; application code doesn't access that dictionary directly.
+
+Client state is untrusted request input. Validate its shape and values before using it in prompts, routing, or privileged operations.
 
 ## Emit a state snapshot
 
