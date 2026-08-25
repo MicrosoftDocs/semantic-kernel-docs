@@ -6,14 +6,15 @@
       "build_output_subfolder": "agent-framework",
       "locale": "en-us",
       "monikers": [],
+      "moniker_ranges": [],
+      "xref_query_tags": [
+        "/dotnet"
+      ],
       "open_to_public_contributors": true,
       "type_mapping": {
         "Conceptual": "Content"
       },
-      "build_entry_point": "docs",
-      "xref_query_tags": [
-        "/dotnet"
-      ]
+      "build_entry_point": "docs"
     },
     {
       "docset_name": "semantic-kernel",
@@ -22,16 +23,16 @@
       "locale": "en-us",
       "monikers": [],
       "moniker_ranges": [],
+      "xref_query_tags": [
+        "/dotnet"
+      ],
       "open_to_public_contributors": false,
       "type_mapping": {
         "ZonePivotGroups": "Toc",
         "Conceptual": "Content"
       },
       "build_entry_point": "docs",
-      "template_folder": "_themes",
-      "xref_query_tags": [
-        "/dotnet"
-      ]
+      "template_folder": "_themes"
     }
   ],
   "notification_subscribers": [
