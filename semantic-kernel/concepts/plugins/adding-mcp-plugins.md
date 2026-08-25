@@ -90,7 +90,7 @@ async def main():
         # Do something with the kernel
 ```
 
-In both case the async context manager is used to setup the connection and close it, you can also do this manually:
+In both cases the async context manager is used to setup the connection and close it, you can also do this manually:
 
 ```python
 import os

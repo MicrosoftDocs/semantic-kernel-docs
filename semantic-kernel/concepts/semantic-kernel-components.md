@@ -30,7 +30,7 @@ The Kernel does not use any registered vector store automatically, but Vector Se
 in which case the plugin is made available to Prompt Templates and the Chat Completion AI Model.
 
 > [!TIP]
-> For more information on using memory connectors see [Adding AI services to Semantic Kernel](./ai-services/index.md).
+> For more information on using memory connectors see [Vector Store Connectors](./vector-store-connectors/index.md).
 
 ## Functions and Plugins
 
