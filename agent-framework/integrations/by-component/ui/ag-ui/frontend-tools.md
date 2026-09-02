@@ -203,8 +203,8 @@ class AGUIClientWithTools:
             }
         ]
 
-    async def send_message(self, message: str) -> AsyncIterator[dict]:
-        """Send a message and handle streaming response with tool execution."""
+    async def run_turn(self, message: str) -> AsyncIterator[dict]:
+        """Send a message and stream the turn, executing frontend tools as requested."""
         # Prepare tool declarations for the server. The parameter schema is what
         # lets the model call a tool with arguments instead of an empty object.
         tool_declarations = []
@@ -359,7 +359,7 @@ async def main():
                 break
 
             print()
-            async for event in client.send_message(message):
+            async for event in client.run_turn(message):
                 event_type = event.get("type", "")
 
                 if event_type == "RUN_STARTED":
