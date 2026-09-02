@@ -143,10 +143,11 @@ Here's a complete client implementation with frontend tools:
 import asyncio
 import json
 import os
+import uuid
 from typing import Annotated, AsyncIterator
 
 import httpx
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, TypeAdapter
 
 
 class SensorReading(BaseModel):
@@ -194,60 +195,129 @@ class AGUIClientWithTools:
         self.server_url = server_url
         self.tools = tools
         self.thread_id: str | None = None
+        self.messages: list[dict] = [
+            {
+                "id": str(uuid.uuid4()),
+                "role": "system",
+                "content": "You are a helpful assistant with access to client tools.",
+            }
+        ]
 
     async def send_message(self, message: str) -> AsyncIterator[dict]:
         """Send a message and handle streaming response with tool execution."""
-        # Prepare tool declarations for the server
+        # Prepare tool declarations for the server. The parameter schema is what
+        # lets the model call a tool with arguments instead of an empty object.
         tool_declarations = []
         for name, func in self.tools.items():
             tool_declarations.append({
                 "name": name,
                 "description": func.__doc__ or "",
-                # Add parameter schema from function signature
+                "parameters": TypeAdapter(func).json_schema(),
             })
 
+        self.messages.append({"id": str(uuid.uuid4()), "role": "user", "content": message})
+
+        async with httpx.AsyncClient(timeout=60.0) as client:
+            # A frontend tool call ends the server's run: the run reports the call,
+            # the client executes it, and a follow-up run delivers the answer.
+            first_run = True
+            while True:
+                tool_calls: dict[str, dict] = {}
+                run_finished: dict | None = None
+
+                async for event in self._stream_run(client, tool_declarations):
+                    event_type = event.get("type")
+
+                    if event_type == "TOOL_CALL_START":
+                        tool_calls[event["toolCallId"]] = {
+                            "name": event.get("toolCallName", ""),
+                            "arguments": "",
+                        }
+
+                    elif event_type == "TOOL_CALL_ARGS":
+                        # Arguments arrive as JSON fragments, one event at a time
+                        call = tool_calls.get(event["toolCallId"])
+                        if call:
+                            call["arguments"] += event.get("delta", "")
+
+                    elif event_type == "RUN_STARTED":
+                        # Capture thread_id
+                        if not self.thread_id:
+                            self.thread_id = event.get("threadId")
+                        if not first_run:
+                            continue
+
+                    elif event_type == "RUN_FINISHED":
+                        # Hold this back: the turn is only over once no frontend
+                        # tool is waiting to run
+                        run_finished = event
+                        continue
+
+                    yield event
+
+                if not tool_calls:
+                    if run_finished:
+                        yield run_finished
+                    return
+
+                await self._execute_tool_calls(tool_calls)
+                first_run = False
+
+    async def _stream_run(
+        self, client: httpx.AsyncClient, tool_declarations: list[dict]
+    ) -> AsyncIterator[dict]:
+        """Stream one server run and yield its events."""
         request_data = {
-            "messages": [
-                {"role": "system", "content": "You are a helpful assistant with access to client tools."},
-                {"role": "user", "content": message},
-            ],
+            "messages": self.messages,
             "tools": tool_declarations,  # Send tool declarations to server
         }
 
         if self.thread_id:
             request_data["thread_id"] = self.thread_id
 
-        async with httpx.AsyncClient(timeout=60.0) as client:
-            async with client.stream(
-                "POST",
-                self.server_url,
-                json=request_data,
-                headers={"Accept": "text/event-stream"},
-            ) as response:
-                response.raise_for_status()
+        async with client.stream(
+            "POST",
+            self.server_url,
+            json=request_data,
+            headers={"Accept": "text/event-stream"},
+        ) as response:
+            response.raise_for_status()
 
-                async for line in response.aiter_lines():
-                    if line.startswith("data: "):
-                        data = line[6:]
-                        try:
-                            event = json.loads(data)
-                            
-                            # Tool calls arrive as TOOL_CALL_START/ARGS/END events
-                            # and results are streamed back as TOOL_CALL_RESULT events.
-                            yield event
+            async for line in response.aiter_lines():
+                if line.startswith("data: "):
+                    data = line[6:]
+                    try:
+                        yield json.loads(data)
+                    except json.JSONDecodeError:
+                        continue
 
-                            # Capture thread_id
-                            if event.get("type") == "RUN_STARTED" and not self.thread_id:
-                                self.thread_id = event.get("threadId")
+    async def _execute_tool_calls(self, tool_calls: dict[str, dict]) -> None:
+        """Execute the requested frontend tools and record their results."""
+        self.messages.append({
+            "id": str(uuid.uuid4()),
+            "role": "assistant",
+            "toolCalls": [
+                {
+                    "id": tool_call_id,
+                    "type": "function",
+                    "function": {"name": call["name"], "arguments": call["arguments"] or "{}"},
+                }
+                for tool_call_id, call in tool_calls.items()
+            ],
+        })
 
-                        except json.JSONDecodeError:
-                            continue
+        for tool_call_id, call in tool_calls.items():
+            result = self._handle_tool_call(tool_call_id, call["name"], call["arguments"])
+            self.messages.append({
+                "id": str(uuid.uuid4()),
+                "role": "tool",
+                "content": json.dumps(result),
+                "toolCallId": tool_call_id,
+            })
 
-    async def _handle_tool_call(self, event: dict, client: httpx.AsyncClient):
-        """Execute frontend tool and send result back to server."""
-        tool_name = event.get("toolName")
-        tool_call_id = event.get("toolCallId")
-        arguments = event.get("arguments", {})
+    def _handle_tool_call(self, tool_call_id: str, tool_name: str, raw_arguments: str):
+        """Execute frontend tool and return the result sent back to the server."""
+        arguments = json.loads(raw_arguments) if raw_arguments else {}
 
         print(f"\n\033[95m[Client Tool Call: {tool_name}]\033[0m")
         print(f"  Arguments: {arguments}")
@@ -264,15 +334,12 @@ class AGUIClientWithTools:
             if hasattr(result, "model_dump"):
                 result = result.model_dump()
 
-            print(f"\033[94m[Client Tool Result: {result}]\033[0m")
-
-            # In current Python AG-UI, frontend tool declarations are sent with
-            # the run request. Tool-call lifecycle events are streamed back over SSE.
-            print(f"Tool result for {tool_call_id}: {result}")
+            print(f"\033[94m[Client Tool Result: {result}]\033[0m\n")
+            return result
 
         except Exception as e:
             print(f"\033[91m[Tool Error: {e}]\033[0m")
-            print(f"Tool error for {tool_call_id}: {e}")
+            return {"error": str(e)}
 
 
 async def main():
