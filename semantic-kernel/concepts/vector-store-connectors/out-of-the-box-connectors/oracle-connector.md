@@ -336,7 +336,7 @@ The following table shows the default data property type mapping, including null
 | byte              | NUMBER(3)       |
 | short/int16       | NUMBER(5)       |
 | int/int32         | NUMBER(10)      |
-| decimal           | NUMBER(18,2)    |
+| decimal           | NUMBER          |
 | long/int64        | NUMBER(19)      |
 | float             | BINARY_FLOAT    |
 | double            | BINARY_DOUBLE   |
