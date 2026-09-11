@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: alexkeh
 ms.topic: article
 ms.author: westey
-ms.date: 08/28/2026
+ms.date: 09/18/2026
 ms.service: semantic-kernel
 ---
 # Using the Oracle AI Database Vector Store connector
