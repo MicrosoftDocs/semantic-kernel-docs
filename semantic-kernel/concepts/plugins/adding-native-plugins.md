@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: sophialagerkranspandey
 ms.topic: article
 ms.author: sopand
-ms.date: 07/12/2023
+ms.date: 09/13/2026
 ms.service: semantic-kernel
 ---
 
@@ -423,9 +423,9 @@ The three techniques differ in **when** the return type information reaches the 
 |---|---|---|---|
 | Return type description in the function description | During function advertisement, for every function | No | Manual |
 | Return type schema in the function description | During function advertisement, for every function | Yes | Manual |
-| Return type schema as part of the return value | During function invocation, only for the functions actually called | Yes | Automatic |
+| Return type schema as part of the return value | During function invocation, only for the functions actually called | Yes | Schema extracted automatically; property descriptions still authored by hand |
 
-#### Provide function return type description in function description
+#### Provide function return type information in function description
 
 To apply this technique, describe the return type properties in the function's `Description` attribute. The description includes only the property names and their meaning, without any type information:
 
@@ -457,7 +457,7 @@ private sealed class WeatherPlugin
 
 ```csharp
 Kernel kernel = Kernel.CreateBuilder()
-    .AddOpenAIChatCompletion(modelId, apiKey)
+    .AddOpenAIChatCompletion("gpt-4", Environment.GetEnvironmentVariable("OpenAI__ApiKey"))
     .Build();
 
 kernel.ImportPluginFromType<WeatherPlugin>();
@@ -580,7 +580,7 @@ private sealed class WeatherPlugin
 
 ```csharp
 Kernel kernel = Kernel.CreateBuilder()
-    .AddOpenAIChatCompletion(modelId, apiKey)
+    .AddOpenAIChatCompletion("gpt-4", Environment.GetEnvironmentVariable("OpenAI__ApiKey"))
     .Build();
 
 // Register the filter that adds the return type schema to every function result
