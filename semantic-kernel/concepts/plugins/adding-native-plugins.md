@@ -5,9 +5,26 @@ zone_pivot_groups: programming-languages
 author: sophialagerkranspandey
 ms.topic: article
 ms.author: sopand
-ms.date: 09/13/2026
+ms.date: 09/24/2026
 ms.service: semantic-kernel
 ---
+
+<!--
+  Language parity table - keep in sync when adding/removing sections.
+
+  | Section                                                                | C# | Python | Java | Notes                                |
+  |------------------------------------------------------------------------|:--:|:------:|:----:|--------------------------------------|
+  | Providing the LLM with the right information                           | ✅ |   ✅   |  ✅  |                                      |
+  | Defining a plugin using a class                                        | ✅ |   ✅   |  ✅  | Naming and parameter tips in C# only |
+  | Adding a plugin using the AddFromObject method                         | ✅ |   ❌   |  ❌  | C#-specific                          |
+  | Adding a plugin using the AddFromType<> method                         | ✅ |   ❌   |  ❌  | C#-specific                          |
+  | Adding a plugin using the add_plugin method                            | ❌ |   ✅   |  ❌  | Python-specific                      |
+  | Adding a plugin using the createFromObject method                      | ❌ |   ❌   |  ✅  | Java-specific                        |
+  | Defining a plugin using a collection of functions                      | ✅ |   ❌   |  ❌  | Not documented for Python or Java    |
+  | Additional strategies for adding native code with Dependency Injection | ✅ |   ❌   |  ❌  | Not documented for Python or Java    |
+  | Providing functions return type schema to LLM                          | ✅ |   ❌   |  ❌  | Not documented for Python or Java    |
+  | Providing more details about the functions                             | ❌ |   ✅   |  ❌  | Python-specific                      |
+-->
 
 # Add native code as a plugin
 
