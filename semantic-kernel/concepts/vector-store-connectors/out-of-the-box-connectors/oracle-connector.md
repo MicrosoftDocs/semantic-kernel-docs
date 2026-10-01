@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: alexkeh
 ms.topic: article
 ms.author: westey
-ms.date: 09/18/2026
+ms.date: 10/01/2026
 ms.service: semantic-kernel
 ---
 # Using the Oracle AI Database Vector Store connector
@@ -101,7 +101,7 @@ Add the Oracle AI Database Vector Store connector NuGet package to your project.
 dotnet add package Oracle.VectorData
 ```
 
-You can add the vector store to the `IServiceCollection` dependency injection container using Microsoft Agent Framework extension methods. In this case, an instance of the `Oracle.VectorData.OracleVectorStore` class also gets registered with the container.
+You can add the vector store to the `IServiceCollection` dependency injection container using Oracle connector extension methods. In this case, an instance of the `Oracle.VectorData.OracleVectorStore` class also gets registered with the container.
 
 ```csharp
 using Microsoft.Extensions.VectorData;
