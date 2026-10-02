@@ -94,6 +94,7 @@ These abstractions let you write simple, high-level code against a single API, a
 | [Postgres](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/postgres-connector)                | ✅                         | ✅                           | Microsoft           |
 | [Qdrant](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/qdrant-connector)                    | ✅                         | ✅                           | Microsoft           |
 | [Redis](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/redis-connector)                      | ✅                         | ✅                           | Microsoft           |
+| [SingleStore](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/singlestore-connector)          | ✅                         |✅                           | SingleStore         |
 | [SQL Server](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/sql-connector)                   | ✅                         | ✅                           | Microsoft           |
 | [SQLite](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/sqlite-connector)                    | ✅                         | ✅                           | Microsoft           |
 | [Volatile (In-Memory)](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/volatile-connector)    | Deprecated (use In-Memory) | N/A                           | Microsoft           |

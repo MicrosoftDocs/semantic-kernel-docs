@@ -49,6 +49,7 @@ Semantic Kernel provides a number of out-of-the-box Vector Store integrations ma
 | [Postgres](./postgres-connector.md)                                |             ✅              |               ✅               |              Microsoft            | 
 | [Qdrant](./qdrant-connector.md)                                    |             ✅              |               ✅               |              Microsoft            | 
 | [Redis](./redis-connector.md)                                      |             ✅              |               ✅               |              Microsoft            | 
+| [SingleStore](./singlestore-connector.md)                          |             ✅              |               ✅               |              SingleStore          | 
 | [SQL Server](./sql-connector.md)                                   |             ✅              |               ✅               |              Microsoft            | 
 | [SQLite](./sqlite-connector.md)                                    |             ✅              |               ✅               |              Microsoft            | 
 | [Volatile (In-Memory)](./volatile-connector.md)                    | Deprecated (use In-Memory)   |              N/A               |              Microsoft            | 
