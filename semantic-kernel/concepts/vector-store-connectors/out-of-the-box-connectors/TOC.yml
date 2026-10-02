@@ -31,7 +31,7 @@
 - name: Redis connector
   href: redis-connector.md
 - name: SingleStore connector
-  href: singlestore.md
+  href: singlestore-connector.md
 - name: SQL Server connector
   href: sql-connector.md
 - name: SQLite connector

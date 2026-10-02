@@ -157,7 +157,7 @@ The following table shows the default key and data property type mapping:
 | byte[]         | LONGBLOB          |
 | Guid           | CHAR(36)          |
 | string[]       | JSON              |
-| List<string>   | JSON              |
+| `List<string>` | JSON              |
 
 Vector properties are mapped to `VECTOR(dimensions, F32)`.
 
