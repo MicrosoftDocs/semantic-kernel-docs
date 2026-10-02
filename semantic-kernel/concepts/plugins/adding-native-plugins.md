@@ -5,9 +5,26 @@ zone_pivot_groups: programming-languages
 author: sophialagerkranspandey
 ms.topic: article
 ms.author: sopand
-ms.date: 07/12/2023
+ms.date: 09/24/2026
 ms.service: semantic-kernel
 ---
+
+<!--
+  Language parity table - keep in sync when adding/removing sections.
+
+  | Section                                                                | C# | Python | Java | Notes                                |
+  |------------------------------------------------------------------------|:--:|:------:|:----:|--------------------------------------|
+  | Providing the LLM with the right information                           | ✅ |   ✅   |  ✅  |                                      |
+  | Defining a plugin using a class                                        | ✅ |   ✅   |  ✅  | Naming and parameter tips in C# only |
+  | Adding a plugin using the AddFromObject method                         | ✅ |   ❌   |  ❌  | C#-specific                          |
+  | Adding a plugin using the AddFromType<> method                         | ✅ |   ❌   |  ❌  | C#-specific                          |
+  | Adding a plugin using the add_plugin method                            | ❌ |   ✅   |  ❌  | Python-specific                      |
+  | Adding a plugin using the createFromObject method                      | ❌ |   ❌   |  ✅  | Java-specific                        |
+  | Defining a plugin using a collection of functions                      | ✅ |   ❌   |  ❌  | Not documented for Python or Java    |
+  | Additional strategies for adding native code with Dependency Injection | ✅ |   ❌   |  ❌  | Not documented for Python or Java    |
+  | Providing functions return type schema to LLM                          | ✅ |   ❌   |  ❌  | Not documented for Python or Java    |
+  | Providing more details about the functions                             | ❌ |   ✅   |  ❌  | Python-specific                      |
+-->
 
 # Add native code as a plugin
 
@@ -415,72 +432,116 @@ or where additional context or handling instructions need to be associated with 
 
 Before employing any of these techniques, it is advisable to provide more descriptive names for the return type properties, as this is the most straightforward way to improve the LLM's understanding of the return type and is also cost-effective in terms of token usage.
 
+The examples below come from the [FunctionCalling_ReturnMetadata](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/FunctionCalling/FunctionCalling_ReturnMetadata.cs) sample. The properties of the `WeatherData` class are intentionally given generic names (`Data1`, `Data2`, `Data3`, `Data4`) for demonstration purposes only: this prevents the model from making assumptions about their content based solely on their names, and forces it to rely on the other return type metadata (descriptions or schemas) to reason about them. In your own plugins, descriptive property names should always be the first choice.
+
+The three techniques differ in **when** the return type information reaches the model and in **who maintains it**:
+
+| Technique | Sent to the model | Type information | Maintenance |
+|---|---|---|---|
+| Return type description in the function description | During function advertisement, for every function | No | Manual |
+| Return type schema in the function description | During function advertisement, for every function | Yes | Manual |
+| Return type schema as part of the return value | During function invocation, only for the functions actually called | Yes | Schema extracted automatically; property descriptions still authored by hand |
+
 #### Provide function return type information in function description
 
-To apply this technique, include the return type schema in the function's description attribute. The schema should detail the property names, descriptions, and types, as shown in the following example:
+To apply this technique, describe the return type properties in the function's `Description` attribute. The description includes only the property names and their meaning, without any type information:
 
 ```csharp
-public class LightsPlugin
+private sealed class WeatherPlugin
 {
-   [KernelFunction("change_state")]
-   [Description("""Changes the state of the light and returns:
-   {  
-       "type": "object",
-       "properties": {
-           "id": { "type": "integer", "description": "Light ID" },
-           "name": { "type": "string", "description": "Light name" },
-           "is_on": { "type": "boolean", "description": "Is light on" },
-           "brightness": { "type": "string", "enum": ["Low", "Medium", "High"], "description": "Brightness level" },
-           "color": { "type": "string", "description": "Hex color code" }
-       },
-       "required": ["id", "name"]
-   } 
-   """)]
-   public async Task<LightModel?> ChangeStateAsync(LightModel changeState)
-   {
-      ...
-   }
+    [KernelFunction]
+    [Description("Returns current weather: Data1 - Temperature (°C), Data2 - Humidity (%), Data3 - Dew Point (°C), Data4 - Wind Speed (km/h)")]
+    public WeatherData GetWeatherData()
+    {
+        return new WeatherData()
+        {
+            Data1 = 35.0,  // Temperature in degrees Celsius
+            Data2 = 20.0,  // Humidity in percentage
+            Data3 = 10.0,  // Dew point in degrees Celsius
+            Data4 = 15.0   // Wind speed in kilometers per hour
+        };
+    }
+
+    public sealed class WeatherData
+    {
+        public double Data1 { get; set; }
+        public double Data2 { get; set; }
+        public double Data3 { get; set; }
+        public double Data4 { get; set; }
+    }
 }
 ```
 
-Some models may have limitations on the size of the function description, so it is advisable to keep the schema concise and only include essential information.
+```csharp
+Kernel kernel = Kernel.CreateBuilder()
+    .AddOpenAIChatCompletion("gpt-4", Environment.GetEnvironmentVariable("OpenAI__ApiKey"))
+    .Build();
 
-In cases where type information is not critical and minimizing token consumption is a priority, consider providing a brief description of the return type in the function's description attribute instead of the full schema.
+kernel.ImportPluginFromType<WeatherPlugin>();
+
+OpenAIPromptExecutionSettings settings = new() { FunctionChoiceBehavior = FunctionChoiceBehavior.Auto() };
+
+FunctionResult result = await kernel.InvokePromptAsync("What is the current weather?", new(settings));
+
+Console.WriteLine(result);
+// Output: The current weather is as follows:
+// - Temperature: 35°C
+// - Humidity: 20%
+// - Dew Point: 10°C
+// - Wind Speed: 15 km/h
+```
+
+This information is provided to the AI model during the function advertisement step, so it is sent for every function exposed to the model, whether the model calls it or not. This approach may be useful when type information is not critical and minimizing token consumption is a priority. Keep in mind that the description must be written by hand and updated each time the return type changes.
+
+#### Provide function return type schema in function description
+
+When type information is essential, include the full return type schema in the function's `Description` attribute. The schema details the property names, descriptions, and types in JSON format:
 
 ```csharp
-public class LightsPlugin
+private sealed class WeatherPlugin
 {
-   [KernelFunction("change_state")]
-   [Description("""Changes the state of the light and returns:
-        id: light ID,
-        name: light name,
-        is_on: is light on,
-        brightness: brightness level (Low, Medium, High),
-        color: Hex color code.
-    """)]
-   public async Task<LightModel?> ChangeStateAsync(LightModel changeState)
-   {
-      ...
-   }
+    [KernelFunction]
+    [Description("""Returns current weather: {"type":"object","properties":{"Data1":{"description":"Temperature (°C)","type":"number"},"Data2":{"description":"Humidity (%)","type":"number"},"Data3":{"description":"Dew point (°C)","type":"number"},"Data4":{"description":"Wind speed (km/h)","type":"number"}}}""")]
+    public WeatherData GetWeatherData()
+    {
+        return new WeatherData()
+        {
+            Data1 = 35.0,  // Temperature in degrees Celsius
+            Data2 = 20.0,  // Humidity in percentage
+            Data3 = 10.0,  // Dew point in degrees Celsius
+            Data4 = 15.0   // Wind speed in kilometers per hour
+        };
+    }
+
+    public sealed class WeatherData
+    {
+        public double Data1 { get; set; }
+        public double Data2 { get; set; }
+        public double Data3 { get; set; }
+        public double Data4 { get; set; }
+    }
 }
 ```
 
-Both approaches mentioned above require manually adding the return type schema and updating it each time the return type changes. To avoid this, consider the next technique.
+The plugin is imported and invoked exactly as in the previous example. As before, the schema is supplied during the function advertisement step and must be maintained manually. Some models may have limitations on the size of the function description, so it is advisable to keep the schema concise and only include essential information.
+
+Both approaches described so far require manually adding the return type information and updating it each time the return type changes. To avoid this, consider the next technique.
 
 #### Provide function return type schema as part of the function's return value
 
-This technique involves supplying both the function's return value and its schema to the LLM, rather than just the return value. This allows the LLM to use the schema to reason about the properties of the return value.
+This technique involves supplying both the function's return value and its schema to the LLM, rather than just the return value. The information reaches the model during the function invocation step, rather than during the function advertisement step: the schema is returned to the model together with the result of each function it invokes, while the schemas of functions that are never called are never sent. This can help reduce token consumption, particularly when only a few out of many available functions are actually called.
 
-To implement this technique, you need to create and register an auto function invocation filter. For more details, see the [Auto Function Invocation Filter](../enterprise-readiness/filters.md#auto-function-invocation-filter) article. This filter should wrap the function's return value in a custom object that contains both the original return value and its schema. Below is an example:
+To implement this technique, you need to create and register an auto function invocation filter. For more details, see the [Auto Function Invocation Filter](../enterprise-readiness/filters.md#auto-function-invocation-filter) article. The filter wraps the function's return value in an object that contains both the original value and its schema, which Semantic Kernel extracts automatically from the return type:
 
 ```csharp
 private sealed class AddReturnTypeSchemaFilter : IAutoFunctionInvocationFilter
 {
     public async Task OnAutoFunctionInvocationAsync(AutoFunctionInvocationContext context, Func<AutoFunctionInvocationContext, Task> next)
     {
-        await next(context); // Invoke the original function
+        // Invoke the function
+        await next(context);
 
-        // Crete the result with the schema
+        // Create the result with the schema
         FunctionResultWithSchema resultWithSchema = new()
         {
             Value = context.Result.GetValue<object>(),                  // Get the original result
@@ -494,45 +555,70 @@ private sealed class AddReturnTypeSchemaFilter : IAutoFunctionInvocationFilter
     private sealed class FunctionResultWithSchema
     {
         public object? Value { get; set; }
+
         public KernelJsonSchema? Schema { get; set; }
     }
 }
-
-// Register the filter
-Kernel kernel = new Kernel();
-kernel.AutoFunctionInvocationFilters.Add(new AddReturnTypeSchemaFilter());
-
 ```
 
-With the filter registered, you can now provide descriptions for the return type and its properties, which will be automatically extracted by Semantic Kernel:
+With the filter in place, the function description no longer needs to carry any return type information. Instead, annotate the return type properties with `Description` attributes: Semantic Kernel includes them in the extracted schema.
 
 ```csharp
-[Description("The state of the light")] // Equivalent to annotating the function with the [return: Description("The state of the light")] attribute
-public class LightModel
+private sealed class WeatherPlugin
 {
-    [JsonPropertyName("id")]
-    [Description("The ID of the light")]
-    public int Id { get; set; }
+    [KernelFunction]
+    public WeatherData GetWeatherData()
+    {
+        return new WeatherData()
+        {
+            Data1 = 35.0,  // Temperature in degrees Celsius
+            Data2 = 20.0,  // Humidity in percentage
+            Data3 = 10.0,  // Dew point in degrees Celsius
+            Data4 = 15.0   // Wind speed in kilometers per hour
+        };
+    }
 
-    [JsonPropertyName("name")]
-    [Description("The name of the light")]
-    public string? Name { get; set; }
+    public sealed class WeatherData
+    {
+        [Description("Temp (°C)")]
+        public double Data1 { get; set; }
 
-    [JsonPropertyName("is_on")]
-    [Description("Indicates whether the light is on")]
-    public bool? IsOn { get; set; }
+        [Description("Humidity (%)")]
+        public double Data2 { get; set; }
 
-    [JsonPropertyName("brightness")]
-    [Description("The brightness level of the light")]
-    public Brightness? Brightness { get; set; }
+        [Description("Dew point (°C)")]
+        public double Data3 { get; set; }
 
-    [JsonPropertyName("color")]
-    [Description("The color of the light with a hex code (ensure you include the # symbol)")]
-    public string? Color { get; set; }
+        [Description("Wind speed (km/h)")]
+        public double Data4 { get; set; }
+    }
 }
 ```
 
-This approach eliminates the need to manually provide and update the return type schema each time the return type changes, as the schema is automatically extracted by the Semantic Kernel.
+```csharp
+Kernel kernel = Kernel.CreateBuilder()
+    .AddOpenAIChatCompletion("gpt-4", Environment.GetEnvironmentVariable("OpenAI__ApiKey"))
+    .Build();
+
+// Register the filter that adds the return type schema to every function result
+kernel.AutoFunctionInvocationFilters.Add(new AddReturnTypeSchemaFilter());
+
+// Import the plugin that provides descriptions for the return type properties
+kernel.ImportPluginFromType<WeatherPlugin>();
+
+OpenAIPromptExecutionSettings settings = new() { FunctionChoiceBehavior = FunctionChoiceBehavior.Auto() };
+
+FunctionResult result = await kernel.InvokePromptAsync("What is the current weather?", new(settings));
+
+Console.WriteLine(result);
+// Output: The current weather conditions are as follows:
+// - Temperature: 35°C
+// - Humidity: 20%
+// - Dew Point: 10°C
+// - Wind Speed: 15 km/h
+```
+
+This approach eliminates the need to manually provide and update the return type schema each time the return type changes, as the schema is automatically extracted by Semantic Kernel. The class-level `Description` attribute is also supported and is equivalent to annotating the function with `[return: Description("...")]`.
 
 ::: zone-end
 
