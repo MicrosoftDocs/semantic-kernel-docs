@@ -1,11 +1,11 @@
 ---
 title: MCP Apps Compatibility with AG-UI
-description: Learn how Agent Framework Python AG-UI endpoints work with CopilotKit's MCPAppsMiddleware for MCP Apps integration
+description: Learn how Agent Framework AG-UI endpoints work with CopilotKit's MCPAppsMiddleware for MCP Apps integration
 zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: article
 ms.author: evmattso
-ms.date: 08/11/2026
+ms.date: 08/28/2026
 ms.service: agent-framework
 ---
 
@@ -15,16 +15,106 @@ ms.service: agent-framework
   | Section                         | C# | Python | Go | Notes |
   |---------------------------------|:--:|:------:|:--:|-------|
   | MAF-specific MCP Apps behavior  | ❌ |   ❌   | ❌ | MCP Apps is implemented by external middleware |
-  | External middleware setup       | ❌ |   ✅   | ❌ | Python zone documents CopilotKit middleware |
+  | External middleware setup       | ✅ |   ✅   | ❌ | C# and Python zones document CopilotKit middleware |
 -->
 
 # MCP Apps Compatibility with AG-UI
 
 ::: zone pivot="programming-language-csharp"
 
-MAF doesn't provide MCP Apps-specific configuration or runtime behavior. MCP Apps support is implemented by middleware outside the MAF AG-UI endpoint, which continues to receive standard AG-UI requests.
+Agent Framework .NET AG-UI endpoints are compatible with the AG-UI ecosystem's [MCP Apps](https://docs.ag-ui.com/agentic-protocols) feature. MCP Apps allows frontend applications to embed MCP-powered tools and resources alongside your AG-UI agent — no changes needed on the .NET side.
 
-For middleware setup and compatibility requirements, use the documentation for the selected AG-UI client or middleware.
+## Architecture
+
+MCP Apps support is provided by CopilotKit's TypeScript `MCPAppsMiddleware` (`@ag-ui/mcp-apps-middleware`), which sits between the frontend and your Agent Framework backend:
+
+```
+┌─────────────────────────┐
+│  Frontend               │
+│  (CopilotKit / AG-UI)   │
+└────────┬────────────────┘
+         │
+         ▼
+┌─────────────────────────┐
+│  CopilotKit Runtime /   │
+│  Node.js Proxy          │
+│  + MCPAppsMiddleware    │
+└────────┬────────────────┘
+         │ AG-UI protocol
+         ▼
+┌─────────────────────────┐
+│  Agent Framework        │
+│  ASP.NET Core AG-UI     │
+│  Endpoint               │
+└─────────────────────────┘
+```
+
+The middleware layer handles MCP tool discovery, iframe-proxied resource requests, and `ui/resourceUri` resolution. Your .NET AG-UI endpoint receives standard AG-UI requests and is unaware of the MCP Apps layer.
+
+## No .NET-Side Changes Required
+
+MCP Apps integration is entirely handled by the TypeScript middleware. Your existing `MapAGUIServer` setup works as-is:
+
+```csharp
+using Microsoft.Agents.AI;
+using Microsoft.Agents.AI.Hosting.AGUI.AspNetCore;
+
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+builder.Services.AddAGUIServer();
+
+AIAgent agent = CreateAgent();
+
+WebApplication app = builder.Build();
+
+// This endpoint is MCP Apps-compatible with no additional configuration
+app.MapAGUIServer("/", agent);
+await app.RunAsync();
+```
+
+This approach is consistent with how MCP Apps works with all other AG-UI .NET integrations — the MCP Apps layer is always in the TypeScript middleware, not in the .NET backend.
+
+## Setting Up the Middleware
+
+To use MCP Apps with your Agent Framework backend, set up a CopilotKit Runtime or Node.js proxy that includes `MCPAppsMiddleware` and points at your .NET endpoint:
+
+```typescript
+// Example Node.js proxy configuration (TypeScript)
+import { HttpAgent } from "@ag-ui/client";
+import { MCPAppsMiddleware } from "@ag-ui/mcp-apps-middleware";
+
+const agent = new HttpAgent({
+  url: "http://localhost:8888/",  // Your MAF AG-UI endpoint
+}).use(
+  new MCPAppsMiddleware({
+    mcpServers: [
+      { type: "http", url: "http://localhost:3001/mcp", serverId: "weather-server" },
+    ],
+  }),
+);
+```
+
+For full setup instructions, see the [CopilotKit MCP Apps documentation](https://docs.copilotkit.ai/built-in-agent/generative-ui/mcp-apps) and the [AG-UI agentic protocols documentation](https://docs.ag-ui.com/agentic-protocols).
+
+## What Is Not in Scope
+
+The following are explicitly **not** part of the .NET AG-UI integration:
+
+- **No .NET `MCPAppsMiddleware`**: MCP Apps middleware runs in the TypeScript layer only.
+- **No ASP.NET Core handling of iframe-proxied MCP requests**: Resource proxying is handled by the Node.js middleware.
+- **No .NET-side `ui/resourceUri` discovery**: Resource URI resolution is a middleware concern.
+
+If your application doesn't need the MCP Apps middleware layer, your Agent Framework AG-UI endpoint works directly with any AG-UI-compatible client.
+
+## Next steps
+
+> [!div class="nextstepaction"]
+> [State Management](./state-management.md)
+
+## Additional Resources
+
+- [AG-UI Agentic Protocols Documentation](https://docs.ag-ui.com/agentic-protocols)
+- [CopilotKit MCP Apps Documentation](https://docs.copilotkit.ai/built-in-agent/generative-ui/mcp-apps)
+- [Agent Framework GitHub Repository](https://github.com/microsoft/agent-framework)
 
 ::: zone-end
 
