@@ -173,7 +173,7 @@ The default mapper uses the model annotations or record definition to determine 
 
 ### Property name override
 
-For data properties, you can provide override field names to use in storage that is different to the property names on the data model. This is not supported for keys, since a key is stored as the Chroma record id, or for vectors, since a Chroma record has a single unnamed embedding.
+For data properties, you can provide override field names to use in storage that are different from the property names on the data model. This is not supported for keys, since a key is stored as the Chroma record id, or for vectors, since a Chroma record has a single unnamed embedding.
 
 The property name override is done by setting the `StorageName` option via the data model attributes or record definition.
 
