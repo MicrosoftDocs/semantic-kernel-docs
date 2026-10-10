@@ -23,8 +23,12 @@
       }
     ],
     "ms.update-cycle": {
+      "agent-framework/agents/**/*.md": "180-days",
+      "agent-framework/agents/**/*.yml": "180-days",
       "agent-framework/api-docs/*.md": "180-days",
       "agent-framework/api-docs/*.yml": "180-days",
+      "agent-framework/get-started/*.md": "180-days",
+      "agent-framework/get-started/*.yml": "180-days",
       "agent-framework/tutorials/**/*.md": "180-days",
       "agent-framework/tutorials/**/*.yml": "180-days",
       "agent-framework/migration-guide/**/*.md": "180-days",
