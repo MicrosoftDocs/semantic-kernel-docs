@@ -37,9 +37,9 @@ Semantic Kernel provides a number of out-of-the-box Vector Store integrations ma
 | [Azure AI Search](./azure-ai-search-connector.md)                  |             ✅              |               ✅               |              Microsoft            | 
 | [Cosmos DB MongoDB (vCore)](./azure-cosmosdb-mongodb-connector.md) |             ✅              |               ✅               |              Microsoft            | 
 | [Cosmos DB No SQL](./azure-cosmosdb-nosql-connector.md)            |             ✅              |               ✅               |              Microsoft            | 
+| [Chroma](./chroma-connector.md)                                    |             ✅              |               ❌               |     .NET Community Toolkit        |
 | [Couchbase](./couchbase-connector.md)                              |             ✅              |               ✅               |             Couchbase             |
 | [Elasticsearch](./elasticsearch-connector.md)                      |             ✅              |               ✅               |              Elastic              |
-| Chroma                                                             |          Planned             |                                |                                   |
 | [In-Memory](./inmemory-connector.md)                               |             ✅              |              N/A                |              Microsoft            | 
 | Milvus                                                             |          Planned             |                                |                                   |
 | [MongoDB](./mongodb-connector.md)                                  |             ✅              |               ✅               |              Microsoft            | 

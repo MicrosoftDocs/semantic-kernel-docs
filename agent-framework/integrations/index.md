@@ -84,6 +84,7 @@ These abstractions let you write simple, high-level code against a single API, a
 | [Azure AI Search](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/azure-ai-search-connector)  | ✅                         | ✅                           | Microsoft           |
 | [Cosmos DB MongoDB (vCore)](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/azure-cosmosdb-mongodb-connector) | ✅         | ✅                           | Microsoft           |
 | [Cosmos DB No SQL](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/azure-cosmosdb-nosql-connector) | ✅                    | ✅                           | Microsoft           |
+| [Chroma](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/chroma-connector)                    | ✅                         | ❌                           | .NET Community Toolkit |
 | [Couchbase](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/couchbase-connector)              | ✅                         | ✅                           | Couchbase           |
 | [Elasticsearch](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/elasticsearch-connector)      | ✅                         | ✅                           | Elastic             |
 | [In-Memory](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/inmemory-connector)               | ✅                         | N/A                           | Microsoft           |
