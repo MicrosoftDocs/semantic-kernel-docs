@@ -45,7 +45,6 @@ Semantic Kernel provides a number of out-of-the-box Vector Store integrations ma
 | [MongoDB](./mongodb-connector.md)                                  |             ✅              |               ✅               |              Microsoft            | 
 | [Neon Serverless Postgres](https://neon.com/) |Use [Postgres Connector](./postgres-connector.md)  |               ✅               |              Microsoft            | 
 | [Oracle](./oracle-connector.md)                                    |             ✅              |               ✅               |              Oracle               |
-| [Pinecone](./pinecone-connector.md)                                |             ✅              |               ❌               |              Microsoft            | 
 | [Postgres](./postgres-connector.md)                                |             ✅              |               ✅               |              Microsoft            | 
 | [Qdrant](./qdrant-connector.md)                                    |             ✅              |               ✅               |              Microsoft            | 
 | [Redis](./redis-connector.md)                                      |             ✅              |               ✅               |              Microsoft            | 

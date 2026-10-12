@@ -228,7 +228,7 @@ For the list of out of the box vector store connectors and the language support 
 | Chroma                   | ✅ | ✅ | ❌ | |
 | DuckDB                   | ✅ | ❌ | ❌ | |
 | Milvus                   | ✅ | ✅ | ❌ | |
-| Pinecone                 | ✅ | ✅ | ❌ | |
+| Pinecone                 | ❌ | ✅ | ❌ | |
 | Postgres                 | ✅ | ✅ | ❌ | |
 | Qdrant                   | ✅ | ✅ | ❌ | |
 | Redis                    | ✅ | ✅ | ❌ | |

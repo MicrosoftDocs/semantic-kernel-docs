@@ -90,7 +90,6 @@ These abstractions let you write simple, high-level code against a single API, a
 | [MongoDB](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/mongodb-connector)                  | ✅                         | ✅                           | Microsoft           |
 | [Neon Serverless Postgres](https://neon.com) | Use [Postgres Connector](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/postgres-connector) | ✅           | Microsoft           |
 | [Oracle](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/oracle-connector)                    | ✅                         | ✅                           | Oracle              |
-| [Pinecone](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/pinecone-connector)                | ✅                         | ❌                           | Microsoft           |
 | [Postgres](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/postgres-connector)                | ✅                         | ✅                           | Microsoft           |
 | [Qdrant](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/qdrant-connector)                    | ✅                         | ✅                           | Microsoft           |
 | [Redis](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/redis-connector)                      | ✅                         | ✅                           | Microsoft           |
