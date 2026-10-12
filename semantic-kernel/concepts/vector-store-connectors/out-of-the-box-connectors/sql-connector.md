@@ -10,12 +10,6 @@ ms.service: semantic-kernel
 ---
 # Using the SQL Server Vector Store connector (Preview)
 
-::: zone pivot="programming-language-csharp"
-
-> [!WARNING]
-> The Sql Server Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
-
-::: zone-end
 ::: zone pivot="programming-language-python"
 
 > [!WARNING]
@@ -37,20 +31,23 @@ The SQL Server Vector Store connector can be used to access and manage data in S
 | Feature Area                      | Support                                                                                                                          |
 |-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
 | Collection maps to                | SQL Server table                                                                                                                 |
-| Supported key property types      | <ul><li>int</li><li>long</li><li>string</li><li>Guid</li><li>DateTime</li><li>byte[]</li></ul>                                   |
-| Supported data property types     | <ul><li>int</li><li>short</li><li>byte</li><li>long</li><li>Guid</li><li>string</li><li>bool</li><li>float</li><li>double</li><li>decimal</li><li>byte[]</li><li>DateTime</li><li>TimeOnly</li></ul> |
-| Supported vector property types   | <ul><li>ReadOnlyMemory\<float\></li><li>Embedding\<float\></li><li>float[]</li></ul>                                             |
-| Supported index types             | <ul><li>Flat</li></ul>                                                                                                           |
+| Supported key property types      | <ul><li>int</li><li>long</li><li>string</li><li>Guid</li></ul>                                                                   |
+| Supported data property types     | <ul><li>int</li><li>short</li><li>byte</li><li>long</li><li>Guid</li><li>string</li><li>bool</li><li>float</li><li>double</li><li>decimal</li><li>byte[]</li><li>DateTime</li><li>DateTimeOffset</li><li>DateOnly (.NET only)</li><li>TimeOnly (.NET only)</li><li>string[] and `List<string>` (stored as JSON, requires SQL Server 2025 or Azure SQL)</li></ul> |
+| Supported vector property types   | <ul><li>ReadOnlyMemory\<float\></li><li>Embedding\<float\></li><li>float[]</li><li>SqlVector\<float\></li></ul>                  |
+| Supported index types             | <ul><li>Flat</li><li>DiskAnn (Azure SQL Database and Fabric only)</li></ul>                                                      |
 | Supported distance functions      | <ul><li>CosineDistance</li><li>NegativeDotProductSimilarity</li><li>EuclideanDistance</li></ul>                                  |
 | Supports multiple vectors in a record | Yes                                                                                                                          |
 | IsIndexed supported?              | Yes                                                                                                                              |
-| IsFullTextIndexed supported?      | No                                                                                                                               |
+| IsFullTextIndexed supported?      | Yes (creates a full-text catalog and index)                                                                                      |
 | StorageName supported?            | Yes                                                                                                                              |
-| HybridSearch supported?           | No                                                                                                                               |
+| HybridSearch supported?           | Yes, requires a string data property with `IsFullTextIndexed = true`                                                             |
+
+> [!NOTE]
+> The `VECTOR` data type requires SQL Server 2025 or Azure SQL Database.
 
 ## Getting started
 
-Add the SQL Sever Vector Store connector NuGet package to your project.
+Add the SQL Server Vector Store connector NuGet package to your project.
 
 ```dotnetcli
 dotnet add package CommunityToolkit.VectorData.SqlServer
@@ -66,15 +63,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSqlServerVectorStore(_ => "<connectionstring>");
 ```
 
-```csharp
-using Microsoft.Extensions.DependencyInjection;
+Overloads that accept `SqlServerVectorStoreOptions`, a `ServiceLifetime` and keyed registrations are also provided, as well as `AddSqlServerCollection<TKey, TRecord>` for registering a collection directly. If an `IEmbeddingGenerator` is registered in the container, the vector store and collections use it automatically.
 
-// Using IServiceCollection with ASP.NET Core.
-var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddSqlServerVectorStore(_ => "<connectionstring>")
-```
-
-You can construct a Sql Server Vector Store instance directly.
+You can construct a SQL Server Vector Store instance directly.
 
 ```csharp
 using CommunityToolkit.VectorData.SqlServer;
@@ -87,7 +78,7 @@ It is possible to construct a direct reference to a named collection.
 ```csharp
 using CommunityToolkit.VectorData.SqlServer;
 
-var collection = new SqlServerCollection<string, Hotel>("<connectionstring>", "skhotels");
+var collection = new SqlServerCollection<long, Hotel>("<connectionstring>", "skhotels");
 ```
 
 ## Data mapping
@@ -108,7 +99,7 @@ using Microsoft.Extensions.VectorData;
 public class Hotel
 {
     [VectorStoreKey]
-    public ulong HotelId { get; set; }
+    public long HotelId { get; set; }
 
     [VectorStoreData(StorageName = "hotel_name")]
     public string? HotelName { get; set; }
@@ -116,7 +107,7 @@ public class Hotel
     [VectorStoreData(StorageName = "hotel_description")]
     public string? Description { get; set; }
 
-    [VectorStoreVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineDistance)]
+    [VectorStoreVector(4, DistanceFunction = DistanceFunction.CosineDistance)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```

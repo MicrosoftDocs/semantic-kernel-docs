@@ -81,23 +81,22 @@ These abstractions let you write simple, high-level code against a single API, a
 
 | Implementation                                                                                                               | C#                         | Uses officially supported SDK | Maintainer / Vendor |
 | ---------------------------------------------------------------------------------------------------------------------------- | :------------------------: | :---------------------------: | :-----------------: |
-| [Azure AI Search](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/azure-ai-search-connector)  | ✅                         | ✅                           | Microsoft           |
-| [Cosmos DB MongoDB (vCore)](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/azure-cosmosdb-mongodb-connector) | ✅         | ✅                           | Microsoft           |
-| [Cosmos DB No SQL](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/azure-cosmosdb-nosql-connector) | ✅                    | ✅                           | Microsoft           |
+| [Azure AI Search](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/azure-ai-search-connector)  | ✅                         | ✅                           | .NET Community Toolkit |
+| [Azure DocumentDB](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/azure-cosmosdb-mongodb-connector) | ✅         | ✅                           | .NET Community Toolkit |
+| [Azure CosmosDB](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/azure-cosmosdb-nosql-connector) | ✅                    | ✅                           | .NET Community Toolkit |
+| [Chroma](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/chroma-connector)                    | ✅                         | ❌                           | .NET Community Toolkit |
 | [Couchbase](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/couchbase-connector)              | ✅                         | ✅                           | Couchbase           |
 | [Elasticsearch](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/elasticsearch-connector)      | ✅                         | ✅                           | Elastic             |
-| [In-Memory](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/inmemory-connector)               | ✅                         | N/A                           | Microsoft           |
+| [In-Memory](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/inmemory-connector)               | ✅                         | N/A                           | .NET Community Toolkit |
 | [MongoDB](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/mongodb-connector)                  | ✅                         | ✅                           | Microsoft           |
-| [Neon Serverless Postgres](https://neon.com) | Use [Postgres Connector](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/postgres-connector) | ✅           | Microsoft           |
 | [Oracle](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/oracle-connector)                    | ✅                         | ✅                           | Oracle              |
-| [Pinecone](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/pinecone-connector)                | ✅                         | ❌                           | Microsoft           |
-| [Postgres](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/postgres-connector)                | ✅                         | ✅                           | Microsoft           |
-| [Qdrant](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/qdrant-connector)                    | ✅                         | ✅                           | Microsoft           |
-| [Redis](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/redis-connector)                      | ✅                         | ✅                           | Microsoft           |
-| [SQL Server](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/sql-connector)                   | ✅                         | ✅                           | Microsoft           |
-| [SQLite](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/sqlite-connector)                    | ✅                         | ✅                           | Microsoft           |
+| [Postgres](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/postgres-connector)                | ✅                         | ✅                           | .NET Community Toolkit |
+| [Qdrant](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/qdrant-connector)                    | ✅                         | ✅                           | .NET Community Toolkit |
+| [Redis](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/redis-connector)                      | ✅                         | ✅                           | .NET Community Toolkit |
+| [SQL Server](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/sql-connector)                   | ✅                         | ✅                           | .NET Community Toolkit |
+| [SQLite](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/sqlite-connector)                    | ✅                         | ✅                           | .NET Community Toolkit |
 | [Volatile (In-Memory)](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/volatile-connector)    | Deprecated (use In-Memory) | N/A                           | Microsoft           |
-| [Weaviate](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/weaviate-connector)                | ✅                         | ✅                           | Microsoft           |
+| [Weaviate](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/weaviate-connector)                | ✅                         | ✅                           | .NET Community Toolkit |
 
 > [!IMPORTANT]
 > The vector store abstraction implementations are built by a variety of sources. Not all connectors are maintained by Microsoft. When considering an implementation, be sure to evaluate quality, licensing, support, etc. to ensure they meet your requirements. Also make sure you review each provider's documentation for detailed version compatibility information.
