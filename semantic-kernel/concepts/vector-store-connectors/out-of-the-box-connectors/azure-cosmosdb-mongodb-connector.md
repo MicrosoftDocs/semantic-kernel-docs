@@ -10,12 +10,6 @@ ms.service: semantic-kernel
 ---
 # Using the Azure DocumentDB (with MongoDB compatibility) Vector Store connector (Preview)
 
-::: zone pivot="programming-language-csharp"
-
-> [!WARNING]
-> The Azure DocumentDB Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
-
-::: zone-end
 ::: zone pivot="programming-language-python"
 
 > [!WARNING]

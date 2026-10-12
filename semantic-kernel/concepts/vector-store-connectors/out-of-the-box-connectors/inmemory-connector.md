@@ -10,12 +10,6 @@ ms.service: semantic-kernel
 ---
 # Using the In-Memory connector (Preview)
 
-::: zone pivot="programming-language-csharp"
-
-> [!WARNING]
-> The In-Memory Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
-
-::: zone-end
 ::: zone pivot="programming-language-python"
 
 > [!WARNING]
