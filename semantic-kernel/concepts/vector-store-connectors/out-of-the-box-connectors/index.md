@@ -35,7 +35,7 @@ Semantic Kernel provides a number of out-of-the-box Vector Store integrations ma
 | Vector Store Connectors                                            |             C#               | Uses officially supported SDK  |        Maintainer / Vendor        |
 | ------------------------------------------------------------------ | :--------------------------: | :----------------------------: | :-------------------------------: |
 | [Azure AI Search](./azure-ai-search-connector.md)                  |             ✅              |               ✅               |     .NET Community Toolkit        |
-| [Cosmos DB MongoDB (vCore)](./azure-cosmosdb-mongodb-connector.md) |             ✅              |               ✅               |     .NET Community Toolkit        |
+| [Azure DocumentDB](./azure-cosmosdb-mongodb-connector.md)          |             ✅              |               ✅               |     .NET Community Toolkit        |
 | [Azure CosmosDB](./azure-cosmosdb-nosql-connector.md)              |             ✅              |               ✅               |     .NET Community Toolkit        |
 | [Chroma](./chroma-connector.md)                                    |             ✅              |               ❌               |     .NET Community Toolkit        |
 | [Couchbase](./couchbase-connector.md)                              |             ✅              |               ✅               |             Couchbase             |
@@ -58,7 +58,7 @@ Semantic Kernel provides a number of out-of-the-box Vector Store integrations ma
 | Vector Store Connectors                                            | Python  |       Uses officially supported SDK        |        Maintainer / Vendor        |
 | ------------------------------------------------------------------ | :-----: | :----------------------------------------: | :-------------------------------: |
 | [Azure AI Search](./azure-ai-search-connector.md)                  |    ✅    |                     ✅                      | Microsoft Semantic Kernel Project |
-| [Cosmos DB MongoDB (vCore)](./azure-cosmosdb-mongodb-connector.md) |    ✅    |                     ✅                      | Microsoft Semantic Kernel Project |
+| [Azure DocumentDB](./azure-cosmosdb-mongodb-connector.md)          |    ✅    |                     ✅                      | Microsoft Semantic Kernel Project |
 | [Azure CosmosDB](./azure-cosmosdb-nosql-connector.md)              |    ✅    |                     ✅                      | Microsoft Semantic Kernel Project |
 | [Chroma](./chroma-connector.md)                                    |    ✅    |                     ✅                      | Microsoft Semantic Kernel Project |
 | [Elasticsearch](./elasticsearch-connector.md)                      | Planned   |                                             |                                   |

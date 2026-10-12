@@ -82,7 +82,7 @@ These abstractions let you write simple, high-level code against a single API, a
 | Implementation                                                                                                               | C#                         | Uses officially supported SDK | Maintainer / Vendor |
 | ---------------------------------------------------------------------------------------------------------------------------- | :------------------------: | :---------------------------: | :-----------------: |
 | [Azure AI Search](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/azure-ai-search-connector)  | ✅                         | ✅                           | .NET Community Toolkit |
-| [Cosmos DB MongoDB (vCore)](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/azure-cosmosdb-mongodb-connector) | ✅         | ✅                           | .NET Community Toolkit |
+| [Azure DocumentDB](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/azure-cosmosdb-mongodb-connector) | ✅         | ✅                           | .NET Community Toolkit |
 | [Azure CosmosDB](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/azure-cosmosdb-nosql-connector) | ✅                    | ✅                           | .NET Community Toolkit |
 | [Chroma](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/chroma-connector)                    | ✅                         | ❌                           | .NET Community Toolkit |
 | [Couchbase](/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/couchbase-connector)              | ✅                         | ✅                           | Couchbase           |
