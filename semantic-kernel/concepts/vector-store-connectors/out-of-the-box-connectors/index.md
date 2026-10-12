@@ -36,7 +36,7 @@ Semantic Kernel provides a number of out-of-the-box Vector Store integrations ma
 | ------------------------------------------------------------------ | :--------------------------: | :----------------------------: | :-------------------------------: |
 | [Azure AI Search](./azure-ai-search-connector.md)                  |             ✅              |               ✅               |     .NET Community Toolkit        |
 | [Cosmos DB MongoDB (vCore)](./azure-cosmosdb-mongodb-connector.md) |             ✅              |               ✅               |     .NET Community Toolkit        |
-| [Cosmos DB No SQL](./azure-cosmosdb-nosql-connector.md)            |             ✅              |               ✅               |     .NET Community Toolkit        |
+| [Azure CosmosDB](./azure-cosmosdb-nosql-connector.md)              |             ✅              |               ✅               |     .NET Community Toolkit        |
 | [Chroma](./chroma-connector.md)                                    |             ✅              |               ❌               |     .NET Community Toolkit        |
 | [Couchbase](./couchbase-connector.md)                              |             ✅              |               ✅               |             Couchbase             |
 | [Elasticsearch](./elasticsearch-connector.md)                      |             ✅              |               ✅               |              Elastic              |
@@ -59,7 +59,7 @@ Semantic Kernel provides a number of out-of-the-box Vector Store integrations ma
 | ------------------------------------------------------------------ | :-----: | :----------------------------------------: | :-------------------------------: |
 | [Azure AI Search](./azure-ai-search-connector.md)                  |    ✅    |                     ✅                      | Microsoft Semantic Kernel Project |
 | [Cosmos DB MongoDB (vCore)](./azure-cosmosdb-mongodb-connector.md) |    ✅    |                     ✅                      | Microsoft Semantic Kernel Project |
-| [Cosmos DB No SQL](./azure-cosmosdb-nosql-connector.md)            |    ✅    |                     ✅                      | Microsoft Semantic Kernel Project |
+| [Azure CosmosDB](./azure-cosmosdb-nosql-connector.md)              |    ✅    |                     ✅                      | Microsoft Semantic Kernel Project |
 | [Chroma](./chroma-connector.md)                                    |    ✅    |                     ✅                      | Microsoft Semantic Kernel Project |
 | [Elasticsearch](./elasticsearch-connector.md)                      | Planned   |                                             |                                   |
 | [Faiss](./faiss-connector.md)                                      |    ✅    |                     ✅                      | Microsoft Semantic Kernel Project |
