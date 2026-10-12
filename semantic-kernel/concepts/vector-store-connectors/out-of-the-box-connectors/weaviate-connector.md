@@ -33,11 +33,11 @@ The Weaviate Vector Store connector can be used to access and manage data in Wea
 | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Collection maps to                    | Weaviate Collection                                                                                                                                                                   |
 | Supported key property types          | Guid                                                                                                                                                                                  |
-| Supported data property types         | <ul><li>string</li><li>byte</li><li>short</li><li>int</li><li>long</li><li>double</li><li>float</li><li>decimal</li><li>bool</li><li>DateTime</li><li>DateTimeOffset</li><li>Guid</li><li>*and enumerables of each of these types*</li></ul> |
+| Supported data property types         | <ul><li>string</li><li>byte</li><li>short</li><li>int</li><li>long</li><li>double</li><li>float</li><li>decimal</li><li>bool</li><li>DateTime</li><li>DateTimeOffset</li><li>DateOnly (.NET only)</li><li>Guid</li><li>*and arrays or `List<T>` of each of these types*</li></ul> |
 | Supported vector property types       | <ul><li>ReadOnlyMemory\<float\></li><li>Embedding\<float\></li><li>float[]</li></ul>                                                                                                  |
-| Supported index types                 | <ul><li>Hnsw</li><li>Flat</li><li>Dynamic</li></ul>                                                                                                                                   |
-| Supported distance functions          | <ul><li>CosineDistance</li><li>NegativeDotProductSimilarity</li><li>EuclideanSquaredDistance</li><li>HammingDistance</li><li>ManhattanDistance</li></ul>                              |
-| Supported filter clauses              | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                                                                       |
+| Supported index types                 | <ul><li>Hnsw (default)</li><li>Flat</li><li>Dynamic</li></ul>                                                                                                                         |
+| Supported distance functions          | <ul><li>CosineDistance (default)</li><li>NegativeDotProductSimilarity</li><li>EuclideanSquaredDistance</li><li>HammingDistance</li><li>ManhattanDistance</li></ul>                     |
+| Supported filter clauses              | LINQ expressions: `==`, `!=`, `<`, `<=`, `>`, `>=`, `&&`, `\|\|`, `Contains` and `Any` with `Contains`. The `!` operator is not supported.                                              |
 | Supports multiple vectors in a record | Yes                                                                                                                                                                                   |
 | IsIndexed supported?                  | Yes                                                                                                                                                                                   |
 | IsFullTextIndexed supported?          | Yes                                                                                                                                                                                   |
@@ -75,6 +75,13 @@ Notable Weaviate connector functionality limitations.
 
 > [!WARNING]
 > Weaviate requires collection names to start with an upper case letter. If you do not provide a collection name with an upper case letter, Weaviate will return an error when you try and create your collection. The error that you will see is `Cannot query field "mycollection" on type "GetObjectsObj". Did you mean "Mycollection"?` where `mycollection` is your collection name. In this example, if you change your collection name to `Mycollection` instead, this will fix the error.
+
+::: zone pivot="programming-language-csharp"
+
+> [!NOTE]
+> In .NET, the connector validates the collection name when the collection is constructed and throws an `ArgumentException` if it doesn't start with an upper case ASCII letter or contains characters other than ASCII letters, digits and `_`. By default, the connector uses named vectors (`HasNamedVectors = true` in `WeaviateVectorStoreOptions` and `WeaviateCollectionOptions`). Set `HasNamedVectors = false` to use the single unnamed `vector` layout, which allows exactly one vector property per record.
+
+::: zone-end
 
 ::: zone pivot="programming-language-csharp"
 
@@ -200,7 +207,7 @@ public class Hotel
     public string Description { get; set; }
 
     [JsonPropertyName("HOTEL_DESCRIPTION_EMBEDDING")]
-    [VectorStoreVector(4, DistanceFunction = DistanceFunction.CosineDistance, IndexKind = IndexKind.QuantizedFlat)]
+    [VectorStoreVector(4, DistanceFunction = DistanceFunction.CosineDistance, IndexKind = IndexKind.Hnsw)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```
@@ -208,12 +215,14 @@ public class Hotel
 ```json
 {
     "id": "11111111-1111-1111-1111-111111111111",
-    "properties": { "HotelName": "Hotel Happy", "Description": "A place where everyone can be happy." },
+    "properties": { "hotelName": "Hotel Happy", "description": "A place where everyone can be happy." },
     "vectors": {
-        "HOTEL_DESCRIPTION_EMBEDDING": [0.9, 0.1, 0.1, 0.1],
+        "HOTEL_DESCRIPTION_EMBEDDING": [0.9, 0.1, 0.1, 0.1]
     }
 }
 ```
+
+The connector serializes with a camel case naming policy, so property names that don't have a `JsonPropertyNameAttribute` are stored in camel case.
 
 ::: zone-end
 ::: zone pivot="programming-language-python"

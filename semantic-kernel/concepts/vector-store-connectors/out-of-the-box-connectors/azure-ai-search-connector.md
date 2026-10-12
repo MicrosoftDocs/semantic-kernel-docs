@@ -32,17 +32,17 @@ The Azure AI Search Vector Store connector can be used to access and manage data
 | Feature Area                          | Support                                                                                                                                                             |
 | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Collection maps to                    | Azure AI Search Index                                                                                                                                               |
-| Supported key property types          | string                                                                                                                                                              |
-| Supported data property types         | <ul><li>string</li><li>int</li><li>long</li><li>double</li><li>float</li><li>bool</li><li>DateTimeOffset</li><li>*and enumerables of each of these types*</li></ul> |
+| Supported key property types          | <ul><li>string</li><li>Guid</li></ul>                                                                                                                               |
+| Supported data property types         | <ul><li>string</li><li>int</li><li>long</li><li>double</li><li>float</li><li>bool</li><li>DateTime</li><li>DateTimeOffset</li><li>DateOnly (.NET only)</li><li>*and arrays or `List<T>` of each of these types*</li></ul> |
 | Supported vector property types       | <ul><li>ReadOnlyMemory\<float\></li><li>Embedding\<float\></li><li>float[]</li></ul>                                                                                |
-| Supported index types                 | <ul><li>Hnsw</li><li>Flat</li></ul>                                                                                                                                 |
+| Supported index types                 | <ul><li>Hnsw (default)</li><li>Flat</li></ul>                                                                                                                       |
 | Supported distance functions          | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul>                                                                           |
-| Supported filter clauses              | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                                                     |
+| Supported filter clauses              | LINQ expressions: `==`, `!=`, `<`, `<=`, `>`, `>=`, `&&`, `\|\|`, `!`, `Contains` and `Any` with `Contains` over arrays and lists                                   |
 | Supports multiple vectors in a record | Yes                                                                                                                                                                 |
 | IsIndexed supported?                  | Yes                                                                                                                                                                 |
-| IsFullTextIndexed supported?          | Yes                                                                                                                                                                 |
+| IsFullTextIndexed supported?          | Yes (string properties only)                                                                                                                                        |
 | StorageName supported?                | No, use `JsonSerializerOptions` and `JsonPropertyNameAttribute` instead. [See here for more info.](#data-mapping)                                                   |
-| HybridSearch supported?               | Yes                                                                                                                                                                 |
+| HybridSearch supported?               | Yes, requires a string data property with `IsFullTextIndexed = true`                                                                                                |
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
@@ -119,6 +119,8 @@ using Microsoft.Extensions.DependencyInjection;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAzureAISearchVectorStore(new Uri(azureAISearchUri), new AzureKeyCredential(secret));
 ```
+
+Overloads that accept a `TokenCredential` (Entra ID authentication), `AzureAISearchVectorStoreOptions`, a `ServiceLifetime` and keyed registrations (`AddKeyedAzureAISearchVectorStore`) are also provided, as well as `AddAzureAISearchCollection<TRecord>` for registering a collection directly. If an `IEmbeddingGenerator` is registered in the container, the vector store and collections use it automatically. When an embedding generator is used, `IncludeVectors` is not supported. If no generator is configured, passing a `string` to `SearchAsync` or `HybridSearchAsync` sends a text query that Azure AI Search vectorizes on the service side.
 
 Extension methods that take no parameters are also provided. These require an instance of the Azure AI Search `SearchIndexClient` to be separately registered with the dependency injection container.
 
@@ -280,7 +282,7 @@ var collection = new AzureAISearchVectorStoreRecordCollection<>(searchClient, "s
 
 ## Data mapping
 
-The default mapper used by the Azure AI Search connector when mapping data from the data model to storage is the one provided by the Azure AI Search SDK.
+The default mapper used by the Azure AI Search connector when mapping data from the data model to storage is a `System.Text.Json`-based mapper provided by the connector.
 
 This mapper does a direct conversion of the list of properties on the data model to the fields in Azure AI Search and uses `System.Text.Json.JsonSerializer`
 to convert to the storage schema. This means that usage of the `JsonPropertyNameAttribute` is supported if a different storage name to the

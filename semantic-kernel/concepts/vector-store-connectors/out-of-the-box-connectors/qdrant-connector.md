@@ -33,16 +33,16 @@ The Qdrant Vector Store connector can be used to access and manage data in Qdran
 |-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
 | Collection maps to                | Qdrant collection with payload indices for filterable data fields                                                                |
 | Supported key property types      | <ul><li>ulong</li><li>Guid</li></ul>                                                                                             |
-| Supported data property types     | <ul><li>string</li><li>int</li><li>long</li><li>double</li><li>float</li><li>bool</li><li>*and enumerables of each of these types*</li></ul> |
+| Supported data property types     | <ul><li>string</li><li>int</li><li>long</li><li>double</li><li>float</li><li>bool</li><li>DateTime</li><li>DateTimeOffset</li><li>DateOnly (.NET only)</li><li>*and arrays or `List<T>` of each of these types*</li></ul> |
 | Supported vector property types   | <ul><li>ReadOnlyMemory\<float\></li><li>Embedding\<float\></li><li>float[]</li></ul>                                             |
 | Supported index types             | Hnsw                                                                                                                             |
-| Supported distance functions      | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanDistance</li><li>ManhattanDistance</li></ul>              |
-| Supported filter clauses          | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                  |
+| Supported distance functions      | <ul><li>CosineSimilarity (default)</li><li>DotProductSimilarity</li><li>EuclideanDistance</li><li>ManhattanDistance</li></ul>    |
+| Supported filter clauses          | LINQ expressions: `==`, `!=`, `<`, `<=`, `>`, `>=`, `&&`, `\|\|`, `!`, null checks, `Contains` and `Any` with `Contains` over int or string arrays |
 | Supports multiple vectors in a record | Yes (configurable)                                                                                                           |
 | IsIndexed supported?              | Yes                                                                                                                              |
-| IsFullTextIndexed supported?      | Yes                                                                                                                              |
+| IsFullTextIndexed supported?      | Yes (string properties only)                                                                                                     |
 | StorageName supported?            | Yes                                                                                                                              |
-| HybridSearch supported?           | Yes                                                                                                                              |
+| HybridSearch supported?           | Yes, requires a string data property with `IsFullTextIndexed = true`                                                             |
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
@@ -80,38 +80,26 @@ Add the Qdrant Vector Store connector NuGet package to your project.
 dotnet add package CommunityToolkit.VectorData.Qdrant
 ```
 
-You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by the connector package.
-
-```csharp
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.SemanticKernel;
-
-// Using Kernel Builder.
-var kernelBuilder = Kernel
-    .CreateBuilder();
-kernelBuilder.Services
-    .AddQdrantVectorStore("localhost");
-```
+You can add the vector store to the `IServiceCollection` dependency injection container using extension methods provided by the connector package.
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
 
-// Using IServiceCollection with ASP.NET Core.
-var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddQdrantVectorStore("localhost");
+ServiceCollection services = new();
+services.AddQdrantVectorStore("localhost", https: false);
 ```
+
+The host-only overload defaults to port `6334` and `https: true`. Use `https: false` for a local Qdrant instance that serves plain gRPC. Overloads that accept `port`, `apiKey`, `QdrantVectorStoreOptions`, `ServiceLifetime` and keyed registrations (`AddKeyedQdrantVectorStore`) are also provided, as well as `AddQdrantCollection<TKey, TRecord>` for registering a collection directly. If an `IEmbeddingGenerator` is registered in the container, the vector store and collections use it automatically.
 
 Extension methods that take no parameters are also provided. These require an instance of the `Qdrant.Client.QdrantClient` class to be separately registered with the dependency injection container.
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.SemanticKernel;
 using Qdrant.Client;
 
-// Using Kernel Builder.
-var kernelBuilder = Kernel.CreateBuilder();
-kernelBuilder.Services.AddSingleton<QdrantClient>(sp => new QdrantClient("localhost"));
-kernelBuilder.Services.AddQdrantVectorStore();
+ServiceCollection services = new();
+services.AddSingleton<QdrantClient>(sp => new QdrantClient("localhost"));
+services.AddQdrantVectorStore();
 ```
 
 ```csharp
@@ -163,7 +151,7 @@ unnamed vector* mode, since the vector is stored under a fixed name.
 
 The property name override is done by setting the `StorageName` option via the data model attributes or record definition.
 
-Here is an example of a data model with `StorageName` set on its attributes and how that will be represented in Qdrant.
+Here is an example of a data model with `StorageName` set on its attributes and how that will be represented in Qdrant, when using named vectors mode (`HasNamedVectors = true` on `QdrantVectorStoreOptions` or `QdrantCollectionOptions`). In the default single unnamed vector mode, the vector `StorageName` is ignored.
 
 ```csharp
 using Microsoft.Extensions.VectorData;
@@ -323,7 +311,7 @@ new Hotel
     HotelId = 1,
     HotelName = "Hotel Happy",
     Description = "A place where everyone can be happy.",
-    HotelNameEmbedding = new float[4] { 0.9f, 0.5f, 0.5f, 0.5f }
+    HotelNameEmbedding = new float[4] { 0.9f, 0.5f, 0.5f, 0.5f },
     DescriptionEmbedding = new float[4] { 0.9f, 0.1f, 0.1f, 0.1f }
 };
 ```

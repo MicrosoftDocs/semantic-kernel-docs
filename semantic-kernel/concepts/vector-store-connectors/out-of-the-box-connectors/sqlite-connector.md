@@ -38,14 +38,14 @@ The SQLite Vector Store connector can be used to access and manage data in SQLit
 | Feature Area                      | Support                                                                                                                          |
 |-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
 | Collection maps to                | SQLite table                                                                                                                     |
-| Supported key property types      | <ul><li>int</li><li>long</li><li>string</li></ul>                                                                                |
-| Supported data property types     | <ul><li>int</li><li>long</li><li>short</li><li>string</li><li>bool</li><li>float</li><li>double</li><li>byte[]</li></ul>         |
+| Supported key property types      | <ul><li>int</li><li>long</li><li>string</li><li>Guid</li></ul>                                                                   |
+| Supported data property types     | <ul><li>int</li><li>long</li><li>short</li><li>string</li><li>bool</li><li>float</li><li>double</li><li>byte[]</li><li>Guid</li><li>DateTime</li><li>DateTimeOffset</li><li>DateOnly (.NET only)</li><li>TimeOnly (.NET only)</li></ul> |
 | Supported vector property types   | <ul><li>ReadOnlyMemory\<float\></li><li>Embedding\<float\></li><li>float[]</li></ul>                                             |
 | Supported index types             | N/A                                                                                                                              |
-| Supported distance functions      | <ul><li>CosineDistance</li><li>ManhattanDistance</li><li>EuclideanDistance</li></ul>                                             |
-| Supported filter clauses          | <ul><li>EqualTo</li></ul>                                                                                                        |
+| Supported distance functions      | <ul><li>CosineDistance (default)</li><li>ManhattanDistance</li><li>EuclideanDistance</li></ul>                                   |
+| Supported filter clauses          | LINQ expressions: comparisons, `&&`, `\|\|`, `!`, and `Contains` over an inline or captured array. `Contains` over an array property and `Any` are not supported. |
 | Supports multiple vectors in a record | Yes                                                                                                                          |
-| IsIndexed    supported?           | No                                                                                                                               |
+| IsIndexed    supported?           | Yes                                                                                                                              |
 | IsFullTextIndexed supported?      | No                                                                                                                               |
 | StorageName supported?            | Yes                                                                                                                              |
 | HybridSearch supported?           | No                                                                                                                               |
@@ -68,13 +68,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSqliteVectorStore(_ => "Data Source=:memory:");
 ```
 
-```csharp
-using Microsoft.Extensions.DependencyInjection;
-
-// Using IServiceCollection with ASP.NET Core.
-var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddSqliteVectorStore(_ => "Data Source=:memory:")
-```
+Overloads that accept `SqliteVectorStoreOptions`, a `ServiceLifetime` and keyed registrations are also provided, as well as `AddSqliteCollection<TKey, TRecord>` for registering a collection directly. If an `IEmbeddingGenerator` is registered in the container, the vector store and collections use it automatically. The sqlite-vec extension is loaded automatically, so no manual loading is needed.
 
 You can construct a SQLite Vector Store instance directly.
 
@@ -89,7 +83,7 @@ It is possible to construct a direct reference to a named collection.
 ```csharp
 using CommunityToolkit.VectorData.SqliteVec;
 
-var collection = new SqliteCollection<string, Hotel>("Data Source=:memory:", "skhotels");
+var collection = new SqliteCollection<long, Hotel>("Data Source=:memory:", "skhotels");
 ```
 
 ## Data mapping
@@ -98,7 +92,7 @@ The SQLite Vector Store connector provides a default mapper when mapping from th
 This mapper does a direct conversion of the list of properties on the data model to the columns in SQLite.
 
 With the vector search extension, vectors are stored in virtual tables, separately from key and data properties.
-By default, the virtual table with vectors will use the same name as the table with key and data properties, but with a `vec_` prefix. For example, if the collection name in `SqliteCollection` is `skhotels`, the name of the virtual table with vectors will be `vec_skhotels`. It's possible to override the virtual table name by using the `SqliteVectorStoreOptions.VectorVirtualTableName` or `SqliteCollectionOptions<TRecord>.VectorVirtualTableName` properties.
+By default, the virtual table with vectors will use the same name as the table with key and data properties, but with a `vec_` prefix. For example, if the collection name in `SqliteCollection` is `skhotels`, the name of the virtual table with vectors will be `vec_skhotels`. It's possible to override the virtual table name by using the `SqliteVectorStoreOptions.VectorVirtualTableName` or `SqliteCollectionOptions.VectorVirtualTableName` properties.
 
 ### Property name override
 
@@ -113,7 +107,7 @@ using Microsoft.Extensions.VectorData;
 public class Hotel
 {
     [VectorStoreKey]
-    public ulong HotelId { get; set; }
+    public long HotelId { get; set; }
 
     [VectorStoreData(StorageName = "hotel_name")]
     public string? HotelName { get; set; }
@@ -121,21 +115,21 @@ public class Hotel
     [VectorStoreData(StorageName = "hotel_description")]
     public string? Description { get; set; }
 
-    [VectorStoreVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineDistance)]
+    [VectorStoreVector(4, DistanceFunction = DistanceFunction.CosineDistance)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```
 
-```
-CREATE TABLE Hotels (
-    HotelId INTEGER PRIMARY KEY,
-    hotel_name TEXT,
-    hotel_description TEXT
+```sql
+CREATE TABLE "Hotels" (
+    "HotelId" INTEGER PRIMARY KEY,
+    "hotel_name" TEXT,
+    "hotel_description" TEXT
 );
 
-CREATE VIRTUAL TABLE vec_Hotels (
-    HotelId INTEGER PRIMARY KEY,
-    DescriptionEmbedding FLOAT[4] distance_metric=cosine
+CREATE VIRTUAL TABLE "vec_Hotels" USING vec0(
+    "HotelId" INTEGER PRIMARY KEY,
+    "DescriptionEmbedding" FLOAT[4] distance_metric=cosine
 );
 ```
 

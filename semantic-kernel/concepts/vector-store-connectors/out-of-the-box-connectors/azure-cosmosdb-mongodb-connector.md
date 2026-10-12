@@ -32,12 +32,12 @@ The Azure DocumentDB Vector Store connector can be used to access and manage dat
 | Feature Area                          | Support                                                                                                                                                                       |
 | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Collection maps to                    | Azure DocumentDB Collection + Index                                                                                                                            |
-| Supported key property types          | string                                                                                                                                                                        |
-| Supported data property types         | <ul><li>string</li><li>int</li><li>long</li><li>double</li><li>float</li><li>decimal</li><li>bool</li><li>DateTime</li><li>*and enumerables of each of these types*</li></ul> |
+| Supported key property types          | <ul><li>string</li><li>int</li><li>long</li><li>Guid</li><li>ObjectId</li></ul>                                                                                               |
+| Supported data property types         | <ul><li>string</li><li>int</li><li>long</li><li>double</li><li>float</li><li>decimal</li><li>bool</li><li>DateTime</li><li>DateTimeOffset</li><li>DateOnly (.NET only)</li><li>*and arrays or `List<T>` of each of these types*</li></ul> |
 | Supported vector property types       | <ul><li>ReadOnlyMemory\<float\></li><li>Embedding\<float\></li><li>float[]</li></ul>                                                                                                    |
-| Supported index types                 | <ul><li>Hnsw</li><li>IvfFlat</li></ul>                                                                                                                                        |
-| Supported distance functions          | <ul><li>CosineDistance</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul>                                                                                       |
-| Supported filter clauses              | <ul><li>EqualTo</li></ul>                                                                                                                                                     |
+| Supported index types                 | <ul><li>Hnsw</li><li>IvfFlat (default)</li></ul>                                                                                                                              |
+| Supported distance functions          | <ul><li>CosineDistance (default)</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul>                                                                             |
+| Supported filter clauses              | LINQ expressions: `==`, `!=`, `<`, `<=`, `>`, `>=`, `&&`, `\|\|`, `!` (on `==`, `!=` and `Contains`), and `Contains` over an inline or captured collection              |
 | Supports multiple vectors in a record | Yes                                                                                                                                                                           |
 | IsIndexed supported?                  | Yes                                                                                                                                                                           |
 | IsFullTextIndexed supported?          | No                                                                                                                                                                            |
@@ -100,7 +100,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDocumentDBVectorStore(connectionString, databaseName);
 ```
 
-Extension methods that take no parameters are also provided. These require an instance of `MongoDB.Driver.IMongoDatabase` to be separately registered with the dependency injection container.
+Overloads that accept `DocumentDBVectorStoreOptions`, a `ServiceLifetime` and keyed registrations (`AddKeyedDocumentDBVectorStore`) are also provided, as well as `AddDocumentDBCollection<TRecord>` for registering a collection directly. If an `IEmbeddingGenerator` is registered in the container, the vector store and collections use it automatically. `DocumentDBCollectionOptions` lets you tune the index with `NumLists`, `EfConstruction` and `EfSearch`.
+
+Extension methods that don't take a connection string are also provided. These require an instance of `MongoDB.Driver.IMongoDatabase` to be separately registered with the dependency injection container.
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
@@ -189,7 +191,7 @@ public class Hotel
     public string HotelName { get; set; }
 
     [BsonElement("hotel_description")]
-    [VectorStoreData(IsFullTextIndexed = true)]
+    [VectorStoreData]
     public string Description { get; set; }
 
     [BsonElement("hotel_description_embedding")]
