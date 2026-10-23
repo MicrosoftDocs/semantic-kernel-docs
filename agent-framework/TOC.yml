@@ -321,6 +321,8 @@ items:
           href: integrations/by-component/ui/ag-ui/state-management.md
         - name: Testing with Dojo
           href: integrations/by-component/ui/ag-ui/testing-with-dojo.md
+        - name: Microsoft Teams with CopilotKit Channels
+          href: integrations/by-component/ui/ag-ui/channels.md
       - name: ChatKit
         href: integrations/by-component/ui/chatkit.md
       - name: DevUI

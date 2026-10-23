@@ -108,6 +108,7 @@ dotnet add package Microsoft.Agents.AI.Hosting.AGUI.AspNetCore --prerelease
 - [Agent Framework overview](../../../../overview/index.md)
 - [AG-UI protocol documentation](https://docs.ag-ui.com/introduction)
 - [Microsoft Agent Framework repository](https://github.com/microsoft/agent-framework)
+- [Microsoft Teams with CopilotKit Channels](channels.md)
 
 ::: zone-end
 
@@ -211,6 +212,7 @@ To get started with AG-UI integration:
 4. **[Human-in-the-Loop](human-in-the-loop.md)**: Implement approval workflows
 5. **[MCP Apps Compatibility](mcp-apps.md)**: Use MCP Apps with your AG-UI endpoint
 6. **[State Management](state-management.md)**: Synchronize state between client and server
+7. **[Microsoft Teams with CopilotKit Channels](channels.md)**: Run the same AG-UI endpoint as a bot in Microsoft Teams and other messaging platforms
 
 ## Additional Resources
 
