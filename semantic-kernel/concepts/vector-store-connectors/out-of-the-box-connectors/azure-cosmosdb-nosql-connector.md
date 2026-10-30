@@ -1,6 +1,6 @@
 ---
-title: Using the Semantic Kernel Azure CosmosDB NoSQL Vector Store connector (Preview)
-description: Contains information on how to use a Semantic Kernel Vector store connector to access and manipulate data in Azure CosmosDB NoSQL.
+title: Using the Semantic Kernel Azure CosmosDB Vector Store connector (Preview)
+description: Contains information on how to use a Semantic Kernel Vector store connector to access and manipulate data in Azure CosmosDB.
 zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: article
@@ -8,7 +8,7 @@ ms.author: westey
 ms.date: 09/23/2024
 ms.service: semantic-kernel
 ---
-# Using the Azure CosmosDB NoSQL Vector Store connector (Preview)
+# Using the Azure CosmosDB Vector Store connector (Preview)
 
 ::: zone pivot="programming-language-python"
 
@@ -27,17 +27,17 @@ ms.service: semantic-kernel
 
 ## Overview
 
-The Azure CosmosDB NoSQL Vector Store connector can be used to access and manage data in Azure CosmosDB NoSQL. The connector has the following characteristics.
+The Azure CosmosDB Vector Store connector can be used to access and manage data in Azure CosmosDB. The connector has the following characteristics.
 
 | Feature Area                          | Support                                                                                                                                                             |
 | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Collection maps to                    | Azure Cosmos DB NoSQL Container                                                                                                                                     |
-| Supported key property types          | <ul><li>string</li><li>CosmosKey</li></ul>                                                                                                     |
-| Supported data property types         | <ul><li>string</li><li>int</li><li>long</li><li>double</li><li>float</li><li>bool</li><li>DateTimeOffset</li><li>*and enumerables of each of these types*</li></ul> |
+| Collection maps to                    | Azure Cosmos DB Container                                                                                                                                           |
+| Supported key property types          | <ul><li>string</li><li>Guid</li><li>CosmosKey</li></ul>                                                                                                                  |
+| Supported data property types         | <ul><li>string</li><li>int</li><li>long</li><li>double</li><li>float</li><li>bool</li><li>DateTime</li><li>DateTimeOffset</li><li>DateOnly (.NET only)</li><li>*and arrays or `List<T>` of each of these types*</li></ul> |
 | Supported vector property types       | <ul><li>ReadOnlyMemory\<float\></li><li>Embedding\<float\></li><li>float[]</li><li>ReadOnlyMemory\<byte\></li><li>Embedding\<byte\></li><li>byte[]</li><li>ReadOnlyMemory\<sbyte\></li><li>Embedding\<sbyte\></li><li>sbyte[]</li></ul>                             |
-| Supported index types                 | <ul><li>Flat</li><li>QuantizedFlat</li><li>DiskAnn</li></ul>                                                                                                        |
+| Supported index types                 | <ul><li>Flat</li><li>QuantizedFlat</li><li>DiskAnn (default)</li></ul>                                                                                              |
 | Supported distance functions          | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul>                                                                           |
-| Supported filter clauses              | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                                                     |
+| Supported filter clauses              | LINQ expressions: `==`, `!=`, `<`, `<=`, `>`, `>=`, `&&`, `\|\|`, `Contains` and `Any` with `Contains` over arrays and lists                                         |
 | Supports multiple vectors in a record | Yes                                                                                                                                                                 |
 | IsIndexed supported?                  | Yes                                                                                                                                                                 |
 | IsFullTextIndexed supported?          | Yes                                                                                                                                                                 |
@@ -46,7 +46,7 @@ The Azure CosmosDB NoSQL Vector Store connector can be used to access and manage
 
 ## Limitations
 
-When initializing `CosmosClient` manually, it is necessary to specify `CosmosClientOptions.UseSystemTextJsonSerializerWithOptions` due to limitations in the default serializer. This option can be set to `JsonSerializerOptions.Default` or customized with other serializer options to meet specific configuration needs.
+When initializing `CosmosClient` manually, it is necessary to specify `CosmosClientOptions.UseSystemTextJsonSerializerWithOptions` due to limitations in the default serializer. This option can be set to `JsonSerializerOptions.Default` or customized with other serializer options to meet specific configuration needs. The connection string based constructors and `AddCosmosVectorStore(connectionString, databaseName)` configure this option automatically.
 
 ```csharp
 var cosmosClient = new CosmosClient(connectionString, new CosmosClientOptions()
@@ -131,7 +131,7 @@ builder.Services.AddSingleton<Database>(
 builder.Services.AddCosmosVectorStore();
 ```
 
-You can construct an Azure CosmosDB NoSQL Vector Store instance directly.
+You can construct an Azure CosmosDB Vector Store instance directly.
 
 ```csharp
 using System.Text.Json;
@@ -175,7 +175,7 @@ The Azure CosmosDB Vector Store connector provides a default mapper when mapping
 
 This mapper does a direct conversion of the list of properties on the data model to the fields in Azure CosmosDB and uses `System.Text.Json.JsonSerializer`
 to convert to the storage schema. This means that usage of the `JsonPropertyNameAttribute` is supported if a different storage name to the
-data model property name is required. The only exception is the key of the record which is mapped to a database field named `id`, since all CosmosDB NoSQL
+data model property name is required. The only exception is the key of the record which is mapped to a database field named `id`, since all CosmosDB
 records must use this name for ids.
 
 It is also possible to use a custom `JsonSerializerOptions` instance with a customized property naming policy. To enable this, the `JsonSerializerOptions`
@@ -230,28 +230,27 @@ public class Hotel
     "id": "1",
     "HOTEL_NAME": "Hotel Happy",
     "DESCRIPTION": "A place where everyone can be happy.",
-    "HOTEL_DESCRIPTION_EMBEDDING": [0.9, 0.1, 0.1, 0.1],
+    "HOTEL_DESCRIPTION_EMBEDDING": [0.9, 0.1, 0.1, 0.1]
 }
 ```
 
 ## Using partition key
 
-In the Azure Cosmos DB connector, the partition key property defaults to the key property - `id`. The `PartitionKeyPropertyName` property in `CosmosCollectionOptions` class allows specifying a different property as the partition key.
+In the Azure Cosmos DB connector, the partition key property defaults to the key property - `id`. The `PartitionKeyProperties` property in `CosmosCollectionOptions` class allows specifying a different property (or up to three properties, for hierarchical partition keys) as the partition key. Partition key properties must be of type `string`, `bool`, `double` or `Guid`.
 
-The `CosmosCollection` class supports two key types: `string` and `CosmosKey`. The `CosmosKey` consists of `RecordKey` and `PartitionKey`.
+The `CosmosCollection` class supports three key types: `string`, `Guid` and `CosmosKey`. The `CosmosKey` consists of `DocumentId` and `PartitionKey`.
 
-If the partition key property is not set (and the default key property is used), `string` keys can be used for operations with database records. However, if a partition key property is specified, it is recommended to use `CosmosKey` to provide both the key and partition key values.
+If the partition key property is not set (and the default key property is used), `string` or `Guid` keys can be used for operations with database records. However, if a partition key property is specified, you must use `CosmosKey` to provide both the key and partition key values.
 
 Specify partition key property name:
 
 ```csharp
 var options = new CosmosCollectionOptions
 {
-    PartitionKeyPropertyName = nameof(Hotel.HotelName)
+    PartitionKeyProperties = [nameof(Hotel.HotelName)]
 };
 
-var collection = new CosmosCollection<string, Hotel>(database, "collection-name", options)
-    as VectorStoreCollection<CosmosKey, Hotel>;
+var collection = new CosmosCollection<CosmosKey, Hotel>(database, "collection-name", options);
 ```
 
 Get with partition key:
@@ -265,11 +264,11 @@ var record = await collection.GetAsync(new CosmosKey("hotel-id", "hotel-name"));
 
 ## Overview
 
-The Azure CosmosDB NoSQL Vector Store connector can be used to access and manage data in Azure CosmosDB NoSQL. The connector has the following characteristics.
+The Azure CosmosDB Vector Store connector can be used to access and manage data in Azure CosmosDB. The connector has the following characteristics.
 
 | Feature Area                          | Support                                                                                                                                                           |
 | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Collection maps to                    | Azure Cosmos DB NoSQL Container                                                                                                                                   |
+| Collection maps to                    | Azure Cosmos DB Container                                                                                                                                         |
 | Supported key property types          | <ul><li>string</li><li>CosmosNoSqlCompositeKey</li></ul>                                                                                                   |
 | Supported data property types         | <ul><li>string</li><li>int</li><li>long</li><li>double</li><li>float</li><li>bool</li><li>DateTimeOffset</li><li>*and iterables of each of these types*</li></ul> |
 | Supported vector property types       | <ul><li>list[float]</li><li>list[int]</li><li>ndarray</li></ul>                                                                                                   |
@@ -289,7 +288,7 @@ Add the Azure extra package to your project.
 pip install semantic-kernel[azure]
 ```
 
-Next you can create a Azure CosmosDB NoSQL Vector Store instance directly. This reads certain environment variables to configure the connection to Azure CosmosDB NoSQL:
+Next you can create a Azure CosmosDB Vector Store instance directly. This reads certain environment variables to configure the connection to Azure CosmosDB:
 
 - AZURE_COSMOS_DB_NO_SQL_URL
 - AZURE_COSMOS_DB_NO_SQL_DATABASE_NAME
@@ -358,7 +357,7 @@ collection = CosmosNoSqlCollection(
 
 ## Using partition key
 
-In the Azure Cosmos DB for NoSQL connector, the partition key property defaults to the key property - `id`. You can also supply a value for the partition key in the constructor.
+In the Azure CosmosDB connector, the partition key property defaults to the key property - `id`. You can also supply a value for the partition key in the constructor.
 
 ```python
 from semantic_kernel.connectors.azure_cosmos_db import CosmosNoSqlCollection

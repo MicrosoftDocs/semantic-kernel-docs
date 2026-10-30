@@ -97,7 +97,6 @@ In the following sample, we show how to use these approaches to construct Langch
 
 For each vector store, there is a factory class that shows how to construct the Langchain compatible Vector Store. See e.g.
 
-- [PineconeFactory](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Memory/VectorStoreLangchainInterop/PineconeFactory.cs)
 - [RedisFactory](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/Concepts/Memory/VectorStoreLangchainInterop/RedisFactory.cs)
 
 ::: zone-end

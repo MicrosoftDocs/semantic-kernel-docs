@@ -10,12 +10,6 @@ ms.service: semantic-kernel
 ---
 # Using the Azure DocumentDB (with MongoDB compatibility) Vector Store connector (Preview)
 
-::: zone pivot="programming-language-csharp"
-
-> [!WARNING]
-> The Azure DocumentDB Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
-
-::: zone-end
 ::: zone pivot="programming-language-python"
 
 > [!WARNING]
@@ -31,19 +25,19 @@ ms.service: semantic-kernel
 
 ## Overview
 
-The Azure CosmosDB MongoDB Vector Store connector can be used to access and manage data in Azure DocumentDB. The connector has the following characteristics.
+The Azure DocumentDB Vector Store connector can be used to access and manage data in Azure DocumentDB. The connector has the following characteristics.
 
 ::: zone pivot="programming-language-csharp"
 
 | Feature Area                          | Support                                                                                                                                                                       |
 | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Collection maps to                    | Azure DocumentDB Collection + Index                                                                                                                            |
-| Supported key property types          | string                                                                                                                                                                        |
-| Supported data property types         | <ul><li>string</li><li>int</li><li>long</li><li>double</li><li>float</li><li>decimal</li><li>bool</li><li>DateTime</li><li>*and enumerables of each of these types*</li></ul> |
+| Supported key property types          | <ul><li>string</li><li>int</li><li>long</li><li>Guid</li><li>ObjectId</li></ul>                                                                                               |
+| Supported data property types         | <ul><li>string</li><li>int</li><li>long</li><li>double</li><li>float</li><li>decimal</li><li>bool</li><li>DateTime</li><li>DateTimeOffset</li><li>DateOnly (.NET only)</li><li>*and arrays or `List<T>` of each of these types*</li></ul> |
 | Supported vector property types       | <ul><li>ReadOnlyMemory\<float\></li><li>Embedding\<float\></li><li>float[]</li></ul>                                                                                                    |
-| Supported index types                 | <ul><li>Hnsw</li><li>IvfFlat</li></ul>                                                                                                                                        |
-| Supported distance functions          | <ul><li>CosineDistance</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul>                                                                                       |
-| Supported filter clauses              | <ul><li>EqualTo</li></ul>                                                                                                                                                     |
+| Supported index types                 | <ul><li>Hnsw</li><li>IvfFlat (default)</li></ul>                                                                                                                              |
+| Supported distance functions          | <ul><li>CosineDistance (default)</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul>                                                                             |
+| Supported filter clauses              | LINQ expressions: `==`, `!=`, `<`, `<=`, `>`, `>=`, `&&`, `\|\|`, `!` (on `==`, `!=` and `Contains`), and `Contains` over an inline or captured collection              |
 | Supports multiple vectors in a record | Yes                                                                                                                                                                           |
 | IsIndexed supported?                  | Yes                                                                                                                                                                           |
 | IsFullTextIndexed supported?          | No                                                                                                                                                                            |
@@ -79,7 +73,7 @@ This connector is compatible with Azure DocumentDB and is *not* designed to be c
 
 ## Getting started
 
-Add the Azure CosmosDB MongoDB Vector Store connector NuGet package to your project.
+Add the Azure DocumentDB Vector Store connector NuGet package to your project.
 
 ```dotnetcli
 dotnet add package CommunityToolkit.VectorData.AzureDocumentDB
@@ -103,10 +97,12 @@ using Microsoft.Extensions.DependencyInjection;
 
 // Using IServiceCollection with ASP.NET Core.
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddCosmosMongoVectorStore(connectionString, databaseName);
+builder.Services.AddDocumentDBVectorStore(connectionString, databaseName);
 ```
 
-Extension methods that take no parameters are also provided. These require an instance of `MongoDB.Driver.IMongoDatabase` to be separately registered with the dependency injection container.
+Overloads that accept `DocumentDBVectorStoreOptions`, a `ServiceLifetime` and keyed registrations (`AddKeyedDocumentDBVectorStore`) are also provided, as well as `AddDocumentDBCollection<TRecord>` for registering a collection directly. If an `IEmbeddingGenerator` is registered in the container, the vector store and collections use it automatically. `DocumentDBCollectionOptions` lets you tune the index with `NumLists`, `EfConstruction` and `EfSearch`.
+
+Extension methods that don't take a connection string are also provided. These require an instance of `MongoDB.Driver.IMongoDatabase` to be separately registered with the dependency injection container.
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
@@ -121,7 +117,7 @@ kernelBuilder.Services.AddSingleton<IMongoDatabase>(
         var mongoClient = new MongoClient(connectionString);
         return mongoClient.GetDatabase(databaseName);
     });
-kernelBuilder.Services.AddCosmosMongoVectorStore();
+kernelBuilder.Services.AddDocumentDBVectorStore();
 ```
 
 ```csharp
@@ -136,40 +132,40 @@ builder.Services.AddSingleton<IMongoDatabase>(
         var mongoClient = new MongoClient(connectionString);
         return mongoClient.GetDatabase(databaseName);
     });
-builder.Services.AddCosmosMongoVectorStore();
+builder.Services.AddDocumentDBVectorStore();
 ```
 
-You can construct an Azure CosmosDB MongoDB Vector Store instance directly.
+You can construct an Azure DocumentDB Vector Store instance directly.
 
 ```csharp
-using CommunityToolkit.VectorData.CosmosMongoDB;
+using CommunityToolkit.VectorData.AzureDocumentDB;
 using MongoDB.Driver;
 
 var mongoClient = new MongoClient(connectionString);
 var database = mongoClient.GetDatabase(databaseName);
-var vectorStore = new CosmosMongoVectorStore(database);
+var vectorStore = new DocumentDBVectorStore(database);
 ```
 
 It is possible to construct a direct reference to a named collection.
 
 ```csharp
-using CommunityToolkit.VectorData.CosmosMongoDB;
+using CommunityToolkit.VectorData.AzureDocumentDB;
 using MongoDB.Driver;
 
 var mongoClient = new MongoClient(connectionString);
 var database = mongoClient.GetDatabase(databaseName);
-var collection = new CosmosMongoCollection<ulong, Hotel>(
+var collection = new DocumentDBCollection<string, Hotel>(
     database,
     "skhotels");
 ```
 
 ## Data mapping
 
-The Azure CosmosDB MongoDB Vector Store connector provides a default mapper when mapping data from the data model to storage.
+The Azure DocumentDB Vector Store connector provides a default mapper when mapping data from the data model to storage.
 
-This mapper does a direct conversion of the list of properties on the data model to the fields in Azure CosmosDB MongoDB and uses `MongoDB.Bson.Serialization`
+This mapper does a direct conversion of the list of properties on the data model to the fields in Azure DocumentDB and uses `MongoDB.Bson.Serialization`
 to convert to the storage schema. This means that usage of the `MongoDB.Bson.Serialization.Attributes.BsonElement` is supported if a different storage name to the
-data model property name is required. The only exception is the key of the record which is mapped to a database field named `_id`, since all CosmosDB MongoDB
+data model property name is required. The only exception is the key of the record which is mapped to a database field named `_id`, since all Azure DocumentDB
 records must use this name for ids.
 
 ### Property name override
@@ -183,18 +179,19 @@ Here is an example of a data model with `BsonElement` set.
 
 ```csharp
 using Microsoft.Extensions.VectorData;
+using MongoDB.Bson.Serialization.Attributes;
 
 public class Hotel
 {
     [VectorStoreKey]
-    public ulong HotelId { get; set; }
+    public string HotelId { get; set; }
 
     [BsonElement("hotel_name")]
     [VectorStoreData(IsIndexed = true)]
     public string HotelName { get; set; }
 
     [BsonElement("hotel_description")]
-    [VectorStoreData(IsFullTextIndexed = true)]
+    [VectorStoreData]
     public string Description { get; set; }
 
     [BsonElement("hotel_description_embedding")]
@@ -208,7 +205,7 @@ public class Hotel
 
 ## Getting started
 
-Add the Azure CosmosDB MongoDB Vector Store dependencies to your environment. Because the Azure CosmosDB MongoDB connector is built on the MongoDB Atlas connector and uses the same client as that one, you need to install with these extras:
+Add the Azure DocumentDB Vector Store dependencies to your environment. Because the Azure DocumentDB connector is built on the MongoDB Atlas connector and uses the same client as that one, you need to install with these extras:
 
 ```bash
 pip install semantic-kernel[azure, mongo]
@@ -249,7 +246,7 @@ collection = CosmosMongoCollection(
 
 ## Serialization
 
-Since the Azure CosmosDB for MongoDB  connector needs a simple dict with the fields corresponding to the index as the input, the serialization is quite easy, it only uses a predetermined key `_id`, so we replace the key of the data model with that if it is not already `_id`.
+Since the Azure DocumentDB connector needs a simple dict with the fields corresponding to the index as the input, the serialization is quite easy, it only uses a predetermined key `_id`, so we replace the key of the data model with that if it is not already `_id`.
 
 For more details on this concept see the [serialization documentation](./../serialization.md).
 

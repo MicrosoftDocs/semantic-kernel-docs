@@ -5,9 +5,21 @@ zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: article
 ms.author: westey
-ms.date: 07/08/2024
+ms.date: 10/30/2026
 ms.service: semantic-kernel
 ---
+
+<!--
+  Language parity table - keep in sync when adding/removing sections.
+
+  | Section             | C# | Python | Java | Notes                                    |
+  |---------------------|:--:|:------:|:----:|------------------------------------------|
+  | Connector guidance  | ✅ |   ✅   |  ✅  | Shared                                   |
+  | Connector catalog   | ✅ |   ✅   |  ✅  | Availability varies by language          |
+  | Milvus connector    | ✅ |   ❌   |  ❌  | .NET Community Toolkit provider for C#   |
+  | Preview warning     | ❌ |   ❌   |  ✅  | Java-specific                            |
+-->
+
 # Out-of-the-box Vector Store connectors
 
 ::: zone pivot="programming-language-csharp"
@@ -23,36 +35,34 @@ ms.service: semantic-kernel
 
 ::: zone-end
 
-Semantic Kernel provides a number of out-of-the-box Vector Store integrations making it easy to get started with using Vector Stores. It also allows you to experiment with a free or locally hosted Vector Store and then easily switch to a service when scale requires it.
+A number of out-of-the-box Vector Store integrations exist, making it easy to get started with using Vector Stores. This also allows you to experiment with a free or locally hosted Vector Store and then easily switch to a service when scale requires it.
 
 > [!IMPORTANT]
-> Semantic Kernel Vector Store connectors are built by a variety of sources. Not all connectors are maintained as part of the Microsoft Semantic Kernel Project. When considering a connector, be sure to evaluate quality, licensing, support, etc. to ensure they meet your requirements. Also make sure you review each provider's documentation for detailed version compatibility information.
+> Vector Store integrations are built by a variety of sources. Not all integrations are maintained as part of the Microsoft Semantic Kernel Project. When considering an integration, be sure to evaluate quality, licensing, support, etc. to ensure they meet your requirements. Also make sure you review each provider's documentation for detailed version compatibility information.
 > [!IMPORTANT]
-> Some connectors are internally using Database SDKs that are not officially supported by Microsoft or by the Database provider. The *Uses Officially supported SDK* column lists which are using officially supported SDKs and which are not.
+> Some integrations are internally using Database SDKs that are not officially supported by Microsoft or by the Database provider. The *Uses Officially supported SDK* column lists which are using officially supported SDKs and which are not.
 
 ::: zone pivot="programming-language-csharp"
 
 | Vector Store Connectors                                            |             C#               | Uses officially supported SDK  |        Maintainer / Vendor        |
 | ------------------------------------------------------------------ | :--------------------------: | :----------------------------: | :-------------------------------: |
-| [Azure AI Search](./azure-ai-search-connector.md)                  |             ✅              |               ✅               |              Microsoft            | 
-| [Azure DocumentDB](./azure-cosmosdb-mongodb-connector.md) |             ✅              |               ✅               |              Microsoft            |
-| [Cosmos DB No SQL](./azure-cosmosdb-nosql-connector.md)            |             ✅              |               ✅               |              Microsoft            | 
+| [Azure AI Search](./azure-ai-search-connector.md)                  |             ✅              |               ✅               |     .NET Community Toolkit        |
+| [Azure DocumentDB](./azure-cosmosdb-mongodb-connector.md)          |             ✅              |               ✅               |     .NET Community Toolkit        |
+| [Azure CosmosDB](./azure-cosmosdb-nosql-connector.md)              |             ✅              |               ✅               |     .NET Community Toolkit        |
+| [Chroma](./chroma-connector.md)                                    |             ✅              |               ❌               |     .NET Community Toolkit        |
 | [Couchbase](./couchbase-connector.md)                              |             ✅              |               ✅               |             Couchbase             |
 | [Elasticsearch](./elasticsearch-connector.md)                      |             ✅              |               ✅               |              Elastic              |
-| Chroma                                                             |          Planned             |                                |                                   |
-| [In-Memory](./inmemory-connector.md)                               |             ✅              |              N/A                |              Microsoft            | 
-| Milvus                                                             |          Planned             |                                |                                   |
+| [In-Memory](./inmemory-connector.md)                               |             ✅              |              N/A                |     .NET Community Toolkit        |
+| [Milvus](./milvus-connector.md)                                    |             ✅              |               ✅               |     .NET Community Toolkit        |
 | [MongoDB](./mongodb-connector.md)                                  |             ✅              |               ✅               |              Microsoft            | 
-| [Neon Serverless Postgres](https://neon.com/) |Use [Postgres Connector](./postgres-connector.md)  |               ✅               |              Microsoft            | 
 | [Oracle](./oracle-connector.md)                                    |             ✅              |               ✅               |              Oracle               |
-| [Pinecone](./pinecone-connector.md)                                |             ✅              |               ❌               |              Microsoft            | 
-| [Postgres](./postgres-connector.md)                                |             ✅              |               ✅               |              Microsoft            | 
-| [Qdrant](./qdrant-connector.md)                                    |             ✅              |               ✅               |              Microsoft            | 
-| [Redis](./redis-connector.md)                                      |             ✅              |               ✅               |              Microsoft            | 
-| [SQL Server](./sql-connector.md)                                   |             ✅              |               ✅               |              Microsoft            | 
-| [SQLite](./sqlite-connector.md)                                    |             ✅              |               ✅               |              Microsoft            | 
+| [Postgres](./postgres-connector.md)                                |             ✅              |               ✅               |     .NET Community Toolkit        |
+| [Qdrant](./qdrant-connector.md)                                    |             ✅              |               ✅               |     .NET Community Toolkit        |
+| [Redis](./redis-connector.md)                                      |             ✅              |               ✅               |     .NET Community Toolkit        |
+| [SQL Server](./sql-connector.md)                                   |             ✅              |               ✅               |     .NET Community Toolkit        |
+| [SQLite](./sqlite-connector.md)                                    |             ✅              |               ✅               |     .NET Community Toolkit        |
 | [Volatile (In-Memory)](./volatile-connector.md)                    | Deprecated (use In-Memory)   |              N/A               |              Microsoft            | 
-| [Weaviate](./weaviate-connector.md)                                |             ✅              |               ✅               |              Microsoft            | 
+| [Weaviate](./weaviate-connector.md)                                |             ✅              |               ✅               |     .NET Community Toolkit        | 
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
@@ -60,8 +70,8 @@ Semantic Kernel provides a number of out-of-the-box Vector Store integrations ma
 | Vector Store Connectors                                            | Python  |       Uses officially supported SDK        |        Maintainer / Vendor        |
 | ------------------------------------------------------------------ | :-----: | :----------------------------------------: | :-------------------------------: |
 | [Azure AI Search](./azure-ai-search-connector.md)                  |    ✅    |                     ✅                      | Microsoft Semantic Kernel Project |
-| [Azure DocumentDB](./azure-cosmosdb-mongodb-connector.md) |    ✅    |                     ✅                      | Microsoft Semantic Kernel Project |
-| [Cosmos DB No SQL](./azure-cosmosdb-nosql-connector.md)            |    ✅    |                     ✅                      | Microsoft Semantic Kernel Project |
+| [Azure DocumentDB](./azure-cosmosdb-mongodb-connector.md)          |    ✅    |                     ✅                      | Microsoft Semantic Kernel Project |
+| [Azure CosmosDB](./azure-cosmosdb-nosql-connector.md)              |    ✅    |                     ✅                      | Microsoft Semantic Kernel Project |
 | [Chroma](./chroma-connector.md)                                    |    ✅    |                     ✅                      | Microsoft Semantic Kernel Project |
 | [Elasticsearch](./elasticsearch-connector.md)                      | Planned   |                                             |                                   |
 | [Faiss](./faiss-connector.md)                                      |    ✅    |                     ✅                      | Microsoft Semantic Kernel Project |
