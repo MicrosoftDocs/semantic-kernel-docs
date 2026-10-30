@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: article
 ms.author: edvan
-ms.date: 02/26/2025
+ms.date: 10/30/2026
 ms.service: semantic-kernel
 ---
 
@@ -45,6 +45,8 @@ Notable Chroma connector functionality limitations.
 | Array and list properties   | Require Chroma 1.5.0 or later.                                                                                                                    |
 | Chroma Cloud search results | A vector search returns at most 300 results (`Skip` included), which is the default Chroma Cloud quota. Requesting more results fails with a quota error. |
 | Ordering                    | Ordering of results is not supported.                                                                                                             |
+| Null values                 | Chroma metadata has no null values, so a data property set to `null` is not stored, and is read back as `null`.                                   |
+| Storage names               | A storage name cannot be empty, or start with `#`, `$` or `chroma:`.                                                                              |
 
 ## Getting started
 
@@ -74,6 +76,16 @@ using Microsoft.Extensions.DependencyInjection;
 // Using IServiceCollection with ASP.NET Core.
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddChromaVectorStore("http://localhost:8000");
+```
+
+To connect to Chroma Cloud, the connection string has the API key, and the tenant and the database shown in the Chroma Cloud dashboard.
+
+```csharp
+using Microsoft.Extensions.DependencyInjection;
+
+// Using IServiceCollection with ASP.NET Core and Chroma Cloud.
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddChromaVectorStore("Endpoint=https://api.trychroma.com;Token=<api key>;Tenant=<tenant>;Database=<database>");
 ```
 
 Extension methods that take no parameters are also provided. These require an instance of the `ChromaDB.Client.ChromaClient` class to be separately registered with the dependency injection container.
@@ -170,6 +182,12 @@ public class Hotel
     "embedding": [0.9, 0.1, 0.1, 0.1]
 }
 ```
+
+## Hybrid search
+
+On Chroma Cloud, `HybridSearchAsync` combines dense vector search with BM25 keyword search on a full-text indexed `string` property, applying the filter to both searches. The connector fuses the results with Reciprocal Rank Fusion (RRF, `k = 60`). Higher scores rank higher, and score thresholds are lower bounds. The keywords are analyzed together as one text.
+
+Each search ranks `top + Skip` candidates. When the connector creates a collection on Chroma Cloud, it also creates a BM25 index for each full-text indexed `string` property. The collection exposes `IKeywordHybridSearchable<TRecord>` through `GetService` only on Chroma Cloud, and only when its model contains a full-text indexed property. `HybridSearchAsync` throws when the collection has no BM25 index, for example outside Chroma Cloud.
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
