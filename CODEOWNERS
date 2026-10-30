@@ -1,0 +1,6 @@
+# Codeowners file
+# Each line is a file pattern followed by one or more owners.
+
+# Folder paths in this list have been migrated to new repositories and content can no longer be created for these services in this repo.
+/agent-framework @sgilley @mcleans
+
