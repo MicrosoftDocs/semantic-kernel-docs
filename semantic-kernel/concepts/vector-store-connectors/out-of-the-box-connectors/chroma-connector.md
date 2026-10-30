@@ -143,7 +143,7 @@ Chroma stores each record as an id, an embedding, optional metadata and an optio
 The default mapper uses the model annotations or record definition to determine the type of each property and to do this mapping.
 
 - The data model property annotated as a key will be mapped to the Chroma record id.
-- The data model properties annotated as data will be mapped to the Chroma record metadata, except one: if exactly one `string` data property has `IsFullTextIndexed` set, it is stored as the Chroma record document instead. `string.Contains` filters on this property search the document.
+- The data model properties annotated as data will be mapped to the Chroma record metadata. If exactly one string data property has `IsFullTextIndexed` set, it is also stored as the Chroma record document.
 - The data model property annotated as a vector will be mapped to the Chroma record embedding.
 
 ### Property name override
@@ -177,7 +177,7 @@ public class Hotel
 ```json
 {
     "id": "1",
-    "metadata": { "hotel_name": "Hotel Happy" },
+    "metadata": { "hotel_name": "Hotel Happy", "hotel_description": "A place where everyone can be happy." },
     "document": "A place where everyone can be happy.",
     "embedding": [0.9, 0.1, 0.1, 0.1]
 }
@@ -185,31 +185,9 @@ public class Hotel
 
 ## Hybrid search
 
-On Chroma Cloud, the connector supports [hybrid search](../hybrid-search.md). It combines a vector search with a BM25 search of the keywords in a full-text indexed `string` property, and fuses the two rankings with reciprocal rank fusion.
+On Chroma Cloud, `HybridSearchAsync` combines dense vector search with BM25 keyword search on a full-text indexed `string` property, applying the filter to both searches. The connector fuses the results with Reciprocal Rank Fusion (RRF, `k = 60`). Higher scores rank higher, and score thresholds are lower bounds. The keywords are analyzed together as one text.
 
-When the connector creates a collection on Chroma Cloud, it also creates a BM25 index for each full-text indexed `string` property. A Chroma server outside Chroma Cloud has no BM25 indexes. There, `GetService` does not return the collection as `IKeywordHybridSearchable<TRecord>`, and `HybridSearchAsync` throws.
-
-```csharp
-using ChromaDB.Client;
-using CommunityToolkit.VectorData.Chroma;
-using Microsoft.Extensions.VectorData;
-
-var vectorStore = new ChromaVectorStore(
-    new ChromaClient(ChromaConfigurationOptions.FromConnectionString(
-        "Endpoint=https://api.trychroma.com;Token=<api key>;Tenant=<tenant>;Database=<database>")),
-    ownsClient: true);
-var collection = vectorStore.GetCollection<string, Hotel>("skhotels");
-await collection.EnsureCollectionExistsAsync();
-
-// This snippet assumes searchVector is already provided, having been created using the embedding model of your choice.
-var hybridSearchCollection = (IKeywordHybridSearchable<Hotel>)collection;
-var searchResult = hybridSearchCollection.HybridSearchAsync(searchVector, ["happy", "place"], top: 3);
-
-await foreach (var result in searchResult)
-{
-    Console.WriteLine($"{result.Record.HotelName}: {result.Score}");
-}
-```
+Each search ranks `top + Skip` candidates. When the connector creates a collection on Chroma Cloud, it also creates a BM25 index for each full-text indexed `string` property. The collection exposes `IKeywordHybridSearchable<TRecord>` through `GetService` only on Chroma Cloud, and only when its model contains a full-text indexed property. `HybridSearchAsync` throws when the collection has no BM25 index, for example outside Chroma Cloud.
 
 ::: zone-end
 ::: zone pivot="programming-language-python"
