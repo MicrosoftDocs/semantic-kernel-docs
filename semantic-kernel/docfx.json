@@ -50,6 +50,13 @@
     },
     "fileMetadata": {},
     "template": [],
-    "dest": "semantic-kernel"
+    "dest": "semantic-kernel",
+    "rules": {
+      "filename-incomplete": {
+        "exclude": [
+          "concepts/vector-store-connectors/out-of-the-box-connectors/milvus-connector.md"
+        ]
+      }
+    }
   }
 }

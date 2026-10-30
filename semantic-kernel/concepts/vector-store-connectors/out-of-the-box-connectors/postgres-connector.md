@@ -10,12 +10,6 @@ ms.service: semantic-kernel
 ---
 # Using the Postgres Vector Store connector (Preview)
 
-::: zone pivot="programming-language-csharp"
-
-> [!WARNING]
-> The Postgres Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
-
-::: zone-end
 ::: zone pivot="programming-language-python"
 
 > [!WARNING]
@@ -41,16 +35,16 @@ The connector has the following characteristics.
 |-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
 | Collection maps to                | Postgres table                                                                                                                   |
 | Supported key property types      | <ul><li>short</li><li>int</li><li>long</li><li>string</li><li>Guid</li></ul>                                                     |
-| Supported data property types     | <ul><li>bool</li><li>short</li><li>int</li><li>long</li><li>float</li><li>double</li><li>decimal</li><li>string</li><li>DateTime</li><li>DateTimeOffset</li><li>Guid</li><li>byte[]</li><li>bool Enumerables</li><li>short Enumerables</li><li>int Enumerables</li><li>long Enumerables</li><li>float Enumerables</li><li>double Enumerables</li><li>decimal Enumerables</li><li>string Enumerables</li><li>DateTime Enumerables</li><li>DateTimeOffset Enumerables</li><li>Guid Enumerables</li></ul> |
-| Supported vector property types   | <ul><li>ReadOnlyMemory\<float\></li><li>Embedding\<float\></li><li>float[]</li><li>ReadOnlyMemory\<Half\></li><li>Embedding\<Half\></li><li>Half[]</li><li>BitArray</li><li>Pgvector.SparseVector</li></ul>                                             |
-| Supported index types             | Hnsw                                                                                                                             |
-| Supported distance functions      | <ul><li>CosineDistance</li><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanDistance</li><li>ManhattanDistance</li></ul>|
-| Supported filter clauses          | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                  |
+| Supported data property types     | <ul><li>bool</li><li>short</li><li>int</li><li>long</li><li>float</li><li>double</li><li>decimal</li><li>string</li><li>DateTime</li><li>DateTimeOffset</li><li>Guid</li><li>byte[]</li><li>DateOnly (.NET only)</li><li>TimeOnly (.NET only)</li><li>Arrays or `List<T>` of bool, short, int, long, float, double, decimal, string, DateTime, DateTimeOffset, Guid, DateOnly and TimeOnly</li></ul> |
+| Supported vector property types   | <ul><li>ReadOnlyMemory\<float\></li><li>Embedding\<float\></li><li>float[]</li><li>ReadOnlyMemory\<Half\></li><li>Embedding\<Half\></li><li>Half[]</li><li>BitArray</li><li>Pgvector.SparseVector</li><li>BinaryEmbedding</li></ul>                                             |
+| Supported index types             | Hnsw (limited to 2000 dimensions). The default is Flat, which creates no index.                                                  |
+| Supported distance functions      | <ul><li>CosineDistance (default)</li><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanDistance</li><li>ManhattanDistance</li><li>HammingDistance</li></ul>|
+| Supported filter clauses          | LINQ expressions: `==`, `!=`, `<`, `<=`, `>`, `>=`, `&&`, `\|\|`, `!`, null comparisons, `Contains` and `Any` with `Contains` over array properties |
 | Supports multiple vectors in a record | Yes                                                                                                                          |
-| IsIndexed supported?              | No                                                                                                                               |
-| IsFullTextIndexed supported?      | No                                                                                                                               |
+| IsIndexed supported?              | Yes (creates a btree index)                                                                                                      |
+| IsFullTextIndexed supported?      | Yes (creates a GIN index on `to_tsvector`)                                                                                       |
 | StorageName supported?            | Yes                                                                                                                              |
-| HybridSearch supported?           | No                                                                                                                               |
+| HybridSearch supported?           | Yes, requires a string data property with `IsFullTextIndexed = true`                                                             |
 
 ## Limitations
 
@@ -80,21 +74,15 @@ You can add the vector store to the `IServiceCollection` dependency injection co
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
 
-var kernelBuilder = Kernel.CreateBuilder();
-kernelBuilder.Services.AddPostgresVectorStore("<Connection String>");
+ServiceCollection services = new();
+services.AddPostgresVectorStore("<Connection String>");
 ```
 
 Where `<Connection String>` is a connection string to the Postgres instance, in the format that [Npgsql](https://www.npgsql.org/) expects, for example `Host=localhost;Port=5432;Database=postgres;Username=postgres;Password=postgres`.
 
-Extension methods that take no parameters are also provided. These require an instance of [NpgsqlDataSource](https://www.npgsql.org/doc/api/Npgsql.NpgsqlDataSource.html) to be separately registered with the dependency injection container. Note that `UseVector` must be called on the builder to enable vector support via [pgvector-dotnet](https://github.com/pgvector/pgvector-dotnet?tab=readme-ov-file#npgsql-c):
+Overloads that take an optional `PostgresVectorStoreOptions` and a `ServiceLifetime`, and keyed registrations (`AddKeyedPostgresVectorStore`), are also provided. If an `IEmbeddingGenerator` is registered in the container, the vector store and collections use it automatically. To register a collection directly, use `AddPostgresCollection<TKey, TRecord>`.
 
-```csharp
-using Microsoft.Extensions.DependencyInjection;
-
-// Using IServiceCollection with ASP.NET Core.
-var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddPostgresVectorStore("<Connection String>");
-```
+Extension methods that take no connection string are also provided. These require an instance of [NpgsqlDataSource](https://www.npgsql.org/doc/api/Npgsql.NpgsqlDataSource.html) to be separately registered with the dependency injection container. Note that `UseVector` must be called on the builder to enable vector support via [pgvector-dotnet](https://github.com/pgvector/pgvector-dotnet?tab=readme-ov-file#npgsql-c):
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
@@ -139,13 +127,13 @@ NpgsqlDataSourceBuilder dataSourceBuilder = new("<Connection String>");
 dataSourceBuilder.UseVector();
 var dataSource = dataSourceBuilder.Build();
 
-var collection = new PostgresCollection<string, Hotel>(dataSource, "skhotels", ownsDataSource: true);
+var collection = new PostgresCollection<int, Hotel>(dataSource, "skhotels", ownsDataSource: true);
 ```
 
 ```csharp
 using CommunityToolkit.VectorData.PgVector;
 
-var collection = new PostgresCollection<string, Hotel>("<Connection String>", "skhotels");
+var collection = new PostgresCollection<int, Hotel>("<Connection String>", "skhotels");
 ```
 
 ## Data mapping
@@ -183,25 +171,27 @@ public class Hotel
     [VectorStoreData(StorageName = "hotel_description")]
     public string Description { get; set; }
 
-    [VectorStoreVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineDistance, IndexKind = IndexKind.Hnsw, StorageName = "hotel_description_embedding")]
+    [VectorStoreVector(4, DistanceFunction = DistanceFunction.CosineDistance, IndexKind = IndexKind.Hnsw, StorageName = "hotel_description_embedding")]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 ```
 
+The following DDL is illustrative; the exact statement generated by the connector quotes all identifiers and may differ slightly.
+
 ```sql
 CREATE TABLE IF NOT EXISTS public."Hotels" (
     "hotel_id" INTEGER PRIMARY KEY NOT NULL,
-    hotel_name TEXT,
-    hotel_description TEXT,
-    hotel_description_embedding VECTOR(4)
+    "hotel_name" TEXT,
+    "hotel_description" TEXT,
+    "hotel_description_embedding" VECTOR(4)
 );
 ```
 
 ## Vector indexing
 
-The `hotel_description_embedding` in the above `Hotel` model is a vector property with `IndexKind.HNSW` 
+The `hotel_description_embedding` in the above `Hotel` model is a vector property with `IndexKind.Hnsw` 
 indexing. This index will be created automatically when the collection is created. 
-HNSW is the only index type supported for index creation. IVFFlat index building requires that data already 
+Hnsw is the only index type supported for index creation, and it is limited to 2000 dimensions. IVFFlat index building requires that data already 
 exist in the table at index creation time, and so it is not appropriate for the creation of an empty table. 
 You are free to create and modify indexes on tables outside of the connector, which will 
 be used by the connector when performing queries.
