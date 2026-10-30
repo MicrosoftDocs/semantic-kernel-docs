@@ -35,12 +35,12 @@ ms.service: semantic-kernel
 
 ::: zone-end
 
-Semantic Kernel provides a number of out-of-the-box Vector Store integrations making it easy to get started with using Vector Stores. It also allows you to experiment with a free or locally hosted Vector Store and then easily switch to a service when scale requires it.
+A number of out-of-the-box Vector Store integrations exist, making it easy to get started with using Vector Stores. This also allows you to experiment with a free or locally hosted Vector Store and then easily switch to a service when scale requires it.
 
 > [!IMPORTANT]
-> Semantic Kernel Vector Store connectors are built by a variety of sources. Not all connectors are maintained as part of the Microsoft Semantic Kernel Project. When considering a connector, be sure to evaluate quality, licensing, support, etc. to ensure they meet your requirements. Also make sure you review each provider's documentation for detailed version compatibility information.
+> Vector Store integrations are built by a variety of sources. Not all integrations are maintained as part of the Microsoft Semantic Kernel Project. When considering an integration, be sure to evaluate quality, licensing, support, etc. to ensure they meet your requirements. Also make sure you review each provider's documentation for detailed version compatibility information.
 > [!IMPORTANT]
-> Some connectors are internally using Database SDKs that are not officially supported by Microsoft or by the Database provider. The *Uses Officially supported SDK* column lists which are using officially supported SDKs and which are not.
+> Some integrations are internally using Database SDKs that are not officially supported by Microsoft or by the Database provider. The *Uses Officially supported SDK* column lists which are using officially supported SDKs and which are not.
 
 ::: zone pivot="programming-language-csharp"
 

@@ -5,7 +5,7 @@ zone_pivot_groups: programming-languages
 author: moonbox3
 ms.topic: reference
 ms.author: evmattso
-ms.date: 07/11/2023
+ms.date: 10/30/2026
 ms.service: semantic-kernel
 ---
 
@@ -216,21 +216,3 @@ Once you've created a prompt, you can serialize it so that it can be stored or s
 > The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
 
 For the list of out of the box vector store connectors and the language support for each, refer to [out of the box connectors](../concepts/vector-store-connectors/out-of-the-box-connectors/index.md).
-
-### Memory Store Connectors (Legacy)
-
-> [!IMPORTANT]
-> Memory Store connectors are legacy and have been replaced by Vector Store connectors. For more information see [Legacy Memory Stores](../concepts/vector-store-connectors/memory-stores.md).
-
-| Memory Connectors        |  C#  | Python | Java | Notes |
-|--------------------------|:----:|:------:|:----:|-------|
-| Azure AI Search          | ✅ | ✅ | ✅ | |
-| Chroma                   | ✅ | ✅ | ❌ | |
-| DuckDB                   | ✅ | ❌ | ❌ | |
-| Milvus                   | ✅ | ✅ | ❌ | |
-| Pinecone                 | ❌ | ✅ | ❌ | |
-| Postgres                 | ✅ | ✅ | ❌ | |
-| Qdrant                   | ✅ | ✅ | ❌ | |
-| Redis                    | ✅ | ✅ | ❌ | |
-| Sqlite                   | ✅ | ❌ | 🔄 | |
-| Weaviate                 | ✅ | ✅ | ❌ | |
