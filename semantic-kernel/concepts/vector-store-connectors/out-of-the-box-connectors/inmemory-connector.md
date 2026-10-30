@@ -10,12 +10,6 @@ ms.service: semantic-kernel
 ---
 # Using the In-Memory connector (Preview)
 
-::: zone pivot="programming-language-csharp"
-
-> [!WARNING]
-> The In-Memory Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
-
-::: zone-end
 ::: zone pivot="programming-language-python"
 
 > [!WARNING]
@@ -33,7 +27,7 @@ ms.service: semantic-kernel
 
 ## Overview
 
-The In-Memory Vector Store connector is a Vector Store implementation provided by Semantic Kernel that uses no external database and stores data in memory.
+The In-Memory Vector Store connector is a Vector Store implementation provided by the .NET Community Toolkit that uses no external database and stores data in memory.
 This Vector Store is useful for prototyping scenarios or where high-speed in-memory operations are required.
 
 The connector has the following characteristics.
@@ -41,21 +35,21 @@ The connector has the following characteristics.
 | Feature Area                      | Support                                                                                                                          |
 |-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
 | Collection maps to                | In-memory dictionary                                                                                                             |
-| Supported key property types      | Any type that can be compared                                                                                                    |
+| Supported key property types      | Any type with sensible equality and hashing (auto-generated keys are supported only for Guid)                                    |
 | Supported data property types     | Any type                                                                                                                         |
 | Supported vector property types   | <ul><li>ReadOnlyMemory\<float\></li><li>Embedding\<float\></li><li>float[]</li></ul>                                             |
-| Supported index types             | Flat                                                                                                                             |
-| Supported distance functions      | <ul><li>CosineSimilarity</li><li>CosineDistance</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul>                 |
-| Supported filter clauses          | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                  |
+| Supported index types             | Flat (brute-force scan; `IndexKind` is ignored)                                                                                  |
+| Supported distance functions      | <ul><li>CosineSimilarity (default)</li><li>CosineDistance</li><li>DotProductSimilarity</li><li>EuclideanDistance</li></ul>       |
+| Supported filter clauses          | Any LINQ expression, evaluated in-process                                                                                        |
 | Supports multiple vectors in a record | Yes                                                                                                                          |
-| IsIndexed supported?              | Yes                                                                                                                              |
-| IsFullTextIndexed supported?      | Yes                                                                                                                              |
+| IsIndexed supported?              | Accepted, but has no effect                                                                                                      |
+| IsFullTextIndexed supported?      | Accepted, but has no effect                                                                                                      |
 | StorageName supported?            | No, since storage is in-memory and data reuse is therefore not possible, custom naming is not applicable.                        |
 | HybridSearch supported?           | No                                                                                                                               |
 
 ## Getting started
 
-Add the Semantic Kernel Core nuget package to your project.
+Add the In-Memory Vector Store connector NuGet package to your project.
 
 ```dotnetcli
 dotnet add package CommunityToolkit.VectorData.InMemory
@@ -97,6 +91,8 @@ using CommunityToolkit.VectorData.InMemory;
 
 var collection = new InMemoryCollection<string, Hotel>("skhotels");
 ```
+
+A collection constructed directly has its own private storage, unlike a collection obtained with `vectorStore.GetCollection`, which shares storage with the vector store. Collection names must be unique per record type within a store.
 
 ::: zone-end
 ::: zone pivot="programming-language-python"

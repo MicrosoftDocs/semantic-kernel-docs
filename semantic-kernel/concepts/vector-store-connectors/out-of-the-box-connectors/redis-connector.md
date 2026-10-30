@@ -10,12 +10,6 @@ ms.service: semantic-kernel
 ---
 # Using the Redis connector (Preview)
 
-::: zone pivot="programming-language-csharp"
-
-> [!WARNING]
-> The Redis Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
-
-::: zone-end
 ::: zone pivot="programming-language-python"
 
 > [!WARNING]
@@ -38,15 +32,15 @@ The connector has the following characteristics.
 | Feature Area                      | Support                                                                                                                          |
 |-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
 | Collection maps to                | Redis index with prefix set to `<collectionname>:`                                                                               |
-| Supported key property types      | string                                                                                                                           |
-| Supported data property types     | **When using Hashes:**<ul><li>string</li><li>int</li><li>uint</li><li>long</li><li>ulong</li><li>double</li><li>float</li><li>bool</li></ul>|
+| Supported key property types      | <ul><li>string</li><li>Guid</li></ul>                                                                                            |
+| Supported data property types     | **When using Hashes:**<ul><li>string</li><li>int</li><li>uint</li><li>long</li><li>ulong</li><li>double</li><li>float</li></ul>**When using JSON:** any type that `System.Text.Json` can serialize. Strings and collections of strings can be indexed as tags.|
 | Supported vector property types   | <ul><li>ReadOnlyMemory\<float\></li><li>Embedding\<float\></li><li>float[]</li><li>ReadOnlyMemory\<double\></li><li>Embedding\<double\></li><li>double[]</li></ul>                                                       |
 | Supported index types             | <ul><li>Hnsw</li><li>Flat</li></ul>                                                                                              |
-| Supported distance functions      | <ul><li>CosineSimilarity</li><li>DotProductSimilarity</li><li>EuclideanSquaredDistance</li></ul>                                 |
-| Supported filter clauses          | <ul><li>AnyTagEqualTo</li><li>EqualTo</li></ul>                                                                                  |
+| Supported distance functions      | <ul><li>CosineSimilarity</li><li>CosineDistance</li><li>DotProductSimilarity</li><li>EuclideanSquaredDistance</li></ul>          |
+| Supported filter clauses          | LINQ expressions: `==`, `!=`, `<`, `<=`, `>`, `>=`, `&&`, `\|\|`, `!`, a bool property, `Contains` over a tag field and `Any` with `Contains` |
 | Supports multiple vectors in a record | Yes                                                                                                                          |
-| IsIndexed supported?              | Yes                                                                                                                              |
-| IsFullTextIndexed supported?      | Yes                                                                                                                              |
+| IsIndexed supported?              | Yes (not combinable with `IsFullTextIndexed` on the same property)                                                               |
+| IsFullTextIndexed supported?      | Yes (string and string collection properties only, not combinable with `IsIndexed` on the same property)                         |
 | StorageName supported?            | **When using Hashes:** Yes<br>**When using JSON:** No, use `JsonSerializerOptions` and `JsonPropertyNameAttribute` instead. [See here for more info.](#data-mapping) |
 | HybridSearch supported?           | No                                                                                                                               |
 
@@ -81,7 +75,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRedisVectorStore("localhost:6379");
 ```
 
-Extension methods that take no parameters are also provided. These require an instance of the Redis `IDatabase` to be separately registered with the dependency injection container.
+Overloads that accept a connection string, `RedisVectorStoreOptions`, a `ServiceLifetime` and keyed registrations (`AddKeyedRedisVectorStore`) are also provided, as well as `AddRedisJsonCollection<TRecord>` and `AddRedisHashSetCollection<TRecord>` for registering a collection directly. If an `IEmbeddingGenerator` is registered in the container, the vector store and collections use it automatically.
+
+Extension methods that don't take a connection string are also provided. These require an instance of the Redis `IDatabase` to be separately registered with the dependency injection container.
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;

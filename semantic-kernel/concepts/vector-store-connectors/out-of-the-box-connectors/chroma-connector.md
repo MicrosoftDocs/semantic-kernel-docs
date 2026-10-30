@@ -5,75 +5,48 @@ zone_pivot_groups: programming-languages
 author: eavanvalkenburg
 ms.topic: article
 ms.author: edvan
-ms.date: 10/09/2026
+ms.date: 10/30/2026
 ms.service: semantic-kernel
 ---
 
-<!--
-  Language parity table – keep in sync when adding/removing sections.
-
-  | Section                  | C# | Python | Java | Notes                                  |
-  |--------------------------|:--:|:------:|:----:|----------------------------------------|
-  | Overview                 | ✅ |   ✅   |  ❌  | No Java connector                      |
-  | Limitations              | ✅ |   ✅   |  ❌  |                                        |
-  | Getting started          | ✅ |   ✅   |  ❌  |                                        |
-  | Data mapping             | ✅ |   ❌   |  ❌  | C#-specific, Python has Serialization  |
-  | Property name override   | ✅ |   ❌   |  ❌  | C#-specific                            |
-  | Hybrid search            | ✅ |   ❌   |  ❌  | C#-specific                            |
-  | Serialization            | ❌ |   ✅   |  ❌  | Python-specific                        |
--->
-
 # Using the Chroma connector (Preview)
 
-::: zone pivot="programming-language-csharp"
-
-> [!WARNING]
-> The Chroma Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
-
-::: zone-end
-::: zone pivot="programming-language-python"
-
 > [!WARNING]
 > The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
-
-::: zone-end
-::: zone pivot="programming-language-java"
-
-> [!WARNING]
-> The Semantic Kernel Vector Store functionality is in preview, and improvements that require breaking changes may still occur in limited circumstances before release.
-
-::: zone-end
 
 ::: zone pivot="programming-language-csharp"
 
 ## Overview
 
-The Chroma Vector Store connector can be used to access and manage data in Chroma and Chroma Cloud. The connector has the following characteristics.
+The Chroma Vector Store connector can be used to access and manage data in Chroma and Chroma Cloud. The connector is provided by the [.NET Community Toolkit](https://github.com/CommunityToolkit/AI) and is built on the [ChromaDotNet.Client](https://www.nuget.org/packages/ChromaDotNet.Client) library. The connector has the following characteristics.
 
-| Feature Area                          | Support                                                                                                                          |
-| ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| Collection maps to                    | Chroma collection                                                                                                                |
-| Supported key property types          | <ul><li>string</li><li>Guid</li></ul>                                                                                            |
-| Supported data property types         | <ul><li>string</li><li>int</li><li>long</li><li>double</li><li>float</li><li>bool</li><li>DateTime</li><li>DateTimeOffset</li><li>DateOnly</li><li>*and arrays and lists of each of these types*</li></ul> |
-| Supported vector property types       | <ul><li>ReadOnlyMemory\<float\></li><li>Embedding\<float\></li><li>float[]</li></ul>                                             |
-| Supported index types                 | Hnsw                                                                                                                             |
-| Supported distance functions          | <ul><li>CosineSimilarity (default)</li><li>CosineDistance</li><li>DotProductSimilarity</li><li>NegativeDotProductSimilarity</li><li>EuclideanDistance</li><li>EuclideanSquaredDistance</li></ul> |
-| Supported filter clauses              | <ul><li>==</li><li>!=</li><li><, <=, >, >= <ul><li>Only on numbers</li></ul></li><li>&&, \|\|, !</li><li>List.Contains() <ul><li>When checking if the model property is in the list</li><li>When checking if an array or list model property contains the value</li></ul></li><li>Enumerable.Any() <ul><li>Only with List.Contains(), when checking if an array or list model property contains any of the values in the list</li></ul></li><li>string.Contains() <ul><li>Only on the property stored as the Chroma document, see [Data mapping](#data-mapping)</li><li>Only joined to the other conditions with &&</li></ul></li><li>Filters on the key <ul><li>Only == and List.Contains()</li><li>Only joined to the other conditions with &&</li></ul></li></ul> |
-| Supports multiple vectors in a record | No                                                                                                                               |
-| IsIndexed supported?                  | Not needed, every data property can be used in filters                                                                           |
-| IsFullTextIndexed supported?          | Yes                                                                                                                              |
-| StorageName supported?                | Yes                                                                                                                              |
-| HybridSearch supported?               | Yes, on Chroma Cloud only. See [Hybrid search](#hybrid-search).                                                                  |
+| Feature Area                          | Support                                                                                                                                                                  |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Collection maps to                    | Chroma collection                                                                                                                                                        |
+| Supported key property types          | <ul><li>string</li><li>Guid</li></ul>                                                                                                                                    |
+| Supported data property types         | <ul><li>string</li><li>int</li><li>long</li><li>double</li><li>float</li><li>bool</li><li>DateTime</li><li>DateTimeOffset</li><li>DateOnly</li><li>*and arrays or lists of each of these types*</li></ul> |
+| Supported vector property types       | <ul><li>ReadOnlyMemory\<float\></li><li>Embedding\<float\></li><li>float[]</li></ul>                                                                                     |
+| Supported index types                 | Hnsw (any other index kind throws when the collection is constructed)                                                                                                    |
+| Supported distance functions          | <ul><li>CosineSimilarity (default)</li><li>CosineDistance</li><li>DotProductSimilarity</li><li>NegativeDotProductSimilarity</li><li>EuclideanSquaredDistance</li><li>EuclideanDistance</li></ul> |
+| Supported filter clauses              | LINQ expressions: `==`, `!=`, `<`, `<=`, `>`, `>=` (numbers only), `&&`, `\|\|`, `!`, `Contains` over a list and `Any` with `Contains` over array properties. `string.Contains` only works on the full-text indexed document property. Vector properties cannot be filtered. |
+| Supports multiple vectors in a record | No                                                                                                                                                                       |
+| IsIndexed supported?                  | Yes (all data properties can be used in filters, so the setting has no effect)                                                                                           |
+| IsFullTextIndexed supported?          | Yes (string properties only)                                                                                                                                             |
+| StorageName supported?                | Yes                                                                                                                                                                      |
+| HybridSearch supported?               | Yes (Chroma Cloud only, requires a full-text indexed string property)                                                                                                    |
 
 ## Limitations
 
 Notable Chroma connector functionality limitations.
 
-- Chroma metadata has no null values. A data property with a null value is not stored, and is read back as null.
-- Chroma does not store empty arrays and lists, so they are read back as null.
-- Array and list data properties need Chroma 1.5.0 or later.
-- `GetAsync` with a filter does not support ordering.
-- On Chroma Cloud, `top` and `Skip` of a vector search can add up to at most 300, the default quota of Chroma Cloud. Beyond that, Chroma Cloud returns a quota error.
+| Feature Area                | Details                                                                                                                                           |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Empty arrays and lists      | Chroma does not store empty lists, so an empty array or list is returned as `null`.                                                               |
+| Array and list properties   | Require Chroma 1.5.0 or later.                                                                                                                    |
+| Chroma Cloud search results | A vector search returns at most 300 results (`Skip` included), which is the default Chroma Cloud quota. Requesting more results fails with a quota error. |
+| Ordering                    | Ordering of results is not supported.                                                                                                             |
+| Null values                 | Chroma metadata has no null values, so a data property set to `null` is not stored, and is read back as `null`.                                   |
+| Storage names               | A storage name cannot be empty, or start with `#`, `$` or `chroma:`.                                                                              |
 
 ## Getting started
 
@@ -84,6 +57,7 @@ dotnet add package CommunityToolkit.VectorData.Chroma --prerelease
 ```
 
 You can add the vector store to the dependency injection container available on the `KernelBuilder` or to the `IServiceCollection` dependency injection container using extension methods provided by the connector package.
+The connection string is either the URI of the Chroma server, or `Endpoint=...;Token=...;Tenant=...;Database=...` (for example, for Chroma Cloud).
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
@@ -104,12 +78,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddChromaVectorStore("http://localhost:8000");
 ```
 
-The string is a connection string. To connect to Chroma Cloud, it also contains an API key, and the tenant and the database shown in the Chroma Cloud dashboard.
+To connect to Chroma Cloud, the connection string has the API key, and the tenant and the database shown in the Chroma Cloud dashboard.
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
 
-// Using IServiceCollection with ASP.NET Core.
+// Using IServiceCollection with ASP.NET Core and Chroma Cloud.
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddChromaVectorStore("Endpoint=https://api.trychroma.com;Token=<api key>;Tenant=<tenant>;Database=<database>");
 ```
@@ -123,7 +97,8 @@ using Microsoft.SemanticKernel;
 
 // Using Kernel Builder.
 var kernelBuilder = Kernel.CreateBuilder();
-kernelBuilder.Services.AddSingleton<ChromaClient>(sp => new ChromaClient(new ChromaConfigurationOptions("http://localhost:8000")));
+kernelBuilder.Services.AddSingleton<ChromaClient>(sp =>
+    new ChromaClient(new ChromaConfigurationOptions("http://localhost:8000")));
 kernelBuilder.Services.AddChromaVectorStore();
 ```
 
@@ -133,7 +108,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 // Using IServiceCollection with ASP.NET Core.
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddSingleton<ChromaClient>(sp => new ChromaClient(new ChromaConfigurationOptions("http://localhost:8000")));
+builder.Services.AddSingleton<ChromaClient>(sp =>
+    new ChromaClient(new ChromaConfigurationOptions("http://localhost:8000")));
 builder.Services.AddChromaVectorStore();
 ```
 
@@ -163,17 +139,17 @@ var collection = new ChromaCollection<string, Hotel>(
 ## Data mapping
 
 The Chroma connector provides a default mapper when mapping data from the data model to storage.
-Chroma stores each record as an id, an embedding, metadata and a document.
+Chroma stores each record as an id, an embedding, optional metadata and an optional document.
 The default mapper uses the model annotations or record definition to determine the type of each property and to do this mapping.
 
 - The data model property annotated as a key will be mapped to the Chroma record id.
-- The data model properties annotated as data will be mapped to the Chroma record metadata.
+- The data model properties annotated as data will be mapped to the Chroma record metadata, except one: if exactly one `string` data property has `IsFullTextIndexed` set, it is stored as the Chroma record document instead. `string.Contains` filters on this property search the document.
 - The data model property annotated as a vector will be mapped to the Chroma record embedding.
-- If exactly one `string` data property has `IsFullTextIndexed` set, it will also be mapped to the Chroma record document. `string.Contains` filters on this property search the document. On Chroma Cloud, a text longer than 8,182 bytes is stored in the document only, since Chroma Cloud does not accept longer metadata values.
 
 ### Property name override
 
-For data properties, you can provide override field names to use in storage that are different from the property names on the data model. This is not supported for keys, since a key is stored as the Chroma record id, or for vectors, since a Chroma record has a single unnamed embedding.
+For data properties, you can provide override field names to use in storage that are different to the property names on the data model.
+This is not supported for keys and vectors, since they have fixed names in Chroma.
 
 The property name override is done by setting the `StorageName` option via the data model attributes or record definition.
 
@@ -187,7 +163,7 @@ public class Hotel
     [VectorStoreKey]
     public string HotelId { get; set; }
 
-    [VectorStoreData(StorageName = "hotel_name")]
+    [VectorStoreData(IsIndexed = true, StorageName = "hotel_name")]
     public string HotelName { get; set; }
 
     [VectorStoreData(IsFullTextIndexed = true, StorageName = "hotel_description")]
@@ -200,10 +176,10 @@ public class Hotel
 
 ```json
 {
-    "ids": ["h1"],
-    "embeddings": [[0.9, 0.1, 0.1, 0.1]],
-    "metadatas": [{ "hotel_name": "Hotel Happy", "hotel_description": "A place where everyone can be happy." }],
-    "documents": ["A place where everyone can be happy."]
+    "id": "1",
+    "metadata": { "hotel_name": "Hotel Happy" },
+    "document": "A place where everyone can be happy.",
+    "embedding": [0.9, 0.1, 0.1, 0.1]
 }
 ```
 
