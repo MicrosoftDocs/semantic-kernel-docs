@@ -18,6 +18,8 @@
   href: inmemory-connector.md
 - name: JDBC connector
   href: jdbc-connector.md
+- name: Milvus connector
+  href: milvus-connector.md
 - name: MongoDB connector
   href: mongodb-connector.md
 - name: Oracle Database connector

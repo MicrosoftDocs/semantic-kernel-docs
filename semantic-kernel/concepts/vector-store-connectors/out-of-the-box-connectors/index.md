@@ -5,9 +5,21 @@ zone_pivot_groups: programming-languages
 author: westey-m
 ms.topic: article
 ms.author: westey
-ms.date: 07/08/2024
+ms.date: 10/30/2026
 ms.service: semantic-kernel
 ---
+
+<!--
+  Language parity table - keep in sync when adding/removing sections.
+
+  | Section             | C# | Python | Java | Notes                                    |
+  |---------------------|:--:|:------:|:----:|------------------------------------------|
+  | Connector guidance  | ✅ |   ✅   |  ✅  | Shared                                   |
+  | Connector catalog   | ✅ |   ✅   |  ✅  | Availability varies by language          |
+  | Milvus connector    | ✅ |   ❌   |  ❌  | .NET Community Toolkit provider for C#   |
+  | Preview warning     | ❌ |   ❌   |  ✅  | Java-specific                            |
+-->
+
 # Out-of-the-box Vector Store connectors
 
 ::: zone pivot="programming-language-csharp"
@@ -41,7 +53,7 @@ Semantic Kernel provides a number of out-of-the-box Vector Store integrations ma
 | [Couchbase](./couchbase-connector.md)                              |             ✅              |               ✅               |             Couchbase             |
 | [Elasticsearch](./elasticsearch-connector.md)                      |             ✅              |               ✅               |              Elastic              |
 | [In-Memory](./inmemory-connector.md)                               |             ✅              |              N/A                |     .NET Community Toolkit        |
-| Milvus                                                             |          Planned             |                                |                                   |
+| [Milvus](./milvus-connector.md)                                    |             ✅              |               ✅               |     .NET Community Toolkit        |
 | [MongoDB](./mongodb-connector.md)                                  |             ✅              |               ✅               |              Microsoft            | 
 | [Oracle](./oracle-connector.md)                                    |             ✅              |               ✅               |              Oracle               |
 | [Postgres](./postgres-connector.md)                                |             ✅              |               ✅               |     .NET Community Toolkit        |
